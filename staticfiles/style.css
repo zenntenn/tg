@@ -1,0 +1,92 @@
+@font-face {
+    font-family: 'Abbess';
+    src: url('../static/fonts/abbess-regular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Caslon Antique';
+    src: url('../static/fonts/cas_antn.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Futura PT';
+    src: url('../static/fonts/FuturaT-Bold.otf') format("opentype");
+}
+
+@font-face {
+    font-family: 'Optima';
+    src: url('../static/fonts/Optima-Bold.otf') format("opentype");
+}
+
+@font-face {
+    font-family: 'Balthazar';
+    src: url('../static/fonts/balthazarregular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Kells';
+    src: url('../static/fonts/KellsFLF.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'OPTIProtea';
+    src: url('../static/fonts/OPTIProtea.otf') format("opentype");
+}
+
+@font-face {
+    font-family: 'EnvisionRoman';
+    src: url('../static/fonts/Envision roman_0.ttf') format("truetype");
+}
+
+.vtm_heading {
+    font-family: "Delavan", serif;
+}
+
+.wta_heading {
+    font-family: "Balthazar", serif;
+}
+
+.mtas_heading {
+    font-family: "Abbess", serif;
+}
+
+.ctd_heading {
+    font-family: "Kells", serif;
+}
+
+.wto_heading {
+    font-family: "MatrixTall", serif;
+}
+
+.wod_heading {
+    font-family: "OPTIProtea", serif;
+}
+
+.inlineforms {
+    display: inline;
+}
+
+.headerimg {
+    height: 30px;
+    width: auto;
+}
+
+.margin {
+    margin: 30px;
+}
+
+.dots {
+    font-family: "Arial", sans-serif;
+}
+
+.centertext {
+    text-align: center;
+}
+
+.lefttext {
+    text-align: left;
+}
+
+.border {
+    border: 1px solid gray;
+}
