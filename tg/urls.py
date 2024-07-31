@@ -22,11 +22,11 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),
-    path("characters/", include("characters.urls", "characters")),
-    path("locations/", include("locations.urls", "locations")),
-    path("items/", include("items.urls", "items")),
-    path("game/", include("game.urls", "game")),
-    path("accounts/", include("accounts.urls", "accounts")),
+    path("characters/", include("characters.urls")),
+    path("locations/", include("locations.urls")),
+    path("items/", include("items.urls")),
+    path("game/", include("game.urls")),
+    path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     # path("", include()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
