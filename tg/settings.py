@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "accounts",
     "characters",
     "game",
-    "item",
+    "items",
     "locations",
     "polymorphic",
 ]
