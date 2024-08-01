@@ -1,7 +1,18 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import CreateView
+
+from accounts.forms import CustomUSerCreationForm
 
 # Create your views here.
+class SignUp(CreateView):
+    """View for the Sign Up Page"""
+
+    form_class = CustomUSerCreationForm
+    success_url = reverse_lazy("login")
+    template_name = "accounts/signup.html"
+
 class ProfileView(View):
     """View for User Profiles"""
 
