@@ -5,6 +5,8 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
+from characters.models.core import CharacterModel
+
 MAX_WAIT = 10
 # Create your tests here.
 class FunctionalTest(LiveServerTestCase):
@@ -70,3 +72,52 @@ class TestHomeView(TestCase):
         self.assertContains(response, "dark_pack.png")
 
         self.assertTemplateUsed(response, "core/index.html")
+
+
+class TestModel(TestCase):
+    def setUp(self):
+        # Model is abstract, using a descendant class to test methods
+        self.model = CharacterModel.objects.create(name="")
+        self.user = User.objects.create_user(username="Test User")
+
+    def test_has_name(self):
+        self.assertFalse(self.model.has_name())
+        self.model.set_name("Test")
+        self.assertTrue(self.model.has_name())
+
+    def test_set_name(self):
+        self.assertFalse(self.model.has_name())
+        self.assertTrue(self.model.set_name("Test"))
+        self.assertTrue(self.model.has_name())
+
+    def test_has_description(self):
+        self.assertFalse(self.model.has_description())
+        self.model.set_description("Test")
+        self.assertTrue(self.model.has_description())
+
+    def test_set_description(self):
+        self.assertFalse(self.model.has_description())
+        self.assertTrue(self.model.set_description("Test"))
+        self.assertTrue(self.model.has_description())
+
+    def test_has_owner(self):
+        self.assertFalse(self.model.has_owner())
+        self.model.set_owner(self.user)
+        self.assertTrue(self.model.has_owner())
+
+    def test_set_owner(self):
+        self.assertFalse(self.model.has_owner())
+        self.assertTrue(self.model.set_owner(self.user))
+        self.assertTrue(self.model.has_owner())
+
+    def test_update_status(self):
+        self.assertEqual(self.model.status, "Un")
+        self.assertEqual(self.model.get_status_display(), "Unfinished")
+        self.assertTrue(self.model.update_status("App"))
+        self.assertEqual(self.model.status, "App")
+        self.assertEqual(self.model.get_status_display(), "Approved")
+
+    def test_toggle_display(self):
+        self.assertTrue(self.model.display)
+        self.assertTrue(self.model.toggle_display())
+        self.assertFalse(self.model.display)
