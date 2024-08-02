@@ -68,3 +68,5 @@ class TestHomeView(TestCase):
         response = self.client.get("/")
         self.assertContains(response, "Dark Pack")
         self.assertContains(response, "dark_pack.png")
+
+        self.assertTemplateUsed(response, "core/index.html")
