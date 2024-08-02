@@ -4,6 +4,7 @@ from django.views import View
 from django.views.generic import CreateView
 
 from accounts.forms import CustomUSerCreationForm
+from characters.models.core import CharacterModel
 
 # Create your views here.
 class SignUp(CreateView):
@@ -22,5 +23,11 @@ class ProfileView(View):
             return render(request, "accounts/index.html", context,)
         return redirect("/accounts/login/")
 
+    def post(self, request):
+        context = self.get_context(request.user)
+        return render(request, "accounts/index.html", context,)
+
     def get_context(self, user):
-        return {}
+        return {
+            "characters": CharacterModel.objects.filter(owner=user).order_by("name"),
+        }

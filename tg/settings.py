@@ -130,8 +130,8 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_DIRS = [BASE_DIR / "staticfiles"]
 
-# LOGIN_REDIRECT_URL = "user"
-# LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "user"
+LOGOUT_REDIRECT_URL = "home"
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Default primary key field type
