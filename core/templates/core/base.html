@@ -42,7 +42,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarsExample05">
                 <ul class="navbar-nav mr-auto">
-                    {% comment %} {% if user.is_authenticated %}
+                    {% if user.is_authenticated %}
                         <li>
                             <a class="nav-link" href="{% url 'user' %}">Account</a>
                         </li>
@@ -56,12 +56,12 @@
                         <li>
                             <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
                         </li>
-                    {% endif %} {% endcomment %}
-                    {% comment %} {% if user.is_staff %}
+                    {% endif %}
+                    {% if user.is_staff %}
                         <li>
                             <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
                         </li>
-                    {% endif %} {% endcomment %}
+                    {% endif %}
                     <li class="nav-tiem dropdown">
                         <a class="nav-link dropdown-toggle"
                            href="#"
