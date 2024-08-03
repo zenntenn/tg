@@ -1,4 +1,5 @@
 from characters.models.core import CharacterModel
+from core.utils import level_name, tree_sort
 from django.shortcuts import redirect, render
 from django.views import View
 from game.forms import AddCharForm, PostForm, SceneCreationForm, StoryCreationForm
@@ -11,6 +12,13 @@ from locations.models.core import LocationModel
 class ChronicleDetailView(View):
     def get_context(self, pk):
         chronicle = Chronicle.objects.get(pk=pk)
+        locations = LocationModel.objects.filter(chronicle=chronicle).order_by("name")
+        L1 = []
+        L2 = []
+        for x in locations.filter(parent=None).order_by("name"):
+            L1.extend([level_name(y) for y in tree_sort(x)])
+            L2.extend(tree_sort(x))
+
         return {
             "object": chronicle,
             "stories": Story.objects.filter(chronicle=chronicle).order_by("start_date"),
@@ -22,6 +30,7 @@ class ChronicleDetailView(View):
             ),
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
             "form": StoryCreationForm(),
+            "names_dict": dict(zip(L1, L2)),
         }
 
     def get(self, request, *args, **kwargs):
