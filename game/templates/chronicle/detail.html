@@ -27,5 +27,15 @@
             <div class="col-sm">Common Knowledge</div>
             <div class="col-sm">{{ object.common_knowledge_elements }}</div>
         </div>
+        <div class="row centertext">
+            <h3 class="col-sm {{ object.headings }}">Stories <a href="">(All Scenes)</a></h3>
+        </div>
+        {% for story in stories %}
+        <div class="row border centertext">
+            <a class="col-sm border" href="">{{ story.name }}</a>
+            <div class="col-sm border">{{ story.start_date }}</div>
+            <div class="col-sm border">{{ story.end_date }}</div>
+        </div>
+        {% endfor %}
     </div>
 {% endblock content %}
