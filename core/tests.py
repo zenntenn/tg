@@ -1,3 +1,4 @@
+from collections import Counter
 import os
 import time
 
@@ -7,6 +8,8 @@ from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+
+from core.templatetags.dots import dots
 
 os.environ["MOZ_HEADLESS"] = "1"
 
@@ -241,3 +244,20 @@ class TestModel(TestCase):
         self.assertTrue(self.model.display)
         self.assertTrue(self.model.toggle_display())
         self.assertFalse(self.model.display)
+
+class TestDots(TestCase):
+    def test_length(self):
+        output_5 = dots(4)
+        output_10 = dots(4, maximum=10)
+        output_10_2 = dots(6)
+        self.assertEqual(len(output_5), 5)
+        self.assertEqual(len(output_10), 10)
+        self.assertEqual(len(output_10_2), 10)
+
+    def test_correct_ratio(self):
+        self.assertEqual(Counter(dots(3))["●"], 3)
+        self.assertEqual(Counter(dots(3))["○"], 2)
+        self.assertEqual(Counter(dots(3, maximum=10))["●"], 3)
+        self.assertEqual(Counter(dots(3, maximum=10))["○"], 7)
+        self.assertEqual(Counter(dots(6))["●"], 6)
+        self.assertEqual(Counter(dots(6))["○"], 4)
