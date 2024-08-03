@@ -1,5 +1,5 @@
 from django.contrib import admin
-from items.models.core import ItemModel, MeleeWeapon, RangedWeapon, ThrownWeapon, Weapon
+from items.models.core import ItemModel, Medium, MeleeWeapon, RangedWeapon, ThrownWeapon, Weapon
 
 
 # Register your models here.
@@ -12,3 +12,9 @@ admin.site.register(Weapon)
 admin.site.register(MeleeWeapon)
 admin.site.register(ThrownWeapon)
 admin.site.register(RangedWeapon)
+
+@admin.register(Medium)
+class MediumAdmin(admin.ModelAdmin):
+    class Meta:
+        verbose_name = "Medium"
+        verbose_name_plural = "Mediums"

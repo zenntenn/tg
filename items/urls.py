@@ -5,4 +5,5 @@ from items import views
 app_name = "items"
 urlpatterns = [
     path("<pk>/", views.GenericItemDetailView.as_view(), name="item"),
+    path("medium/<pk>/", views.MediumDetailView.as_view(), name="medium"),
 ]

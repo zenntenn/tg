@@ -1,0 +1,12 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Length Modifier</div>
+        <div class="col-sm">{{ object.length_modifier_type }}{{ object.length_modifier }}</div>
+    </div>
+{% endblock contents %}
