@@ -28,5 +28,47 @@
                 </div>
             </div>
         </div>
-</div>
+        {% for post in object.post_set.all %}
+            <div class="row">
+                <div class="col-sm">
+                    <p>
+                        <b>{{ post.display_name }}</b>:
+                        {% autoescape off %}
+                            {{ post.message }}
+                        {% endautoescape %}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+        {% if not object.finished %}
+            {% if request.user.is_authenticated %}
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm">{{ post_form.character }} {{ post_form.display_name }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">{{ post_form.message }}</div>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Post" />
+                </form>
+                <button class="btn btn-primary"
+                        onClick="location.href = window.location.href;">Refresh</button>
+                {% if num_chars != 0 %}
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        {{ add_char_form.character_to_add }}
+                        <input class="btn btn-primary" type="submit" value="Add" />
+                    </form>
+                {% endif %}
+                <form class="inlineforms" method="post" action="">
+                    {% csrf_token %}
+                    <input class="btn btn-primary"
+                           type="submit"
+                           value="Close Scene"
+                           name="close_scene" />
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
 {% endblock content %}

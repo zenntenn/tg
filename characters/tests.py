@@ -1,8 +1,7 @@
-from django.utils.timezone import now
-from django.test import TestCase
-from django.contrib.auth.models import User
-
 from characters.models.core import Character, Human
+from django.contrib.auth.models import User
+from django.test import TestCase
+from django.utils.timezone import now
 
 
 # Create your tests here.

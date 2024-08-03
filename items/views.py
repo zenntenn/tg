@@ -6,8 +6,8 @@ from items.models.core import (
     Medium,
     MeleeWeapon,
     RangedWeapon,
-    Weapon,
     ThrownWeapon,
+    Weapon,
 )
 
 

@@ -28,14 +28,56 @@
             <div class="col-sm">{{ object.common_knowledge_elements }}</div>
         </div>
         <div class="row centertext">
-            <h3 class="col-sm {{ object.headings }}">Stories <a href="">(All Scenes)</a></h3>
+            <h3 class="col-sm {{ object.headings }}">
+                Stories <a href="{{ object.get_scenes_url }}">(All Scenes)</a>
+            </h3>
         </div>
-        {% for story in stories %}
-        <div class="row border centertext">
-            <a class="col-sm border" href="">{{ story.name }}</a>
-            <div class="col-sm border">{{ story.start_date }}</div>
-            <div class="col-sm border">{{ story.end_date }}</div>
+        <div class="row centertext">
+            <h3 class="col-sm {{ object.headings }}">Characters</h3>
         </div>
+        {% for char in characters %}
+            <div class="row border centertext">
+                <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                <div class="col-sm border">{{ char.type.title }}</div>
+                <div class="col-sm border">{{ char.owner }}</div>
+            </div>
         {% endfor %}
+        <div class="row">
+            <h3 class="col-sm {{ object.headings }} centertext">Locations</h3>
+        </div>
+        {% for name, loc in names_dict.items %}
+            <div class="row border">
+                <a class="col-sm border lefttext" href="{{ loc.get_absolute_url }}">{{ name|safe }}</a>
+                <div class="col-sm border centertext">{{ loc.owner.username }}</div>
+                <div class="col-sm border centertext">{{ loc.type.title }}</div>
+            </div>
+        {% endfor %}
+        <div class="row centertext">
+            <h3 class="col-sm {{ object.headings }}">Items</h3>
+        </div>
+        {% for item in items %}
+            <div class="row border centertext">
+                <a class="col-sm border" href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                <div class="col-sm border">{{ item.type.title }}</div>
+            </div>
+        {% endfor %}
+        {% for story in stories %}
+            <div class="row border centertext">
+                <a class="col-sm border" href="">{{ story.name }}</a>
+                <div class="col-sm border">{{ story.start_date }}</div>
+                <div class="col-sm border">{{ story.end_date }}</div>
+            </div>
+        {% endfor %}
+        {% if request.user.is_authenticated %}
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="row centertext">
+                    <div class="col-sm">{{ form.name }}</div>
+                    <div class="col-sm">
+                        <input class="btn btn-primary" type="submit" value="Create Story" />
+                    </div>
+                </div>
+            </form>
+        {% endif %}
     </div>
 {% endblock content %}

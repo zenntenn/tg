@@ -1,5 +1,5 @@
 from django.contrib import admin
-from game.models import Chronicle, Scene, Story
+from game.models import Chronicle, Post, Scene, Story
 
 # Register your models here.
 admin.site.register(Chronicle)
@@ -18,3 +18,6 @@ class SceneAdmin(admin.ModelAdmin):
         "location",
         "finished",
     )
+
+
+admin.site.register(Post)

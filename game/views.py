@@ -1,7 +1,8 @@
 from characters.models.core import CharacterModel
 from django.shortcuts import redirect, render
 from django.views import View
-from game.models import Chronicle, Scene, Story
+from game.forms import AddCharForm, PostForm, SceneCreationForm, StoryCreationForm
+from game.models import Chronicle, Post, Scene, Story
 from items.models.core import ItemModel
 from locations.models.core import LocationModel
 
@@ -20,6 +21,7 @@ class ChronicleDetailView(View):
                 "name"
             ),
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
+            "form": StoryCreationForm(),
         }
 
     def get(self, request, *args, **kwargs):
@@ -37,6 +39,7 @@ class StoryDetailView(View):
         return {
             "object": story,
             "scenes": Scene.objects.filter(story=story),
+            "form": SceneCreationForm(chronicle=story.chronicle),
         }
 
     def get(self, request, *args, **kwargs):
@@ -58,8 +61,14 @@ class SceneDetailView(View):
         if not user.is_authenticated:
             user = None
         scene = Scene.objects.get(pk=pk)
+        a = AddCharForm(user=user, scene=scene)
+        num_chars = (a.fields["character_to_add"].queryset).count()
         return {
             "object": scene,
+            "posts": Post.objects.filter(scene=scene),
+            "post_form": PostForm(user=user, scene=scene),
+            "add_char_form": a,
+            "num_chars": num_chars,
         }
 
     def get(self, request, *args, **kwargs):
@@ -70,6 +79,14 @@ class SceneDetailView(View):
         context = self.get_context(kwargs["pk"], request.user)
         if "close_scene" in request.POST.keys():
             context["object"].close()
+        elif "character_to_add" in request.POST.keys():
+            c = CharacterModel.objects.get(pk=request.POST["character_to_add"])
+            context["object"].add_character(c)
+        elif "message" in request.POST.keys():
+            character = CharacterModel.objects.get(pk=request.POST["character"])
+            context["object"].add_post(
+                character, request.POST["display_name"], request.POST["message"]
+            )
         return render(request, "game/scene/detail.html", context)
 
 
