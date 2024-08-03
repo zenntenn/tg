@@ -1,0 +1,16 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% block name %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">{{ object.name }}</h2>
+        </div>
+    {% endblock name %}
+    {% block additional_stats %}
+    {% endblock additional_stats %}
+    {% block description %}
+        <div class="row">
+            <div class="col-sm">Description</div>
+            <div class="col-sm">{{ object.description }}</div>
+        </div>
+    {% endblock description %}
+{% endblock contents %}

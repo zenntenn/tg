@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}
+    {{ object.name|safe }}
+{% endblock title %}
+{% block content %}
+    {% csrf_token %}
+
+    <div class="centertext container">
+        {% block references %}
+        {% endblock references %}
+        {% block image %}
+            {% if object.image %}
+                <img src="{{ object.image.url }}"
+                     width=300
+                     height="{{ image.height }}"
+                     alt="image of {{ object.name }}"/>
+            {% endif %}
+        {% endblock image %}
+        {% block contents %}
+        {% endblock contents %}
+        {% block update %}
+        {% endblock update %}
+    </div>
+{% endblock content %}
