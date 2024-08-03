@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
-from items.models.core import ItemModel, MeleeWeapon, Weapon
+from items.models.core import ItemModel, MeleeWeapon, Weapon, ThrownWeapon
 
 
 # Create your views here.
@@ -18,11 +18,18 @@ class MeleeWeaponDetailView(DetailView):
     template_name = "items/meleeweapon/detail.html"
 
 
+class ThrownWeaponDetailView(DetailView):
+    model = ThrownWeapon
+    template_name = "items/thrownweapon/detail.html"
+
+
+
 class GenericItemDetailView(View):
     views = {
         "item": ItemDetailView,
         "weapon": WeaponDetailView,
         "melee_weapon": MeleeWeaponDetailView,
+        "thrown_weapon": ThrownWeaponDetailView,
     }
 
     def get(self, request, *args, **kwargs):
