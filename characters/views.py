@@ -1,7 +1,6 @@
+from characters.models.core import Character, Human
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
-
-from characters.models.core import Character, Human
 
 
 # Create your views here.

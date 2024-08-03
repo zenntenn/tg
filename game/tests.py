@@ -68,6 +68,15 @@ class SceneTest(TestCase):
         self.assertEqual(self.story.total_pcs(), 1)
         self.assertEqual(self.story.total_npcs(), 1)
 
+    def test_add_post(self):
+        self.scene.add_character(self.char)
+        self.assertEqual(self.scene.total_posts(), 0)
+        post = self.scene.add_post(self.char, "", "Here's a post message.")
+        self.assertEqual(self.scene.total_posts(), 1)
+        self.assertEqual(post.display_name, self.char.name)
+        self.assertEqual(post.message, "Here's a post message.")
+        self.assertEqual(str(post), "Test Character: Here's a post message.")
+
 
 class TestChronicleDetailView(TestCase):
     def setUp(self):

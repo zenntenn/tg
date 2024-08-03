@@ -1,7 +1,7 @@
-from django.urls import reverse
 from core.models import Model
-from django.db import models
 from core.utils import add_dot
+from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.

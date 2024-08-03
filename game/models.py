@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -155,7 +156,7 @@ class Scene(models.Model):
 
     def add_character(self, character):
         if isinstance(character, str):
-            from core.models import CharacterModel
+            from characters.models.core import CharacterModel
 
             character = CharacterModel.objects.get(name=character)
         self.characters.add(character)
@@ -164,3 +165,35 @@ class Scene(models.Model):
         else:
             self.story.pcs.add(character)
         return character
+
+    def total_posts(self):
+        return Post.objects.filter(scene=self).count()
+
+    def add_post(self, character, display, message):
+        if character not in self.characters.all():
+            self.add_character(character)
+        if display == "":
+            display = character.name
+        post = Post.objects.create(
+            character=character, message=message, display_name=display, scene=self
+        )
+        return post
+
+
+class Post(models.Model):
+    character = models.ForeignKey(
+        "characters.CharacterModel", on_delete=models.SET_NULL, null=True
+    )
+    display_name = models.CharField(max_length=100)
+    scene = models.ForeignKey("game.Scene", on_delete=models.SET_NULL, null=True)
+    message = models.TextField(default="")
+    datetime_created = models.DateTimeField(default=now)
+
+    class Meta:
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
+
+    def __str__(self):
+        if self.display_name:
+            return self.display_name + ": " + self.message
+        return self.character.name + ": " + self.message
