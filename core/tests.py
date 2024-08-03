@@ -1,15 +1,14 @@
-import os
-import time
-
 from django.contrib.auth.models import User
-from django.test import LiveServerTestCase, TestCase
+from django.test import TestCase, LiveServerTestCase
+import time
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
 from characters.models.core import CharacterModel
+import os
 
-os.environ["MOZ_HEADLESS"] = "1"
+os.environ['MOZ_HEADLESS'] = '1'
 
 MAX_WAIT = 10
 # Create your tests here.
@@ -39,8 +38,7 @@ class FunctionalTest(LiveServerTestCase):
 
     def clean_url(self, url):
         return url.replace(self.live_server_url + "/", "")
-
-
+    
 class TestHomeView(TestCase):
     """Manages Tests for the HomeView and Template"""
 
@@ -77,7 +75,7 @@ class TestHomeView(TestCase):
         self.assertContains(response, "dark_pack.png")
 
         self.assertTemplateUsed(response, "core/index.html")
-
+        
     def test_content_null_user(self):
         """Tests what users who are not logged in see on front page"""
         response = self.client.get("/")
@@ -104,7 +102,6 @@ class TestHomeView(TestCase):
         self.assertContains(response, "Log Out")
         self.assertContains(response, "Admin")
         self.assertContains(response, "Account")
-
 
 class NewUserTest(FunctionalTest):
     """Test creating a new user with interface"""
@@ -176,8 +173,7 @@ class NewUserTest(FunctionalTest):
             (self.clean_url(link.get_attribute("href")), link.text) for link in links
         ]
         self.assertIn("test_user", self.browser.title)
-
-
+        
 class TestHomepage(FunctionalTest):
     """Test seeing the appropriate content on Homepage"""
 
@@ -193,7 +189,6 @@ class TestHomepage(FunctionalTest):
 
         self.assertIn(("accounts/login/", "Log In"), links)
         self.assertIn(("accounts/signup/", "Sign Up"), links)
-
 
 class TestModel(TestCase):
     def setUp(self):

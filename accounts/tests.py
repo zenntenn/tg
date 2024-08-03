@@ -1,6 +1,5 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
-
+from django.contrib.auth.models import User
 
 # Create your tests here.
 class TestSignUpView(TestCase):
@@ -10,10 +9,8 @@ class TestSignUpView(TestCase):
         self.client.get("/accounts/")
         self.assertTemplateUsed("registration/login.html")
 
-
 class TestProfileView(TestCase):
     """Class that Tests the ProfileView"""
-
     def setUp(self) -> None:
         self.user1 = User.objects.create_user(
             "Test User 1", "test@user1.com", "testpass"
@@ -24,7 +21,7 @@ class TestProfileView(TestCase):
         self.storyteller = User.objects.create_user(
             "Test Storyteller", "test@st.com", "testpass"
         )
-
+        
         self.storyteller.profile.mta_st = True
         self.storyteller.profile.save()
 

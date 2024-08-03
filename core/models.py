@@ -1,7 +1,6 @@
-from django.contrib.auth.models import User
 from django.db import models
 from polymorphic.models import PolymorphicModel
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Model(PolymorphicModel):
@@ -62,3 +61,4 @@ class Model(PolymorphicModel):
     def toggle_display(self):
         self.display = not self.display
         return True
+
