@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ object.name }}
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h2 class="col-sm {{ object.headings }} centertext">{{ object.name }}</h2>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Storytellers</div>
+            <div class="col-sm">{{ object.storyteller_list }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Theme</div>
+            <div class="col-sm">{{ object.theme }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Mood</div>
+            <div class="col-sm">{{ object.mood }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Year</div>
+            <div class="col-sm">{{ object.year }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Common Knowledge</div>
+            <div class="col-sm">{{ object.common_knowledge_elements }}</div>
+        </div>
+    </div>
+{% endblock content %}
