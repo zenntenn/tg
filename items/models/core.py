@@ -63,3 +63,12 @@ class MeleeWeapon(Weapon):
     class Meta:
         verbose_name = "Melee Weapon"
         verbose_name_plural = "Melee Weapons"
+
+
+
+class ThrownWeapon(Weapon):
+    type = "thrown_weapon"
+
+    class Meta:
+        verbose_name = "Thrown Weapon"
+        verbose_name_plural = "Thrown Weapons"
