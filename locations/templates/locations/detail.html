@@ -1,0 +1,46 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% block name %}
+        <div class="row {{ object.get_heading }}">
+            <h1 class="col-sm">{{ object.name }}</h1>
+        </div>
+    {% endblock name %}
+    {% block parent %}
+        {% if object.parent != None %}
+            <div class="row">
+                <div class="col-sm">Parent</div>
+                <a class="col-sm" href="{{ object.parent.get_absolute_url }}">{{ object.parent.name }}</a>
+            </div>
+        {% endif %}
+    {% endblock parent %}
+    {% block prominents %}
+    {% endblock prominents %}
+    {% block gauntlets %}
+        <div class="row">
+            <div class="col-sm">Gauntlet</div>
+            <div class="col-sm">{{ object.gauntlet }}</div>
+            <div class="col-sm">Shroud</div>
+            <div class="col-sm">{{ object.shroud }}</div>
+            <div class="col-sm">Dimension Barrier</div>
+            <div class="col-sm">{{ object.dimension_barrier }}</div>
+        </div>
+    {% endblock gauntlets %}
+    {% block reality_zone %}
+        {% if object.reality_zone %}
+            <div class="row">
+                <div class="col-sm">Reality Zone</div>
+                <div class="col-sm">{{ object.reality_zone }}</div>
+            </div>
+        {% endif %}
+    {% endblock reality_zone %}
+    {% block other %}
+    {% endblock other %}
+    {% block description %}
+        <div class="row">
+            <div class="col-sm">Description</div>
+            <div class="col-sm">{{ object.description }}</div>
+        </div>
+    {% endblock description %}
+    {% block post_description %}
+    {% endblock post_description %}
+{% endblock contents %}
