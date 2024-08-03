@@ -103,3 +103,20 @@ class Medium(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Material(models.Model):
+    """Class managing Material data"""
+
+    name = models.TextField(default="")
+    is_hard = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Material"
+        verbose_name_plural = "Materials"
+
+    def get_absolute_url(self):
+        return reverse("material", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return f"{self.name}"
