@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from game.models import Chronicle
 from polymorphic.models import PolymorphicModel
 
 
@@ -9,6 +10,10 @@ class Model(PolymorphicModel):
 
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+
+    chronicle = models.ForeignKey(
+        Chronicle, blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     status_keys = ["Un", "Sub", "App", "Ret", "Dec", "Ran", "Fre"]
     statuses = [

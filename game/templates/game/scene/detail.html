@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ object.name }}
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <div class="centertext">
+            <div class="row">
+                <h2 class="col-sm {{ object.story.chronicle.headings }}">{{ object.name }}</h2>
+            </div>
+            <div class="row">
+                <h3 class="col-sm {{ object.story.chronicle.headings }}">
+                    <a href="{{ object.story.get_absolute_url }}">{{ object.story.name }}</a>
+                </h3>
+            </div>
+            <div class="row">
+                <h3 class="col-sm {{ object.story.chronicle.headings }}">
+                    <a href="{{ object.location.get_absolute_url }}">{{ object.location.name }}</a>
+                </h3>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <h4 class="col-sm {{ object.story.chronicle.headings }}">
+                        {% autoescape off %}
+                            {{ object.location.description }}
+                        {% endautoescape %}
+                    </h4>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock content %}
