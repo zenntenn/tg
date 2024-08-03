@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ object.name }}
+{% endblock title %}
+{% block content %}
+    <div class="centertext container">
+        <div class="row">
+            <h2 class="col-sm {{ chronicle.headings }}"><a href="{{ chronicle.get_absolute_url }}">{{ chronicle.name }}</a></h2>
+        </div>
+        <div class="row">
+            <h3 class="col-sm {{ chronicle.headings }}">Scenes</h3>
+        </div>
+        <div class="row border">
+            <div class="col-sm border">
+                <b>Story</b>
+            </div>
+            <div class="col-sm border">
+                <b>Title</b>
+            </div>
+            <div class="col-sm border">
+                <b>Date Played</b>
+            </div>
+            <div class="col-sm border">
+                <b>Date of Scene</b>
+            </div>
+        </div>
+        {% for scene in scenes %}
+            <div class="row border">
+                <a class="col-sm" href="{{ scene.story.get_absolute_url }}">{{ scene.story.name }}</a>
+
+                <a class="col-sm border" href="{{ scene.get_absolute_url }}">{{ scene.name }}
+                    {% if not scene.finished %}- <b>Ongoing</b>{% endif %}
+                </a>
+                
+                <div class="col-sm">{{ scene.date_played }}</div>
+
+                <div class="col-sm">{{ scene.date_of_scene }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,15 +1,14 @@
-from collections import Counter
 import os
 import time
+from collections import Counter
 
 from characters.models.core import CharacterModel
+from core.templatetags.dots import dots
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-
-from core.templatetags.dots import dots
 
 os.environ["MOZ_HEADLESS"] = "1"
 
@@ -244,6 +243,7 @@ class TestModel(TestCase):
         self.assertTrue(self.model.display)
         self.assertTrue(self.model.toggle_display())
         self.assertFalse(self.model.display)
+
 
 class TestDots(TestCase):
     def test_length(self):
