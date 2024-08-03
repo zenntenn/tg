@@ -5,6 +5,7 @@ from django.views.generic import CreateView
 
 from accounts.forms import CustomUSerCreationForm
 from characters.models.core import CharacterModel
+from items.models.core import ItemModel
 
 # Create your views here.
 class SignUp(CreateView):
@@ -30,4 +31,5 @@ class ProfileView(View):
     def get_context(self, user):
         return {
             "characters": CharacterModel.objects.filter(owner=user).order_by("name"),
+            "items": ItemModel.objects.filter(owner=user).order_by("name"),
         }
