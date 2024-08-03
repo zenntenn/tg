@@ -1,9 +1,12 @@
 import os
 import time
 from collections import Counter
+from unittest import mock
+from unittest.mock import Mock
 
 from characters.models.core import CharacterModel
 from core.templatetags.dots import dots
+from core.utils import dice
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
@@ -261,3 +264,49 @@ class TestDots(TestCase):
         self.assertEqual(Counter(dots(3, maximum=10))["○"], 7)
         self.assertEqual(Counter(dots(6))["●"], 6)
         self.assertEqual(Counter(dots(6))["○"], 4)
+
+
+class TestDice(TestCase):
+    """Manage tests for Diceroller"""
+
+    def test_botch(self):
+        mocker = Mock()
+        mocker.side_effect = [1, 1, 3, 4, 5]
+        with mock.patch("random.randint", mocker):
+            _, successes = dice(5)
+            self.assertEqual(successes, -2)
+
+    def test_failure_with_1s(self):
+        mocker = Mock()
+        mocker.side_effect = [1, 1, 7, 4, 5]
+        with mock.patch("random.randint", mocker):
+            _, successes = dice(5)
+            self.assertEqual(successes, 0)
+
+    def test_failure(self):
+        mocker = Mock()
+        mocker.side_effect = [4, 2, 3, 4, 5]
+        with mock.patch("random.randint", mocker):
+            _, successes = dice(5)
+            self.assertEqual(successes, 0)
+
+    def test_success(self):
+        mocker = Mock()
+        mocker.side_effect = [6, 7, 3, 4, 5]
+        with mock.patch("random.randint", mocker):
+            _, successes = dice(5)
+            self.assertEqual(successes, 2)
+
+    def test_specialty(self):
+        mocker = Mock()
+        mocker.side_effect = [10, 10, 3, 6, 5]
+        with mock.patch("random.randint", mocker):
+            _, successes = dice(5, specialty=True)
+            self.assertEqual(successes, 5)
+
+    def test_difficulty(self):
+        mocker = Mock()
+        mocker.side_effect = [4, 2, 3, 4, 5]
+        with mock.patch("random.randint", mocker):
+            _, successes = dice(5, difficulty=5)
+            self.assertEqual(successes, 1)

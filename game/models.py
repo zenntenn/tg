@@ -1,3 +1,4 @@
+from core.utils import dice
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -177,6 +178,18 @@ class Scene(models.Model):
         post = Post.objects.create(
             character=character, message=message, display_name=display, scene=self
         )
+        if message.startswith("/roll"):
+            # /roll <num_dice> difficulty <diff> <specialty>
+            tmp = message.split("/roll")[1]
+            parts = [x.strip() for x in tmp.split("difficulty")]
+            num_dice = int(parts[0])
+            if " " in parts[1]:
+                difficulty = int(parts[1].split(" ")[0])
+                specialty = True
+            else:
+                difficulty = int(parts[1])
+                specialty = False
+            post.roll(num_dice, difficulty=difficulty, specialty=specialty)
         return post
 
 
@@ -197,3 +210,11 @@ class Post(models.Model):
         if self.display_name:
             return self.display_name + ": " + self.message
         return self.character.name + ": " + self.message
+
+    def roll(self, number_of_dice, difficulty=6, specialty=False):
+        roll, success_count = dice(
+            number_of_dice, difficulty=difficulty, specialty=specialty
+        )
+        roll = ", ".join(map(str, roll))
+        self.message = f"{roll}: <b>{success_count}</b>"
+        self.save()
