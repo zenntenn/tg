@@ -1,0 +1,181 @@
+{% extends "characters/character/detail.html" %}
+{% block statistics %}
+    {% load dots %}
+    {% block name %}
+        <div class="row">
+            <div class="col-sm {{ object.get_heading }}">
+                <h1>{{ object.name }}</h1>
+            </div>
+        </div>
+    {% endblock name %}
+    {% block basics %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
+        </div>
+        <div class="row">
+            <div class="col-sm">Name</div>
+            <div class="col-sm">{{ object.name }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Player</div>
+            <div class="col-sm">{{ object.player }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">Concept</div>
+            <div class="col-sm">{{ object.concept }}</div>
+            <div class="col-sm"></div>
+        </div>
+    {% endblock basics %}
+    {% block attributes %}
+    {% endblock attributes %}
+    {% block abilities %}
+    {% endblock abilities %}
+    {% block advantages %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">
+                Advantages
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Willpower
+            </div>
+            <div class="col-sm dots">
+                {{ object.willpower|dots:10 }}
+            </div>
+        </div>
+    {% endblock advantages %}
+    {% block backgrounds %}
+    {% endblock backgrounds %}
+    {% block powers %}
+    {% endblock powers %}
+    {% block mfs %}
+    {% endblock mfs %}
+    {% block languages %}
+    {% endblock languages %}
+{% endblock statistics %}
+{% block flavor %}
+    {% block appearance %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">
+                Appearance
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Date of Birth
+            </div>
+            <div class="col-sm">
+                {{ object.date_of_birth }}
+            </div>
+            <div class="col-sm">
+                Apparent Age
+            </div>
+            <div class="col-sm">
+                {{ object.apparent_age }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Hair
+            </div>
+            <div class="col-sm">
+                {{ object.hair }}
+            </div>
+            <div class="col-sm">
+                Eyes
+            </div>
+            <div class="col-sm">
+                {{ object.eyes }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Ethnicity
+            </div>
+            <div class="col-sm">
+                {{ object.ethnicity }}
+            </div>
+            <div class="col-sm">
+                Nationality
+            </div>
+            <div class="col-sm">
+                {{ object.nationality }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Height
+            </div>
+            <div class="col-sm">
+                {{ object.height }}
+            </div>
+            <div class="col-sm">
+                Weight
+            </div>
+            <div class="col-sm">
+                {{ object.weight }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Age
+            </div>
+            <div class="col-sm">
+                {{ object.age }}
+            </div>
+            <div class="col-sm">
+                Sex
+            </div>
+            <div class="col-sm">
+                {{ object.sex }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Description
+            </div>
+            <div class="col-sm">
+                {{ object.description }}
+            </div>
+        </div>
+    {% endblock appearance %}
+    {% block history %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">
+                History
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Childhood
+            </div>
+            <div class="col-sm">
+                {{ object.childhood }}
+            </div>
+            <div class="col-sm">
+                History
+            </div>
+            <div class="col-sm">
+                {{ object.history }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Goals
+            </div>
+            <div class="col-sm">
+                {{ object.goals }}
+            </div>
+            <div class="col-sm">
+                Notes
+            </div>
+            <div class="col-sm">
+                {{ object.notes }}
+            </div>
+        </div>
+    {% endblock history %}
+    {% block advancement %}
+    {% endblock advancement %}
+{% endblock flavor %}
