@@ -1,5 +1,4 @@
 from django.test import TestCase
-
 from items.models.core import ItemModel, Weapon
 
 

@@ -1,6 +1,5 @@
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
-
 from items.models.core import ItemModel, Weapon
 
 

@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from items.models.core import ItemModel, Weapon
 
 

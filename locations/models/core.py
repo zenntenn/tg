@@ -1,6 +1,7 @@
-from django.db import models
-from core.models import Model
 from characters.models.core import CharacterModel
+from core.models import Model
+from django.db import models
+
 
 # Create your models here.
 class LocationModel(Model):
