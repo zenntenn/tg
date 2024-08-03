@@ -55,3 +55,11 @@ class Weapon(ItemModel):
 
     def get_update_url(self):
         return reverse("wod:items:human:update_weapon", args=[str(self.id)])
+
+
+class MeleeWeapon(Weapon):
+    type = "melee_weapon"
+
+    class Meta:
+        verbose_name = "Melee Weapon"
+        verbose_name_plural = "Melee Weapons"
