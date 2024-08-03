@@ -1,0 +1,11 @@
+{% extends "wod/items/human/weapon/detail.html" %}
+{% block ranged_details %}
+    <div class="row">
+        <div class="col-sm">Range</div>
+        <div class="col-sm">{{ object.range }}</div>
+        <div class="col-sm">Rate</div>
+        <div class="col-sm">{{ object.rate }}</div>
+        <div class="col-sm">Clip</div>
+        <div class="col-sm">{{ object.clip }}</div>
+    </div>
+{% endblock ranged_details %}
