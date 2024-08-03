@@ -62,3 +62,13 @@ class Model(PolymorphicModel):
     def toggle_display(self):
         self.display = not self.display
         return True
+
+
+class NewsItem(models.Model):
+    title = models.CharField(default="", max_length=100)
+    content = models.TextField(default="")
+    date = models.DateField()
+
+    class Meta:
+        verbose_name = "News Item"
+        verbose_name_plural = "News Items"
