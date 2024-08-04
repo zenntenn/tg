@@ -1,4 +1,4 @@
-from characters.models.core import Character, Human
+from characters.models.core import Archetype, Character, Human
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils.timezone import now
@@ -40,6 +40,8 @@ class TestHuman(TestCase):
     def setUp(self) -> None:
         self.user = User.objects.create_user(username="Test")
         self.character = Human.objects.create(name="", owner=self.user)
+        for i in range(10):
+            Archetype.objects.create(name=f"Archetype {i}")
 
     def test_add_willpower(self):
         self.assertEqual(self.character.willpower, 3)
@@ -107,6 +109,21 @@ class TestHuman(TestCase):
         self.assertEqual(self.character.current_health_levels, "ALLBBBB")
         self.character.add_aggravated()
         self.assertEqual(self.character.get_wound_penalty(), -1000)
+
+    def test_has_archetypes(self):
+        self.assertFalse(self.character.has_archetypes())
+        self.character.nature = Archetype.objects.first()
+        self.character.demeanor = Archetype.objects.first()
+        self.assertTrue(self.character.has_archetypes())
+
+    def test_set_archetypes(self):
+        self.assertFalse(self.character.has_archetypes())
+        self.assertTrue(
+            self.character.set_archetypes(
+                Archetype.objects.first(), Archetype.objects.first()
+            )
+        )
+        self.assertTrue(self.character.has_archetypes())
 
 
 class TestHumanDetailView(TestCase):
