@@ -115,3 +115,20 @@ class NewsItem(models.Model):
     class Meta:
         verbose_name = "News Item"
         verbose_name_plural = "News Items"
+
+
+class Language(models.Model):
+    """Class managing Language data"""
+
+    name = models.CharField(max_length=100)
+    frequency = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Language"
+        verbose_name_plural = "Languages"
+
+    def get_absolute_url(self):
+        return reverse("language", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return f"{self.name}"

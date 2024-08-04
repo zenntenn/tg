@@ -1,4 +1,4 @@
-from core.models import Book, BookReference, NewsItem
+from core.models import Book, BookReference, Language, NewsItem
 from django.contrib import admin
 
 # Register your models here.
@@ -13,3 +13,10 @@ class BookAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BookReference)
+
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    class Meta:
+        verbose_name = "Language"
+        verbose_name_plural = "Languages"
