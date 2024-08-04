@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}
+    {{ object.name|safe }}
+{% endblock title %}
+{% block content %}
+    {% csrf_token %}
+    <div class="centertext container">
+        {% block contents %}
+        {% endblock contents %}
+        {% block update %}
+        {% endblock update %}
+    </div>
+{% endblock content %}
