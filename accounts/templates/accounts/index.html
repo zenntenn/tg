@@ -26,5 +26,16 @@
                 <div class="col-sm border">{{ item.get_status_display }}</div>
             </div>
         {% endfor %}
+        <div class="row">
+            <h2 class="col-sm">My Locations</h2>
+        </div>
+        {% for loc in locations %}
+            <div class="row border">
+                <a class="col-sm border" href="{{ loc.get_absolute_url }}">{{ loc.name }}</a>
+                <div class="col-sm border">{{ loc.get_gameline }}</div>
+                <div class="col-sm border">{{ loc.type.title }}</div>
+                <div class="col-sm border">{{ loc.get_status_display }}</div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock content %}    
