@@ -16,6 +16,8 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 os.environ["MOZ_HEADLESS"] = "1"
 
 MAX_WAIT = 10
+
+
 # Create your tests here.
 class FunctionalTest(LiveServerTestCase):
     """Base case for Functional Tests"""
@@ -246,6 +248,16 @@ class TestModel(TestCase):
         self.assertTrue(self.model.display)
         self.assertTrue(self.model.toggle_display())
         self.assertFalse(self.model.display)
+
+    def test_has_source(self):
+        self.assertFalse(self.model.has_source())
+        self.model.add_source("Test Book", 1)
+        self.assertTrue(self.model.has_source())
+
+    def test_add_source(self):
+        self.assertFalse(self.model.has_source())
+        self.assertTrue(self.model.add_source("Test Book", 1))
+        self.assertTrue(self.model.has_source())
 
 
 class TestDots(TestCase):

@@ -1,5 +1,7 @@
+from core.models import Book
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import DetailView
 
 
 # Create your views here.
@@ -8,3 +10,8 @@ class HomeView(View):
 
     def get(self, request):
         return render(request, "core/index.html", context={})
+
+
+class BookDetailView(DetailView):
+    model = Book
+    template_name = "core/book/detail.html"
