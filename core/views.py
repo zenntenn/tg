@@ -1,4 +1,4 @@
-from core.models import Book, Language
+from core.models import Book, Language, NewsItem
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import DetailView
@@ -9,7 +9,9 @@ class HomeView(View):
     """This View controls the main landing page for the site"""
 
     def get(self, request):
-        return render(request, "core/index.html", context={})
+        context = {"user": request.user}
+        context["news"] = NewsItem.objects.order_by("-date")
+        return render(request, "core/index.html", context=context)
 
 
 class BookDetailView(DetailView):
