@@ -6,6 +6,45 @@ from django.utils.timezone import now
 
 
 # Create your models here.
+class ObjectType(models.Model):
+    name = models.CharField(max_length=100, default="")
+    type = models.CharField(
+        default="",
+        max_length=100,
+        choices=[
+            ("char", "Character"),
+            ("loc", "Location"),
+            ("obj", "Item"),
+        ],
+    )
+    gameline = models.CharField(
+        default="",
+        max_length=100,
+        choices=[
+            ("wod", "World of Darkness"),
+            ("vtm", "Vampire: the Masquerade"),
+            ("wta", "Werewolf: the Apocalypse"),
+            ("mta", "Mage: the Ascension"),
+            ("wto", "Wraith: the Oblivion"),
+            ("ctd", "Changeling: the Dreaming"),
+        ],
+    )
+
+    class Meta:
+        verbose_name = "Object Type"
+        verbose_name_plural = "Object Types"
+        ordering = ["type", "gameline", "name"]
+
+    def __str__(self):
+        return (
+            self.get_gameline_display()
+            + "/"
+            + self.get_type_display()
+            + "/"
+            + self.name
+        )
+
+
 class Chronicle(models.Model):
     name = models.CharField(max_length=100, default="")
     storytellers = models.ManyToManyField(User, blank=True)
@@ -26,6 +65,8 @@ class Chronicle(models.Model):
             ("wod_heading", "World of Darkness"),
         ],
     )
+
+    allowed_objects = models.ManyToManyField(ObjectType, blank=True)
 
     class Meta:
         verbose_name = "Chronicle"

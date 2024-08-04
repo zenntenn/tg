@@ -1,6 +1,6 @@
 from characters.models.core import CharacterModel
 from django.test import TestCase
-from game.models import Chronicle, Scene, Story
+from game.models import Chronicle, ObjectType, Scene, Story
 from locations.models.core import LocationModel
 
 
@@ -118,3 +118,9 @@ class TestSceneDetailView(TestCase):
     def test_scene_detail_view_template(self):
         response = self.client.get(f"/game/scene/{self.scene.id}")
         self.assertTemplateUsed(response, "game/scene/detail.html")
+
+
+class TestObjectType(TestCase):
+    def test_str(self):
+        x = ObjectType.objects.create(name="Test", type="loc", gameline="mta")
+        self.assertEqual(str(x), "Mage: the Ascension/Location/Test")
