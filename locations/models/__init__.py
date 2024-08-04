@@ -1,1 +1,1 @@
-from .core import LocationModel
+from .core import City, LocationModel
