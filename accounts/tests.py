@@ -1,5 +1,7 @@
+from characters.models.core import Human
 from django.contrib.auth.models import User
 from django.test import TestCase
+from game.models import Chronicle
 
 
 # Create your tests here.
@@ -28,7 +30,39 @@ class TestProfileView(TestCase):
         self.storyteller.profile.mta_st = True
         self.storyteller.profile.save()
 
+        chronicle = Chronicle.objects.create(name="Test Chronicle")
+        chronicle.storytellers.add(self.storyteller)
+        self.char1 = Human.objects.create(name="Test Character 1", owner=self.user1)
+        self.char2 = Human.objects.create(
+            name="Test Character 2", owner=self.user2, chronicle=chronicle
+        )
+        self.char3 = Human.objects.create(name="Test Character 3", owner=self.user1)
+        self.char4 = Human.objects.create(name="Test Character 4", owner=self.user2)
+        self.char5 = Human.objects.create(name="Test Character 5", owner=self.user1)
+        self.char6 = Human.objects.create(name="Test Character 6", owner=self.user2)
+
     def test_template_logged_in(self):
         self.client.login(username="Test User 1", password="testpass")
         response = self.client.get("/accounts/")
         self.assertTemplateUsed(response, "accounts/index.html")
+
+    def test_template_logged_out(self):
+        response = self.client.get("/accounts/", follow=True)
+        self.assertTemplateUsed(response, "registration/login.html")
+
+    def test_character_list(self):
+        self.client.login(username="Test User 1", password="testpass")
+        response = self.client.get("/accounts/")
+        self.assertTemplateUsed(response, "accounts/index.html")
+        # Check that character appears on user page
+        self.assertContains(response, "Test Character 1")
+        self.assertNotContains(response, "Test Character 2")
+        self.assertContains(response, f"/characters/{self.char1.id}/")
+
+        self.assertContains(response, "Test Character 3")
+        self.assertNotContains(response, "Test Character 4")
+        self.assertContains(response, f"/characters/{self.char3.id}/")
+
+        self.assertContains(response, "Test Character 5")
+        self.assertNotContains(response, "Test Character 6")
+        self.assertContains(response, f"/characters/{self.char5.id}/")
