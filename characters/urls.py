@@ -5,4 +5,9 @@ from django.urls import path
 app_name = "characters"
 urlpatterns = [
     path("<pk>/", views.GenericCharacterDetailView.as_view(), name="character"),
+    path(
+        "archetypes/<pk>/",
+        views.ArchetypeDetailView.as_view(),
+        name="archetype",
+    ),
 ]

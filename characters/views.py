@@ -1,4 +1,4 @@
-from characters.models.core import Character, Human
+from characters.models.core import Archetype, Character, Human
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
 
@@ -29,3 +29,8 @@ class GenericCharacterDetailView(View):
         char = Character.objects.get(pk=kwargs["pk"])
         if char.type in self.character_views:
             return self.character_views[char.type].as_view()(request, *args, **kwargs)
+
+
+class ArchetypeDetailView(DetailView):
+    model = Archetype
+    template_name = "characters/archetype/detail.html"

@@ -5,6 +5,20 @@ from django.urls import reverse
 
 
 # Create your models here.
+class Archetype(Model):
+    type = "archetype"
+
+    class Meta:
+        verbose_name = "Archetype"
+        verbose_name_plural = "Archetypes"
+
+    def get_absolute_url(self):
+        return reverse("characters:archetype", kwargs={"pk": self.pk})
+
+    def get_heading(self):
+        return "wod_heading"
+
+
 class CharacterModel(Model):
     npc = models.BooleanField(default=False)
 
@@ -47,6 +61,21 @@ class Character(CharacterModel):
 
 class Human(Character):
     type = "human"
+
+    nature = models.ForeignKey(
+        Archetype,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="nature_of",
+    )
+    demeanor = models.ForeignKey(
+        Archetype,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="demeanor_of",
+    )
 
     willpower = models.IntegerField(default=3)
 
@@ -146,3 +175,11 @@ class Human(Character):
         self.current_health_levels = "".join(
             sorted(self.current_health_levels, key=self.sort_damage)
         )
+
+    def has_archetypes(self):
+        return self.nature is not None and self.demeanor is not None
+
+    def set_archetypes(self, nature, demeanor):
+        self.nature = nature
+        self.demeanor = demeanor
+        return True

@@ -1,4 +1,4 @@
-from characters.models.core import Character, CharacterModel, Human
+from characters.models.core import Archetype, Character, CharacterModel, Human
 from django.contrib import admin
 
 # Register your models here.
@@ -13,3 +13,8 @@ class CharacterAdmin(admin.ModelAdmin):
 @admin.register(Human)
 class HumanCharacterAdmin(admin.ModelAdmin):
     list_display = ("name", "owner")
+
+
+@admin.register(Archetype)
+class ArchetypeAdmin(admin.ModelAdmin):
+    list_display = ("name",)
