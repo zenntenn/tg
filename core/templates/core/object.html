@@ -7,6 +7,11 @@
     {% csrf_token %}
     <div class="centertext container">
         {% block references %}
+            {% for reference in object.sources.all %}
+                <div class="row">
+                    <div class="col-sm">{{ reference|safe }}</div>
+                </div>
+            {% endfor %}
         {% endblock references %}
         {% block image %}
             {% if object.image %}
@@ -20,12 +25,5 @@
         {% endblock contents %}
         {% block update %}
         {% endblock update %}
-        {% block references %}
-            {% for reference in object.sources.all %}
-                <div class="row">
-                    <div class="col-sm">{{ reference|safe }}</div>
-                </div>
-            {% endfor %}
-        {% endblock references %}
     </div>
 {% endblock content %}

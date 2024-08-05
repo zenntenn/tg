@@ -132,3 +132,10 @@ class Language(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Number(models.Model):
+    value = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.value)

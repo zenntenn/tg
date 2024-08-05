@@ -10,4 +10,9 @@ urlpatterns = [
         views.ArchetypeDetailView.as_view(),
         name="archetype",
     ),
+    path(
+        "meritflaws/<pk>/",
+        views.MeritFlawDetailView.as_view(),
+        name="meritflaw",
+    ),
 ]
