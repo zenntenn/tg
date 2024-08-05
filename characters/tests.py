@@ -1,7 +1,15 @@
-from characters.models.core import Archetype, Character, Human
+from characters.models.core import (
+    Archetype,
+    Character,
+    Human,
+    MeritFlaw,
+    MeritFlawRating,
+)
+from core.models import Number
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils.timezone import now
+from game.models import ObjectType
 
 
 # Create your tests here.
@@ -42,6 +50,22 @@ class TestHuman(TestCase):
         self.character = Human.objects.create(name="", owner=self.user)
         for i in range(10):
             Archetype.objects.create(name=f"Archetype {i}")
+
+        for i in [1, 2, 3, 4, 5, 6]:
+            Number.objects.create(value=i)
+            Number.objects.create(value=-i)
+
+        human = ObjectType.objects.create(
+            name=self.character.type, type="char", gameline="wod"
+        )
+
+        for i in range(1, 6):
+            mf = MeritFlaw.objects.create(name=f"Merit {i}")
+            mf.allowed_types.add(human)
+            mf.add_rating(i)
+            mf = MeritFlaw.objects.create(name=f"Flaw {i}")
+            mf.allowed_types.add(human)
+            mf.add_rating(-i)
 
     def test_add_willpower(self):
         self.assertEqual(self.character.willpower, 3)
@@ -124,6 +148,79 @@ class TestHuman(TestCase):
             )
         )
         self.assertTrue(self.character.has_archetypes())
+
+    def test_add_mf(self):
+        m3 = MeritFlaw.objects.get(name="Merit 3")
+        self.assertEqual(self.character.merits_and_flaws.count(), 0)
+        self.assertTrue(self.character.add_mf(m3, 3))
+        self.assertEqual(self.character.merits_and_flaws.count(), 1)
+        self.assertIn(m3, self.character.merits_and_flaws.all())
+
+    def test_has_max_flaws(self):
+        self.assertFalse(self.character.has_max_flaws())
+        self.character.add_mf(MeritFlaw.objects.get(name="Flaw 3"), -3)
+        self.assertFalse(self.character.has_max_flaws())
+        self.character.add_mf(MeritFlaw.objects.get(name="Flaw 4"), -4)
+        self.assertTrue(self.character.has_max_flaws())
+
+    def test_filter_mfs(self):
+        self.assertEqual(len(self.character.filter_mfs()), 10)
+        self.character.add_mf(MeritFlaw.objects.get(name="Merit 1"), 1)
+        self.assertEqual(len(self.character.filter_mfs()), 9)
+        self.character.add_mf(MeritFlaw.objects.get(name="Merit 2"), 2)
+        self.assertEqual(len(self.character.filter_mfs()), 8)
+        self.character.add_mf(MeritFlaw.objects.get(name="Flaw 2"), -2)
+        self.assertEqual(len(self.character.filter_mfs()), 7)
+        self.character.add_mf(MeritFlaw.objects.get(name="Flaw 5"), -5)
+        self.assertEqual(len(self.character.filter_mfs()), 3)
+        m = MeritFlaw.objects.create(name="Test Merit")
+        m.add_ratings([1, 2, 3])
+        self.assertNotIn(m, self.character.filter_mfs())
+        m.allowed_types.add(ObjectType.objects.get(name="human"))
+        self.assertIn(m, self.character.filter_mfs())
+
+    def test_total_merits(self):
+        self.assertEqual(self.character.total_merits(), 0)
+        self.character.add_mf(MeritFlaw.objects.get(name="Merit 3"), 3)
+        self.assertEqual(self.character.total_merits(), 3)
+        self.character.add_mf(MeritFlaw.objects.get(name="Flaw 3"), -3)
+        self.assertEqual(self.character.total_merits(), 3)
+
+    def test_total_flaws(self):
+        self.assertEqual(self.character.total_flaws(), 0)
+        self.character.add_mf(MeritFlaw.objects.get(name="Flaw 3"), -3)
+        self.assertEqual(self.character.total_flaws(), -3)
+        self.character.add_mf(MeritFlaw.objects.get(name="Merit 3"), 3)
+        self.assertEqual(self.character.total_flaws(), -3)
+
+    def test_mf_rating(self):
+        mf = MeritFlaw.objects.create(name="Test Merit Flaw")
+        mf.add_ratings([-2, -1])
+        MeritFlawRating.objects.create(character=self.character, mf=mf, rating=-2)
+        self.assertEqual(self.character.mf_rating(mf), -2)
+
+
+class TestMeritFlaw(TestCase):
+    def setUp(self):
+        human = ObjectType.objects.create(name="Human", type="char", gameline="wod")
+        garou = ObjectType.objects.create(name="Garou", type="char", gameline="wta")
+        changeling = ObjectType.objects.create(
+            name="Changeling", type="char", gameline="ctd"
+        )
+        self.merit_flaw = MeritFlaw.objects.create(name="Test Merit")
+        self.merit_flaw.add_ratings([1, 2, 3])
+        self.merit_flaw.allowed_types.add(human)
+        self.merit_flaw.allowed_types.add(garou)
+        self.merit_flaw.allowed_types.add(changeling)
+
+    def test_add_rating(self):
+        self.merit_flaw.add_rating(4)
+        self.assertEqual(self.merit_flaw.max_rating, 4)
+
+    def test_get_ratings(self):
+        self.assertEqual(self.merit_flaw.get_ratings(), [1, 2, 3])
+        self.merit_flaw.add_rating(4)
+        self.assertEqual(self.merit_flaw.get_ratings(), [1, 2, 3, 4])
 
 
 class TestHumanDetailView(TestCase):

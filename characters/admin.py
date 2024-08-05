@@ -1,4 +1,11 @@
-from characters.models.core import Archetype, Character, CharacterModel, Human
+from characters.models.core import (
+    Archetype,
+    Character,
+    CharacterModel,
+    Human,
+    MeritFlaw,
+    MeritFlawRating,
+)
 from django.contrib import admin
 
 # Register your models here.
@@ -18,3 +25,11 @@ class HumanCharacterAdmin(admin.ModelAdmin):
 @admin.register(Archetype)
 class ArchetypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
+
+
+@admin.register(MeritFlaw)
+class MeritFlawAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
+admin.site.register(MeritFlawRating)
