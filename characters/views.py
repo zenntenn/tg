@@ -5,6 +5,7 @@ from characters.models.core import (
     Group,
     Human,
     MeritFlaw,
+    Specialty,
 )
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
@@ -77,3 +78,8 @@ class GenericGroupDetailView(View):
         group = Group.objects.get(pk=kwargs["pk"])
         if group.type in self.group_views:
             return self.group_views[group.type].as_view()(request, *args, **kwargs)
+
+
+class SpecialtyDetailView(DetailView):
+    model = Specialty
+    template_name = "characters/specialty/detail.html"
