@@ -21,4 +21,9 @@ urlpatterns = [
         name="derangement",
     ),
     path("groups/<pk>/", views.GenericGroupDetailView.as_view(), name="group"),
+    path(
+        "specialties/<pk>/",
+        views.SpecialtyDetailView.as_view(),
+        name="specialty",
+    ),
 ]

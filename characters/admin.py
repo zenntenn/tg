@@ -7,6 +7,7 @@ from characters.models.core import (
     Human,
     MeritFlaw,
     MeritFlawRating,
+    Specialty,
 )
 from django.contrib import admin
 
@@ -45,3 +46,8 @@ class DerangementAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ("name", "leader", "chronicle")
+
+
+@admin.register(Specialty)
+class SpecialtyAdmin(admin.ModelAdmin):
+    list_display = ("name", "stat")

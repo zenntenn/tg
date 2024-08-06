@@ -121,6 +121,42 @@ class Character(CharacterModel):
         return reverse("characters:character", kwargs={"pk": self.pk})
 
 
+class Derangement(Model):
+    type = "derangement"
+
+    class Meta:
+        verbose_name = "Derangement"
+        verbose_name_plural = "Derangements"
+
+    def get_absolute_url(self):
+        return reverse("characters:derangement", args=[str(self.id)])
+
+    def get_heading(self):
+        return "wod_heading"
+
+
+class Specialty(Model):
+    type = "specialty"
+
+    stat = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Specialty"
+        verbose_name_plural = "Specialties"
+
+    def display_stat(self):
+        return self.stat.replace("_", " ").title()
+
+    def get_absolute_url(self):
+        return reverse("characters:specialty", args=[str(self.id)])
+
+    def __str__(self):
+        return f"{self.name} ({self.display_stat()})"
+
+    def get_heading(self):
+        return "wod_heading"
+
+
 class Human(Character):
     type = "human"
 
@@ -138,6 +174,8 @@ class Human(Character):
         null=True,
         related_name="demeanor_of",
     )
+
+    specialties = models.ManyToManyField(Specialty, blank=True)
 
     willpower = models.IntegerField(default=3)
     derangements = models.ManyToManyField("Derangement", blank=True)
@@ -319,19 +357,18 @@ class Human(Character):
         self.derangements.add(derangement)
         return True
 
+    def get_specialty(self, stat):
+        spec = self.specialties.filter(stat=stat).first()
+        if spec is None:
+            return None
+        return spec.name
 
-class Derangement(Model):
-    type = "derangement"
-
-    class Meta:
-        verbose_name = "Derangement"
-        verbose_name_plural = "Derangements"
-
-    def get_absolute_url(self):
-        return reverse("characters:derangement", args=[str(self.id)])
-
-    def get_heading(self):
-        return "wod_heading"
+    def filter_specialties(self, stat=None):
+        if stat is None:
+            return Specialty.objects.all().exclude(pk__in=self.specialties.all())
+        return Specialty.objects.filter(stat=stat).exclude(
+            pk__in=self.specialties.all()
+        )
 
 
 class Group(Model):
