@@ -332,3 +332,23 @@ class Derangement(Model):
 
     def get_heading(self):
         return "wod_heading"
+
+
+class Group(Model):
+    type = "group"
+
+    members = models.ManyToManyField(Human, blank=True)
+    leader = models.ForeignKey(
+        Human,
+        blank=True,
+        related_name="leads_group",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = "Group"
+        verbose_name_plural = "Groups"
+
+    def get_absolute_url(self):
+        return reverse("wod:characters:group", kwargs={"pk": self.pk})

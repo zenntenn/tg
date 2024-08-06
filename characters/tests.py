@@ -2,6 +2,7 @@ from characters.models.core import (
     Archetype,
     Character,
     Derangement,
+    Group,
     Human,
     MeritFlaw,
     MeritFlawRating,
@@ -256,3 +257,27 @@ class TestGenericCharacterDetailViews(TestCase):
         self.assertTemplateUsed(response, "characters/character/detail.html")
         response = self.client.get(f"/characters/{self.human.id}/")
         self.assertTemplateUsed(response, "characters/human/detail.html")
+
+
+class TestGroupDetailView(TestCase):
+    def setUp(self) -> None:
+        self.player = User.objects.create_user(username="User1", password="12345")
+        self.group = Group.objects.create(name="Test Group")
+
+    def test_group_detail_view_status_code(self):
+        response = self.client.get(f"/characters/groups/{self.group.id}/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_group_detail_view_templates(self):
+        response = self.client.get(f"/characters/groups/{self.group.id}/")
+        self.assertTemplateUsed(response, "characters/group/detail.html")
+
+
+class TestGenericGroupDetailView(TestCase):
+    def setUp(self) -> None:
+        self.player = User.objects.create_user(username="Test")
+        self.group = Group.objects.create(name="Group Test")
+
+    def test_generic_group_detail_view_templates(self):
+        response = self.client.get(f"/characters/groups/{self.group.id}/")
+        self.assertTemplateUsed(response, "characters/group/detail.html")

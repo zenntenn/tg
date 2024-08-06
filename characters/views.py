@@ -1,4 +1,11 @@
-from characters.models.core import Archetype, Character, Derangement, Human, MeritFlaw
+from characters.models.core import (
+    Archetype,
+    Character,
+    Derangement,
+    Group,
+    Human,
+    MeritFlaw,
+)
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
 
@@ -54,3 +61,19 @@ class MeritFlawDetailView(View):
 class DerangementDetailView(DetailView):
     model = Derangement
     template_name = "characters/derangement/detail.html"
+
+
+class GroupDetailView(DetailView):
+    model = Group
+    template_name = "characters/group/detail.html"
+
+
+class GenericGroupDetailView(View):
+    group_views = {
+        "group": GroupDetailView,
+    }
+
+    def get(self, request, *args, **kwargs):
+        group = Group.objects.get(pk=kwargs["pk"])
+        if group.type in self.group_views:
+            return self.group_views[group.type].as_view()(request, *args, **kwargs)

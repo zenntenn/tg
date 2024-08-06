@@ -3,6 +3,7 @@ from characters.models.core import (
     Character,
     CharacterModel,
     Derangement,
+    Group,
     Human,
     MeritFlaw,
     MeritFlawRating,
@@ -39,3 +40,8 @@ admin.site.register(MeritFlawRating)
 @admin.register(Derangement)
 class DerangementAdmin(admin.ModelAdmin):
     list_display = ("name",)
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ("name", "leader", "chronicle")
