@@ -139,3 +139,14 @@ class Number(models.Model):
 
     def __str__(self):
         return str(self.value)
+
+
+class Noun(models.Model):
+    name = models.TextField(default="")
+
+    class Meta:
+        verbose_name = "Noun"
+        verbose_name_plural = "Nouns"
+
+    def __str__(self):
+        return self.name
