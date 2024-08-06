@@ -9,6 +9,29 @@ from polymorphic.models import PolymorphicModel
 class Book(models.Model):
     name = models.TextField(default="")
     url = models.CharField(max_length=200, null=True, blank=True)
+    edition = models.CharField(
+        max_length=3,
+        choices=[
+            ("1e", "1st Edition"),
+            ("2e", "2nd Edition"),
+            ("Rev", "Revised Edition"),
+            ("20th", "20th Anniversary Edition"),
+        ],
+        default="Un",
+    )
+    gameline = models.CharField(
+        max_length=3,
+        choices=zip(
+            ("wod", "World of Darkness"),
+            ("vtm", "Vampire: the Masquerade"),
+            ("wta", "Werewolf: the Apocalypse"),
+            ("mta", "Mage: the Ascension"),
+            ("wto", "Wraith: the Oblivion"),
+            ("ctd", "Changeling: the Dreaming"),
+        ),
+        default="Un",
+    )
+    storytellers_vault = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Book"
