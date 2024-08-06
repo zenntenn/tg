@@ -2,6 +2,7 @@ from characters.models.core import (
     Archetype,
     Character,
     CharacterModel,
+    Derangement,
     Human,
     MeritFlaw,
     MeritFlawRating,
@@ -33,3 +34,8 @@ class MeritFlawAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MeritFlawRating)
+
+
+@admin.register(Derangement)
+class DerangementAdmin(admin.ModelAdmin):
+    list_display = ("name",)
