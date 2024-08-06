@@ -1,6 +1,7 @@
 from characters.models.core import (
     Archetype,
     Character,
+    Derangement,
     Human,
     MeritFlaw,
     MeritFlawRating,
@@ -198,6 +199,11 @@ class TestHuman(TestCase):
         mf.add_ratings([-2, -1])
         MeritFlawRating.objects.create(character=self.character, mf=mf, rating=-2)
         self.assertEqual(self.character.mf_rating(mf), -2)
+
+    def test_add_derangement(self):
+        d = Derangement.objects.create(name="Test Derangement")
+        self.assertTrue(self.character.add_derangement(d))
+        self.assertFalse(self.character.add_derangement(d))
 
 
 class TestMeritFlaw(TestCase):

@@ -1,4 +1,4 @@
-from characters.models.core import Archetype, Character, Human, MeritFlaw
+from characters.models.core import Archetype, Character, Derangement, Human, MeritFlaw
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, View
 
@@ -49,3 +49,8 @@ class MeritFlawDetailView(View):
         mf_ratings.sort()
         context["ratings"] = ", ".join([str(x) for x in mf_ratings])
         return context
+
+
+class DerangementDetailView(DetailView):
+    model = Derangement
+    template_name = "characters/derangement/detail.html"

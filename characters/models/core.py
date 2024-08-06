@@ -140,6 +140,7 @@ class Human(Character):
     )
 
     willpower = models.IntegerField(default=3)
+    derangements = models.ManyToManyField("Derangement", blank=True)
 
     age = models.IntegerField(blank=True, null=True)
     apparent_age = models.IntegerField(blank=True, null=True)
@@ -311,3 +312,23 @@ class Human(Character):
             for x in MeritFlawRating.objects.filter(character=self)
             if x.rating > 0
         )
+
+    def add_derangement(self, derangement):
+        if derangement in self.derangements.all():
+            return False
+        self.derangements.add(derangement)
+        return True
+
+
+class Derangement(Model):
+    type = "derangement"
+
+    class Meta:
+        verbose_name = "Derangement"
+        verbose_name_plural = "Derangements"
+
+    def get_absolute_url(self):
+        return reverse("characters:derangement", args=[str(self.id)])
+
+    def get_heading(self):
+        return "wod_heading"

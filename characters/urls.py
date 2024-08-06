@@ -15,4 +15,9 @@ urlpatterns = [
         views.MeritFlawDetailView.as_view(),
         name="meritflaw",
     ),
+    path(
+        "derangement/<pk>/",
+        views.DerangementDetailView.as_view(),
+        name="derangement",
+    ),
 ]
