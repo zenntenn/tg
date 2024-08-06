@@ -1,0 +1,31 @@
+{% extends "core/form.html" %}
+{% block contents %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Ratings</div>
+        <div class="col-sm">{{ form.ratings }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Allowed Human</div>
+        <div class="col-sm">{{ form.human }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Allowed Garou</div>
+        <div class="col-sm">{{ form.garou }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Allowed Mage</div>
+        <div class="col-sm">{{ form.mage }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Allowed Kinfolk</div>
+        <div class="col-sm">{{ form.kinfolk }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+{% endblock contents %}

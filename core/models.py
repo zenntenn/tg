@@ -10,7 +10,7 @@ class Book(models.Model):
     name = models.TextField(default="")
     url = models.CharField(max_length=200, null=True, blank=True)
     edition = models.CharField(
-        max_length=3,
+        max_length=4,
         choices=[
             ("1e", "1st Edition"),
             ("2e", "2nd Edition"),
@@ -21,14 +21,14 @@ class Book(models.Model):
     )
     gameline = models.CharField(
         max_length=3,
-        choices=zip(
+        choices=[
             ("wod", "World of Darkness"),
             ("vtm", "Vampire: the Masquerade"),
             ("wta", "Werewolf: the Apocalypse"),
             ("mta", "Mage: the Ascension"),
             ("wto", "Wraith: the Oblivion"),
             ("ctd", "Changeling: the Dreaming"),
-        ),
+        ],
         default="Un",
     )
     storytellers_vault = models.BooleanField(default=False)

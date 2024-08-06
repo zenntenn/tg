@@ -1,0 +1,27 @@
+{% extends "wod/locations/human/location/form.html" %}
+{% block other %}
+    <div class="row">
+        <div class="col-sm">Population</div>
+        <div class="col-sm">{{ form.population }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Mood</div>
+        <div class="col-sm">{{ form.mood }}</div>
+        <div class="col-sm">Theme</div>
+        <div class="col-sm">{{ form.theme }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Media</div>
+        <div class="col-sm">{{ form.media }}</div>
+        <div class="col-sm">Politicians</div>
+        <div class="col-sm">{{ form.politicians }}</div>
+    </div>
+{% endblock other %}
+{% block post_description %}
+    <div class="row">
+        <h2 class="col-sm">Characters</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.characters }}</div>
+    </div>
+{% endblock post_description %}

@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.views.generic import DetailView, View
+from django.views.generic import CreateView, DetailView, UpdateView, View
 from items.models.core import (
     ItemModel,
     Material,
@@ -14,7 +14,19 @@ from items.models.core import (
 # Create your views here.
 class ItemDetailView(DetailView):
     model = ItemModel
-    template_name = "items/detail.html"
+    template_name = "items/item/detail.html"
+
+
+class ItemCreateView(CreateView):
+    model = ItemModel
+    fields = "__all__"
+    template_name = "items/item/form.html"
+
+
+class ItemUpdateView(UpdateView):
+    model = ItemModel
+    fields = "__all__"
+    template_name = "items/item/form.html"
 
 
 class WeaponDetailView(DetailView):
@@ -22,9 +34,33 @@ class WeaponDetailView(DetailView):
     template_name = "items/weapon/detail.html"
 
 
+class WeaponCreateView(CreateView):
+    model = Weapon
+    fields = "__all__"
+    template_name = "items/weapon/form.html"
+
+
+class WeaponUpdateView(UpdateView):
+    model = Weapon
+    fields = "__all__"
+    template_name = "items/weapon/form.html"
+
+
 class MeleeWeaponDetailView(DetailView):
     model = MeleeWeapon
     template_name = "items/meleeweapon/detail.html"
+
+
+class MeleeWeaponCreateView(CreateView):
+    model = MeleeWeapon
+    fields = "__all__"
+    template_name = "items/meleeweapon/form.html"
+
+
+class MeleeWeaponUpdateView(UpdateView):
+    model = MeleeWeapon
+    fields = "__all__"
+    template_name = "items/meleeweapon/form.html"
 
 
 class ThrownWeaponDetailView(DetailView):
@@ -32,9 +68,33 @@ class ThrownWeaponDetailView(DetailView):
     template_name = "items/thrownweapon/detail.html"
 
 
+class ThrownWeaponCreateView(CreateView):
+    model = ThrownWeapon
+    fields = "__all__"
+    template_name = "items/thrownweapon/form.html"
+
+
+class ThrownWeaponUpdateView(UpdateView):
+    model = ThrownWeapon
+    fields = "__all__"
+    template_name = "items/thrownweapon/form.html"
+
+
 class RangedWeaponDetailView(DetailView):
     model = RangedWeapon
     template_name = "items/rangedweapon/detail.html"
+
+
+class RangedWeaponCreateView(CreateView):
+    model = RangedWeapon
+    fields = "__all__"
+    template_name = "items/rangedweapon/form.html"
+
+
+class RangedWeaponUpdateView(UpdateView):
+    model = RangedWeapon
+    fields = "__all__"
+    template_name = "items/rangedweapon/form.html"
 
 
 class GenericItemDetailView(View):

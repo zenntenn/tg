@@ -27,7 +27,7 @@ class TestLocationDetailView(TestCase):
 
     def test_location_detail_view_templates(self):
         response = self.client.get(f"/locations/{self.location.id}/")
-        self.assertTemplateUsed(response, "locations/detail.html")
+        self.assertTemplateUsed(response, "locations/location/detail.html")
 
 
 class TestCity(TestCase):

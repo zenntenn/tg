@@ -8,7 +8,7 @@ from characters.models.core import (
     Specialty,
 )
 from django.shortcuts import redirect, render
-from django.views.generic import DetailView, View
+from django.views.generic import CreateView, DetailView, UpdateView, View
 
 
 # Create your views here.
@@ -17,9 +17,33 @@ class CharacterDetailView(DetailView):
     template_name = "characters/character/detail.html"
 
 
+class CharacterCreateView(CreateView):
+    model = Character
+    fields = "__all__"
+    template_name = "wod/characters/human/character/form.html"
+
+
+class CharacterUpdateView(UpdateView):
+    model = Character
+    fields = "__all__"
+    template_name = "wod/characters/human/character/form.html"
+
+
 class HumanDetailView(DetailView):
     model = Human
     template_name = "characters/human/detail.html"
+
+
+class HumanCreateView(CreateView):
+    model = Human
+    fields = "__all__"
+    template_name = "wod/characters/human/human/form.html"
+
+
+class HumanUpdateView(UpdateView):
+    model = Human
+    fields = "__all__"
+    template_name = "wod/characters/human/human/form.html"
 
 
 class GenericCharacterDetailView(View):
@@ -44,6 +68,18 @@ class ArchetypeDetailView(DetailView):
     template_name = "characters/archetype/detail.html"
 
 
+class ArchetypeCreateView(CreateView):
+    model = Archetype
+    fields = "__all__"
+    template_name = "wod/characters/human/archetype/form.html"
+
+
+class ArchetypeUpdateView(UpdateView):
+    model = Archetype
+    fields = ["name", "description"]
+    template_name = "wod/characters/human/archetype/form.html"
+
+
 class MeritFlawDetailView(View):
     def get(self, request, *args, **kwargs):
         mf = MeritFlaw.objects.get(pk=kwargs["pk"])
@@ -59,14 +95,50 @@ class MeritFlawDetailView(View):
         return context
 
 
+class MeritFlawCreateView(CreateView):
+    model = MeritFlaw
+    fields = "__all__"
+    template_name = "wod/characters/human/meritflaw/form.html"
+
+
+class MeritFlawUpdateView(UpdateView):
+    model = MeritFlaw
+    fields = ["name", "ratings", "human", "garou", "kinfolk", "mage", "description"]
+    template_name = "wod/characters/human/meritflaw/form.html"
+
+
 class DerangementDetailView(DetailView):
     model = Derangement
     template_name = "characters/derangement/detail.html"
 
 
+class DerangementCreateView(CreateView):
+    model = Derangement
+    fields = "__all__"
+    template_name = "wod/characters/human/derangement/form.html"
+
+
+class DerangementUpdateView(UpdateView):
+    model = Derangement
+    fields = "__all__"
+    template_name = "wod/characters/human/derangement/form.html"
+
+
 class GroupDetailView(DetailView):
     model = Group
     template_name = "characters/group/detail.html"
+
+
+class GroupCreateView(CreateView):
+    model = Group
+    fields = "__all__"
+    template_name = "wod/characters/human/group/form.html"
+
+
+class GroupUpdateView(UpdateView):
+    model = Group
+    fields = "__all__"
+    template_name = "wod/characters/human/group/form.html"
 
 
 class GenericGroupDetailView(View):
@@ -83,3 +155,15 @@ class GenericGroupDetailView(View):
 class SpecialtyDetailView(DetailView):
     model = Specialty
     template_name = "characters/specialty/detail.html"
+
+
+class SpecialtyCreateView(CreateView):
+    model = Specialty
+    fields = "__all__"
+    template_name = "wod/characters/human/specialty/form.html"
+
+
+class SpecialtyUpdateView(UpdateView):
+    model = Specialty
+    fields = "__all__"
+    template_name = "wod/characters/human/specialty/form.html"

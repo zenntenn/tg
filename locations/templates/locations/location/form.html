@@ -1,0 +1,40 @@
+{% extends "core/form.html" %}
+{% block contents %}
+    {% block name %}
+        <div class="row">
+            <h2 class="col-sm">{{ form.name }}</h2>
+        </div>
+    {% endblock name %}
+    {% block parent %}
+        <div class="row">
+            <div class="col-sm">Parent</div>
+            <div class="col-sm">{{ form.parent }}</div>
+        </div>
+    {% endblock parent %}
+    {% block gauntlets %}
+        <div class="row">
+            <div class="col-sm">Gauntlet</div>
+            <div class="col-sm">{{ form.gauntlet }}</div>
+            <div class="col-sm">Shroud</div>
+            <div class="col-sm">{{ form.shroud }}</div>
+            <div class="col-sm">Dimension Barrier</div>
+            <div class="col-sm">{{ form.dimension_barrier }}</div>
+        </div>
+    {% endblock gauntlets %}
+    {% block reality_zone %}
+        <div class="row">
+            <div class="col-sm">Reality Zone</div>
+            <div class="col-sm">{{ form.reality_zone }}</div>
+        </div>
+    {% endblock reality_zone %}
+    {% block other %}
+    {% endblock other %}
+    {% block description %}
+        <div class="row">
+            <div class="col-sm">Description</div>
+            <div class="col-sm">{{ form.description }}</div>
+        </div>
+    {% endblock description %}
+    {% block post_description %}
+    {% endblock post_description %}
+{% endblock contents %}
