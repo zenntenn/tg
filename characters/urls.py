@@ -20,4 +20,5 @@ urlpatterns = [
         views.DerangementDetailView.as_view(),
         name="derangement",
     ),
+    path("groups/<pk>/", views.GenericGroupDetailView.as_view(), name="group"),
 ]
