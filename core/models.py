@@ -150,3 +150,14 @@ class Noun(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Adjective(models.Model):
+    name = models.TextField(default="")
+
+    class Meta:
+        verbose_name = "Adjective"
+        verbose_name_plural = "Adjectives"
+
+    def __str__(self):
+        return self.name
