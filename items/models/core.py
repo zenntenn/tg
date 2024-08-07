@@ -24,6 +24,9 @@ class ItemModel(Model):
     def get_absolute_url(self):
         return reverse("items:item", args=[str(self.id)])
 
+    def get_update_url(self):
+        return reverse("items:update_item", args=[str(self.id)])
+
     def get_heading(self):
         return "wod_heading"
 
@@ -64,6 +67,9 @@ class MeleeWeapon(Weapon):
         verbose_name = "Melee Weapon"
         verbose_name_plural = "Melee Weapons"
 
+    def get_update_url(self):
+        return reverse("items:update_meleeweapon", args=[str(self.id)])
+
 
 class ThrownWeapon(Weapon):
     type = "thrown_weapon"
@@ -71,6 +77,9 @@ class ThrownWeapon(Weapon):
     class Meta:
         verbose_name = "Thrown Weapon"
         verbose_name_plural = "Thrown Weapons"
+
+    def get_update_url(self):
+        return reverse("items:update_thrownweapon", args=[str(self.id)])
 
 
 class RangedWeapon(Weapon):
@@ -83,6 +92,9 @@ class RangedWeapon(Weapon):
     class Meta:
         verbose_name = "Ranged Weapon"
         verbose_name_plural = "Ranged Weapons"
+
+    def get_update_url(self):
+        return reverse("items:update_rangedweapon", args=[str(self.id)])
 
 
 class Medium(models.Model):
@@ -99,7 +111,10 @@ class Medium(models.Model):
         verbose_name_plural = "Media"
 
     def get_absolute_url(self):
-        return reverse("medium", kwargs={"pk": self.pk})
+        return reverse("items:medium", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("items:update_medium", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.name}"
@@ -116,7 +131,10 @@ class Material(models.Model):
         verbose_name_plural = "Materials"
 
     def get_absolute_url(self):
-        return reverse("material", kwargs={"pk": self.pk})
+        return reverse("items:material", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("items:update_material", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.name}"
