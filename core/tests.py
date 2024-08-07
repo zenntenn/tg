@@ -5,10 +5,13 @@ from unittest import mock
 from unittest.mock import Mock
 
 from characters.models.core import CharacterModel
+from core.models import Language, NewsItem
 from core.templatetags.dots import dots
 from core.utils import dice
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase, TestCase
+from django.urls import reverse
+from django.utils.timezone import now
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
@@ -322,3 +325,137 @@ class TestDice(TestCase):
         with mock.patch("random.randint", mocker):
             _, successes = dice(5, difficulty=5)
             self.assertEqual(successes, 1)
+
+
+class TestNewsItemDetailView(TestCase):
+    def setUp(self) -> None:
+        self.news = NewsItem.objects.create(name="Test Location")
+        self.url = self.news.get_absolute_url()
+
+    def test_newsitem_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_newsitem_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/newsitem/detail.html")
+
+
+class TestNewsItemCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "title": "Test News",
+            "content": "News Test Content.",
+            "date": now(),
+        }
+        self.url = reverse("create_newsitem")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/newsitem/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(NewsItem.objects.count(), 1)
+        self.assertEqual(NewsItem.objects.first().name, "Test News")
+
+
+class TestNewsItemUpdateView(TestCase):
+    def setUp(self):
+        self.newsitem = NewsItem.objects.create(
+            title="Test Title",
+            content="Test Content",
+            date=now(),
+        )
+        self.valid_data = {
+            "title": "Test News 2",
+            "content": "News Test Content 2.",
+            "date": now(),
+        }
+        self.url = self.newsitem.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/newsitem/form.html")
+
+    def test_update_view_successful_post(self):
+        self.assertEqual(self.newsitem.title, 10000)
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.location.refresh_from_db()
+        self.assertEqual(self.newsitem.title, "Test News 2")
+        self.assertEqual(self.newsitem.content, "News Test Content 2.")
+
+
+class TestLanguageDetailView(TestCase):
+    def setUp(self) -> None:
+        self.language = Language.objects.create(name="Test Language")
+        self.url = self.language.get_absolute_url()
+
+    def test_location_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_location_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/language/detail.html")
+
+
+class TestLanguageCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test Language",
+            "frequency": 1,
+        }
+        self.url = reverse("create_language")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/language/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Language.objects.count(), 1)
+        self.assertEqual(Language.objects.first().name, "Test Language")
+
+
+class TestLanguageUpdateView(TestCase):
+    def setUp(self):
+        self.language = Language.objects.create(
+            name="Languge",
+            frequency=2,
+        )
+        self.valid_data = {
+            "name": "Test Language",
+            "frequency": 1,
+        }
+        self.url = self.language.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "core/language/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.language.refresh_from_db()
+        self.assertEqual(self.language.name, "Test Language")
+        self.assertEqual(self.language.frequency, 1)

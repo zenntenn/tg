@@ -6,10 +6,12 @@ from characters.models.core import (
     Human,
     MeritFlaw,
     MeritFlawRating,
+    Specialty,
 )
 from core.models import Number
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
 from django.utils.timezone import now
 from game.models import ObjectType
 
@@ -234,14 +236,61 @@ class TestHumanDetailView(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="Test")
         self.human = Human.objects.create(name="Test Human", owner=self.player)
+        self.url = self.human.get_absolute_url()
 
     def test_human_detail_view_status_code(self):
-        response = self.client.get(f"/characters/{self.human.id}/")
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
     def test_mage_detail_view_templates(self):
-        response = self.client.get(f"/characters/{self.human.id}/")
+        response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/human/detail.html")
+
+
+class TestHumanCreateView(TestCase):
+    def setUp(self):
+        self.player = User.objects.create_user(username="Test")
+        self.valid_data = {"name": "Test Human", "owner": self.player}
+        self.url = reverse("characters:create_human")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/human/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Human.objects.count(), 1)
+        self.assertEqual(Human.objects.first().name, "Test Human")
+
+
+class TestHumanUpdateView(TestCase):
+    def setUp(self):
+        self.player = User.objects.create_user(username="Test")
+        self.human = Human.objects.create(
+            name="Test Human",
+            owner=self.player,
+        )
+        self.valid_data = {"name": "Test Human Update", "owner": self.player}
+        self.url = self.human.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/human/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.human.refresh_from_db()
+        self.assertEqual(self.human.name, "Test Human Updated")
 
 
 class TestGenericCharacterDetailViews(TestCase):
@@ -263,14 +312,61 @@ class TestGroupDetailView(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="User1", password="12345")
         self.group = Group.objects.create(name="Test Group")
+        self.url = self.group.get_absolute_url()
 
     def test_group_detail_view_status_code(self):
-        response = self.client.get(f"/characters/groups/{self.group.id}/")
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
     def test_group_detail_view_templates(self):
-        response = self.client.get(f"/characters/groups/{self.group.id}/")
+        response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/group/detail.html")
+
+
+class TestGroupCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test Group",
+        }
+        self.url = reverse("characters:create_group")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/group/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Group.objects.count(), 1)
+        self.assertEqual(Group.objects.first().name, "Test Group")
+
+
+class TestGroupUpdateView(TestCase):
+    def setUp(self):
+        self.player = User.objects.create_user(username="User1", password="12345")
+        self.group = Group.objects.create(name="Test Group")
+        self.valid_data = {
+            "name": "Test Group Updated",
+        }
+        self.url = self.group.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/group/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.group.refresh_from_db()
+        self.assertEqual(self.group.name, "Test Group Updated")
 
 
 class TestGenericGroupDetailView(TestCase):
@@ -281,3 +377,251 @@ class TestGenericGroupDetailView(TestCase):
     def test_generic_group_detail_view_templates(self):
         response = self.client.get(f"/characters/groups/{self.group.id}/")
         self.assertTemplateUsed(response, "characters/group/detail.html")
+
+
+class TestArchetypeDetailView(TestCase):
+    def setUp(self) -> None:
+        self.archetype = Archetype.objects.create(name="Test Archetype")
+        self.url = self.archetype.get_absolute_url()
+
+    def test_archetype_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_archetype_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/archetype/detail.html")
+
+
+class TestArchetypeCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test Archetype",
+            "description": "A test description for the Archetype.",
+        }
+        self.url = reverse("characters:create_archetype")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/archetype/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Archetype.objects.count(), 1)
+        self.assertEqual(Archetype.objects.first().name, "Test Archetype")
+
+
+class TestArchetypeUpdateView(TestCase):
+    def setUp(self):
+        self.archetype = Archetype.objects.create(name="Test Archetype")
+        self.valid_data = {
+            "name": "Test Archetype Updated",
+            "description": "A test description for the Archetype.",
+        }
+        self.url = self.archetype.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/archetype/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.archetype.refresh_from_db()
+        self.assertEqual(self.archetype.name, "Test Archetype Updated")
+        self.assertEqual(
+            self.archetype.description, "A test description for the Archetype."
+        )
+
+
+class TestMeritFlawDetailView(TestCase):
+    def setUp(self) -> None:
+        self.mf = MeritFlaw.objects.create(name="Test MeritFlaw")
+        self.mf.add_ratings([1, 2])
+        self.url = self.mf.get_absolute_url()
+
+    def test_mf_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_mf_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/meritflaw/detail.html")
+
+
+class TestMeritFlawCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test MeritFlaw",
+        }
+        self.url = reverse("characters:create_meritflaw")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/meritflaw/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(MeritFlaw.objects.count(), 1)
+        self.assertEqual(MeritFlaw.objects.first().name, "Test MeritFlaw")
+
+
+class TestMeritFlawUpdateView(TestCase):
+    def setUp(self):
+        self.mf = MeritFlaw.objects.create(name="Test MeritFlaw")
+        self.mf.add_ratings([1, 2])
+        self.valid_data = {
+            "name": "Test MeritFlaw 2",
+        }
+        self.url = self.mf.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/meritflaw/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.mf.refresh_from_db()
+        self.assertEqual(self.mf.name, "Test MeritFlaw 2")
+
+
+class TestDerangementDetailView(TestCase):
+    def setUp(self) -> None:
+        self.derangement = Derangement.objects.create(name="Test Derangement")
+        self.url = self.derangement.get_absolute_url()
+
+    def test_derangement_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_derangement_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/derangement/detail.html")
+
+
+class TestDerangementCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test Derangement",
+        }
+        self.url = reverse("characters:create_derangement")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/derangement/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Derangement.objects.count(), 1)
+        self.assertEqual(Derangement.objects.first().name, "Test Derangement")
+
+
+class TestDerangementUpdateView(TestCase):
+    def setUp(self):
+        self.derangement = Derangement.objects.create(
+            name="Test Derangement",
+        )
+        self.valid_data = {
+            "name": "Test Derangement Updated",
+        }
+        self.url = self.derangement.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/derangement/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.derangement.refresh_from_db()
+        self.assertEqual(self.derangement.name, "Test Derangement Updated")
+
+
+class TestSpecialtyDetailView(TestCase):
+    def setUp(self) -> None:
+        self.specialty = Specialty.objects.create(name="Test Specialty", stat="Test")
+        self.url = self.specialty.get_absolute_url()
+
+    def test_specialty_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_specialty_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/specialty/detail.html")
+
+
+class TestSpecialtyCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test Specialty",
+            "stat": "Test",
+        }
+        self.url = reverse("characters:create_specialty")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/specialty/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Specialty.objects.count(), 1)
+        self.assertEqual(Specialty.objects.first().name, "Test Specialty")
+
+
+class TestSpecialtyUpdateView(TestCase):
+    def setUp(self):
+        self.specialty = Specialty.objects.create(name="Test Specialty", stat="Test")
+        self.valid_data = {
+            "name": "Test Specialty Updated",
+            "stat": "Test",
+        }
+        self.url = self.specialty.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/specialty/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.specialty.refresh_from_db()
+        self.assertEqual(self.specialty.name, "Test Specialty Updated")
+        self.assertEqual(self.specialty.stat, "Test")

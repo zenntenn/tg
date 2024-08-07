@@ -11,6 +11,34 @@ class LocationDetailView(DetailView):
     template_name = "locations/location/detail.html"
 
 
+class LocationCreateView(CreateView):
+    model = LocationModel
+    fields = [
+        "name",
+        "parent",
+        "gauntlet",
+        "shroud",
+        "dimension_barrier",
+        "reality_zone",
+        "description",
+    ]
+    template_name = "locations/location/form.html"
+
+
+class LocationUpdateView(UpdateView):
+    model = LocationModel
+    fields = [
+        "name",
+        "parent",
+        "gauntlet",
+        "shroud",
+        "dimension_barrier",
+        "reality_zone",
+        "description",
+    ]
+    template_name = "locations/location/form.html"
+
+
 class CityDetailView(DetailView):
     model = City
     template_name = "locations/city/detail.html"
@@ -40,34 +68,6 @@ class CityUpdateView(UpdateView):
         "characters",
     ]
     template_name = "locations/city/form.html"
-
-
-class LocationCreateView(CreateView):
-    model = LocationModel
-    fields = [
-        "name",
-        "parent",
-        "gauntlet",
-        "shroud",
-        "dimension_barrier",
-        "reality_zone",
-        "description",
-    ]
-    template_name = "locations/location/form.html"
-
-
-class LocationUpdateView(UpdateView):
-    model = LocationModel
-    fields = [
-        "name",
-        "parent",
-        "gauntlet",
-        "shroud",
-        "dimension_barrier",
-        "reality_zone",
-        "description",
-    ]
-    template_name = "locations/location/form.html"
 
 
 class GenericLocationDetailView(View):
