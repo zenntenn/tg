@@ -4,10 +4,10 @@ from collections import Counter
 from unittest import mock
 from unittest.mock import Mock
 
-from characters.models.core import CharacterModel
+from characters.models.core import CharacterModel, Human
 from core.models import Language, NewsItem
 from core.templatetags.dots import dots
-from core.utils import dice
+from core.utils import dice, filepath
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase, TestCase
 from django.urls import reverse
@@ -458,3 +458,12 @@ class TestLanguageUpdateView(TestCase):
         self.language.refresh_from_db()
         self.assertEqual(self.language.name, "Test Language")
         self.assertEqual(self.language.frequency, 1)
+
+
+class TestFilePath(TestCase):
+    def test_filepath_parsing(self):
+        m = Human.objects.create(name="Test Human")
+        self.assertEqual(
+            filepath(m, "test.jpg"),
+            "characters/core/human/test_human.jpg",
+        )
