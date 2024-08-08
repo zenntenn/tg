@@ -262,6 +262,10 @@ class TestModel(TestCase):
         self.assertTrue(self.model.add_source("Test Book", 1))
         self.assertTrue(self.model.has_source())
 
+    def test_get_gameline(self):
+        m = Human.objects.create(name="Test Human from WoD")
+        self.assertEqual(m.get_gameline(), "World of Darkness")
+
 
 class TestDots(TestCase):
     def test_length(self):
