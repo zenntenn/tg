@@ -250,7 +250,16 @@ class TestHumanDetailView(TestCase):
 class TestHumanCreateView(TestCase):
     def setUp(self):
         self.player = User.objects.create_user(username="Test")
-        self.valid_data = {"name": "Test Human", "owner": self.player}
+        self.valid_data = {
+            "name": "Test Human",
+            "owner": self.player.id,
+            "description": "Test",
+            "willpower": 3,
+            "childhood": "Test",
+            "history": "Test",
+            "goals": "Test",
+            "notes": "Test",
+        }
         self.url = reverse("characters:create_human")
 
     def test_create_view_status_code(self):
@@ -275,7 +284,16 @@ class TestHumanUpdateView(TestCase):
             name="Test Human",
             owner=self.player,
         )
-        self.valid_data = {"name": "Test Human Update", "owner": self.player}
+        self.valid_data = {
+            "name": "Test Human Updated",
+            "owner": self.player.id,
+            "description": "Test",
+            "willpower": 3,
+            "childhood": "Test",
+            "history": "Test",
+            "goals": "Test",
+            "notes": "Test",
+        }
         self.url = self.human.get_update_url()
 
     def test_update_view_status_code(self):
@@ -327,6 +345,7 @@ class TestGroupCreateView(TestCase):
     def setUp(self):
         self.valid_data = {
             "name": "Test Group",
+            "description": "test",
         }
         self.url = reverse("characters:create_group")
 
@@ -349,9 +368,7 @@ class TestGroupUpdateView(TestCase):
     def setUp(self):
         self.player = User.objects.create_user(username="User1", password="12345")
         self.group = Group.objects.create(name="Test Group")
-        self.valid_data = {
-            "name": "Test Group Updated",
-        }
+        self.valid_data = {"name": "Test Group Updated", "description": "Test"}
         self.url = self.group.get_update_url()
 
     def test_update_view_status_code(self):
@@ -462,6 +479,9 @@ class TestMeritFlawCreateView(TestCase):
     def setUp(self):
         self.valid_data = {
             "name": "Test MeritFlaw",
+            "description": "Test Description",
+            "ratings": [],
+            "allowed_types": [],
         }
         self.url = reverse("characters:create_meritflaw")
 
@@ -486,6 +506,9 @@ class TestMeritFlawUpdateView(TestCase):
         self.mf.add_ratings([1, 2])
         self.valid_data = {
             "name": "Test MeritFlaw 2",
+            "description": "Test Description",
+            "ratings": [],
+            "allowed_types": [],
         }
         self.url = self.mf.get_update_url()
 
@@ -520,9 +543,7 @@ class TestDerangementDetailView(TestCase):
 
 class TestDerangementCreateView(TestCase):
     def setUp(self):
-        self.valid_data = {
-            "name": "Test Derangement",
-        }
+        self.valid_data = {"name": "Test Derangement", "description": "Test"}
         self.url = reverse("characters:create_derangement")
 
     def test_create_view_status_code(self):
@@ -545,9 +566,7 @@ class TestDerangementUpdateView(TestCase):
         self.derangement = Derangement.objects.create(
             name="Test Derangement",
         )
-        self.valid_data = {
-            "name": "Test Derangement Updated",
-        }
+        self.valid_data = {"name": "Test Derangement Updated", "description": "Test"}
         self.url = self.derangement.get_update_url()
 
     def test_update_view_status_code(self):

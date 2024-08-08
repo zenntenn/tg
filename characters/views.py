@@ -1,3 +1,5 @@
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from characters.models.core import (
     Archetype,
     Character,
@@ -20,13 +22,13 @@ class CharacterDetailView(DetailView):
 class CharacterCreateView(CreateView):
     model = Character
     fields = "__all__"
-    template_name = "wod/characters/human/character/form.html"
+    template_name = "characters/character/form.html"
 
 
 class CharacterUpdateView(UpdateView):
     model = Character
     fields = "__all__"
-    template_name = "wod/characters/human/character/form.html"
+    template_name = "characters/character/form.html"
 
 
 class HumanDetailView(DetailView):
@@ -36,14 +38,72 @@ class HumanDetailView(DetailView):
 
 class HumanCreateView(CreateView):
     model = Human
-    fields = "__all__"
-    template_name = "wod/characters/human/human/form.html"
+    fields = [
+        "name",
+        "owner",
+        "description",
+        "nature",
+        "demeanor",
+        "specialties",
+        "willpower",
+        "derangements",
+        "age",
+        "apparent_age",
+        "date_of_birth",
+        "hair",
+        "eyes",
+        "ethnicity",
+        "nationality",
+        "height",
+        "weight",
+        "sex",
+        "merits_and_flaws",
+        "childhood",
+        "history",
+        "goals",
+        "notes",
+    ]
+    template_name = "characters/human/form.html"
+    
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        print(form.data)
+        return super().form_invalid(form)
+    
+    def form_valid(self, form):
+        print("VALID")
+        print(form.data)
+        return super().form_valid(form)
+    
 
 
 class HumanUpdateView(UpdateView):
     model = Human
-    fields = "__all__"
-    template_name = "wod/characters/human/human/form.html"
+    fields = [
+        "name",
+        "owner",
+        "description",
+        "nature",
+        "demeanor",
+        "specialties",
+        "willpower",
+        "derangements",
+        "age",
+        "apparent_age",
+        "date_of_birth",
+        "hair",
+        "eyes",
+        "ethnicity",
+        "nationality",
+        "height",
+        "weight",
+        "sex",
+        "merits_and_flaws",
+        "childhood",
+        "history",
+        "goals",
+        "notes",
+    ]
+    template_name = "characters/human/form.html"
 
 
 class GenericCharacterDetailView(View):
@@ -70,14 +130,14 @@ class ArchetypeDetailView(DetailView):
 
 class ArchetypeCreateView(CreateView):
     model = Archetype
-    fields = "__all__"
-    template_name = "wod/characters/human/archetype/form.html"
+    fields = ["name", "description"]
+    template_name = "characters/archetype/form.html"
 
 
 class ArchetypeUpdateView(UpdateView):
     model = Archetype
     fields = ["name", "description"]
-    template_name = "wod/characters/human/archetype/form.html"
+    template_name = "characters/archetype/form.html"
 
 
 class MeritFlawDetailView(View):
@@ -97,14 +157,14 @@ class MeritFlawDetailView(View):
 
 class MeritFlawCreateView(CreateView):
     model = MeritFlaw
-    fields = "__all__"
-    template_name = "wod/characters/human/meritflaw/form.html"
+    fields = ["name", "description", "ratings", "allowed_types"]
+    template_name = "characters/meritflaw/form.html"
 
 
 class MeritFlawUpdateView(UpdateView):
     model = MeritFlaw
-    fields = ["name", "ratings", "human", "garou", "kinfolk", "mage", "description"]
-    template_name = "wod/characters/human/meritflaw/form.html"
+    fields = ["name", "description", "ratings", "allowed_types"]
+    template_name = "characters/meritflaw/form.html"
 
 
 class DerangementDetailView(DetailView):
@@ -114,14 +174,14 @@ class DerangementDetailView(DetailView):
 
 class DerangementCreateView(CreateView):
     model = Derangement
-    fields = "__all__"
-    template_name = "wod/characters/human/derangement/form.html"
+    fields = ["name", "description"]
+    template_name = "characters/derangement/form.html"
 
 
 class DerangementUpdateView(UpdateView):
     model = Derangement
-    fields = "__all__"
-    template_name = "wod/characters/human/derangement/form.html"
+    fields = ["name", "description"]
+    template_name = "characters/derangement/form.html"
 
 
 class GroupDetailView(DetailView):
@@ -131,14 +191,14 @@ class GroupDetailView(DetailView):
 
 class GroupCreateView(CreateView):
     model = Group
-    fields = "__all__"
-    template_name = "wod/characters/human/group/form.html"
+    fields = ["name", "description", "members", "leader"]
+    template_name = "characters/group/form.html"
 
 
 class GroupUpdateView(UpdateView):
     model = Group
-    fields = "__all__"
-    template_name = "wod/characters/human/group/form.html"
+    fields = ["name", "description", "members", "leader"]
+    template_name = "characters/group/form.html"
 
 
 class GenericGroupDetailView(View):
@@ -159,11 +219,11 @@ class SpecialtyDetailView(DetailView):
 
 class SpecialtyCreateView(CreateView):
     model = Specialty
-    fields = "__all__"
-    template_name = "wod/characters/human/specialty/form.html"
+    fields = ["name", "stat"]
+    template_name = "characters/specialty/form.html"
 
 
 class SpecialtyUpdateView(UpdateView):
     model = Specialty
-    fields = "__all__"
-    template_name = "wod/characters/human/specialty/form.html"
+    fields = ["name", "stat"]
+    template_name = "characters/specialty/form.html"

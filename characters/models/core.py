@@ -140,7 +140,7 @@ class Derangement(Model):
     def get_absolute_url(self):
         return reverse("characters:derangement", args=[str(self.id)])
 
-    def get_absolute_url(self):
+    def get_update_url(self):
         return reverse("characters:update_derangement", args=[str(self.id)])
 
     def get_heading(self):
@@ -308,7 +308,7 @@ class Human(Character):
         return True
 
     def get_update_url(self):
-        return reverse("wod:characters:human:update_human", kwargs={"pk": self.pk})
+        return reverse("characters:update_human", kwargs={"pk": self.pk})
 
     def get_mf_and_rating_list(self):
         return [(x.name, self.mf_rating(x)) for x in self.merits_and_flaws.all()]
