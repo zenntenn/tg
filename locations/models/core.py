@@ -31,6 +31,9 @@ class LocationModel(Model):
     def get_absolute_url(self):
         return reverse("locations:location", args=[str(self.id)])
 
+    def get_update_url(self):
+        return reverse("locations:update_location", args=[str(self.id)])
+
     def get_heading(self):
         return "wod_heading"
 
@@ -52,6 +55,9 @@ class City(LocationModel):
     def add_character(self, character):
         self.characters.add(character)
         self.save()
+
+    def get_update_url(self):
+        return reverse("locations:update_city", args=[str(self.id)])
 
     def get_heading(self):
         return "wod_heading"

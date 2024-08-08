@@ -4,9 +4,6 @@ from items import views
 # Create your URLs here
 app_name = "items"
 urlpatterns = [
-    path("<pk>/", views.GenericItemDetailView.as_view(), name="item"),
-    path("medium/<pk>/", views.MediumDetailView.as_view(), name="medium"),
-    path("material/<pk>/", views.MaterialDetailView.as_view(), name="material"),
     path("item/create/", views.ItemCreateView.as_view(), name="create_item"),
     path(
         "item/update/<pk>/",
@@ -53,4 +50,27 @@ urlpatterns = [
         views.ThrownWeaponUpdateView.as_view(),
         name="update_thrownweapon",
     ),
+    path(
+        "material/create/",
+        views.MaterialCreateView.as_view(),
+        name="create_material",
+    ),
+    path(
+        "material/update/<pk>/",
+        views.MaterialUpdateView.as_view(),
+        name="update_material",
+    ),
+    path("material/<pk>/", views.MaterialDetailView.as_view(), name="material"),
+    path(
+        "medium/create/",
+        views.MediumCreateView.as_view(),
+        name="create_medium",
+    ),
+    path(
+        "medium/update/<pk>/",
+        views.MediumUpdateView.as_view(),
+        name="update_medium",
+    ),
+    path("medium/<pk>/", views.MediumDetailView.as_view(), name="medium"),
+    path("<pk>/", views.GenericItemDetailView.as_view(), name="item"),
 ]

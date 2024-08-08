@@ -22,6 +22,9 @@ class Archetype(Model):
     def get_heading(self):
         return "wod_heading"
 
+    def get_update_url(self):
+        return reverse("characters:update_archetype", kwargs={"pk": self.pk})
+
 
 class MeritFlaw(Model):
     type = "merit_flaw"
@@ -37,6 +40,9 @@ class MeritFlaw(Model):
 
     def get_absolute_url(self):
         return reverse("characters:meritflaw", args=[str(self.id)])
+
+    def get_update_url(self):
+        return reverse("characters:update_meritflaw", kwargs={"pk": self.pk})
 
     def get_heading(self):
         return "wod_heading"
@@ -120,6 +126,9 @@ class Character(CharacterModel):
     def get_absolute_url(self):
         return reverse("characters:character", kwargs={"pk": self.pk})
 
+    def get_update_url(self):
+        return reverse("characters:update_character", kwargs={"pk": self.pk})
+
 
 class Derangement(Model):
     type = "derangement"
@@ -130,6 +139,9 @@ class Derangement(Model):
 
     def get_absolute_url(self):
         return reverse("characters:derangement", args=[str(self.id)])
+
+    def get_update_url(self):
+        return reverse("characters:update_derangement", args=[str(self.id)])
 
     def get_heading(self):
         return "wod_heading"
@@ -149,6 +161,9 @@ class Specialty(Model):
 
     def get_absolute_url(self):
         return reverse("characters:specialty", args=[str(self.id)])
+
+    def get_update_url(self):
+        return reverse("characters:update_specialty", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.name} ({self.display_stat()})"
@@ -212,6 +227,9 @@ class Human(Character):
     class Meta:
         verbose_name = "Human"
         verbose_name_plural = "Humans"
+
+    def get_update_url(self):
+        return reverse("characters:update_human", kwargs={"pk": self.pk})
 
     def get_heading(self):
         return "wod_heading"
@@ -290,7 +308,7 @@ class Human(Character):
         return True
 
     def get_update_url(self):
-        return reverse("wod:characters:human:update_human", kwargs={"pk": self.pk})
+        return reverse("characters:update_human", kwargs={"pk": self.pk})
 
     def get_mf_and_rating_list(self):
         return [(x.name, self.mf_rating(x)) for x in self.merits_and_flaws.all()]
@@ -388,4 +406,7 @@ class Group(Model):
         verbose_name_plural = "Groups"
 
     def get_absolute_url(self):
-        return reverse("wod:characters:group", kwargs={"pk": self.pk})
+        return reverse("characters:group", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("characters:update_group", kwargs={"pk": self.pk})

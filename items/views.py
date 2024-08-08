@@ -1,3 +1,5 @@
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 from items.models.core import (
@@ -19,13 +21,13 @@ class ItemDetailView(DetailView):
 
 class ItemCreateView(CreateView):
     model = ItemModel
-    fields = "__all__"
+    fields = ["name", "description"]
     template_name = "items/item/form.html"
 
 
 class ItemUpdateView(UpdateView):
     model = ItemModel
-    fields = "__all__"
+    fields = ["name", "description"]
     template_name = "items/item/form.html"
 
 
@@ -36,13 +38,13 @@ class WeaponDetailView(DetailView):
 
 class WeaponCreateView(CreateView):
     model = Weapon
-    fields = "__all__"
+    fields = ["name", "description", "difficulty", "damage", "damage_type", "conceal"]
     template_name = "items/weapon/form.html"
 
 
 class WeaponUpdateView(UpdateView):
     model = Weapon
-    fields = "__all__"
+    fields = ["name", "description", "difficulty", "damage", "damage_type", "conceal"]
     template_name = "items/weapon/form.html"
 
 
@@ -53,13 +55,13 @@ class MeleeWeaponDetailView(DetailView):
 
 class MeleeWeaponCreateView(CreateView):
     model = MeleeWeapon
-    fields = "__all__"
+    fields = ["name", "description", "difficulty", "damage", "damage_type", "conceal"]
     template_name = "items/meleeweapon/form.html"
 
 
 class MeleeWeaponUpdateView(UpdateView):
     model = MeleeWeapon
-    fields = "__all__"
+    fields = ["name", "description", "difficulty", "damage", "damage_type", "conceal"]
     template_name = "items/meleeweapon/form.html"
 
 
@@ -70,13 +72,13 @@ class ThrownWeaponDetailView(DetailView):
 
 class ThrownWeaponCreateView(CreateView):
     model = ThrownWeapon
-    fields = "__all__"
+    fields = ["name", "description", "difficulty", "damage", "damage_type", "conceal"]
     template_name = "items/thrownweapon/form.html"
 
 
 class ThrownWeaponUpdateView(UpdateView):
     model = ThrownWeapon
-    fields = "__all__"
+    fields = ["name", "description", "difficulty", "damage", "damage_type", "conceal"]
     template_name = "items/thrownweapon/form.html"
 
 
@@ -87,13 +89,33 @@ class RangedWeaponDetailView(DetailView):
 
 class RangedWeaponCreateView(CreateView):
     model = RangedWeapon
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "difficulty",
+        "damage",
+        "damage_type",
+        "conceal",
+        "range",
+        "rate",
+        "clip",
+    ]
     template_name = "items/rangedweapon/form.html"
 
 
 class RangedWeaponUpdateView(UpdateView):
     model = RangedWeapon
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "difficulty",
+        "damage",
+        "damage_type",
+        "conceal",
+        "range",
+        "rate",
+        "clip",
+    ]
     template_name = "items/rangedweapon/form.html"
 
 
@@ -120,3 +142,27 @@ class MediumDetailView(DetailView):
 class MaterialDetailView(DetailView):
     model = Material
     template_name = "items/material/detail.html"
+
+
+class MediumCreateView(CreateView):
+    model = Medium
+    fields = "__all__"
+    template_name = "items/medium/form.html"
+
+
+class MediumUpdateView(UpdateView):
+    model = Medium
+    fields = "__all__"
+    template_name = "items/medium/form.html"
+
+
+class MaterialCreateView(CreateView):
+    model = Material
+    fields = "__all__"
+    template_name = "items/material/form.html"
+
+
+class MaterialUpdateView(UpdateView):
+    model = Material
+    fields = "__all__"
+    template_name = "items/material/form.html"

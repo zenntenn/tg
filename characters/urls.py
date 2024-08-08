@@ -4,28 +4,6 @@ from django.urls import path
 # Create your URLs here
 app_name = "characters"
 urlpatterns = [
-    path("<pk>/", views.GenericCharacterDetailView.as_view(), name="character"),
-    path(
-        "archetypes/<pk>/",
-        views.ArchetypeDetailView.as_view(),
-        name="archetype",
-    ),
-    path(
-        "meritflaws/<pk>/",
-        views.MeritFlawDetailView.as_view(),
-        name="meritflaw",
-    ),
-    path(
-        "derangement/<pk>/",
-        views.DerangementDetailView.as_view(),
-        name="derangement",
-    ),
-    path("groups/<pk>/", views.GenericGroupDetailView.as_view(), name="group"),
-    path(
-        "specialties/<pk>/",
-        views.SpecialtyDetailView.as_view(),
-        name="specialty",
-    ),
     path(
         "character/create/",
         views.CharacterCreateView.as_view(),
@@ -46,6 +24,7 @@ urlpatterns = [
         views.GroupUpdateView.as_view(),
         name="update_group",
     ),
+    path("groups/<pk>/", views.GenericGroupDetailView.as_view(), name="group"),
     path(
         "human/create/",
         views.HumanCreateView.as_view(),
@@ -67,6 +46,11 @@ urlpatterns = [
         name="update_archetype",
     ),
     path(
+        "archetypes/<pk>/",
+        views.ArchetypeDetailView.as_view(),
+        name="archetype",
+    ),
+    path(
         "meritflaws/create/",
         views.MeritFlawCreateView.as_view(),
         name="create_meritflaw",
@@ -75,6 +59,11 @@ urlpatterns = [
         "meritflaws/update/<pk>/",
         views.MeritFlawUpdateView.as_view(),
         name="update_meritflaw",
+    ),
+    path(
+        "meritflaws/<pk>/",
+        views.MeritFlawDetailView.as_view(),
+        name="meritflaw",
     ),
     path(
         "specialties/create/",
@@ -87,6 +76,11 @@ urlpatterns = [
         name="update_specialty",
     ),
     path(
+        "specialties/<pk>/",
+        views.SpecialtyDetailView.as_view(),
+        name="specialty",
+    ),
+    path(
         "derangement/create/",
         views.DerangementCreateView.as_view(),
         name="create_derangement",
@@ -96,4 +90,10 @@ urlpatterns = [
         views.DerangementUpdateView.as_view(),
         name="update_derangement",
     ),
+    path(
+        "derangement/<pk>/",
+        views.DerangementDetailView.as_view(),
+        name="derangement",
+    ),
+    path("<pk>/", views.GenericCharacterDetailView.as_view(), name="character"),
 ]
