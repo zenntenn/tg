@@ -32,7 +32,7 @@ class LocationModel(Model):
         return reverse("locations:location", args=[str(self.id)])
 
     def get_update_url(self):
-        return reverse("locations:update_location", args=[str(self.id)])
+        return reverse("locations:update:location", args=[str(self.id)])
 
     def get_heading(self):
         return "wod_heading"
@@ -57,7 +57,7 @@ class City(LocationModel):
         self.save()
 
     def get_update_url(self):
-        return reverse("locations:update_city", args=[str(self.id)])
+        return reverse("locations:update:city", args=[str(self.id)])
 
     def get_heading(self):
         return "wod_heading"

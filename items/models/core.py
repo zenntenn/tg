@@ -25,7 +25,7 @@ class ItemModel(Model):
         return reverse("items:item", args=[str(self.id)])
 
     def get_update_url(self):
-        return reverse("items:update_item", args=[str(self.id)])
+        return reverse("items:update:item", args=[str(self.id)])
 
     def get_heading(self):
         return "wod_heading"
@@ -57,7 +57,7 @@ class Weapon(ItemModel):
     )
 
     def get_update_url(self):
-        return reverse("items:update_weapon", args=[str(self.id)])
+        return reverse("items:update:weapon", args=[str(self.id)])
 
 
 class MeleeWeapon(Weapon):
@@ -68,7 +68,7 @@ class MeleeWeapon(Weapon):
         verbose_name_plural = "Melee Weapons"
 
     def get_update_url(self):
-        return reverse("items:update_meleeweapon", args=[str(self.id)])
+        return reverse("items:update:meleeweapon", args=[str(self.id)])
 
 
 class ThrownWeapon(Weapon):
@@ -79,7 +79,7 @@ class ThrownWeapon(Weapon):
         verbose_name_plural = "Thrown Weapons"
 
     def get_update_url(self):
-        return reverse("items:update_thrownweapon", args=[str(self.id)])
+        return reverse("items:update:thrownweapon", args=[str(self.id)])
 
 
 class RangedWeapon(Weapon):
@@ -94,7 +94,7 @@ class RangedWeapon(Weapon):
         verbose_name_plural = "Ranged Weapons"
 
     def get_update_url(self):
-        return reverse("items:update_rangedweapon", args=[str(self.id)])
+        return reverse("items:update:rangedweapon", args=[str(self.id)])
 
 
 class Medium(models.Model):
@@ -114,7 +114,7 @@ class Medium(models.Model):
         return reverse("items:medium", kwargs={"pk": self.pk})
 
     def get_update_url(self):
-        return reverse("items:update_medium", kwargs={"pk": self.pk})
+        return reverse("items:update:medium", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.name}"
@@ -134,7 +134,7 @@ class Material(models.Model):
         return reverse("items:material", kwargs={"pk": self.pk})
 
     def get_update_url(self):
-        return reverse("items:update_material", kwargs={"pk": self.pk})
+        return reverse("items:update:material", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.name}"

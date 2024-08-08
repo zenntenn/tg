@@ -52,7 +52,7 @@ class TestLocationCreateView(TestCase):
             "dimension_barrier": 5,
         }
         self.invalid_data = {"name": "", "description": ""}
-        self.url = reverse("locations:create_location")
+        self.url = reverse("locations:create:location")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -141,7 +141,7 @@ class TestCityCreateView(TestCase):
             "media": "Only National",
             "politicians": "White dudes",
         }
-        self.url = reverse("locations:create_city")
+        self.url = reverse("locations:create:city")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

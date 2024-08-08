@@ -22,9 +22,12 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("core.urls")),
-    path("characters/", include("characters.urls", namespace="characters")),
-    path("locations/", include("locations.urls", namespace="locations")),
-    path("items/", include("items.urls", namespace="items")),
+    path(
+        "characters/",
+        include(("characters.urls", "characters"), namespace="characters"),
+    ),
+    path("locations/", include(("locations.urls", "locations"), namespace="locations")),
+    path("items/", include(("items.urls", "items"), namespace="items")),
     path("game/", include("game.urls", namespace="game")),
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),

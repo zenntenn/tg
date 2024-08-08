@@ -32,7 +32,7 @@ class TestItemCreateView(TestCase):
             "name": "Test Item",
             "description": "A test description for the item.",
         }
-        self.url = reverse("items:create_item")
+        self.url = reverse("items:create:item")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -101,7 +101,7 @@ class TestWeaponCreateView(TestCase):
             "damage_type": "L",
             "conceal": "P",
         }
-        self.url = reverse("items:create_weapon")
+        self.url = reverse("items:create:weapon")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -174,7 +174,7 @@ class TestMeleeWeaponCreateView(TestCase):
             "damage_type": "L",
             "conceal": "P",
         }
-        self.url = reverse("items:create_meleeweapon")
+        self.url = reverse("items:create:meleeweapon")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -247,7 +247,7 @@ class TestThrownWeaponCreateView(TestCase):
             "damage_type": "L",
             "conceal": "P",
         }
-        self.url = reverse("items:create_thrownweapon")
+        self.url = reverse("items:create:thrownweapon")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -323,7 +323,7 @@ class TestRangedWeaponCreateView(TestCase):
             "rate": 3,
             "clip": 17,
         }
-        self.url = reverse("items:create_rangedweapon")
+        self.url = reverse("items:create:rangedweapon")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -398,7 +398,7 @@ class TestMediumCreateView(TestCase):
             "length_modifier_type": "/",
             "length_modifier": 4,
         }
-        self.url = reverse("items:create_medium")
+        self.url = reverse("items:create:medium")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -459,7 +459,7 @@ class TestMaterialDetailView(TestCase):
 class TestMaterialCreateView(TestCase):
     def setUp(self):
         self.valid_data = {"name": "Test Material", "is_hard": True}
-        self.url = reverse("items:create_material")
+        self.url = reverse("items:create:material")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

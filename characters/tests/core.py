@@ -260,7 +260,7 @@ class TestHumanCreateView(TestCase):
             "goals": "Test",
             "notes": "Test",
         }
-        self.url = reverse("characters:create_human")
+        self.url = reverse("characters:create:human")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -347,7 +347,7 @@ class TestGroupCreateView(TestCase):
             "name": "Test Group",
             "description": "test",
         }
-        self.url = reverse("characters:create_group")
+        self.url = reverse("characters:create:group")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -416,7 +416,7 @@ class TestArchetypeCreateView(TestCase):
             "name": "Test Archetype",
             "description": "A test description for the Archetype.",
         }
-        self.url = reverse("characters:create_archetype")
+        self.url = reverse("characters:create:archetype")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -483,7 +483,7 @@ class TestMeritFlawCreateView(TestCase):
             "ratings": [],
             "allowed_types": [],
         }
-        self.url = reverse("characters:create_meritflaw")
+        self.url = reverse("characters:create:meritflaw")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -544,7 +544,7 @@ class TestDerangementDetailView(TestCase):
 class TestDerangementCreateView(TestCase):
     def setUp(self):
         self.valid_data = {"name": "Test Derangement", "description": "Test"}
-        self.url = reverse("characters:create_derangement")
+        self.url = reverse("characters:create:derangement")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -604,7 +604,7 @@ class TestSpecialtyCreateView(TestCase):
             "name": "Test Specialty",
             "stat": "Test",
         }
-        self.url = reverse("characters:create_specialty")
+        self.url = reverse("characters:create:specialty")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
