@@ -1,5 +1,3 @@
-from django.forms import BaseModelForm
-from django.http import HttpResponse
 from characters.models.core import (
     Archetype,
     Character,
@@ -9,6 +7,8 @@ from characters.models.core import (
     MeritFlaw,
     Specialty,
 )
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 
@@ -64,16 +64,15 @@ class HumanCreateView(CreateView):
         "notes",
     ]
     template_name = "characters/human/form.html"
-    
+
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         print(form.data)
         return super().form_invalid(form)
-    
+
     def form_valid(self, form):
         print("VALID")
         print(form.data)
         return super().form_valid(form)
-    
 
 
 class HumanUpdateView(UpdateView):
