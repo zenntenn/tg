@@ -329,7 +329,7 @@ class TestDice(TestCase):
 
 class TestNewsItemDetailView(TestCase):
     def setUp(self) -> None:
-        self.news = NewsItem.objects.create(name="Test Location")
+        self.news = NewsItem.objects.create(title="Test NewsItem", date=now())
         self.url = self.news.get_absolute_url()
 
     def test_newsitem_detail_view_status_code(self):
@@ -346,7 +346,7 @@ class TestNewsItemCreateView(TestCase):
         self.valid_data = {
             "title": "Test News",
             "content": "News Test Content.",
-            "date": now(),
+            # "date": now(),
         }
         self.url = reverse("create_newsitem")
 
@@ -362,7 +362,7 @@ class TestNewsItemCreateView(TestCase):
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(NewsItem.objects.count(), 1)
-        self.assertEqual(NewsItem.objects.first().name, "Test News")
+        self.assertEqual(NewsItem.objects.first().title, "Test News")
 
 
 class TestNewsItemUpdateView(TestCase):
@@ -370,7 +370,7 @@ class TestNewsItemUpdateView(TestCase):
         self.newsitem = NewsItem.objects.create(
             title="Test Title",
             content="Test Content",
-            date=now(),
+            # date=now(),
         )
         self.valid_data = {
             "title": "Test News 2",
@@ -388,10 +388,9 @@ class TestNewsItemUpdateView(TestCase):
         self.assertTemplateUsed(response, "core/newsitem/form.html")
 
     def test_update_view_successful_post(self):
-        self.assertEqual(self.newsitem.title, 10000)
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
-        self.location.refresh_from_db()
+        self.newsitem.refresh_from_db()
         self.assertEqual(self.newsitem.title, "Test News 2")
         self.assertEqual(self.newsitem.content, "News Test Content 2.")
 

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.utils.timezone import now
 from game.models import Chronicle
 from polymorphic.models import PolymorphicModel
 
@@ -133,11 +134,17 @@ class Model(PolymorphicModel):
 class NewsItem(models.Model):
     title = models.CharField(default="", max_length=100)
     content = models.TextField(default="")
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = "News Item"
         verbose_name_plural = "News Items"
+
+    def get_absolute_url(self):
+        return reverse("newsitem", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("update_newsitem", kwargs={"pk": self.pk})
 
 
 class Language(models.Model):
@@ -152,6 +159,9 @@ class Language(models.Model):
 
     def get_absolute_url(self):
         return reverse("language", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("update_language", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"{self.name}"

@@ -1,7 +1,11 @@
+from typing import Any
+
 from core.models import Book, Language, NewsItem
+from django.forms import BaseModelForm
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 
 
 # Create your views here.
@@ -22,3 +26,32 @@ class BookDetailView(DetailView):
 class LanguageDetailView(DetailView):
     model = Language
     template_name = "core/language/detail.html"
+
+
+class LanguageCreateView(CreateView):
+    model = Language
+    fields = "__all__"
+    template_name = "core/language/form.html"
+
+
+class LanguageUpdateView(UpdateView):
+    model = Language
+    fields = "__all__"
+    template_name = "core/language/form.html"
+
+
+class NewsItemDetailView(DetailView):
+    model = NewsItem
+    template_name = "core/newsitem/detail.html"
+
+
+class NewsItemCreateView(CreateView):
+    model = NewsItem
+    fields = "__all__"
+    template_name = "core/newsitem/form.html"
+
+
+class NewsItemUpdateView(UpdateView):
+    model = NewsItem
+    fields = "__all__"
+    template_name = "core/newsitem/form.html"

@@ -53,4 +53,24 @@ urlpatterns = [
         views.ThrownWeaponUpdateView.as_view(),
         name="update_thrownweapon",
     ),
+    path(
+        "material/create/",
+        views.MaterialCreateView.as_view(),
+        name="create_material",
+    ),
+    path(
+        "material/update/<pk>/",
+        views.MaterialUpdateView.as_view(),
+        name="update_material",
+    ),
+    path(
+        "medium/create/",
+        views.MediumCreateView.as_view(),
+        name="create_medium",
+    ),
+    path(
+        "medium/update/<pk>/",
+        views.MediumUpdateView.as_view(),
+        name="update_medium",
+    ),
 ]

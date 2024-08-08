@@ -120,3 +120,27 @@ class MediumDetailView(DetailView):
 class MaterialDetailView(DetailView):
     model = Material
     template_name = "items/material/detail.html"
+
+
+class MediumCreateView(CreateView):
+    model = Medium
+    fields = "__all__"
+    template_name = "core/medium/form.html"
+
+
+class MediumUpdateView(UpdateView):
+    model = Medium
+    fields = "__all__"
+    template_name = "core/medium/form.html"
+
+
+class MaterialCreateView(CreateView):
+    model = Material
+    fields = "__all__"
+    template_name = "core/material/form.html"
+
+
+class MaterialUpdateView(UpdateView):
+    model = Material
+    fields = "__all__"
+    template_name = "core/material/form.html"
