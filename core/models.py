@@ -132,6 +132,12 @@ class Model(PolymorphicModel):
         self.sources.add(bookref)
         return self
 
+    def get_gameline(self):
+        s = str(self.__class__).split(" ")[-1].split(".")[2]
+        if s == "core":
+            return "World of Darkness"
+        return str(self.__class__).split(" ")[-1].split(".")[2].title()
+
 
 class NewsItem(models.Model):
     title = models.CharField(default="", max_length=100)
