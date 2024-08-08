@@ -347,7 +347,7 @@ class TestRangedWeaponUpdateView(TestCase):
             description="Test description",
         )
         self.valid_data = {
-            "name": "Test Weapon",
+            "name": "Test Weapon 2",
             "description": "A test description for the weapon.",
             "difficulty": 6,
             "damage": 2,
@@ -494,5 +494,5 @@ class TestMaterialUpdateView(TestCase):
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
         self.material.refresh_from_db()
-        self.assertEqual(self.material.name, "Test Material Updated")
+        self.assertEqual(self.material.name, "Test Material Update")
         self.assertFalse(self.material.is_hard)
