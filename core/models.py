@@ -1,3 +1,4 @@
+from core.utils import filepath
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -83,6 +84,7 @@ class Model(PolymorphicModel):
     display = models.BooleanField(default=True)
     sources = models.ManyToManyField(BookReference, blank=True)
     description = models.TextField(default="")
+    image = models.ImageField(upload_to=filepath, blank=True, null=True)
 
     class Meta:
         abstract = True

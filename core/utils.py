@@ -61,3 +61,12 @@ def tree_sort(x, l=None):
     for y in x.children.order_by("name"):
         tree_sort(y, l=l)
     return l
+
+
+def filepath(instance, filename):
+    s = str(instance.__class__).split(" ")[-1][:-1][1:-1]
+    s = "/".join([x for x in s.split(".") if x != "models"])
+    s += "/" + instance.name
+    s += "." + filename.split(".")[-1]
+    s = s.lower().replace(" ", "_")
+    return s
