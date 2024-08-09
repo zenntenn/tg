@@ -7,3 +7,5 @@ from .core import (
     ThrownWeapon,
     Weapon,
 )
+
+from . import mage

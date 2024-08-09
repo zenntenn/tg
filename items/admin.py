@@ -34,3 +34,8 @@ class MaterialAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = "Material"
         verbose_name_plural = "Materials"
+
+@admin.register(Wonder)
+class WonderAdmin(admin.ModelAdmin):
+    list_display = ("name", "rank", "background_cost", "quintessence_max")
+
