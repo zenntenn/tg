@@ -1,5 +1,22 @@
-from items.models.core import ItemModel
+from characters.models.mage import Resonance
 from django.db import models
+from django.urls import reverse
+from items.models.core import ItemModel
+
+
+# Create your models here.
+class WonderResonanceRating(models.Model):
+    class Meta:
+        verbose_name = "Wonder Resonance Rating"
+        verbose_name_plural = "Wonder Resonance Ratings"
+
+    wonder = models.ForeignKey("Wonder", on_delete=models.SET_NULL, null=True)
+    resonance = models.ForeignKey(Resonance, on_delete=models.SET_NULL, null=True)
+    rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.resonance}: {self.rating}"
+
 
 class Wonder(ItemModel):
     type = "wonder"
@@ -17,13 +34,10 @@ class Wonder(ItemModel):
         verbose_name_plural = "Wonders"
 
     def get_update_url(self):
-        return reverse("wod:items:mage:update_wonder", args=[str(self.id)])
+        return reverse("items:mage:update:wonder", args=[str(self.id)])
 
     def get_heading(self):
         return "mtas_heading"
-
-    def random_points(self):
-        return 3 * (self.rank - 1) + random.randint(1, 3)
 
     def set_rank(self, rank):
         self.rank = rank
@@ -31,11 +45,6 @@ class Wonder(ItemModel):
 
     def has_rank(self):
         return self.rank != 0
-
-    def random_rank(self, rank=None):
-        if rank is None:
-            rank = random.randint(1, 5)
-        return self.set_rank(rank)
 
     def add_resonance(self, resonance):
         r, _ = WonderResonanceRating.objects.get_or_create(
@@ -85,27 +94,5 @@ class Wonder(ItemModel):
     def total_resonance(self):
         return sum(x.rating for x in WonderResonanceRating.objects.filter(wonder=self))
 
-    def random_resonance(self):
-        if random.random() < 0.7:
-            possible = self.filter_resonance(minimum=1, maximum=4)
-            if len(possible) > 0:
-                choice = random.choice(possible)
-                if self.add_resonance(choice):
-                    return True
-        while True:
-            index = random.randint(1, Resonance.objects.last().id)
-            if Resonance.objects.filter(pk=index).exists():
-                choice = Resonance.objects.get(pk=index)
-                if self.add_resonance(choice):
-                    return True
-
     def has_resonance(self):
         return self.total_resonance() >= self.rank
-
-    def random(self, rank=None, name=None):
-        self.update_status("Ran")
-        self.random_name(name=name)
-        self.random_rank(rank=rank)
-        while not self.has_resonance():
-            self.random_resonance()
-        self.background_cost = 2 * self.rank

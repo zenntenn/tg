@@ -1,3 +1,4 @@
+from . import mage
 from .core import (
     ItemModel,
     Material,
@@ -7,5 +8,3 @@ from .core import (
     ThrownWeapon,
     Weapon,
 )
-
-from . import mage
