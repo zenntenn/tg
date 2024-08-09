@@ -1,0 +1,29 @@
+{% extends "items/item/detail.html" %}
+{% block additional_stats %}
+    {% block basics %}
+        <div class="row">
+            <div class="col-sm">Rank</div>
+            <div class="col-sm">{{ object.rank }}</div>
+            <div class="col-sm">Background Cost</div>
+            <div class="col-sm">{{ object.background_cost }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Maximum Quintessence</div>
+            <div class="col-sm">{{ object.quintessence_max }}</div>
+        </div>
+    {% endblock basics %}
+    {% block creation %}
+    {% endblock creation %}
+    {% block resonance %}
+        <div class="col-sm {{ object.get_heading }}">
+            <h2>Resonance</h2>
+        </div>
+        <div class="row">
+            {% for res in resonance %}
+                <a class="col-sm" href={{ res.resonance.get_absolute_url }}>{{ res.resonance }}: {{ res.rating }}</a>
+            {% endfor %}
+        </div>
+    {% endblock resonance %}
+    {% block powers %}
+    {% endblock powers %}
+{% endblock additional_stats %}

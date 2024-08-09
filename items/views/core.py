@@ -12,6 +12,8 @@ from items.models.core import (
     Weapon,
 )
 
+from . import mage
+
 
 # Create your views here.
 class ItemDetailView(DetailView):
@@ -126,6 +128,7 @@ class GenericItemDetailView(View):
         "melee_weapon": MeleeWeaponDetailView,
         "thrown_weapon": ThrownWeaponDetailView,
         "ranged_weapon": RangedWeaponDetailView,
+        "wonder": mage.WonderDetailView,
     }
 
     def get(self, request, *args, **kwargs):

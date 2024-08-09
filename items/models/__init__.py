@@ -1,3 +1,4 @@
+from . import mage
 from .core import (
     ItemModel,
     Material,

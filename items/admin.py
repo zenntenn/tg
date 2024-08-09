@@ -8,6 +8,7 @@ from items.models.core import (
     ThrownWeapon,
     Weapon,
 )
+from items.models.mage import Wonder
 
 
 # Register your models here.
@@ -34,3 +35,8 @@ class MaterialAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = "Material"
         verbose_name_plural = "Materials"
+
+
+@admin.register(Wonder)
+class WonderAdmin(admin.ModelAdmin):
+    list_display = ("name", "rank", "background_cost", "quintessence_max")
