@@ -9,4 +9,9 @@ urls = [
         views.mage.EffectUpdateView.as_view(),
         name="effect",
     ),
+    path(
+        "resonances/update/<pk>/",
+        views.mage.ResonanceUpdateView.as_view(),
+        name="resonance",
+    ),
 ]
