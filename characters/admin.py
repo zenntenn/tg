@@ -9,6 +9,7 @@ from characters.models.core import (
     MeritFlawRating,
     Specialty,
 )
+from characters.models.mage import Effect, Resonance
 from django.contrib import admin
 
 # Register your models here.
@@ -51,3 +52,35 @@ class GroupAdmin(admin.ModelAdmin):
 @admin.register(Specialty)
 class SpecialtyAdmin(admin.ModelAdmin):
     list_display = ("name", "stat")
+
+
+@admin.register(Resonance)
+class ResonanceAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "correspondence",
+        "entropy",
+        "forces",
+        "life",
+        "matter",
+        "mind",
+        "prime",
+        "spirit",
+        "time",
+    )
+
+
+@admin.register(Effect)
+class EffectAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "correspondence",
+        "entropy",
+        "forces",
+        "life",
+        "matter",
+        "mind",
+        "prime",
+        "spirit",
+        "time",
+    )
