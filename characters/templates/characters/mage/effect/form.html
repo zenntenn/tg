@@ -1,0 +1,40 @@
+{% extends "core/form.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Correspondence</div>
+        <div class="col-sm dots">{{ form.correspondence }}</div>
+        <div class="col-sm">Life</div>
+        <div class="col-sm dots">{{ form.life }}</div>
+        <div class="col-sm">Prime</div>
+        <div class="col-sm dots">{{ form.prime }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Entropy</div>
+        <div class="col-sm dots">{{ form.entropy }}</div>
+        <div class="col-sm">Matter</div>
+        <div class="col-sm dots">{{ form.matter }}</div>
+        <div class="col-sm">Spirit</div>
+        <div class="col-sm dots">{{ form.spirit }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Forces</div>
+        <div class="col-sm dots">{{ form.forces }}</div>
+        <div class="col-sm">Mind</div>
+        <div class="col-sm dots">{{ form.mind }}</div>
+        <div class="col-sm">Time</div>
+        <div class="col-sm dots">{{ form.time }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Cost</div>
+        <div class="col-sm">{{ form.rote_cost }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+{% endblock contents %}
