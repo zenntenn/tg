@@ -8,4 +8,9 @@ urls = [
         views.mage.WonderCreateView.as_view(),
         name="wonder",
     ),
+    path(
+        "charm/",
+        views.mage.CharmCreateView.as_view(),
+        name="charm",
+    ),
 ]

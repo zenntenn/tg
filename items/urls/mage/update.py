@@ -8,4 +8,9 @@ urls = [
         views.mage.WonderUpdateView.as_view(),
         name="wonder",
     ),
+    path(
+        "charm//<pk>/",
+        views.mage.CharmUpdateView.as_view(),
+        name="charm",
+    ),
 ]
