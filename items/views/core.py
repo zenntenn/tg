@@ -129,6 +129,7 @@ class GenericItemDetailView(View):
         "thrown_weapon": ThrownWeaponDetailView,
         "ranged_weapon": RangedWeaponDetailView,
         "wonder": mage.WonderDetailView,
+        "charm": mage.CharmDetailView,
     }
 
     def get(self, request, *args, **kwargs):

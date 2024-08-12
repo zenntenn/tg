@@ -1,0 +1,16 @@
+{% extends "items/mage/wonder/form.html" %}
+{% block title %}
+    Wonder Updater
+{% endblock title %}
+{% block powers %}
+    <div class="col-sm mtas_heading">
+        <h2>Powers</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">Arete</div>
+        <div class="col-sm">{{ form.arete }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.power }}</div>
+    </div>
+{% endblock powers %}

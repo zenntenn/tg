@@ -8,7 +8,7 @@ from items.models.core import (
     ThrownWeapon,
     Weapon,
 )
-from items.models.mage import Wonder, WonderResonanceRating
+from items.models.mage import Charm, Wonder, WonderResonanceRating
 
 
 # Register your models here.
@@ -43,3 +43,4 @@ class WonderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(WonderResonanceRating)
+admin.site.register(Charm)
