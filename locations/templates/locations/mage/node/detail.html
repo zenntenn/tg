@@ -1,0 +1,53 @@
+{% extends "locations/location/detail.html" %}
+{% block parent %}
+    {% if object.parent != None %}
+        <div class="row">
+            <div class="col-sm">Parent</div>
+            <a class="col-sm" href="{{ object.parent.get_absolute_url }}">{{ object.parent.name }}</a>
+        </div>
+    {% endif %}
+    {% if object.mage_set.count != 0 %}
+        <div class="row">
+            {% for mage in object.mage_set.all %}
+                <div class="col-sm">Owner</div>
+                <a class="col-sm" href="{{ mage.get_absolute_url }}">{{ mage.name }}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock parent %}
+{% block other %}
+    <div class="row">
+        <div class="col-sm">Rank</div>
+        <div class="col-sm">{{ object.rank }}</div>
+        <div class="col-sm">Size</div>
+        <div class="col-sm">{{ object.get_size_display }}</div>
+        <div class="col-sm"></div>
+        <div class="col-sm"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Quintessence per week</div>
+        <div class="col-sm">{{ object.quintessence_per_week }}</div>
+        <div class="col-sm">{{ object.quintessence_form }}</div>
+        <div class="col-sm">Tass per week</div>
+        <div class="col-sm">{{ object.tass_per_week }}</div>
+        <div class="col-sm">{{ object.tass_form }}</div>
+    </div>
+    {% if merits_and_flaws.count != 0 %}
+        <div class="col-sm {{ object.get_heading }}">
+            <h2>Merits and Flaws</h2>
+        </div>
+        <div class="row">
+            {% for mf in merits_and_flaws %}
+                <a class="col-sm" href={{ mf.mf.get_absolute_url }}>{{ mf.mf }} {{ mf.rating }}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="col-sm {{ object.get_heading }}">
+        <h2>Resonance</h2>
+    </div>
+    <div class="row">
+        {% for res in resonance %}
+            <a class="col-sm" href={{ res.resonance.get_absolute_url }}>{{ res.resonance }}: {{ res.rating }}</a>
+        {% endfor %}
+    </div>
+{% endblock other %}

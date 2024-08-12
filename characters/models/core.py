@@ -31,6 +31,7 @@ class MeritFlaw(Model):
 
     ratings = models.ManyToManyField(Number, blank=True)
     max_rating = models.IntegerField(default=0)
+    min_rating = models.IntegerField(default=0)
 
     allowed_types = models.ManyToManyField(ObjectType, blank=True)
 
@@ -54,6 +55,13 @@ class MeritFlaw(Model):
             self.max_rating = max(self.ratings.all().values_list("value", flat=True))
         self.save()
 
+    def update_min_rating(self):
+        if self.ratings.all().count() == 0:
+            self.min_rating = 0
+        else:
+            self.min_rating = min(self.ratings.all().values_list("value", flat=True))
+        self.save()
+
     def get_ratings(self):
         tmp = list(self.ratings.all().values_list("value", flat=True))
         tmp.sort()
@@ -63,6 +71,7 @@ class MeritFlaw(Model):
         n = Number.objects.get_or_create(value=number)[0]
         self.ratings.add(n)
         self.update_max_rating()
+        self.update_min_rating()
 
     def add_ratings(self, num_list):
         for x in num_list:

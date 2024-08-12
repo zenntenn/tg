@@ -142,3 +142,9 @@ class Resonance(Model):
         }
         assoc_spheres = [k.title() for k, v in all_spheres.items() if v]
         return ", ".join(assoc_spheres)
+
+
+class Sphere(models.Model):
+    type = "sphere"
+
+    name = models.CharField(max_length=100)
