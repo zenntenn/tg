@@ -4,6 +4,8 @@ from django.views.generic import CreateView, DetailView, UpdateView
 from locations.models import LocationModel
 from locations.models.core import City
 
+from . import mage
+
 
 # Create your views here.
 class LocationDetailView(DetailView):
@@ -74,6 +76,7 @@ class GenericLocationDetailView(View):
     views = {
         "location": LocationDetailView,
         "city": CityDetailView,
+        "node": mage.NodeDetailView,
     }
 
     def get(self, request, *args, **kwargs):

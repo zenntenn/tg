@@ -8,7 +8,7 @@ from items.models.core import (
     ThrownWeapon,
     Weapon,
 )
-from items.models.mage import Wonder
+from items.models.mage import Wonder, WonderResonanceRating
 
 
 # Register your models here.
@@ -40,3 +40,6 @@ class MaterialAdmin(admin.ModelAdmin):
 @admin.register(Wonder)
 class WonderAdmin(admin.ModelAdmin):
     list_display = ("name", "rank", "background_cost", "quintessence_max")
+
+
+admin.site.register(WonderResonanceRating)
