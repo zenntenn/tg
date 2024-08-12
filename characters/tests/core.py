@@ -244,7 +244,7 @@ class TestHumanDetailView(TestCase):
 
     def test_mage_detail_view_templates(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/human/detail.html")
+        self.assertTemplateUsed(response, "characters/core/human/detail.html")
 
 
 class TestHumanCreateView(TestCase):
@@ -268,7 +268,7 @@ class TestHumanCreateView(TestCase):
 
     def test_create_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/human/form.html")
+        self.assertTemplateUsed(response, "characters/core/human/form.html")
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -302,7 +302,7 @@ class TestHumanUpdateView(TestCase):
 
     def test_update_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/human/form.html")
+        self.assertTemplateUsed(response, "characters/core/human/form.html")
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -321,9 +321,9 @@ class TestGenericCharacterDetailViews(TestCase):
 
     def test_character_detail_view_templates(self):
         response = self.client.get(f"/characters/{self.character.id}/")
-        self.assertTemplateUsed(response, "characters/character/detail.html")
+        self.assertTemplateUsed(response, "characters/core/character/detail.html")
         response = self.client.get(f"/characters/{self.human.id}/")
-        self.assertTemplateUsed(response, "characters/human/detail.html")
+        self.assertTemplateUsed(response, "characters/core/human/detail.html")
 
 
 class TestGroupDetailView(TestCase):
@@ -338,7 +338,7 @@ class TestGroupDetailView(TestCase):
 
     def test_group_detail_view_templates(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/group/detail.html")
+        self.assertTemplateUsed(response, "characters/core/group/detail.html")
 
 
 class TestGroupCreateView(TestCase):
@@ -355,7 +355,7 @@ class TestGroupCreateView(TestCase):
 
     def test_create_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/group/form.html")
+        self.assertTemplateUsed(response, "characters/core/group/form.html")
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -377,7 +377,7 @@ class TestGroupUpdateView(TestCase):
 
     def test_update_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/group/form.html")
+        self.assertTemplateUsed(response, "characters/core/group/form.html")
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -393,7 +393,7 @@ class TestGenericGroupDetailView(TestCase):
 
     def test_generic_group_detail_view_templates(self):
         response = self.client.get(f"/characters/groups/{self.group.id}/")
-        self.assertTemplateUsed(response, "characters/group/detail.html")
+        self.assertTemplateUsed(response, "characters/core/group/detail.html")
 
 
 class TestArchetypeDetailView(TestCase):
@@ -407,7 +407,7 @@ class TestArchetypeDetailView(TestCase):
 
     def test_archetype_detail_view_templates(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/archetype/detail.html")
+        self.assertTemplateUsed(response, "characters/core/archetype/detail.html")
 
 
 class TestArchetypeCreateView(TestCase):
@@ -424,7 +424,7 @@ class TestArchetypeCreateView(TestCase):
 
     def test_create_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/archetype/form.html")
+        self.assertTemplateUsed(response, "characters/core/archetype/form.html")
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -448,7 +448,7 @@ class TestArchetypeUpdateView(TestCase):
 
     def test_update_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/archetype/form.html")
+        self.assertTemplateUsed(response, "characters/core/archetype/form.html")
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -472,7 +472,7 @@ class TestMeritFlawDetailView(TestCase):
 
     def test_mf_detail_view_templates(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/meritflaw/detail.html")
+        self.assertTemplateUsed(response, "characters/core/meritflaw/detail.html")
 
 
 class TestMeritFlawCreateView(TestCase):
@@ -491,7 +491,7 @@ class TestMeritFlawCreateView(TestCase):
 
     def test_create_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/meritflaw/form.html")
+        self.assertTemplateUsed(response, "characters/core/meritflaw/form.html")
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -518,7 +518,7 @@ class TestMeritFlawUpdateView(TestCase):
 
     def test_update_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/meritflaw/form.html")
+        self.assertTemplateUsed(response, "characters/core/meritflaw/form.html")
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -538,7 +538,7 @@ class TestDerangementDetailView(TestCase):
 
     def test_derangement_detail_view_templates(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/derangement/detail.html")
+        self.assertTemplateUsed(response, "characters/core/derangement/detail.html")
 
 
 class TestDerangementCreateView(TestCase):
@@ -552,7 +552,7 @@ class TestDerangementCreateView(TestCase):
 
     def test_create_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/derangement/form.html")
+        self.assertTemplateUsed(response, "characters/core/derangement/form.html")
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -575,7 +575,7 @@ class TestDerangementUpdateView(TestCase):
 
     def test_update_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/derangement/form.html")
+        self.assertTemplateUsed(response, "characters/core/derangement/form.html")
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -595,7 +595,7 @@ class TestSpecialtyDetailView(TestCase):
 
     def test_specialty_detail_view_templates(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/specialty/detail.html")
+        self.assertTemplateUsed(response, "characters/core/specialty/detail.html")
 
 
 class TestSpecialtyCreateView(TestCase):
@@ -612,7 +612,7 @@ class TestSpecialtyCreateView(TestCase):
 
     def test_create_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/specialty/form.html")
+        self.assertTemplateUsed(response, "characters/core/specialty/form.html")
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
@@ -636,7 +636,7 @@ class TestSpecialtyUpdateView(TestCase):
 
     def test_update_view_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/specialty/form.html")
+        self.assertTemplateUsed(response, "characters/core/specialty/form.html")
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)

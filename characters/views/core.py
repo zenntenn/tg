@@ -16,24 +16,24 @@ from django.views.generic import CreateView, DetailView, UpdateView, View
 # Create your views here.
 class CharacterDetailView(DetailView):
     model = Character
-    template_name = "characters/character/detail.html"
+    template_name = "characters/core/character/detail.html"
 
 
 class CharacterCreateView(CreateView):
     model = Character
     fields = "__all__"
-    template_name = "characters/character/form.html"
+    template_name = "characters/core/character/form.html"
 
 
 class CharacterUpdateView(UpdateView):
     model = Character
     fields = "__all__"
-    template_name = "characters/character/form.html"
+    template_name = "characters/core/character/form.html"
 
 
 class HumanDetailView(DetailView):
     model = Human
-    template_name = "characters/human/detail.html"
+    template_name = "characters/core/human/detail.html"
 
 
 class HumanCreateView(CreateView):
@@ -63,7 +63,7 @@ class HumanCreateView(CreateView):
         "goals",
         "notes",
     ]
-    template_name = "characters/human/form.html"
+    template_name = "characters/core/human/form.html"
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         print(form.data)
@@ -102,7 +102,7 @@ class HumanUpdateView(UpdateView):
         "goals",
         "notes",
     ]
-    template_name = "characters/human/form.html"
+    template_name = "characters/core/human/form.html"
 
 
 class GenericCharacterDetailView(View):
@@ -124,26 +124,26 @@ class GenericCharacterDetailView(View):
 
 class ArchetypeDetailView(DetailView):
     model = Archetype
-    template_name = "characters/archetype/detail.html"
+    template_name = "characters/core/archetype/detail.html"
 
 
 class ArchetypeCreateView(CreateView):
     model = Archetype
     fields = ["name", "description"]
-    template_name = "characters/archetype/form.html"
+    template_name = "characters/core/archetype/form.html"
 
 
 class ArchetypeUpdateView(UpdateView):
     model = Archetype
     fields = ["name", "description"]
-    template_name = "characters/archetype/form.html"
+    template_name = "characters/core/archetype/form.html"
 
 
 class MeritFlawDetailView(View):
     def get(self, request, *args, **kwargs):
         mf = MeritFlaw.objects.get(pk=kwargs["pk"])
         context = self.get_context(mf)
-        return render(request, "characters/meritflaw/detail.html", context)
+        return render(request, "characters/core/meritflaw/detail.html", context)
 
     def get_context(self, mf):
         context = {}
@@ -157,47 +157,47 @@ class MeritFlawDetailView(View):
 class MeritFlawCreateView(CreateView):
     model = MeritFlaw
     fields = ["name", "description", "ratings", "allowed_types"]
-    template_name = "characters/meritflaw/form.html"
+    template_name = "characters/core/meritflaw/form.html"
 
 
 class MeritFlawUpdateView(UpdateView):
     model = MeritFlaw
     fields = ["name", "description", "ratings", "allowed_types"]
-    template_name = "characters/meritflaw/form.html"
+    template_name = "characters/core/meritflaw/form.html"
 
 
 class DerangementDetailView(DetailView):
     model = Derangement
-    template_name = "characters/derangement/detail.html"
+    template_name = "characters/core/derangement/detail.html"
 
 
 class DerangementCreateView(CreateView):
     model = Derangement
     fields = ["name", "description"]
-    template_name = "characters/derangement/form.html"
+    template_name = "characters/core/derangement/form.html"
 
 
 class DerangementUpdateView(UpdateView):
     model = Derangement
     fields = ["name", "description"]
-    template_name = "characters/derangement/form.html"
+    template_name = "characters/core/derangement/form.html"
 
 
 class GroupDetailView(DetailView):
     model = Group
-    template_name = "characters/group/detail.html"
+    template_name = "characters/core/group/detail.html"
 
 
 class GroupCreateView(CreateView):
     model = Group
     fields = ["name", "description", "members", "leader"]
-    template_name = "characters/group/form.html"
+    template_name = "characters/core/group/form.html"
 
 
 class GroupUpdateView(UpdateView):
     model = Group
     fields = ["name", "description", "members", "leader"]
-    template_name = "characters/group/form.html"
+    template_name = "characters/core/group/form.html"
 
 
 class GenericGroupDetailView(View):
@@ -213,16 +213,16 @@ class GenericGroupDetailView(View):
 
 class SpecialtyDetailView(DetailView):
     model = Specialty
-    template_name = "characters/specialty/detail.html"
+    template_name = "characters/core/specialty/detail.html"
 
 
 class SpecialtyCreateView(CreateView):
     model = Specialty
     fields = ["name", "stat"]
-    template_name = "characters/specialty/form.html"
+    template_name = "characters/core/specialty/form.html"
 
 
 class SpecialtyUpdateView(UpdateView):
     model = Specialty
     fields = ["name", "stat"]
-    template_name = "characters/specialty/form.html"
+    template_name = "characters/core/specialty/form.html"
