@@ -9,6 +9,9 @@ from items.models.core import (
     Weapon,
 )
 from items.models.mage import Charm, Wonder, WonderResonanceRating
+from items.models.mage.artifact import Artifact
+from items.models.mage.grimoire import Grimoire
+from items.models.mage.talisman import Talisman
 
 
 # Register your models here.
@@ -44,3 +47,10 @@ class WonderAdmin(admin.ModelAdmin):
 
 admin.site.register(WonderResonanceRating)
 admin.site.register(Charm)
+admin.site.register(Talisman)
+admin.site.register(Artifact)
+
+
+@admin.register(Grimoire)
+class GrimoireAdmin(admin.ModelAdmin):
+    list_display = ("name", "rank", "is_primer", "medium", "faction")

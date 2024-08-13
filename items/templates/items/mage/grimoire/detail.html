@@ -1,0 +1,85 @@
+{% extends "wod/items/mage/wonder/detail.html" %}
+{% block creation %}
+    <div class="row">
+        <div class="col-sm">Created By</div>
+        <div class="col-sm">
+            {% if object.faction.parent is not None %}
+                {% if object.faction.parent.parent is not None %}
+                    <a href="{{ object.faction.parent.parent.get_absolute_url }}">{{ object.faction.parent.parent }}</a> -
+            {% endif %}
+            <a href="{{ object.faction.parent.get_absolute_url }}">{{ object.faction.parent }}</a> -
+    {% endif %}
+    <a href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
+</div>
+<div class="col-sm">Primer</div>
+<div class="col-sm">{{ object.is_primer }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Medium</div>
+    <a class="col-sm" href="{{ object.medium.get_absolute_url }}">{{ object.medium }}</a>
+    <div class="col-sm">Cover Material</div>
+    <a class="col-sm" href="{{ object.cover_material.get_absolute_url }}">{{ object.cover_material }}</a>
+    <div class="col-sm">Inner Material</div>
+    <a class="col-sm" href="{{ object.inner_material.get_absolute_url }}">{{ object.inner_material }}</a>
+</div>
+<div class="row">
+    <div class="col-sm">Length</div>
+    <div class="col-sm">{{ object.length }}</div>
+    <div class="col-sm">Date Written</div>
+    <div class="col-sm">
+        {{ year }}
+        {% if date_written > 0 %}
+            AD
+        {% else %}
+            BC
+        {% endif %}
+    </div>
+    <div class="col-sm">Language</div>
+    <a class="col-sm" href="{{ object.language.get_absolute_url }}">{{ object.language }}</a>
+</div>
+{% endblock creation %}
+{% block powers %}
+    <h2 class="{{ object.get_heading }}">Focus</h2>
+    <div class="row">
+        <div class="col-sm">
+            <b>Paradigms</b>
+        </div>
+        <div class="col-sm">
+            <b>Practices</b>
+        </div>
+        <div class="col-sm">
+            <b>Instruments</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ paradigms| safe }}</div>
+        <div class="col-sm">{{ practices| safe }}</div>
+        <div class="col-sm">{{ instruments| safe }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Abilities</div>
+        <div class="col-sm">{{ abilities| safe }}</div>
+        <div class="col-sm">Spheres</div>
+        <div class="col-sm">{{ spheres| safe }}</div>
+        <div class="col-sm"></div>
+        <div class="col-sm">
+        </div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">
+            Effects
+        </h2>
+    </div>
+    {% for row in effects %}
+        <div class="row">
+            {% for effect in row %}
+                <a class="col-sm" href="{{ effect.get_absolute_url }}">
+                    {{ effect.name }}
+                </a>
+                <div class="col-sm dots">
+                    {{ effect.spheres }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock powers %}

@@ -23,4 +23,9 @@ urls = [
         views.mage.TalismanCreateView.as_view(),
         name="talisman",
     ),
+    path(
+        "grimoire/",
+        views.mage.GrimoireCreateView.as_view(),
+        name="grimoire",
+    ),
 ]
