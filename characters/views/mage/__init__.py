@@ -1,3 +1,5 @@
+from faction import MageFactionCreateView, MageFactionDetailView, MageFactionUpdateView
+
 from .effect import EffectCreateView, EffectDetailView, EffectUpdateView
 from .focus import (
     CorruptedPracticeCreateView,

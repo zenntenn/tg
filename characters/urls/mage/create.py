@@ -10,7 +10,7 @@ urls = [
         name="effect",
     ),
     path(
-        "resonances/",
+        "resonance/",
         views.mage.ResonanceCreateView.as_view(),
         name="resonance",
     ),
@@ -43,5 +43,10 @@ urls = [
         "tenet/",
         views.mage.TenetCreateView.as_view(),
         name="tenet",
+    ),
+    path(
+        "magefaction/",
+        views.mage.MageFactionCreateView.as_view(),
+        name="magefaction",
     ),
 ]
