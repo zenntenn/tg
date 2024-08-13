@@ -23,4 +23,9 @@ urls = [
         views.mage.TalismanUpdateView.as_view(),
         name="talisman",
     ),
+    path(
+        "grimoire/<pk>/",
+        views.mage.GrimoireUpdateView.as_view(),
+        name="grimoire",
+    ),
 ]
