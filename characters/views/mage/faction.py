@@ -7,13 +7,15 @@ class MageFactionDetailView(View):
     def get(self, request, *args, **kwargs):
         magefaction = MageFaction.objects.get(pk=kwargs["pk"])
         context = self.get_context(magefaction)
-        return render(request, "characters/mage/magefaction/detail.html", context)
+        return render(request, "characters/mage/faction/detail.html", context)
 
     def get_context(self, magefaction):
         context = {}
         context["object"] = magefaction
         context["languages"] = ", ".join([str(x) for x in magefaction.languages.all()])
-        context["affinities"] = ", ".join([x.title() for x in magefaction.affinities])
+        context["affinities"] = ", ".join(
+            [x.name for x in magefaction.affinities.all()]
+        )
         context["paradigms"] = ", ".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
@@ -50,11 +52,35 @@ class MageFactionDetailView(View):
 
 class MageFactionCreateView(CreateView):
     model = MageFaction
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "languages",
+        "affinities",
+        "paradigms",
+        "practices",
+        "media",
+        "materials",
+        "founded",
+        "ended",
+        "parent",
+    ]
     template_name = "characters/mage/faction/form.html"
 
 
 class MageFactionUpdateView(UpdateView):
     model = MageFaction
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "languages",
+        "affinities",
+        "paradigms",
+        "practices",
+        "media",
+        "materials",
+        "founded",
+        "ended",
+        "parent",
+    ]
     template_name = "characters/mage/faction/form.html"

@@ -1,6 +1,9 @@
-from core.models import Language, Material, Medium, Model
+from characters.models.mage.sphere import Sphere
+from core.models import Language, Model
 from django.db import models
 from django.urls import reverse
+from items.models.core.material import Material
+from items.models.core.medium import Medium
 
 from .focus import Paradigm, Practice
 
@@ -10,7 +13,7 @@ class MageFaction(Model):
     type = "mage_faction"
 
     languages = models.ManyToManyField(Language, blank=True)
-    affinities = models.JSONField(default=list)
+    affinities = models.ManyToManyField(Sphere, blank=True)
     paradigms = models.ManyToManyField(Paradigm, blank=True)
     practices = models.ManyToManyField(Practice, blank=True)
     media = models.ManyToManyField(Medium, blank=True)

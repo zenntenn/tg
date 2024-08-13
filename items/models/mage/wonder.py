@@ -1,4 +1,4 @@
-from characters.models.mage import Effect, Resonance
+from characters.models.mage.resonance import Resonance
 from django.db import models
 from django.urls import reverse
 from items.models.core import ItemModel
@@ -11,7 +11,9 @@ class WonderResonanceRating(models.Model):
         verbose_name_plural = "Wonder Resonance Ratings"
 
     wonder = models.ForeignKey("Wonder", on_delete=models.SET_NULL, null=True)
-    resonance = models.ForeignKey(Resonance, on_delete=models.SET_NULL, null=True)
+    resonance = models.ForeignKey(
+        "characters.Resonance", on_delete=models.SET_NULL, null=True
+    )
     rating = models.IntegerField(default=0)
 
     def __str__(self):
@@ -26,7 +28,7 @@ class Wonder(ItemModel):
     quintessence_max = models.IntegerField(default=0)
 
     resonance = models.ManyToManyField(
-        Resonance, blank=True, through=WonderResonanceRating
+        "characters.Resonance", blank=True, through=WonderResonanceRating
     )
 
     class Meta:

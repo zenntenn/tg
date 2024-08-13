@@ -10,6 +10,7 @@ from characters.models.core import (
     Specialty,
 )
 from characters.models.mage import Effect, Resonance
+from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import (
     CorruptedPractice,
     Instrument,
@@ -18,7 +19,6 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
-from characters.models.mage.faction import MageFaction
 from django.contrib import admin
 
 # Register your models here.
@@ -123,7 +123,8 @@ class InstrumentAdmin(admin.ModelAdmin):
 @admin.register(Tenet)
 class TenetAdmin(admin.ModelAdmin):
     list_display = ("name",)
-    
+
+
 @admin.register(MageFaction)
 class MageFactionAdmin(admin.ModelAdmin):
     list_display = ("name", "parent")

@@ -1,4 +1,6 @@
 from characters.models.mage.faction import MageFaction
+from characters.models.mage.focus import Paradigm, Practice
+from characters.models.mage.sphere import Sphere
 from django.test import TestCase
 from django.urls import reverse
 
@@ -27,14 +29,16 @@ class TestMageFaction(TestCase):
 
     def test_affinities(self):
         faction = MageFaction.objects.create(name="Faction 1", parent=None)
-        faction.affinities = ["forces", "correspondence"]
-        self.assertEqual(len(faction.affinities), 2)
-        faction.affinities = faction.affinities + ["life"]
-        self.assertEqual(len(faction.affinities), 3)
-        faction.affinities.append("prime")
-        self.assertEqual(len(faction.affinities), 4)
-        faction.affinities.pop()
-        self.assertEqual(len(faction.affinities), 3)
+        forces = Sphere.objects.create(name="Forces", property_name="forces")
+        correspondence = Sphere.objects.create(
+            name="Correspondence", property_name="correspondence"
+        )
+        faction.affinities.add(forces)
+        faction.affinities.add(correspondence)
+        self.assertEqual(faction.affinities.count(), 2)
+        life = Sphere.objects.create(name="Life", property_name="life")
+        faction.affinities.add(life)
+        self.assertEqual(faction.affinities.count(), 3)
 
     def test_get_all_paradigms(self):
         expected_paradigms = Paradigm.objects.filter(id__in=[1, 2, 3])
@@ -73,16 +77,9 @@ class TestMageFactionCreateView(TestCase):
     def setUp(self):
         self.valid_data = {
             "name": "Test MageFaction",
-            "description": "Test",
-            "correspondence": 0,
-            "time": 0,
-            "spirit": 0,
-            "matter": 0,
-            "life": 0,
-            "forces": 3,
-            "entropy": 0,
-            "mind": 0,
-            "prime": 2,
+            "description": "Test description",
+            "founded": 2000,
+            "ended": 2001,
         }
         self.url = reverse("characters:mage:create:magefaction")
 
@@ -109,16 +106,10 @@ class TestMageFactionUpdateView(TestCase):
         self.valid_data = {
             "name": "Test MageFaction Updated",
             "description": "Test",
-            "correspondence": 0,
-            "time": 0,
-            "spirit": 0,
-            "matter": 0,
-            "life": 0,
-            "forces": 3,
-            "entropy": 0,
-            "mind": 0,
-            "prime": 2,
+            "founded": 2000,
+            "ended": 2001,
         }
+
         self.url = self.faction.get_update_url()
 
     def test_update_view_status_code(self):
