@@ -1,0 +1,34 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Abilities</div>
+        <div class="col-sm">{{ object.abilities.all }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Instruments</div>
+        <div class="col-sm">{{ object.instruments.all }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Common Resonance Traits</div>
+        <div class="col-sm">{{ object.common_resonance_traits.all }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ object.description }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Benefit</div>
+        <div class="col-sm">{{ object.benefit }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Penalty</div>
+        <div class="col-sm">{{ object.penalty }}</div>
+    </div>
+    {% block specialization %}
+    {% endblock specialization %}
+{% endblock contents %}

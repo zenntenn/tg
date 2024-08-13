@@ -1,0 +1,25 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Type</div>
+        <div class="col-sm">{{ object.get_tenet_type_display }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ object.description }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Associated Practices</div>
+        <div class="col-sm">{{ object.associated_practices.all }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Limited Practices</div>
+        <div class="col-sm">{{ object.limited_practices.all }}</div>
+    </div>
+{% endblock contents %}
+    
