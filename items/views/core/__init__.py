@@ -33,6 +33,7 @@ class GenericItemDetailView(View):
         "wonder": mage.WonderDetailView,
         "charm": mage.CharmDetailView,
         "artifact": mage.ArtifactDetailView,
+        "talisman": mage.TalismanDetailView,
     }
 
     def get(self, request, *args, **kwargs):

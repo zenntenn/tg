@@ -9,7 +9,7 @@ urls = [
         name="wonder",
     ),
     path(
-        "charm//<pk>/",
+        "charm/<pk>/",
         views.mage.CharmUpdateView.as_view(),
         name="charm",
     ),
@@ -17,5 +17,10 @@ urls = [
         "artifact/<pk>/",
         views.mage.ArtifactUpdateView.as_view(),
         name="artifact",
+    ),
+    path(
+        "talisman/<pk>/",
+        views.mage.TalismanUpdateView.as_view(),
+        name="talisman",
     ),
 ]

@@ -18,4 +18,9 @@ urls = [
         views.mage.ArtifactCreateView.as_view(),
         name="artifact",
     ),
+    path(
+        "talisman/",
+        views.mage.TalismanCreateView.as_view(),
+        name="talisman",
+    ),
 ]
