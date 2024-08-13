@@ -1,4 +1,7 @@
+from characters.models.core.ability import Ability
 from characters.models.mage.effect import Effect
+from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.sphere import Sphere
 from core.models import Language
 from django.db import models
 from django.urls import reverse
@@ -10,11 +13,11 @@ from items.models.mage.wonder import Wonder
 class Grimoire(Wonder):
     type = "grimoire"
 
-    abilities = models.JSONField(default=list)
-    spheres = models.JSONField(default=list)
+    abilities = models.ManyToManyField(Ability, blank=True)
+    spheres = models.ManyToManyField(Sphere, blank=True)
     date_written = models.IntegerField(default=-5000)
     faction = models.ForeignKey(
-        MageFaction, null=True, blank=True, on_delete=models.SET_NULL
+        "characters.MageFaction", null=True, blank=True, on_delete=models.SET_NULL
     )
     paradigms = models.ManyToManyField(Paradigm, blank=True)
     practices = models.ManyToManyField(Practice, blank=True)
@@ -49,13 +52,14 @@ class Grimoire(Wonder):
         return reverse("items:mage:update:grimoire", args=[str(self.id)])
 
     def set_abilities(self, abilities):
-        if not isinstance(abilities, list):
-            return False
-        self.abilities = abilities
+        for ability in abilities:
+            if not isinstance(ability, Ability):
+                return False
+            self.abilities.add(ability)
         return True
 
     def has_abilities(self):
-        return self.abilities != []
+        return self.abilities.count() != 0
 
     def set_date_written(self, date_written):
         self.date_written = date_written
@@ -132,13 +136,14 @@ class Grimoire(Wonder):
         return self.effects.count() != 0
 
     def set_spheres(self, spheres):
-        if not isinstance(spheres, list):
-            return False
-        self.spheres = spheres
+        for sphere in spheres:
+            if not isinstance(sphere, Sphere):
+                return False
+            self.spheres.add(sphere)
         return True
 
     def has_spheres(self):
-        return self.spheres != []
+        return self.spheres.count() != 0
 
     def set_is_primer(self, is_primer):
         self.is_primer = is_primer

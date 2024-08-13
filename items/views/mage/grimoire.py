@@ -2,7 +2,7 @@ from collections import namedtuple
 
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView, View
-from models.mage.grimoire import Grimoire
+from items.models.mage.grimoire import Grimoire
 
 EmptyRote = namedtuple("EmptyRote", ["name", "spheres"])
 empty_rote = EmptyRote("", "")
@@ -27,12 +27,8 @@ class GrimoireDetailView(View):
             s = ""
         context = {
             "object": grimoire,
-            "abilities": "<br>".join(
-                [x.replace("_", " ").title() for x in grimoire.abilities]
-            ),
-            "spheres": "<br>".join(
-                [x.replace("_", " ").title() for x in grimoire.spheres]
-            ),
+            "abilities": "<br>".join([x.name for x in grimoire.abilities.all()]),
+            "spheres": "<br>".join([x.name for x in grimoire.spheres.all()]),
             "effects": "<br>".join([str(x) for x in grimoire.effects.all()]),
             "date_written": grimoire.date_written,
             "faction": s,
@@ -71,11 +67,45 @@ class GrimoireDetailView(View):
 
 class GrimoireCreateView(CreateView):
     model = Grimoire
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "abilities",
+        "spheres",
+        "date_written",
+        "faction",
+        "paradigms",
+        "practices",
+        "instruments",
+        "is_primer",
+        "language",
+        "length",
+        "cover_material",
+        "inner_material",
+        "medium",
+        "effects",
+    ]
     template_name = "items/mage/grimoire/form.html"
 
 
 class GrimoireUpdateView(UpdateView):
     model = Grimoire
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "abilities",
+        "spheres",
+        "date_written",
+        "faction",
+        "paradigms",
+        "practices",
+        "instruments",
+        "is_primer",
+        "language",
+        "length",
+        "cover_material",
+        "inner_material",
+        "medium",
+        "effects",
+    ]
     template_name = "items/mage/grimoire/form.html"

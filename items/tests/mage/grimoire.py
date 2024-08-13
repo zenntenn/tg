@@ -1,6 +1,11 @@
+from characters.models.core.ability import Ability
 from characters.models.mage import Effect
+from characters.models.mage.faction import MageFaction
+from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.sphere import Sphere
 from core.models import Language
 from django.test import TestCase
+from django.urls import reverse
 from items.models.core.material import Material
 from items.models.core.medium import Medium
 from items.models.mage.grimoire import Grimoire
@@ -10,7 +15,10 @@ class TestGrimoire(TestCase):
     def setUp(self):
         self.grimoire = Grimoire.objects.create(name="Test Grimoire")
         self.faction = MageFaction.objects.create(name="Test Faction")
-        self.abilities = ["science", "art", "crafts"]
+        science = Ability.objects.create(name="Science", property_name="science")
+        art = Ability.objects.create(name="Art", property_name="art")
+        crafts = Ability.objects.create(name="Crafts", property_name="crafts")
+        self.abilities = [science, art, crafts]
         self.date_written = 1325
         self.language = Language.objects.create(name="Test Language")
         self.length = 100
@@ -29,7 +37,12 @@ class TestGrimoire(TestCase):
         self.effects = [
             Effect.objects.create(name=f"Test Effect {i}") for i in range(4)
         ]
-        self.spheres = ["correspondence", "forces", "matter"]
+        correspondence = Sphere.objects.create(
+            name="Correspondence", property_name="correspondence"
+        )
+        forces = Sphere.objects.create(name="Forces", property_name="forces")
+        matter = Sphere.objects.create(name="Matter", property_name="matter")
+        self.spheres = [correspondence, forces, matter]
 
     def test_set_rank(self):
         self.assertEqual(self.grimoire.rank, 0)
@@ -73,9 +86,9 @@ class TestGrimoire(TestCase):
         self.assertTrue(self.grimoire.has_focus())
 
     def test_set_abilities(self):
-        self.assertEqual(self.grimoire.abilities, [])
+        self.assertEqual(self.grimoire.abilities.count(), 0)
         self.assertTrue(self.grimoire.set_abilities(self.abilities))
-        self.assertEqual(set(self.grimoire.abilities), set(self.abilities))
+        self.assertEqual(set(self.grimoire.abilities.all()), set(self.abilities))
 
     def test_has_abilities(self):
         self.assertFalse(self.grimoire.has_abilities())
@@ -137,9 +150,9 @@ class TestGrimoire(TestCase):
         self.assertTrue(self.grimoire.has_date_written())
 
     def test_set_spheres(self):
-        self.assertEqual(self.grimoire.spheres, [])
+        self.assertEqual(self.grimoire.spheres.count(), 0)
         self.assertTrue(self.grimoire.set_spheres(self.spheres))
-        self.assertEqual(set(self.grimoire.spheres), set(self.spheres))
+        self.assertEqual(set(self.grimoire.spheres.all()), set(self.spheres))
 
     def test_has_spheres(self):
         self.assertFalse(self.grimoire.has_spheres())
@@ -155,3 +168,76 @@ class TestGrimoire(TestCase):
         self.assertFalse(self.grimoire.has_effects())
         self.grimoire.set_effects(self.effects)
         self.assertTrue(self.grimoire.has_effects())
+
+
+class TestGrimoireDetailView(TestCase):
+    def setUp(self) -> None:
+        self.grimoire = Grimoire.objects.create(name="Test Grimoire")
+        self.url = self.grimoire.get_absolute_url()
+
+    def test_object_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_object_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "items/mage/grimoire/detail.html")
+
+
+class TestGrimoireCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test Grimoire",
+            "description": "Test",
+            "date_written": 1000,
+            "is_primer": False,
+            "length": 3,
+        }
+        self.url = reverse("items:mage:create:grimoire")
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "items/mage/grimoire/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Grimoire.objects.count(), 1)
+        self.assertEqual(Grimoire.objects.first().name, "Test Grimoire")
+
+
+class TestGrimoireUpdateView(TestCase):
+    def setUp(self):
+        self.grimoire = Grimoire.objects.create(
+            name="Test Grimoire",
+            description="Test description",
+        )
+        self.valid_data = {
+            "name": "Test Grimoire Updated",
+            "description": "A test description for the grimoire.",
+            "date_written": 1000,
+            "is_primer": False,
+            "length": 3,
+        }
+        self.url = self.grimoire.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "items/mage/grimoire/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.grimoire.refresh_from_db()
+        self.assertEqual(self.grimoire.name, "Test Grimoire Updated")
+        self.assertEqual(
+            self.grimoire.description, "A test description for the grimoire."
+        )
