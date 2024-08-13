@@ -49,9 +49,9 @@ class Practice(Model):
 class SpecializedPractice(Practice):
     type = "specialized_practice"
 
-    # faction = models.ForeignKey(
-    #     MageFaction, blank=True, null=True, on_delete=models.SET_NULL
-    # )
+    faction = models.ForeignKey(
+        "characters.MageFaction", blank=True, null=True, on_delete=models.SET_NULL
+    )
     extra_benefit = models.TextField(default="")
 
     def get_update_url(self):

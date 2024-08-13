@@ -34,4 +34,9 @@ urls = [
         views.mage.TenetDetailView.as_view(),
         name="tenet",
     ),
+    path(
+        "magefactions/<pk>/",
+        views.mage.MageFactionDetailView.as_view(),
+        name="magefaction",
+    ),
 ]

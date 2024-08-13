@@ -469,5 +469,5 @@ class TestFilePath(TestCase):
         m = Human.objects.create(name="Test Human")
         self.assertEqual(
             filepath(m, "test.jpg"),
-            "characters/core/human/test_human.jpg",
+            "characters/core/human/human/test_human.jpg",
         )

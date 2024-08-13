@@ -1,4 +1,5 @@
 from .effect import EffectCreateView, EffectDetailView, EffectUpdateView
+from .faction import MageFactionCreateView, MageFactionDetailView, MageFactionUpdateView
 from .focus import (
     CorruptedPracticeCreateView,
     CorruptedPracticeDetailView,

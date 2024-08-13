@@ -1,8 +1,6 @@
 # TODO: MeritFlaw should check for Node Object in allowed types
-import random
-
 from characters.models.core import MeritFlaw
-from characters.models.mage import Resonance, Sphere
+from characters.models.mage.resonance import Resonance
 from core.models import Model
 from django.db import models
 from django.db.models import F, Q
@@ -42,7 +40,7 @@ class Node(LocationModel):
         MeritFlaw, blank=True, through="NodeMeritFlawRating"
     )
     resonance = models.ManyToManyField(
-        Resonance, blank=True, through="NodeResonanceRating"
+        "characters.Resonance", blank=True, through="NodeResonanceRating"
     )
 
     quintessence_per_week = models.IntegerField(default=0)

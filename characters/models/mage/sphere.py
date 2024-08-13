@@ -1,4 +1,4 @@
-from tracemalloc import Statistic
+from characters.models.core.statistic import Statistic
 
 
 class Sphere(Statistic):
