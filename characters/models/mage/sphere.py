@@ -1,7 +1,5 @@
-from django.db import models
+from tracemalloc import Statistic
 
 
-class Sphere(models.Model):
+class Sphere(Statistic):
     type = "sphere"
-
-    name = models.CharField(max_length=100)
