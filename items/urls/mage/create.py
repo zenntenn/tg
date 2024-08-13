@@ -13,4 +13,9 @@ urls = [
         views.mage.CharmCreateView.as_view(),
         name="charm",
     ),
+    path(
+        "artifact/",
+        views.mage.ArtifactCreateView.as_view(),
+        name="artifact",
+    ),
 ]
