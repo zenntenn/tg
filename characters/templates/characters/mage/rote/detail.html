@@ -1,0 +1,52 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Effect</div>
+        <a class="col-sm" href={{ object.effect.get_absolute_url }}>{{ object.effect }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Practice</div>
+        <div class="col-sm">{{ object.practice }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Dicepool</div>
+        <div class="col-sm">{{ object.attribute.title }} + {{ object.ability.title }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Correspondence</div>
+        <div class="col-sm dots">{{ object.effect.correspondence|dots }}</div>
+        <div class="col-sm">Life</div>
+        <div class="col-sm dots">{{ object.effect.life|dots }}</div>
+        <div class="col-sm">Prime</div>
+        <div class="col-sm dots">{{ object.effect.prime|dots }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Entropy</div>
+        <div class="col-sm dots">{{ object.effect.entropy|dots }}</div>
+        <div class="col-sm">Matter</div>
+        <div class="col-sm dots">{{ object.effect.matter|dots }}</div>
+        <div class="col-sm">Spirit</div>
+        <div class="col-sm dots">{{ object.effect.spirit|dots }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Forces</div>
+        <div class="col-sm dots">{{ object.effect.forces|dots }}</div>
+        <div class="col-sm">Mind</div>
+        <div class="col-sm dots">{{ object.effect.mind|dots }}</div>
+        <div class="col-sm">Time</div>
+        <div class="col-sm dots">{{ object.effect.time|dots }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Cost</div>
+        <div class="col-sm">{{ object.effect.rote_cost }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ object.description }}</div>
+    </div>
+{% endblock contents %}

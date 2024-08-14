@@ -22,3 +22,4 @@ from .focus import (
     TenetUpdateView,
 )
 from .resonance import ResonanceCreateView, ResonanceDetailView, ResonanceUpdateView
+from .rote import RoteCreateView, RoteDetailView, RoteUpdateView
