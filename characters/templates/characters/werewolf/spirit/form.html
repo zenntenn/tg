@@ -1,0 +1,53 @@
+{% extends "characters/core/character/form.html" %}
+{% block statistics %}
+    <div class="row">
+        <div class="col-sm {{ form.get_heading }}">
+            <h1>{{ form.name }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">Basics</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Player</div>
+        <div class="col-sm">{{ form.player }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Concept</div>
+        <div class="col-sm">{{ form.concept }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Willpower</div>
+        <div class="col-sm">{{ form.willpower }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Rage</div>
+        <div class="col-sm">{{ form.rage }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Gnosis</div>
+        <div class="col-sm">{{ form.gnosis }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Essence</div>
+        <div class="col-sm">{{ form.essence }}</div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm">Charms</h2>
+    </div>
+    {% for charm in form.charms.all %}
+        <div class="row">
+            <a class="col-sm" href="{{ charm.get_absolute_url }}">{{ charm.name }}</a>
+        </div>
+    {% endfor %}
+{% endblock statistics %}
+{% block flavor %}
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+{% endblock flavor %}

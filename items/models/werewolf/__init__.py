@@ -1,0 +1,1 @@
+from .fetish import Fetish

@@ -12,6 +12,7 @@ from items.models.mage import Charm, Wonder, WonderResonanceRating
 from items.models.mage.artifact import Artifact
 from items.models.mage.grimoire import Grimoire
 from items.models.mage.talisman import Talisman
+from items.models.werewolf.fetish import Fetish
 
 
 # Register your models here.
@@ -54,3 +55,8 @@ admin.site.register(Artifact)
 @admin.register(Grimoire)
 class GrimoireAdmin(admin.ModelAdmin):
     list_display = ("name", "rank", "is_primer", "medium", "faction")
+
+
+@admin.register(Fetish)
+class FetishAdmin(admin.ModelAdmin):
+    list_display = ("name",)

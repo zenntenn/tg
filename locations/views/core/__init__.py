@@ -1,6 +1,6 @@
 from django.views import View
 from locations.models.core.location import LocationModel
-from locations.views.mage.node import NodeDetailView
+from locations.views import mage
 
 from .city import CityCreateView, CityDetailView, CityUpdateView
 from .location import LocationCreateView, LocationDetailView, LocationUpdateView
@@ -10,7 +10,10 @@ class GenericLocationDetailView(View):
     views = {
         "location": LocationDetailView,
         "city": CityDetailView,
-        "node": NodeDetailView,
+        "node": mage.NodeDetailView,
+        "sector": mage.SectorDetailView,
+        "library": mage.LibraryDetailView,
+        "horizon_realm": mage.RealmDetailView,
     }
 
     def get(self, request, *args, **kwargs):

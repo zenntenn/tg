@@ -9,4 +9,19 @@ urls = [
         views.mage.NodeCreateView.as_view(),
         name="node",
     ),
+    path(
+        "sector/",
+        views.mage.SectorCreateView.as_view(),
+        name="sector",
+    ),
+    path(
+        "realm/create/",
+        views.mage.RealmCreateView.as_view(),
+        name="realm",
+    ),
+    path(
+        "library/",
+        views.mage.LibraryCreateView.as_view(),
+        name="library",
+    ),
 ]

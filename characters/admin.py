@@ -20,6 +20,9 @@ from characters.models.mage.focus import (
     Tenet,
 )
 from characters.models.mage.rote import Rote
+from characters.models.werewolf.charm import SpiritCharm
+from characters.models.werewolf.spirit import Spirit
+from characters.models.werewolf.totem import Totem
 from django.contrib import admin
 
 # Register your models here.
@@ -132,3 +135,18 @@ class MageFactionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Rote)
+
+
+@admin.register(Totem)
+class TotemAdmin(admin.ModelAdmin):
+    list_display = ("name", "cost")
+
+
+@admin.register(SpiritCharm)
+class SpiritCharmAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
+@admin.register(Spirit)
+class SpiritCharacterAdmin(admin.ModelAdmin):
+    list_display = ("name",)

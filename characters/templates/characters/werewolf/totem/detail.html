@@ -1,0 +1,32 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Cost</div>
+        <div class="col-sm">{{ object.cost }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Type</div>
+        <div class="col-sm">{{ object.get_type_display }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Individual Traits</div>
+        <div class="col-sm">{{ object.individual_traits }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Pack Traits</div>
+        <div class="col-sm">{{ object.pack_traits }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Ban</div>
+        <div class="col-sm">{{ object.ban }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ object.description }}</div>
+    </div>
+{% endblock contents %}

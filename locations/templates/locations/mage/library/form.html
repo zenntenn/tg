@@ -1,0 +1,28 @@
+{% extends "locations/core/location/form.html" %}
+{% block prominents %}
+    <div class="row">
+        <div class="col-sm">
+            {% if form.faction.parent is not None %}
+                {% if form.faction.parent.parent is not None %}
+                    <a href="{{ form.faction.parent.parent.get_absolute_url }}">{{ form.faction.parent.parent }}</a> -
+            {% endif %}
+            <a href="{{ form.faction.parent.get_absolute_url }}">{{ form.faction.parent }}</a> -
+    {% endif %}
+    <a href="{{ form.faction.get_absolute_url }}">{{ form.faction }}</a>
+</div>
+</div>
+{% endblock prominents %}
+{% block other %}
+    {% block resonance %}
+    {% endblock resonance %}
+    {% block powers %}
+        <div class="row">
+            <h2 class="col-sm {{ form.get_heading }}">Books</h2>
+        </div>
+        {% for book in form.books.all %}
+            <div class="row">
+                <a class="col-sm" href={{ book.get_absolute_url }}>{{ book.name }}</a>
+            </div>
+        {% endfor %}
+    {% endblock powers %}
+{% endblock other %}

@@ -1,4 +1,5 @@
 from characters.models.core import Character, Derangement, Group, Human
+from characters.views import werewolf
 from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -22,6 +23,7 @@ class GenericCharacterDetailView(View):
     character_views = {
         "character": CharacterDetailView,
         "human": HumanDetailView,
+        "spirit": werewolf.SpiritDetailView,
     }
 
     def get(self, request, *args, **kwargs):

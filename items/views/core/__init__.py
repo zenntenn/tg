@@ -1,6 +1,6 @@
 from django.views import View
 from items.models.core.item import ItemModel
-from items.views import mage
+from items.views import mage, werewolf
 
 from .item import ItemCreateView, ItemDetailView, ItemUpdateView
 from .material import MaterialCreateView, MaterialDetailView, MaterialUpdateView
@@ -35,6 +35,7 @@ class GenericItemDetailView(View):
         "artifact": mage.ArtifactDetailView,
         "talisman": mage.TalismanDetailView,
         "grimoire": mage.GrimoireDetailView,
+        "fetish": werewolf.FetishDetailView,
     }
 
     def get(self, request, *args, **kwargs):

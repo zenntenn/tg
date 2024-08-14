@@ -1,0 +1,28 @@
+{% extends "locations/core/location/detail.html" %}
+{% block prominents %}
+    <div class="row">
+        <div class="col-sm">
+            {% if object.faction.parent is not None %}
+                {% if object.faction.parent.parent is not None %}
+                    <a href="{{ object.faction.parent.parent.get_absolute_url }}">{{ object.faction.parent.parent }}</a> -
+            {% endif %}
+            <a href="{{ object.faction.parent.get_absolute_url }}">{{ object.faction.parent }}</a> -
+    {% endif %}
+    <a href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
+</div>
+</div>
+{% endblock prominents %}
+{% block other %}
+    {% block resonance %}
+    {% endblock resonance %}
+    {% block powers %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">Books</h2>
+        </div>
+        {% for book in object.books.all %}
+            <div class="row">
+                <a class="col-sm" href={{ book.get_absolute_url }}>{{ book.name }}</a>
+            </div>
+        {% endfor %}
+    {% endblock powers %}
+{% endblock other %}
