@@ -19,6 +19,7 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
+from characters.models.mage.rote import Rote
 from django.contrib import admin
 
 # Register your models here.
@@ -128,3 +129,6 @@ class TenetAdmin(admin.ModelAdmin):
 @admin.register(MageFaction)
 class MageFactionAdmin(admin.ModelAdmin):
     list_display = ("name", "parent")
+
+
+admin.site.register(Rote)

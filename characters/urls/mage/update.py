@@ -49,4 +49,9 @@ urls = [
         views.mage.MageFactionUpdateView.as_view(),
         name="magefaction",
     ),
+    path(
+        "rotes/<pk>/",
+        views.mage.RoteUpdateView.as_view(),
+        name="rote",
+    ),
 ]
