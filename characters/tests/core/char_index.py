@@ -1,15 +1,13 @@
+from characters.models.core.human import Human
 from django.contrib.auth.models import User
 from django.test import TestCase
 from game.models import ObjectType
-from locations.models.core.location import LocationModel
-
-# Create your tests here.
 
 
-class TestLocationIndexView(TestCase):
+class TestCharacterIndexView(TestCase):
     def setUp(self) -> None:
-        self.url = "/locations/index/wod/"
-        ObjectType.objects.create(name="location", type="loc", gameline="wod")
+        self.url = "/characters/index/wod/"
+        ObjectType.objects.create(name="human", type="char", gameline="wod")
         return super().setUp()
 
     def test_index_status_code(self):
@@ -18,13 +16,12 @@ class TestLocationIndexView(TestCase):
 
     def test_index_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "locations/index.html")
+        self.assertTemplateUsed(response, "characters/index.html")
 
     def test_index_content(self):
+        player = User.objects.create_user(username="User1", password="12345")
         for i in range(10):
-            LocationModel.objects.create(
-                name=f"Location {i}",
-            )
+            Human.objects.create(name=f"Human {i}", owner=player)
         response = self.client.post(self.url)
         for i in range(10):
-            self.assertContains(response, f"Location {i}")
+            self.assertContains(response, f"Human {i}")
