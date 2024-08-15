@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+{% block title %}
+    Characters
+{% endblock title %}
+{% block content %}
+    {% load field %}
+    <div class="centertext container">
+        {% for chron in chron_char_dict.keys %}
+            <div class="row border">
+                {% if chron == None %}
+                    <h2 class="col-sm border centertext">No Chronicle</h2>
+                {% else %}
+                    <h2 class="col-sm border centertext">
+                        <a href={{ chron.get_absolute_url }}>{{ chron.name }}</a>
+                    </h2>
+                {% endif %}
+            </div>
+            <div class="row border">
+                <h3 class="col-sm border">Character</h3>
+            </div>
+            {% for char in chron_char_dict|field:chron %}
+                {% if char.display %}
+                    <div class="row border">
+                        <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                        <div class="col-sm border">{{ char.owner.username }}</div>
+                        <div class="col-sm border">{{ char.type.title }}</div>
+                        <div class="col-sm border">{{ char.get_status_display }}</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="row border">
+                <h3 class="col-sm border">Groups</h3>
+            </div>
+            {% for group in chron_group_dict|field:chron %}
+                {% if group.display %}
+                    <div class="row border">
+                        <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
+                        <div class="col-sm border">{{ group.owner.username }}</div>
+                        <div class="col-sm border">{{ group.type.title }}</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock content %}

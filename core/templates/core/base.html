@@ -88,8 +88,8 @@
                            aria-haspopup="true"
                            aria-expanded="false">World of Darkness</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <div class="dropdown-item">Characters</div>
-                            {% comment %} <a class="dropdown-item" href="{% url 'characters:index' gameline='wod' %}">Characters</a> {% endcomment %}
+                            <a class="dropdown-item"
+                               href="{% url 'characters:index' gameline='wod' %}">Characters</a>
                             <a class="dropdown-item"
                                href="{% url 'locations:index' gameline='wod' %}">Locations</a>
                             <div class="dropdown-item">Items</div>
@@ -106,8 +106,8 @@
                            aria-haspopup="true"
                            aria-expanded="false">Mage: the Ascension</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <div class="dropdown-item">Characters</div>
-                            {% comment %} <a class="dropdown-item" href="{% url 'wod:characters:index' %}">Characters</a> {% endcomment %}
+                            <a class="dropdown-item"
+                               href="{% url 'characters:index' gameline='mta' %}">Characters</a>
                             <a class="dropdown-item"
                                href="{% url 'locations:index' gameline='mta' %}">Locations</a>
                             <div class="dropdown-item">Items</div>
