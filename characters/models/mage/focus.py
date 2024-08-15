@@ -7,7 +7,7 @@ from django.urls import reverse
 
 # Create your models here.
 class Instrument(Model):
-    type = "instrumnet"
+    type = "instrument"
 
     class Meta:
         verbose_name = "Instrument"

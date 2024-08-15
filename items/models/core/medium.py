@@ -7,7 +7,7 @@ from locations.models.core import LocationModel
 
 # Create your models here.
 class Medium(models.Model):
-    """Class managing Medium data"""
+    type = "medium"
 
     name = models.TextField(default="")
     length_modifier_type = models.CharField(

@@ -8,7 +8,7 @@ from locations.models.core import LocationModel
 
 
 class Material(models.Model):
-    """Class managing Material data"""
+    type = "material"
 
     name = models.TextField(default="")
     is_hard = models.BooleanField(default=True)
