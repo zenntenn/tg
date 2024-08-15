@@ -70,3 +70,18 @@ def filepath(instance, filename):
     s += "." + filename.split(".")[-1]
     s = s.lower().replace(" ", "_")
     return s
+
+
+def get_gameline_name(s):
+    if s == "wod":
+        return "World of Darkness"
+    elif s == "vtm":
+        return "Vampire: the Masquerade"
+    elif s == "wta":
+        return "Werewolf: the Apocalypse"
+    elif s == "mta":
+        return "Mage: the Ascension"
+    elif s == "wto":
+        return "Wraith: the Oblivion"
+    elif s == "cta":
+        return "Changeling: the Dreaming"
