@@ -1,5 +1,5 @@
 {% extends "items/core/item/form.html" %}
-{% block contents %}
+{% block additional_stats %}
     <div class="row">
         <div class="col-sm">Damage</div>
         <div class="col-sm">{{ form.damage }}/{{ form.get_damage_type_display }}</div>
@@ -10,4 +10,4 @@
     </div>
     {% block ranged_details %}
     {% endblock ranged_details %}
-{% endblock contents %}
+{% endblock additional_stats %}

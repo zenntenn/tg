@@ -10,5 +10,6 @@ urlpatterns = [
     path("mage/", include((mage.urls, "mage"), namespace="mage")),
     path("create/", include((create.urls, "items_create"), namespace="create")),
     path("update/", include((update.urls, "items_update"), namespace="update")),
+    path("index/<gameline>/", views.core.ItemIndexView.as_view(), name="index"),
     path("", include(detail.urls)),
 ]
