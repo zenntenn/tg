@@ -192,6 +192,7 @@ class Noun(models.Model):
     def __str__(self):
         return self.name
 
+
 class HouseRule(models.Model):
     name = models.CharField(default="", max_length=100)
     sources = models.ManyToManyField(BookReference, blank=True)

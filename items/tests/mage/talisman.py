@@ -1,4 +1,8 @@
+from unittest import mock
+from unittest.mock import Mock
+
 from characters.models.mage import Effect
+from characters.models.mage.resonance import Resonance
 from django.test import TestCase
 from django.urls import reverse
 from items.models.mage.talisman import Talisman
@@ -25,6 +29,50 @@ class TestTalisman(TestCase):
         self.assertFalse(talisman.has_powers())
         talisman.add_power(self.effect2)
         self.assertTrue(talisman.has_powers())
+
+
+class TestRandomTalisman(TestCase):
+    def setUp(self):
+        Effect.objects.create(name="Fireball", forces=3, prime=2)
+        Effect.objects.create(name="F1", forces=1)
+        Effect.objects.create(name="F2", forces=2)
+        Effect.objects.create(name="F3", forces=3)
+        Effect.objects.create(name="F4", forces=4)
+        Effect.objects.create(name="F5", forces=5)
+        Resonance.objects.create(name="Test")
+        self.effect1 = Effect.objects.create(name="Effect 1", forces=1)
+        self.effect2 = Effect.objects.create(name="Effect 2", life=2)
+        self.effect3 = Effect.objects.create(name="Effect 3", time=3)
+
+    def test_random_power(self):
+        talisman = Talisman.objects.create(rank=2)
+        talisman.random_power(1)
+        self.assertEqual(talisman.powers.count(), 1)
+        self.assertLessEqual(talisman.powers.first().max_sphere, 1)
+        talisman.random_power(2)
+        self.assertEqual(talisman.powers.count(), 2)
+        max_sphere = max(p.max_sphere for p in talisman.powers.all())
+        self.assertLessEqual(max_sphere, 2)
+
+    def test_random_powers(self):
+        talisman = Talisman.objects.create(rank=2)
+        talisman.random_powers()
+        self.assertEqual(talisman.powers.count(), 2)
+        max_sphere = max(p.max_sphere for p in talisman.powers.all())
+        self.assertLessEqual(max_sphere, 2)
+
+    def test_random(self):
+        talisman = Talisman.objects.create()
+        mocker = Mock()
+        mocker.side_effect = [0.8, 0.5, 0.5, 0.5, 0.5, 0.5]
+        with mock.patch("random.random", mocker):
+            talisman.random(rank=2)
+        self.assertTrue(talisman.has_powers())
+        max_sphere = max(p.max_sphere for p in talisman.powers.all())
+        self.assertLessEqual(max_sphere, 2)
+        self.assertEqual(talisman.quintessence_max, 10)
+        self.assertEqual(talisman.background_cost, 4)
+        self.assertEqual(talisman.arete, 2)
 
 
 class TestTalismanDetailView(TestCase):

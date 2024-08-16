@@ -44,11 +44,11 @@ class Practice(Model):
 
     def get_heading(self):
         return "mtas_heading"
-    
+
     def add_ability(self, ability):
         self.abilities.add(ability)
         return True
-    
+
     def add_abilities(self, list_of_abilities):
         for ab in list_of_abilities:
             self.add_ability(ab)
