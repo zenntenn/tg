@@ -135,5 +135,5 @@ class ItemIndexView(View):
             chron_dict[chron] = c
 
         context["chron_dict"] = chron_dict
-        context["creation_form"] = ItemCreationForm(gameline=gameline)
+        context["form"] = ItemCreationForm(gameline=gameline)
         return context
