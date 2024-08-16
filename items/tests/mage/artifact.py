@@ -1,4 +1,5 @@
 from characters.models.mage import Effect
+from characters.models.mage.resonance import Resonance
 from django.test import TestCase
 from django.urls import reverse
 from items.models.mage import Artifact
@@ -18,6 +19,34 @@ class TestArtifact(TestCase):
         self.assertFalse(self.artifact.has_power())
         self.artifact.set_power(self.power)
         self.assertTrue(self.artifact.has_power())
+
+
+class TestRandomArtifact(TestCase):
+    def setUp(self):
+        Effect.objects.create(name="Fireball", forces=3, prime=2)
+        Effect.objects.create(name="F1", forces=1)
+        Effect.objects.create(name="F2", forces=2)
+        Effect.objects.create(name="F3", forces=3)
+        Effect.objects.create(name="F4", forces=4)
+        Effect.objects.create(name="F5", forces=5)
+        Resonance.objects.create(name="Test")
+
+    def test_random_power(self):
+        a = Artifact.objects.create(name="", rank=3)
+        self.assertFalse(a.has_power())
+        self.assertTrue(a.random_power())
+        self.assertTrue(a.has_power())
+
+    def test_random(self):
+        a = Artifact.objects.create(name="")
+        a.random()
+        self.assertEqual(a.status, "Ran")
+        self.assertTrue(a.has_name())
+        self.assertTrue(a.has_rank())
+        self.assertTrue(a.has_resonance())
+        self.assertTrue(a.has_power())
+        self.assertEqual(a.quintessence_max, a.rank * 5)
+        self.assertEqual(a.background_cost, a.rank * 2)
 
 
 class TestArtifactDetailView(TestCase):
