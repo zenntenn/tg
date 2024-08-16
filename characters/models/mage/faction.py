@@ -27,10 +27,10 @@ class MageFaction(Model):
         verbose_name_plural = "Mage Factions"
 
     def get_absolute_url(self):
-        return reverse("characters:mage:magefaction", args=[str(self.id)])
+        return reverse("characters:mage:mage_faction", args=[str(self.id)])
 
     def get_update_url(self):
-        return reverse("characters:mage:update:magefaction", kwargs={"pk": self.pk})
+        return reverse("characters:mage:update:mage_faction", kwargs={"pk": self.pk})
 
     def get_heading(self):
         return "mtas_heading"

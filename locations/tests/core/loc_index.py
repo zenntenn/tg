@@ -24,6 +24,6 @@ class TestLocationIndexView(TestCase):
             LocationModel.objects.create(
                 name=f"Location {i}",
             )
-        response = self.client.post(self.url)
+        response = self.client.get(self.url)
         for i in range(10):
             self.assertContains(response, f"Location {i}")

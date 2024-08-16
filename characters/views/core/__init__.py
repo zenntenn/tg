@@ -1,8 +1,9 @@
+from characters.forms.core.character_creation import CharacterCreationForm
 from characters.models.core import Character, Derangement, Group, Human
 from characters.views import werewolf
 from core.utils import get_gameline_name
 from django.forms import BaseModelForm
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 from game.models import Chronicle, ObjectType
@@ -51,12 +52,46 @@ class GenericGroupDetailView(View):
 
 
 class CharacterIndexView(View):
+    chars = {}
+
     def get(self, request, *args, **kwargs):
         context = self.get_context(kwargs)
         return render(request, "characters/index.html", context)
 
     def post(self, request, *args, **kwargs):
         context = self.get_context(kwargs)
+        action = request.POST.get("action")
+        char_type = request.POST["char_type"]
+        gameline = kwargs["gameline"]
+        if action == "create":
+            if gameline == "wod":
+                redi = f"characters:create:{char_type}"
+            elif gameline == "wta":
+                redi = f"characters:werewolf:create:{char_type}"
+            elif gameline == "mta":
+                redi = f"characters:mage:create:{char_type}"
+            return redirect(redi)
+        elif action == "random":
+            if request.user.is_authenticated:
+                user = request.user
+            else:
+                user = None
+            try:
+                char = self.chars[request.POST["char_type"]].objects.create(
+                    name=request.POST["name"], owner=user
+                )
+            except KeyError:
+                raise Http404
+            if request.POST["rank"] is None:
+                rank = None
+            else:
+                rank = int(request.POST["rank"])
+            try:
+                char.random(rank=rank)
+            except:
+                raise Http404
+            char.save()
+            return redirect(char.get_absolute_url())
         return render(request, "characters/index.html", context)
 
     def get_context(self, kwargs):
@@ -84,5 +119,5 @@ class CharacterIndexView(View):
 
         context["chron_char_dict"] = chron_char_dict
         context["chron_group_dict"] = chron_group_dict
-
+        context["form"] = CharacterCreationForm(gameline=gameline)
         return context

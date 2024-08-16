@@ -22,6 +22,6 @@ class TestCharacterIndexView(TestCase):
         player = User.objects.create_user(username="User1", password="12345")
         for i in range(10):
             Human.objects.create(name=f"Human {i}", owner=player)
-        response = self.client.post(self.url)
+        response = self.client.get(self.url)
         for i in range(10):
             self.assertContains(response, f"Human {i}")
