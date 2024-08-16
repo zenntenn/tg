@@ -19,7 +19,7 @@ class Book(models.Model):
             ("Rev", "Revised Edition"),
             ("20th", "20th Anniversary Edition"),
         ],
-        default="Un",
+        default="1e",
     )
     gameline = models.CharField(
         max_length=3,
@@ -31,7 +31,7 @@ class Book(models.Model):
             ("wto", "Wraith: the Oblivion"),
             ("ctd", "Changeling: the Dreaming"),
         ],
-        default="Un",
+        default="wod",
     )
     storytellers_vault = models.BooleanField(default=False)
 
@@ -191,3 +191,23 @@ class Noun(models.Model):
 
     def __str__(self):
         return self.name
+
+class HouseRule(models.Model):
+    name = models.CharField(default="", max_length=100)
+    sources = models.ManyToManyField(BookReference, blank=True)
+    description = models.TextField(default="")
+    chronicle = models.ForeignKey(
+        Chronicle, blank=True, null=True, on_delete=models.SET_NULL
+    )
+    gameline = models.CharField(
+        max_length=3,
+        choices=[
+            ("wod", "World of Darkness"),
+            ("vtm", "Vampire: the Masquerade"),
+            ("wta", "Werewolf: the Apocalypse"),
+            ("mta", "Mage: the Ascension"),
+            ("wto", "Wraith: the Oblivion"),
+            ("ctd", "Changeling: the Dreaming"),
+        ],
+        default="wod",
+    )
