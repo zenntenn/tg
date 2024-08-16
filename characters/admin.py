@@ -31,12 +31,12 @@ admin.site.register(CharacterModel)
 
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner")
+    list_display = ("name", "owner", "chronicle")
 
 
 @admin.register(Human)
 class HumanCharacterAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner")
+    list_display = ("name", "owner", "chronicle")
 
 
 @admin.register(Archetype)
