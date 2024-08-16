@@ -45,9 +45,9 @@ urls = [
         name="tenet",
     ),
     path(
-        "magefaction/",
+        "mage_faction/",
         views.mage.MageFactionCreateView.as_view(),
-        name="magefaction",
+        name="mage_faction",
     ),
     path(
         "rotes/",

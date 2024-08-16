@@ -22,6 +22,6 @@ class TestItemIndexView(TestCase):
             ItemModel.objects.create(
                 name=f"Item {i}",
             )
-        response = self.client.post(self.url)
+        response = self.client.get(self.url)
         for i in range(10):
             self.assertContains(response, f"Item {i}")

@@ -81,7 +81,7 @@ class TestMageFactionCreateView(TestCase):
             "founded": 2000,
             "ended": 2001,
         }
-        self.url = reverse("characters:mage:create:magefaction")
+        self.url = reverse("characters:mage:create:mage_faction")
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
