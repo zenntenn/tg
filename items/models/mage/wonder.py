@@ -1,3 +1,5 @@
+import random
+
 from characters.models.mage.resonance import Resonance
 from django.db import models
 from django.urls import reverse
@@ -98,3 +100,33 @@ class Wonder(ItemModel):
 
     def has_resonance(self):
         return self.total_resonance() >= self.rank
+
+    def random_points(self):
+        return 3 * (self.rank - 1) + random.randint(1, 3)
+
+    def random_rank(self, rank=None):
+        if rank is None:
+            rank = random.randint(1, 5)
+        return self.set_rank(rank)
+
+    def random_resonance(self):
+        if random.random() < 0.7:
+            possible = self.filter_resonance(minimum=1, maximum=4)
+            if possible.count() > 0:
+                choice = random.choice(possible)
+                if self.add_resonance(choice):
+                    return True
+        while True:
+            index = random.randint(1, Resonance.objects.last().id)
+            if Resonance.objects.filter(pk=index).exists():
+                choice = Resonance.objects.get(pk=index)
+                if self.add_resonance(choice):
+                    return True
+
+    def random(self, rank=None, name=None):
+        self.update_status("Ran")
+        self.random_name(name=name)
+        self.random_rank(rank=rank)
+        while not self.has_resonance():
+            self.random_resonance()
+        self.background_cost = 2 * self.rank

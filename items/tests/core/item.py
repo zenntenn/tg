@@ -1,17 +1,24 @@
 from django.test import TestCase
 from django.urls import reverse
-from items.models.core import (
-    ItemModel,
-    Material,
-    Medium,
-    MeleeWeapon,
-    RangedWeapon,
-    ThrownWeapon,
-    Weapon,
-)
+from items.models.core import ItemModel
 
 
 # Create your tests here.
+class TestRandomItem(TestCase):
+    def test_random_name(self):
+        # create an item without a name
+        item = ItemModel.objects.create()
+
+        # call random_name method
+        item.random_name()
+
+        # assert that the item has a name now
+        self.assertTrue(item.has_name())
+
+        # assert that the name is in the correct format
+        self.assertTrue(item.name.startswith("Random Item "))
+
+
 class TestItemDetailView(TestCase):
     def setUp(self) -> None:
         self.item = ItemModel.objects.create(name="Test Item")

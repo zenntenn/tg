@@ -81,6 +81,35 @@ class TestWonderDetailView(TestCase):
         self.assertTemplateUsed(response, "items/mage/wonder/detail.html")
 
 
+class TestRandomWonder(TestCase):
+    def setUp(self):
+        self.wonder = Wonder.objects.create(name="Test Wonder")
+
+    def test_random_points(self):
+        self.wonder.rank = 2
+        points = self.wonder.random_points()
+        self.assertGreaterEqual(points, 4)
+        self.assertLessEqual(points, 6)
+
+    def test_random_rank(self):
+        self.wonder.random_rank()
+        self.assertTrue(self.wonder.has_rank())
+
+    def test_random_resonance(self):
+        res1 = Resonance.objects.create(name="Test Resonance 1")
+        self.wonder.add_resonance(res1)
+        self.wonder.random_resonance()
+        self.assertGreater(self.wonder.total_resonance(), 1)
+
+    def test_random(self):
+        Resonance.objects.create(name="Test Resonance 1")
+        self.wonder.random()
+        self.assertTrue(self.wonder.has_name())
+        self.assertTrue(self.wonder.has_rank())
+        self.assertTrue(self.wonder.has_resonance())
+        self.assertGreater(self.wonder.background_cost, 0)
+
+
 class TestWonderCreateView(TestCase):
     def setUp(self):
         self.valid_data = {
