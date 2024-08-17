@@ -33,12 +33,6 @@ class GrimoireDetailView(View):
             "date_written": grimoire.date_written,
             "faction": s,
         }
-        context["paradigms"] = "<br>".join(
-            [
-                f'<a href="{x.get_absolute_url()}">{x}</a>'
-                for x in grimoire.paradigms.all()
-            ]
-        )
         context["practices"] = "<br>".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
@@ -74,7 +68,6 @@ class GrimoireCreateView(CreateView):
         "spheres",
         "date_written",
         "faction",
-        "paradigms",
         "practices",
         "instruments",
         "is_primer",
@@ -97,7 +90,6 @@ class GrimoireUpdateView(UpdateView):
         "spheres",
         "date_written",
         "faction",
-        "paradigms",
         "practices",
         "instruments",
         "is_primer",

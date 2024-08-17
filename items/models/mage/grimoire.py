@@ -1,9 +1,16 @@
+import datetime
+import math
+import random
+
 from characters.models.core.ability import Ability
 from characters.models.mage.effect import Effect
-from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.focus import Instrument, Practice
+from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
-from core.models import Language
+from core.models import Language, Noun
+from core.utils import weighted_choice
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from items.models.core.material import Material
 from items.models.core.medium import Medium
@@ -19,7 +26,6 @@ class Grimoire(Wonder):
     faction = models.ForeignKey(
         "characters.MageFaction", null=True, blank=True, on_delete=models.SET_NULL
     )
-    paradigms = models.ManyToManyField(Paradigm, blank=True)
     practices = models.ManyToManyField(Practice, blank=True)
     instruments = models.ManyToManyField(Instrument, blank=True)
     is_primer = models.BooleanField(default=False)
@@ -75,19 +81,14 @@ class Grimoire(Wonder):
     def has_faction(self):
         return self.faction is not None
 
-    def set_focus(self, paradigms, practices, instruments):
-        self.paradigms.set(paradigms)
+    def set_focus(self, practices, instruments):
         self.practices.set(practices)
         self.instruments.set(instruments)
         self.save()
         return True
 
     def has_focus(self):
-        return (
-            self.paradigms.count() != 0
-            and self.practices.count() != 0
-            and self.instruments.count() != 0
-        )
+        return self.practices.count() != 0 and self.instruments.count() != 0
 
     def set_language(self, language):
         self.language = language
@@ -133,7 +134,15 @@ class Grimoire(Wonder):
         return True
 
     def has_effects(self):
-        return self.effects.count() != 0
+        tot = (
+            self.effects.count()
+            + self.practices.count()
+            + self.spheres.count()
+            + self.abilities.count()
+        )
+        if self.is_primer:
+            tot += 1
+        return tot == self.rank + 3
 
     def set_spheres(self, spheres):
         for sphere in spheres:
@@ -148,3 +157,285 @@ class Grimoire(Wonder):
     def set_is_primer(self, is_primer):
         self.is_primer = is_primer
         return True
+
+    def random_abilities(self, abilities=None):
+        if self.practices is None:
+            raise ValueError("Must have Practice before assigning abilities")
+        if abilities is None:
+            ability_list = Ability.objects.none()
+            for practice in self.practices.all():
+                ability_list = ability_list | practice.abilities.all()
+            ability_list = ability_list.distinct()
+            ability_dict = {x: 1 for x in ability_list}
+            if len(ability_dict) > 0:
+                choice = weighted_choice(ability_dict, ceiling=20)
+            else:
+                raise ValueError("No Abilties")
+            abilities = [choice]
+            while random.random() < 0.1:
+                if len(ability_dict) > len(abilities):
+                    abilities.append(
+                        weighted_choice(
+                            {
+                                k: v
+                                for k, v in ability_dict.items()
+                                if k not in abilities
+                            }
+                        )
+                    )
+        self.set_abilities(abilities)
+
+    def random_date_written(self, date_written=None):
+        if date_written is None:
+            if self.faction is not None:
+                if self.faction.founded is not None:
+                    date_written = random.randint(
+                        self.faction.founded, datetime.datetime.now().year
+                    )
+            date_written = random.randint(
+                datetime.datetime.now().year - 100, datetime.datetime.now().year
+            )
+        self.set_date_written(date_written)
+
+    def random_faction(self, faction=None):
+        if faction is None:
+            faction_probs = {}
+        from characters.models.mage.faction import MageFaction
+
+        for faction in MageFaction.objects.all():
+            if faction.parent is None:
+                faction_probs[faction] = 30
+            elif faction.parent.parent is None:
+                faction_probs[faction] = 10
+            elif faction.parent.parent.parent is None:
+                faction_probs[faction] = 1
+            else:
+                faction_probs[faction] = 0
+            faction = weighted_choice(faction_probs, ceiling=100)
+        self.set_faction(faction)
+
+    def random_practices(self, practices):
+        if self.faction is None:
+            raise ValueError("Faction must come before Practice")
+        if practices is None:
+            practices = self.faction.practices.all()
+            if practices.count() == 0:
+                practices = Practice.objects.all()
+            num_practices = 1
+            while (
+                random.random() < 0.25 and num_practices < practices.distinct().count()
+            ):
+                num_practices += 1
+            practices = practices.order_by("?").distinct()[:num_practices]
+        return practices
+
+    def random_instruments(self, instruments, practices=None):
+        if instruments is None:
+            if practices is not None:
+                instruments = Instrument.objects.none()
+                for practice in practices:
+                    instruments |= practice.instruments.all()
+            else:
+                instruments = Instrument.objects.all()
+            if instruments.count() == 0:
+                instruments = Instrument.objects.all()
+            num_instruments = 1
+            while (
+                random.random() < 0.3
+                and num_instruments < instruments.distinct().count()
+            ):
+                num_instruments += 1
+            instruments = instruments.order_by("?").distinct()[:num_instruments]
+        return instruments
+
+    def random_focus(self, practices=None, instruments=None):
+        practices = self.random_practices(practices)
+        instruments = self.random_instruments(instruments, practices=practices)
+        self.set_focus(practices, instruments)
+
+    def random_language(self, language=None):
+        if language is None:
+            if self.faction is not None:
+                if self.faction.languages.count() > 0:
+                    languages = self.faction.languages.all()
+                    language = weighted_choice({x: x.frequency for x in languages})
+                else:
+                    languages = Language.objects.all()
+                    language = weighted_choice({x: x.frequency for x in languages})
+            else:
+                languages = Language.objects.all()
+                language = weighted_choice({x: x.frequency for x in languages})
+        self.set_language(language)
+
+    def random_length(self, length=None):
+        if length is None:
+            length = int(200 * (random.random() + random.random()) + 50)
+            if self.is_primer:
+                length += 50
+            if self.medium is not None:
+                if self.medium.length_modifier_type == "/":
+                    length /= self.medium.length_modifier
+                elif self.medium.length_modifier_type == "+":
+                    length += self.medium.length_modifier
+                elif self.medium.length_modifier_type == "*":
+                    length *= self.medium.length_modifier
+                elif self.medium.length_modifier_type == "-":
+                    length -= self.medium.length_modifier
+            length = int(length)
+        self.set_length(length)
+
+    def random_material(self, cover_material=None, inner_material=None):
+        if cover_material is None:
+            if self.faction is None:
+                if self.faction.materials.count() > 0:
+                    cover_material = self.faction.materials.order_by("?").first()
+                else:
+                    cover_material = Material.objects.order_by("?").first()
+            else:
+                cover_material = Material.objects.order_by("?").first()
+        if inner_material is None:
+            is_hard = random.random() <= 0.3
+            if self.faction is None:
+                if self.faction.materials.filter(is_hard=is_hard).count() > 0:
+                    inner_material = (
+                        self.faction.materials.filter(is_hard=is_hard)
+                        .order_by("?")
+                        .first()
+                    )
+                else:
+                    inner_material = (
+                        Material.objects.filter(is_hard=is_hard).order_by("?").first()
+                    )
+            else:
+                inner_material = (
+                    Material.objects.filter(is_hard=is_hard).order_by("?").first()
+                )
+        self.set_materials(cover_material, inner_material)
+
+    def random_medium(self, medium=None):
+        if medium is None:
+            if self.faction is not None:
+                if self.faction.media.count() != 0:
+                    medium = self.faction.media.order_by("?").first()
+                else:
+                    medium = Medium.objects.order_by("?").first()
+            else:
+                medium = Medium.objects.order_by("?").first()
+        self.set_medium(medium)
+
+    def random_rank(self, rank=None):
+        if rank is None:
+            roll = 1 / random.random()
+            roll = int(math.log(roll, 10))
+            rank = max(min(roll, 5), 1)
+        self.set_rank(rank)
+
+    def random_effects(self, effects=None):
+        if self.spheres.count() == 0:
+            raise ValueError("Spheres must be determiend before Effects")
+        if effects is None:
+            effects = []
+
+            kwargs = {f"{sphere}__gt": 0 for sphere in self.spheres.all()}
+            q_objects = Q()
+            for key, value in kwargs.items():
+                q_objects |= Q(**{key: value})
+            effects = Effect.objects.filter(q_objects)
+
+            kwargs = {f"{sphere}__lte": self.rank for sphere in Sphere.objects.all()}
+            for key, value in kwargs.items():
+                effects = effects.filter(Q(**{key: value}))
+            num_effects = self.rank
+            if self.spheres.count() > 1:
+                num_effects -= self.spheres.count() - 1
+            if self.practices.count() > 1:
+                num_effects -= self.practices.count() - 1
+            if self.abilities.count() > 1:
+                num_effects -= self.abilities.count() - 1
+            if self.is_primer:
+                num_effects -= 1
+            if num_effects < 0:
+                num_effects = 0
+            effects = list(effects.order_by("?")[:num_effects])
+        self.set_effects(effects)
+
+    def random_spheres(self, spheres=None):
+        if spheres is None:
+            spheres = []
+            sphere_dict = {x: 1 for x in Sphere.objects.all()}
+            if self.faction is not None:
+                for sphere in self.faction.affinities.all():
+                    sphere_dict[sphere] += 5
+            spheres.append(weighted_choice(sphere_dict))
+            while random.random() < 0.1:
+                spheres.append(
+                    weighted_choice(
+                        {k: v for k, v in sphere_dict.items() if k not in spheres}
+                    )
+                )
+        self.set_spheres(spheres)
+
+    def random_is_primer(self, is_primer=None):
+        if is_primer is None:
+            is_primer = random.random() < 0.1
+        self.set_is_primer(is_primer)
+
+    def random_name(self):
+        name = ""
+        if not self.has_name():
+            while Grimoire.objects.filter(name=name).exists() or name == "":
+                sphere = random.choice(self.spheres.all())
+                noun = Noun.objects.order_by("?").first().name.title()
+                noun2 = Noun.objects.order_by("?").first().name.title()
+                resonance = (
+                    Resonance.objects.filter(Q(**{str(sphere): True}))
+                    .order_by("?")
+                    .first()
+                    .name.title()
+                )
+                sphere = str(sphere).title()
+                forms = [
+                    f"Book of {resonance} {noun}",
+                    f"{resonance} {sphere} Grimoire",
+                    f"{resonance} {self.medium} of {sphere}",
+                    f"{noun} of {resonance} {noun2}",
+                ]
+                name = random.choice(forms)
+            return self.set_name(name)
+        return False
+
+    def random(
+        self,
+        rank=None,
+        is_primer=None,
+        faction=None,
+        practices=None,
+        instruments=None,
+        date_written=None,
+        medium=None,
+        cover_material=None,
+        inner_material=None,
+        length=None,
+        language=None,
+        abilities=None,
+        spheres=None,
+        effects=None,
+    ):
+        self.update_status("Ran")
+        self.random_rank(rank)
+        self.background_cost = 2 * self.rank
+        self.quintessence_max = 5 * self.rank
+        self.random_is_primer(is_primer)
+        self.random_faction(faction)
+        self.random_medium(medium)
+        self.random_material(cover_material)
+        self.random_material(inner_material)
+        self.random_length(length)
+        self.random_focus(practices, instruments)
+        self.random_date_written(date_written)
+        self.random_abilities(abilities)
+        self.random_language(language)
+        self.random_spheres(spheres)
+        self.random_effects(effects)
+        self.random_name()
+        self.save()

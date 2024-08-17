@@ -6,3 +6,6 @@ class Statistic(models.Model):
 
     name = models.CharField(max_length=100)
     property_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.property_name
