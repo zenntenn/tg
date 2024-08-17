@@ -30,41 +30,38 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-            <a class="navbar-brand" href="{% url 'home' %}">Tellurium Games</a>
-            <button class="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarsExample05"
-                    aria-controls="navbarsExample05"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
+            {% comment %} <a class="navbar-brand" href="{% url 'home' %}">Tellurium Games</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> {% endcomment %}
             <div class="collapse navbar-collapse" id="navbarsExample05">
                 <ul class="navbar-nav mr-auto">
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a class="nav-link" href="{% url 'user' %}">Account</a>
-                        </li>
-                        <li>
-                            <form method="post" action="{% url 'logout' %}">
-                                {% csrf_token %}
-                                <button class="btn nav-link btn-link" type="submit">Log Out</button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li>
-                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
-                        </li>
-                    {% endif %}
-                    {% if user.is_staff %}
-                        <li>
-                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle navbar-brand"
+                            href="#"
+                            id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        href="{% url 'home' %}"">Tellurium Games</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'home' %}">Home</a>
+                            {% if user.is_authenticated %}
+                                <a class="dropdown-item" href="{% url 'user' %}">Account</a>
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button class="dropdown-item" type="submit">Log Out</button>
+                                </form>
+                                {% if user.is_staff %}
+                                    <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+                                {% endif %}
+                            {% else %}
+                                <a class="dropdown-item" href="{% url 'login' %}">Log In</a>
+                                <a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a>
+                            {% endif %}
+                        </div>
+                    </li>
                     <li class="nav-tiem dropdown">
                         <a class="nav-link dropdown-toggle"
                            href="#"
@@ -92,8 +89,7 @@
                                href="{% url 'characters:index' gameline='wod' %}">Characters</a>
                             <a class="dropdown-item"
                                href="{% url 'locations:index' gameline='wod' %}">Locations</a>
-                               <a class="dropdown-item"
-                               href="{% url 'items:index' gameline='wod' %}">Items</a>
+                            <a class="dropdown-item" href="{% url 'items:index' gameline='wod' %}">Items</a>
                             <div class="dropdown-item">House Rules</div>
                         </div>
                     </li>
@@ -104,14 +100,81 @@
                            role="button"
                            data-toggle="dropdown"
                            aria-haspopup="true"
-                           aria-expanded="false">Mage: the Ascension</a>
+                           aria-expanded="false">Vampire</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item"
+                               href="{% url 'characters:index' gameline='vtm' %}">Characters</a>
+                            <a class="dropdown-item"
+                               href="{% url 'locations:index' gameline='vtm' %}">Locations</a>
+                            <a class="dropdown-item" href="{% url 'items:index' gameline='vtm' %}">Items</a>
+                            <div class="dropdown-item">House Rules</div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="navbarDropdown"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">Werewolf</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item"
+                               href="{% url 'characters:index' gameline='wta' %}">Characters</a>
+                            <a class="dropdown-item"
+                               href="{% url 'locations:index' gameline='wta' %}">Locations</a>
+                            <a class="dropdown-item" href="{% url 'items:index' gameline='wta' %}">Items</a>
+                            <div class="dropdown-item">House Rules</div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="navbarDropdown"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">Mage</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item"
                                href="{% url 'characters:index' gameline='mta' %}">Characters</a>
                             <a class="dropdown-item"
                                href="{% url 'locations:index' gameline='mta' %}">Locations</a>
+                            <a class="dropdown-item" href="{% url 'items:index' gameline='mta' %}">Items</a>
+                            <div class="dropdown-item">House Rules</div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="navbarDropdown"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">Wraith</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item"
-                               href="{% url 'items:index' gameline='mta' %}">Items</a>
+                               href="{% url 'characters:index' gameline='wto' %}">Characters</a>
+                            <a class="dropdown-item"
+                               href="{% url 'locations:index' gameline='wto' %}">Locations</a>
+                            <a class="dropdown-item" href="{% url 'items:index' gameline='wto' %}">Items</a>
+                            <div class="dropdown-item">House Rules</div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="navbarDropdown"
+                           role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">Changeling</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item"
+                               href="{% url 'characters:index' gameline='ctd' %}">Characters</a>
+                            <a class="dropdown-item"
+                               href="{% url 'locations:index' gameline='ctd' %}">Locations</a>
+                            <a class="dropdown-item" href="{% url 'items:index' gameline='ctd' %}">Items</a>
                             <div class="dropdown-item">House Rules</div>
                         </div>
                     </li>
