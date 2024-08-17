@@ -68,6 +68,9 @@ class LocationIndexView(View):
                 loc = self.locs[request.POST["loc_type"]].objects.create(
                     name=request.POST["name"], owner=user
                 )
+                if "rank" in dir(loc):
+                    loc.rank = int(request.POST["rank"])
+                    loc.save()
             except KeyError:
                 raise Http404
             if request.POST["rank"] is None:
