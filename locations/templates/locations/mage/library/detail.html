@@ -1,16 +1,20 @@
 {% extends "locations/core/location/detail.html" %}
 {% block prominents %}
     <div class="row">
+        <div class="col-sm">Rank</div>
+        <div class="col-sm">{{ object.rank }}</div>
+    </div>
+    <div class="row">
         <div class="col-sm">
             {% if object.faction.parent is not None %}
                 {% if object.faction.parent.parent is not None %}
                     <a href="{{ object.faction.parent.parent.get_absolute_url }}">{{ object.faction.parent.parent }}</a> -
+                {% endif %}
+                <a href="{{ object.faction.parent.get_absolute_url }}">{{ object.faction.parent }}</a> -
             {% endif %}
-            <a href="{{ object.faction.parent.get_absolute_url }}">{{ object.faction.parent }}</a> -
-    {% endif %}
-    <a href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
-</div>
-</div>
+            <a href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
+        </div>
+    </div>
 {% endblock prominents %}
 {% block other %}
     {% block resonance %}

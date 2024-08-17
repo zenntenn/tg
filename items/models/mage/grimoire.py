@@ -200,18 +200,18 @@ class Grimoire(Wonder):
     def random_faction(self, faction=None):
         if faction is None:
             faction_probs = {}
-        from characters.models.mage.faction import MageFaction
+            from characters.models.mage.faction import MageFaction
 
-        for faction in MageFaction.objects.all():
-            if faction.parent is None:
-                faction_probs[faction] = 30
-            elif faction.parent.parent is None:
-                faction_probs[faction] = 10
-            elif faction.parent.parent.parent is None:
-                faction_probs[faction] = 1
-            else:
-                faction_probs[faction] = 0
-            faction = weighted_choice(faction_probs, ceiling=100)
+            for faction in MageFaction.objects.all():
+                if faction.parent is None:
+                    faction_probs[faction] = 30
+                elif faction.parent.parent is None:
+                    faction_probs[faction] = 10
+                elif faction.parent.parent.parent is None:
+                    faction_probs[faction] = 1
+                else:
+                    faction_probs[faction] = 0
+                faction = weighted_choice(faction_probs, ceiling=100)
         self.set_faction(faction)
 
     def random_practices(self, practices):
