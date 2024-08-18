@@ -1,4 +1,6 @@
 from characters.models.core import Group
+from characters.models.core.human import Human
+from characters.models.core.specialty import Specialty
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -19,6 +21,28 @@ class TestGroupDetailView(TestCase):
     def test_group_detail_view_templates(self):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/core/group/detail.html")
+
+
+class TestRandomGroup(TestCase):
+    def setUp(self):
+        self.group = Group.objects.create()
+        for key in list(Human().get_abilities().keys()) + list(
+            Human().get_attributes().keys()
+        ):
+            for i in range(5):
+                Specialty.objects.create(name=f"{key.title()} Specialty {i}", stat=key)
+
+    def test_random_name(self):
+        self.group.random_name()
+        self.assertTrue(self.group.name.startswith("Random Group"))
+
+    def test_random(self):
+        self.group.random(
+            num_chars=5, new_characters=True, random_names=True, freebies=15, xp=0
+        )
+        self.assertEqual(self.group.members.count(), 5)
+        self.assertIsNotNone(self.group.leader)
+        self.assertIn(self.group.leader, self.group.members.all())
 
 
 class TestGroupCreateView(TestCase):
@@ -72,5 +96,5 @@ class TestGenericGroupDetailView(TestCase):
         self.group = Group.objects.create(name="Group Test")
 
     def test_generic_group_detail_view_templates(self):
-        response = self.client.get(f"/characters/groups/{self.group.id}/")
+        response = self.client.get(self.group.get_absolute_url())
         self.assertTemplateUsed(response, "characters/core/group/detail.html")

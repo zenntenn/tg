@@ -1,3 +1,5 @@
+from datetime import date
+
 from characters.models.core import (
     Archetype,
     Derangement,
@@ -6,7 +8,7 @@ from characters.models.core import (
     MeritFlawRating,
 )
 from characters.models.core.specialty import Specialty
-from core.models import Number
+from core.models import Language, Number
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -50,6 +52,8 @@ class TestHuman(TestCase):
                     name=f"{ability.replace('_', ' ').title()} Specialty {i}",
                     stat=ability,
                 )
+        for i in range(20):
+            Language.objects.create(name=f"TL {i}")
 
     def test_add_willpower(self):
         self.assertEqual(self.character.willpower, 3)
@@ -600,6 +604,182 @@ class TestHuman(TestCase):
         self.character.add_ability("firearms")
         self.assertEqual(self.character.total_abilities(), 2)
 
+    def test_languages(self):
+        english = Language.objects.create(name="English")
+        self.assertEqual(self.character.languages.count(), 0)
+        self.character.languages.add(english)
+        self.assertEqual(self.character.languages.count(), 1)
+
+    def test_language_merit(self):
+        m = MeritFlaw.objects.create(name="Language")
+        m.add_ratings([1, 2, 3, 4, 5])
+        self.assertEqual(self.character.languages.count(), 0)
+        for i in range(5):
+            self.character.add_mf(m, i + 1)
+            self.assertEqual(self.character.languages.count(), 1 + i)
+
+    def test_natural_linguist_merit(self):
+        self.assertEqual(self.character.languages.count(), 0)
+        nl = MeritFlaw.objects.create(name="Natural Linguist")
+        nl.add_rating(1)
+        m = MeritFlaw.objects.create(name="Language")
+        m.add_ratings([1, 2, 3, 4, 5])
+        self.character.add_mf(nl, 1)
+        for i in range(5):
+            self.character.add_mf(m, i + 1)
+            self.assertEqual(self.character.languages.count(), 2 * (i + 1))
+        lt = Human.objects.create(name="language tester", owner=self.user)
+        self.assertEqual(lt.languages.count(), 0)
+        lt.add_mf(m, 1)
+        self.assertEqual(lt.languages.count(), 1)
+        lt.add_mf(nl, 1)
+        self.assertEqual(lt.languages.count(), 2)
+
+    def test_add_specialty(self):
+        num = self.character.specialties.count()
+        self.assertTrue(
+            self.character.add_specialty(
+                Specialty.objects.get(name="Athletics Specialty 3", stat="athletics")
+            )
+        )
+        self.assertEqual(self.character.specialties.count(), num + 1)
+
+    def test_filter_specialties(self):
+        self.assertEqual(len(self.character.filter_specialties()), 280)
+        self.assertEqual(len(self.character.filter_specialties(stat="strength")), 10)
+        self.assertEqual(len(self.character.filter_specialties(stat="athletics")), 10)
+        self.character.add_specialty(
+            Specialty.objects.get(name="Athletics Specialty 3", stat="athletics")
+        )
+        self.assertEqual(len(self.character.filter_specialties(stat="athletics")), 9)
+
+    def test_has_specialties(self):
+        self.character.dexterity = 2
+        self.character.stamina = 3
+        self.character.perception = 4
+        self.character.intelligence = 5
+        self.character.wits = 4
+        self.character.charisma = 3
+        self.character.manipulation = 2
+        self.character.appearance = 4
+        self.character.alertness = 1
+        self.character.athletics = 2
+        self.character.brawl = 4
+        self.character.crafts = 1
+        self.character.drive = 2
+        self.character.etiquette = 5
+        self.character.firearms = 3
+        self.character.stealth = 4
+        self.character.medicine = 2
+        self.character.science = 1
+        for attribute, value in self.character.get_attributes().items():
+            if value >= 4:
+                self.assertGreaterEqual(
+                    self.character.specialties.filter(stat=attribute).count(), 0
+                )
+        for ability, value in self.character.get_abilities().items():
+            if value >= 4 or (
+                ability
+                in [
+                    "arts",
+                    "athletics",
+                    "crafts",
+                    "firearms",
+                    "martial_arts",
+                    "melee",
+                    "academics",
+                    "esoterica",
+                    "lore",
+                    "politics",
+                    "science",
+                ]
+                and value > 0
+            ):
+                self.assertGreaterEqual(
+                    self.character.specialties.filter(stat=ability).count(), 0
+                )
+
+    def test_get_backgrounds(self):
+        self.assertEqual(
+            self.character.get_backgrounds(),
+            {
+                "contacts": 0,
+                "mentor": 0,
+            },
+        )
+        self.character.contacts = 3
+        self.character.mentor = 2
+        self.assertEqual(
+            self.character.get_backgrounds(),
+            {
+                "contacts": 3,
+                "mentor": 2,
+            },
+        )
+
+    def test_add_background(self):
+        total = self.character.total_backgrounds()
+        self.assertTrue(self.character.add_background("contacts"))
+        self.assertEqual(self.character.total_backgrounds(), total + 1)
+
+    def test_filter_backgrounds(self):
+        self.assertEqual(len(self.character.filter_backgrounds()), 2)
+        self.character.contacts = 4
+        self.character.mentor = 2
+        self.assertEqual(len(self.character.filter_backgrounds(minimum=3)), 1)
+        self.assertEqual(len(self.character.filter_backgrounds(maximum=3)), 1)
+
+    def test_has_backgrounds(self):
+        self.assertFalse(self.character.has_backgrounds())
+        self.character.contacts = 2
+        self.character.mentor = 3
+        self.assertTrue(self.character.has_backgrounds())
+
+    def test_notes_field(self):
+        self.assertEqual(self.character.notes, "")
+        self.character.notes = "This is a note."
+        self.assertNotEqual(self.character.notes, "")
+
+    def test_static_numbers(self):
+        self.assertEqual(self.character.willpower, 3)
+        self.assertEqual(self.character.background_points, 5)
+        self.assertEqual(self.character.freebies, 15)
+
+    def test_ability_deficit_flaw(self):
+        mf = MeritFlaw.objects.create(name="Ability Deficit")
+        mf.add_rating(-2)
+        self.character.add_mf(mf, -2)
+        self.character.alertness = 3
+        self.character.athletics = 2
+        self.character.drive = 3
+        self.character.etiquette = 2
+        self.character.academics = 3
+        self.character.computer = 2
+        self.character.mf_based_corrections()
+        self.assertEqual(self.character.total_abilities(), 10)
+        l = [
+            self.character.total_talents(),
+            self.character.total_skills(),
+            self.character.total_knowledges(),
+        ]
+        l.sort()
+        self.assertEqual([0, 5, 5], l)
+
+    def test_total_backgrounds(self):
+        self.character.add_background("contacts")
+        self.character.add_background("mentor")
+        self.assertEqual(self.character.total_backgrounds(), 2)
+
+    def test_attribute_specialties(self):
+        self.character.specialties.create(name="strength focus", stat="strength")
+        self.character.specialties.create(name="charisma focus", stat="charisma")
+        self.assertEqual(
+            self.character.specialties.get(stat="strength").name, "strength focus"
+        )
+        self.assertEqual(
+            self.character.specialties.get(stat="charisma").name, "charisma focus"
+        )
+
 
 class TestRandomHuman(TestCase):
     def setUp(self) -> None:
@@ -630,6 +810,8 @@ class TestRandomHuman(TestCase):
                     mf = MeritFlaw.objects.create(name=f"Flaw {i}")
                     mf.add_rating(-i)
                     mf.allowed_types.add(human)
+        for i in range(20):
+            Language.objects.create(name=f"TL {i}")
 
     def test_random_attribute(self):
         num = self.character.total_attributes()
@@ -662,6 +844,98 @@ class TestRandomHuman(TestCase):
         self.assertEqual(triple, [13, 9, 5])
         for _, value in self.character.get_abilities().items():
             self.assertLessEqual(value, 3)
+
+    def test_random_name(self):
+        self.assertFalse(self.character.has_name())
+        self.character.random_name()
+        self.assertTrue(self.character.has_name())
+
+    def test_random_concept(self):
+        self.assertFalse(self.character.has_concept())
+        self.character.random_concept()
+        self.assertTrue(self.character.has_concept())
+
+    def test_random_specialty(self):
+        self.character.stealth = 3
+        self.assertFalse(self.character.random_specialty("stealth"))
+        self.assertEqual(self.character.specialties.count(), 0)
+        self.character.stealth = 4
+        self.assertTrue(self.character.random_specialty("stealth"))
+        self.assertEqual(self.character.specialties.count(), 1)
+        self.assertTrue(self.character.random_specialty("stealth"))
+        self.assertEqual(self.character.specialties.count(), 2)
+
+    def test_random_specialties(self):
+        self.character.science = 4
+        self.character.athletics = 4
+        self.character.alertness = 4
+        self.assertFalse(self.character.has_specialties())
+        self.character.random_specialties()
+        self.assertTrue(self.character.has_specialties())
+
+    def test_add_random_language(self):
+        Language.objects.create(name="Test Language", frequency=1)
+        self.character.add_random_language()
+        self.assertGreater(self.character.languages.count(), 0)
+
+    def test_random_derangement(self):
+        Derangement.objects.create(name="Test Derangement")
+        self.character.random_derangement()
+        self.assertGreater(self.character.derangements.count(), 0)
+
+    def test_random_background(self):
+        self.character.random_background()
+        self.assertGreater(self.character.total_backgrounds(), 0)
+
+    def test_random_backgrounds(self):
+        self.assertFalse(self.character.has_backgrounds())
+        self.character.random_backgrounds()
+        self.assertTrue(self.character.has_backgrounds())
+
+    def test_random_birthdate(self):
+        age = 25
+        birthdate = self.character.random_birthdate(age)
+        self.assertIsInstance(birthdate, date)
+
+    def test_random_finishing_touches(self):
+        self.character.random_finishing_touches()
+        self.assertIsInstance(self.character.age, int)
+        self.assertIsInstance(self.character.date_of_birth, date)
+        self.assertIsInstance(self.character.height, str)
+        self.assertIsInstance(self.character.weight, str)
+        self.assertIsInstance(self.character.apparent_age, int)
+
+    def test_random_history(self):
+        self.character.random_history()
+        self.assertIsInstance(self.character.childhood, str)
+        self.assertIsInstance(self.character.history, str)
+        self.assertIsInstance(self.character.goals, str)
+
+    def test_random(self):
+        self.assertFalse(self.character.has_name())
+        self.assertFalse(self.character.has_concept())
+        self.assertFalse(self.character.has_archetypes())
+        self.assertFalse(self.character.has_attributes())
+        self.assertFalse(self.character.has_abilities())
+        self.assertFalse(self.character.has_backgrounds())
+        self.assertFalse(self.character.has_finishing_touches())
+        self.assertFalse(self.character.has_history())
+        self.character.random(freebies=0, xp=0)
+        self.assertTrue(self.character.has_name())
+        self.assertTrue(self.character.has_concept())
+        self.assertTrue(self.character.has_archetypes())
+        self.assertTrue(self.character.has_attributes())
+        self.assertTrue(self.character.has_abilities())
+        self.assertTrue(self.character.has_backgrounds())
+        self.assertTrue(self.character.has_specialties())
+        self.assertTrue(self.character.has_finishing_touches())
+        self.assertTrue(self.character.has_history())
+        self.assertEqual(self.character.freebies, 0)
+
+    def test_random_archetypes(self):
+        self.assertFalse(self.character.has_archetypes())
+        self.character.random_archetypes()
+        self.assertTrue(self.character.has_archetypes())
 
 
 class TestHumanDetailView(TestCase):

@@ -37,16 +37,30 @@ class TestCharacter(TestCase):
         )
 
 
+class TestRandomCharacter(TestCase):
+    def setUp(self):
+        self.character = Character.objects.create()
+
+    def test_random_concept(self):
+        self.assertFalse(self.character.has_concept())
+        self.character.random_concept()
+        self.assertTrue(self.character.has_concept())
+
+    def test_random_name(self):
+        name_count = Character.objects.count()
+        self.assertNotEqual(self.character.name, f"Random Character {name_count}")
+        self.character.random_name()
+        self.assertEqual(self.character.name, f"Random Character {name_count}")
+
+
 class TestGenericCharacterDetailViews(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="Test")
-        self.character = Character.objects.create(
-            name="Test Character", owner=self.player
-        )
+        self.character = Character.objects.create(name="Test Char", owner=self.player)
         self.human = Human.objects.create(name="Test Human", owner=self.player)
 
     def test_character_detail_view_templates(self):
-        response = self.client.get(f"/characters/{self.character.id}/")
+        response = self.client.get(self.character.get_absolute_url())
         self.assertTemplateUsed(response, "characters/core/character/detail.html")
-        response = self.client.get(f"/characters/{self.human.id}/")
+        response = self.client.get(self.human.get_absolute_url())
         self.assertTemplateUsed(response, "characters/core/human/detail.html")
