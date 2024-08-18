@@ -1,10 +1,11 @@
 from characters.models.core import Human
+from characters.views.core.character import CharacterDetailView
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
 # Create your views here.
-class HumanDetailView(DetailView):
+class HumanDetailView(CharacterDetailView):
     model = Human
     template_name = "characters/core/human/detail.html"
 
