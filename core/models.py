@@ -220,3 +220,6 @@ class HouseRule(models.Model):
         ],
         default="wod",
     )
+
+    def display_sources(self):
+        return ", ".join(list(self.sources.all()))

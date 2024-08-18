@@ -27,4 +27,9 @@ urlpatterns = [
         views.NewsItemUpdateView.as_view(),
         name="update_newsitem",
     ),
+    path(
+        "houserules/index/<gameline>/",
+        views.HouseRulesIndexView.as_view(),
+        name="houserules",
+    ),
 ]
