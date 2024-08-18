@@ -44,6 +44,12 @@ class TestHuman(TestCase):
                     name=f"{stat.replace('_', ' ').title()} Specialty {i}",
                     stat=stat,
                 )
+        for i in range(10):
+            for ability in self.character.get_abilities():
+                Specialty.objects.create(
+                    name=f"{ability.replace('_', ' ').title()} Specialty {i}",
+                    stat=ability,
+                )
 
     def test_add_willpower(self):
         self.assertEqual(self.character.willpower, 3)
@@ -390,6 +396,210 @@ class TestHuman(TestCase):
         self.character.stamina = 4
         self.assertEqual(self.character.total_attributes(), 15)
 
+    def test_get_abilities(self):
+        self.assertEqual(
+            self.character.get_abilities(),
+            {
+                "alertness": 0,
+                "athletics": 0,
+                "brawl": 0,
+                "empathy": 0,
+                "expression": 0,
+                "intimidation": 0,
+                "streetwise": 0,
+                "subterfuge": 0,
+                "crafts": 0,
+                "drive": 0,
+                "etiquette": 0,
+                "firearms": 0,
+                "melee": 0,
+                "stealth": 0,
+                "academics": 0,
+                "computer": 0,
+                "investigation": 0,
+                "medicine": 0,
+                "science": 0,
+            },
+        )
+        self.set_abilities()
+        self.assertEqual(
+            self.character.get_abilities(),
+            {
+                "alertness": 3,
+                "athletics": 3,
+                "brawl": 3,
+                "empathy": 3,
+                "expression": 1,
+                "intimidation": 0,
+                "streetwise": 0,
+                "subterfuge": 0,
+                "crafts": 3,
+                "drive": 3,
+                "etiquette": 3,
+                "firearms": 0,
+                "melee": 0,
+                "stealth": 0,
+                "academics": 3,
+                "computer": 2,
+                "investigation": 0,
+                "medicine": 0,
+                "science": 0,
+            },
+        )
+
+    def test_get_talents(self):
+        self.assertEqual(
+            self.character.get_talents(),
+            {
+                "alertness": 0,
+                "athletics": 0,
+                "brawl": 0,
+                "empathy": 0,
+                "expression": 0,
+                "intimidation": 0,
+                "streetwise": 0,
+                "subterfuge": 0,
+            },
+        )
+        self.set_abilities()
+        self.assertEqual(
+            self.character.get_talents(),
+            {
+                "alertness": 3,
+                "athletics": 3,
+                "brawl": 3,
+                "empathy": 3,
+                "expression": 1,
+                "intimidation": 0,
+                "streetwise": 0,
+                "subterfuge": 0,
+            },
+        )
+
+    def test_get_skills(self):
+        self.assertEqual(
+            self.character.get_skills(),
+            {
+                "crafts": 0,
+                "drive": 0,
+                "etiquette": 0,
+                "firearms": 0,
+                "melee": 0,
+                "stealth": 0,
+            },
+        )
+        self.set_abilities()
+        self.assertEqual(
+            self.character.get_skills(),
+            {
+                "crafts": 3,
+                "drive": 3,
+                "etiquette": 3,
+                "firearms": 0,
+                "melee": 0,
+                "stealth": 0,
+            },
+        )
+
+    def test_get_knowledges(self):
+        self.assertEqual(
+            self.character.get_knowledges(),
+            {
+                "academics": 0,
+                "computer": 0,
+                "investigation": 0,
+                "medicine": 0,
+                "science": 0,
+            },
+        )
+        self.set_abilities()
+        self.assertEqual(
+            self.character.get_knowledges(),
+            {
+                "academics": 3,
+                "computer": 2,
+                "investigation": 0,
+                "medicine": 0,
+                "science": 0,
+            },
+        )
+
+    def test_add_ability(self):
+        self.character.occult = 0
+        self.assertTrue(self.character.add_ability("occult"))
+        self.assertEqual(self.character.occult, 1)
+        self.character.occult = 5
+        self.assertFalse(self.character.add_ability("occult", maximum=5))
+        self.assertEqual(self.character.occult, 5)
+        self.assertTrue(self.character.add_ability("occult", maximum=6))
+        self.assertEqual(self.character.occult, 6)
+
+    def test_filter_abilities(self):
+        self.assertEqual(len(self.character.filter_abilities(minimum=1, maximum=3)), 0)
+        self.assertEqual(len(self.character.filter_abilities(minimum=0, maximum=3)), 19)
+        self.set_abilities()
+        self.assertEqual(len(self.character.filter_abilities(minimum=1, maximum=3)), 10)
+        self.assertEqual(len(self.character.filter_abilities(minimum=1, maximum=2)), 2)
+
+    def set_abilities(self):
+        self.character.alertness = 3
+        self.character.athletics = 3
+        self.character.brawl = 3
+        self.character.empathy = 3
+        self.character.expression = 1
+        self.character.crafts = 3
+        self.character.drive = 3
+        self.character.etiquette = 3
+        self.character.academics = 3
+        self.character.computer = 2
+
+    def test_has_abilities(self):
+        triple = [
+            self.character.total_talents(),
+            self.character.total_skills(),
+            self.character.total_knowledges(),
+        ]
+        triple.sort()
+        self.assertNotEqual(triple, [5, 9, 13])
+        self.set_abilities()
+        triple = [
+            self.character.total_talents(),
+            self.character.total_skills(),
+            self.character.total_knowledges(),
+        ]
+        triple.sort()
+        self.assertEqual(triple, [5, 9, 13])
+        self.character.subterfuge = 1
+        triple = [
+            self.character.total_talents(),
+            self.character.total_skills(),
+            self.character.total_knowledges(),
+        ]
+        triple.sort()
+        self.assertNotEqual(triple, [5, 9, 13])
+
+    def test_total_talents(self):
+        self.character.alertness = 2
+        self.character.athletics = 1
+        self.character.brawl = 1
+        self.assertEqual(self.character.total_talents(), 4)
+
+    def test_total_skills(self):
+        self.character.etiquette = 2
+        self.character.firearms = 1
+        self.character.stealth = 3
+        self.assertEqual(self.character.total_skills(), 6)
+
+    def test_total_knowledges(self):
+        self.character.academics = 1
+        self.character.investigation = 2
+        self.assertEqual(self.character.total_knowledges(), 3)
+
+    def test_total_abilities(self):
+        self.character.add_ability("brawl")
+        self.character.add_ability("firearms")
+        self.assertEqual(self.character.total_abilities(), 2)
+
 
 class TestRandomHuman(TestCase):
     def setUp(self) -> None:
@@ -402,6 +612,12 @@ class TestRandomHuman(TestCase):
                 Specialty.objects.create(
                     name=f"{attribute.replace('_', ' ').title()} Specialty {i}",
                     stat=attribute,
+                )
+        for i in range(10):
+            for ability in self.character.get_abilities():
+                Specialty.objects.create(
+                    name=f"{ability.replace('_', ' ').title()} Specialty {i}",
+                    stat=ability,
                 )
         human = ObjectType.objects.get_or_create(name="human")[0]
         for i in range(1, 6):
@@ -429,6 +645,23 @@ class TestRandomHuman(TestCase):
         ]
         triple.sort(key=lambda x: -x)
         self.assertEqual(triple, [10, 8, 6])
+
+    def test_random_ability(self):
+        num = self.character.total_abilities()
+        self.character.random_ability()
+        self.assertEqual(self.character.total_abilities(), num + 1)
+
+    def test_random_abilities(self):
+        self.character.random_abilities()
+        triple = [
+            self.character.total_talents(),
+            self.character.total_skills(),
+            self.character.total_knowledges(),
+        ]
+        triple.sort(key=lambda x: -x)
+        self.assertEqual(triple, [13, 9, 5])
+        for _, value in self.character.get_abilities().items():
+            self.assertLessEqual(value, 3)
 
 
 class TestHumanDetailView(TestCase):
