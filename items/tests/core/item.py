@@ -39,7 +39,7 @@ class TestItemCreateView(TestCase):
             "name": "Test Item",
             "description": "A test description for the item.",
         }
-        self.url = reverse("items:create:item")
+        self.url = ItemModel.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

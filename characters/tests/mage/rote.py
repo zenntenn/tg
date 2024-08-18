@@ -28,7 +28,7 @@ class TestRoteCreateView(TestCase):
             "attribute": "tmp",
             "ability": "tmp",
         }
-        self.url = reverse("characters:mage:create:rote")
+        self.url = Rote.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

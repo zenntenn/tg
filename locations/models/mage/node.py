@@ -55,6 +55,10 @@ class Node(LocationModel):
     def get_update_url(self):
         return reverse("locations:mage:update:node", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("locations:mage:create:node")
+
     def get_heading(self):
         return "mtas_heading"
 

@@ -22,7 +22,7 @@ class TestDerangementDetailView(TestCase):
 class TestDerangementCreateView(TestCase):
     def setUp(self):
         self.valid_data = {"name": "Test Derangement", "description": "Test"}
-        self.url = reverse("characters:create:derangement")
+        self.url = Derangement.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

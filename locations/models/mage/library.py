@@ -24,6 +24,10 @@ class Library(LocationModel):
     def get_update_url(self):
         return reverse("locations:mage:update:library", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("locations:mage:create:library")
+
     def get_heading(self):
         return "mtas_heading"
 

@@ -53,7 +53,7 @@ class TestEffectCreateView(TestCase):
             "mind": 0,
             "prime": 2,
         }
-        self.url = reverse("characters:mage:create:effect")
+        self.url = Effect.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

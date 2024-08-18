@@ -31,7 +31,7 @@ class TestResonanceCreateView(TestCase):
             "mind": False,
             "prime": True,
         }
-        self.url = reverse("characters:mage:create:resonance")
+        self.url = Resonance.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

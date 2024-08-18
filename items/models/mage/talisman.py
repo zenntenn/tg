@@ -19,6 +19,10 @@ class Talisman(Wonder):
     def get_update_url(self):
         return reverse("items:mage:update:talisman", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:mage:create:talisman")
+
     def add_power(self, power):
         self.powers.add(power)
         return True

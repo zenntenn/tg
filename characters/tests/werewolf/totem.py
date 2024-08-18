@@ -28,7 +28,7 @@ class TestTotemCreateView(TestCase):
             "pack_traits": "Test",
             "ban": "Test",
         }
-        self.url = reverse("characters:werewolf:create:totem")
+        self.url = Totem.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

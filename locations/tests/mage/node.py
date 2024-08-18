@@ -227,7 +227,7 @@ class TestNodeCreateView(TestCase):
             "tass_per_week": 3,
             "tass_form": "tass",
         }
-        self.url = reverse("locations:mage:create:node")
+        self.url = Node.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

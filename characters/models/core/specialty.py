@@ -22,6 +22,10 @@ class Specialty(Model):
     def get_update_url(self):
         return reverse("characters:update:specialty", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:create:specialty")
+
     def __str__(self):
         return f"{self.name} ({self.display_stat()})"
 

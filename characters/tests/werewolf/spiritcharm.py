@@ -23,7 +23,7 @@ class TestSpiritCharmCreateView(TestCase):
             "name": "SpiritCharm",
             "description": "Test",
         }
-        self.url = reverse("characters:werewolf:create:charm")
+        self.url = SpiritCharm.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

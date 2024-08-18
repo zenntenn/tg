@@ -45,6 +45,10 @@ class Effect(Model):
     def get_update_url(self):
         return reverse("characters:mage:update:effect", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:effect")
+
     def get_heading(self):
         return "mtas_heading"
 

@@ -27,5 +27,9 @@ class City(LocationModel):
     def get_update_url(self):
         return reverse("locations:update:city", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("locations:create:city")
+
     def get_heading(self):
         return "wod_heading"

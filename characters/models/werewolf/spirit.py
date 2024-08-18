@@ -21,5 +21,9 @@ class Spirit(Character):
     def get_update_url(self):
         return reverse("characters:werewolf:update:spirit", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:werewolf:create:spirit")
+
     def get_heading(self):
         return "wta_heading"

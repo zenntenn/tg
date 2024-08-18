@@ -27,7 +27,7 @@ class TestSpiritCreateView(TestCase):
             "gnosis": 1,
             "essence": 20,
         }
-        self.url = reverse("characters:werewolf:create:spirit")
+        self.url = Spirit.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

@@ -352,7 +352,7 @@ class TestNewsItemCreateView(TestCase):
             "content": "News Test Content.",
             # "date": now(),
         }
-        self.url = reverse("create_newsitem")
+        self.url = NewsItem.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -419,7 +419,7 @@ class TestLanguageCreateView(TestCase):
             "name": "Test Language",
             "frequency": 1,
         }
-        self.url = reverse("create_language")
+        self.url = Language.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

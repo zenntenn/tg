@@ -77,7 +77,7 @@ class TestLibraryCreateView(TestCase):
             "description": "Test",
             "rank": 2,
         }
-        self.url = reverse("locations:mage:create:library")
+        self.url = Library.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

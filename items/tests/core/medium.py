@@ -27,7 +27,7 @@ class TestMediumCreateView(TestCase):
             "length_modifier_type": "/",
             "length_modifier": 4,
         }
-        self.url = reverse("items:create:medium")
+        self.url = Medium.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

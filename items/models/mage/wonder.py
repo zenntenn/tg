@@ -40,6 +40,10 @@ class Wonder(ItemModel):
     def get_update_url(self):
         return reverse("items:mage:update:wonder", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:mage:create:wonder")
+
     def get_heading(self):
         return "mtas_heading"
 

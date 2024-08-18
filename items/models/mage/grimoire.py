@@ -57,6 +57,10 @@ class Grimoire(Wonder):
     def get_update_url(self):
         return reverse("items:mage:update:grimoire", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:mage:create:grimoire")
+
     def set_abilities(self, abilities):
         for ability in abilities:
             if not isinstance(ability, Ability):

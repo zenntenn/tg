@@ -25,7 +25,7 @@ class TestSpecialtyCreateView(TestCase):
             "name": "Test Specialty",
             "stat": "Test",
         }
-        self.url = reverse("characters:create:specialty")
+        self.url = Specialty.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

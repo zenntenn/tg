@@ -31,7 +31,7 @@ class TestRangedWeaponCreateView(TestCase):
             "rate": 3,
             "clip": 17,
         }
-        self.url = reverse("items:create:rangedweapon")
+        self.url = RangedWeapon.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

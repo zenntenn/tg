@@ -23,5 +23,9 @@ class Material(models.Model):
     def get_update_url(self):
         return reverse("items:update:material", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:create:material")
+
     def __str__(self):
         return f"{self.name}"

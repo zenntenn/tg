@@ -47,7 +47,7 @@ class TestCityCreateView(TestCase):
             "media": "Only National",
             "politicians": "White dudes",
         }
-        self.url = reverse("locations:create:city")
+        self.url = City.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

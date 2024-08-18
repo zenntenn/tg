@@ -16,6 +16,10 @@ class Artifact(Wonder):
     def get_update_url(self):
         return reverse("items:mage:update:artifact", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:mage:create:artifact")
+
     def set_power(self, power):
         self.power = power
         self.save()
