@@ -1,6 +1,7 @@
 import random
 
 from characters.models.mage.resonance import Resonance
+from core.utils import fast_selector
 from django.db import models
 from django.urls import reverse
 from items.models.core import ItemModel
@@ -120,12 +121,8 @@ class Wonder(ItemModel):
                 choice = random.choice(possible)
                 if self.add_resonance(choice):
                     return True
-        while True:
-            index = random.randint(1, Resonance.objects.last().id)
-            if Resonance.objects.filter(pk=index).exists():
-                choice = Resonance.objects.get(pk=index)
-                if self.add_resonance(choice):
-                    return True
+        res = fast_selector(Resonance)
+        return self.add_resonance(res)
 
     def random(self, rank=None, name=None):
         self.update_status("Ran")
