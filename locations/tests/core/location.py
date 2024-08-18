@@ -50,7 +50,7 @@ class TestLocationCreateView(TestCase):
             "dimension_barrier": 5,
         }
         self.invalid_data = {"name": "", "description": ""}
-        self.url = reverse("locations:create:location")
+        self.url = LocationModel.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

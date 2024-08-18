@@ -69,6 +69,10 @@ class Human(Character):
     def get_update_url(self):
         return reverse("characters:update:human", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:create:human")
+
     def get_heading(self):
         return "wod_heading"
 

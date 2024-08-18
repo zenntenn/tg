@@ -52,7 +52,7 @@ class TestMeritFlawCreateView(TestCase):
             "ratings": [],
             "allowed_types": [],
         }
-        self.url = reverse("characters:create:meritflaw")
+        self.url = MeritFlaw.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

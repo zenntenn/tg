@@ -21,7 +21,7 @@ class TestMaterialDetailView(TestCase):
 class TestMaterialCreateView(TestCase):
     def setUp(self):
         self.valid_data = {"name": "Test Material", "is_hard": True}
-        self.url = reverse("items:create:material")
+        self.url = Material.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

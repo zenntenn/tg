@@ -26,6 +26,10 @@ class ItemModel(Model):
     def get_update_url(self):
         return reverse("items:update:item", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:create:item")
+
     def get_heading(self):
         return "wod_heading"
 

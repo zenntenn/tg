@@ -73,7 +73,7 @@ class TestCharmCreateView(TestCase):
             "quintessence_max": 5,
             "arete": 2,
         }
-        self.url = reverse("items:mage:create:charm")
+        self.url = Charm.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

@@ -72,7 +72,7 @@ class TestArtifactCreateView(TestCase):
             "background_cost": 3,
             "quintessence_max": 5,
         }
-        self.url = reverse("items:mage:create:artifact")
+        self.url = Artifact.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

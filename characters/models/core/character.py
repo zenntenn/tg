@@ -46,3 +46,7 @@ class Character(CharacterModel):
 
     def get_update_url(self):
         return reverse("characters:update:character", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:create:character")

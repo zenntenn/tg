@@ -19,6 +19,10 @@ class Charm(Wonder):
     def get_update_url(self):
         return reverse("items:mage:update:charm", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:mage:create:charm")
+
     def set_power(self, power):
         self.power = power
         return True

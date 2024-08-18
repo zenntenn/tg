@@ -29,5 +29,9 @@ class Totem(Model):
     def get_update_url(self):
         return reverse("characters:werewolf:update:totem", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:werewolf:create:totem")
+
     def get_heading(self):
         return "wta_heading"

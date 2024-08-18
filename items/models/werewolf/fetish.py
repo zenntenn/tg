@@ -17,6 +17,10 @@ class Fetish(Wonder):
     def get_update_url(self):
         return reverse("items:werewolf:update:fetish", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:werewolf:create:fetish")
+
     def get_heading(self):
         return "wta_heading"
 

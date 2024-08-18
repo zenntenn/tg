@@ -577,7 +577,7 @@ class TestGrimoireCreateView(TestCase):
             "is_primer": False,
             "length": 3,
         }
-        self.url = reverse("items:mage:create:grimoire")
+        self.url = Grimoire.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

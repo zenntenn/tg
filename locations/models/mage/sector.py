@@ -28,5 +28,9 @@ class Sector(LocationModel):
     def get_update_url(self):
         return reverse("locations:mage:update:sector", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("locations:mage:create:sector")
+
     def get_heading(self):
         return "mtas_heading"

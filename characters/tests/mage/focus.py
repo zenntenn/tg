@@ -145,7 +145,7 @@ class TestInstrumentCreateView(TestCase):
             "name": "Test Instrument",
             "description": "Test",
         }
-        self.url = reverse("characters:mage:create:instrument")
+        self.url = Instrument.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -210,7 +210,7 @@ class TestPracticeCreateView(TestCase):
             "benefit": "Test Benny",
             "penalty": "Test Penny",
         }
-        self.url = reverse("characters:mage:create:practice")
+        self.url = Practice.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -282,7 +282,7 @@ class TestSpecializedPracticeCreateView(TestCase):
             "penalty": "Test Penny",
             "extra_benefit": "Test Extra",
         }
-        self.url = reverse("characters:mage:create:specialized_practice")
+        self.url = SpecializedPractice.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -362,7 +362,7 @@ class TestCorruptedPracticeCreateView(TestCase):
             "extra_benefit": "Test Extra",
             "price": "Test Price",
         }
-        self.url = reverse("characters:mage:create:corrupted_practice")
+        self.url = CorruptedPractice.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -436,7 +436,7 @@ class TestTenetCreateView(TestCase):
             "description": "Test Description",
             "tenet_type": "asc",
         }
-        self.url = reverse("characters:mage:create:tenet")
+        self.url = Tenet.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -498,7 +498,7 @@ class TestParadigmCreateView(TestCase):
             "name": "Test Paradigm",
             "description": "Test description",
         }
-        self.url = reverse("characters:mage:create:paradigm")
+        self.url = Paradigm.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

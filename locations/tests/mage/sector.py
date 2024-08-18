@@ -26,7 +26,7 @@ class TestSectorCreateView(TestCase):
             "sector_class": "virgin",
             "constraints": "test",
         }
-        self.url = reverse("locations:mage:create:sector")
+        self.url = Sector.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)

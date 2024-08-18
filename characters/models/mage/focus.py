@@ -19,6 +19,10 @@ class Instrument(Model):
     def get_update_url(self):
         return reverse("characters:mage:update:instrument", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:instrument")
+
     def get_heading(self):
         return "mtas_heading"
 
@@ -41,6 +45,10 @@ class Practice(Model):
 
     def get_update_url(self):
         return reverse("characters:mage:update:practice", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:practice")
 
     def get_heading(self):
         return "mtas_heading"
@@ -68,6 +76,10 @@ class SpecializedPractice(Practice):
             "characters:mage:update:specialized_practice", kwargs={"pk": self.pk}
         )
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:specialized_practice")
+
 
 class CorruptedPractice(Practice):
     type = "corrupted_practice"
@@ -79,6 +91,10 @@ class CorruptedPractice(Practice):
         return reverse(
             "characters:mage:update:corrupted_practice", kwargs={"pk": self.pk}
         )
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:corrupted_practice")
 
 
 class Tenet(Model):
@@ -116,6 +132,10 @@ class Tenet(Model):
     def get_update_url(self):
         return reverse("characters:mage:update:tenet", kwargs={"pk": self.pk})
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:tenet")
+
     def get_heading(self):
         return "mtas_heading"
 
@@ -134,6 +154,10 @@ class Paradigm(Model):
 
     def get_update_url(self):
         return reverse("characters:mage:update:paradigm", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:paradigm")
 
     def get_heading(self):
         return "mtas_heading"

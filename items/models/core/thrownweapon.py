@@ -13,3 +13,7 @@ class ThrownWeapon(Weapon):
 
     def get_update_url(self):
         return reverse("items:update:thrownweapon", args=[str(self.id)])
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("items:create:thrownweapon")

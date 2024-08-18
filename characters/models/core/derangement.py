@@ -16,5 +16,9 @@ class Derangement(Model):
     def get_update_url(self):
         return reverse("characters:update:derangement", args=[str(self.id)])
 
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:create:derangement")
+
     def get_heading(self):
         return "wod_heading"

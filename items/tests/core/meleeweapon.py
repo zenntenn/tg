@@ -28,7 +28,7 @@ class TestMeleeWeaponCreateView(TestCase):
             "damage_type": "L",
             "conceal": "P",
         }
-        self.url = reverse("items:create:meleeweapon")
+        self.url = MeleeWeapon.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
