@@ -1,6 +1,7 @@
 {% extends "characters/core/character/detail.html" %}
 {% block statistics %}
     {% load dots %}
+    {% load get_specialty %}
     {% block name %}
         <div class="row">
             <div class="col-sm {{ object.get_heading }}">
@@ -15,10 +16,14 @@
         <div class="row">
             <div class="col-sm">Name</div>
             <div class="col-sm">{{ object.name }}</div>
+            <div class="col-sm">Nature</div>
+            <a class="col-sm" href="{{ object.nature.get_absolute_url }}">{{ object.nature }}</a>
         </div>
         <div class="row">
             <div class="col-sm">Player</div>
             <div class="col-sm">{{ object.player }}</div>
+            <div class="col-sm">Demeanor</div>
+            <a class="col-sm" href="{{ object.demeanor.get_absolute_url }}">{{ object.demeanor }}</a>
         </div>
         <div class="row">
             <div class="col-sm"></div>
@@ -28,6 +33,65 @@
         </div>
     {% endblock basics %}
     {% block attributes %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">Attributes</h2>
+        </div>
+        <div class="row">
+            <h3 class="col-sm {{ object.get_heading }}">Physical</h3>
+            <h3 class="col-sm {{ object.get_heading }}">Social</h3>
+            <h3 class="col-sm {{ object.get_heading }}">Mental</h3>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Strength
+                {% if object|get_specialty:'strength' %}({{ object|get_specialty:'strength' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.strength|dots }}</div>
+            <div class="col-sm">
+                Charisma
+                {% if object|get_specialty:'charisma' %}({{ object|get_specialty:'charisma' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.charisma|dots }}</div>
+            <div class="col-sm">
+                Perception
+                {% if object|get_specialty:'perception' %}({{ object|get_specialty:'perception' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.perception|dots }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Dexterity
+                {% if object|get_specialty:'dexterity' %}({{ object|get_specialty:'dexterity' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.dexterity|dots }}</div>
+            <div class="col-sm">
+                Manipulation
+                {% if object|get_specialty:'manipulation' %}({{ object|get_specialty:'manipulation' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.manipulation|dots }}</div>
+            <div class="col-sm">
+                Intelligence
+                {% if object|get_specialty:'intelligence' %}({{ object|get_specialty:'intelligence' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.intelligence|dots }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Stamina
+                {% if object|get_specialty:'stamina' %}({{ object|get_specialty:'stamina' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.stamina|dots }}</div>
+            <div class="col-sm">
+                Appearance
+                {% if object|get_specialty:'appearance' %}({{ object|get_specialty:'appearance' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.appearance|dots }}</div>
+            <div class="col-sm">
+                Wits
+                {% if object|get_specialty:'wits' %}({{ object|get_specialty:'wits' }}){% endif %}
+            </div>
+            <div class="col-sm dots">{{ object.wits|dots }}</div>
+        </div>
     {% endblock attributes %}
     {% block abilities %}
     {% endblock abilities %}

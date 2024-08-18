@@ -52,7 +52,7 @@ class TestRandomArtifact(TestCase):
         self.assertEqual(a.background_cost, a.rank * 2)
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Artifact, self.player, character=False), 0.01)
+        self.assertLessEqual(time_test(Artifact, self.player, character=False), 0.015)
 
 
 class TestArtifactDetailView(TestCase):

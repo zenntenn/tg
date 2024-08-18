@@ -1,28 +1,30 @@
 {% extends "core/object.html" %}
 {% block contents %}
-    <div class="row">
-        <div class="col-sm {{ object.get_heading }}">
-            <h1>{{ object.name }}</h1>
-        </div>
-    </div>
-    {% block basics %}
-        <div class="row">
-            <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
-        </div>
-        <div class="row">
-            <div class="col-sm">Name</div>
-            <div class="col-sm">{{ object.name }}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">Player</div>
-            <div class="col-sm">{{ object.player }}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">Concept</div>
-            <div class="col-sm">{{ object.concept }}</div>
-        </div>
-    {% endblock basics %}
     {% block statistics %}
+        {% block name %}
+            <div class="row">
+                <div class="col-sm {{ object.get_heading }}">
+                    <h1>{{ object.name }}</h1>
+                </div>
+            </div>
+        {% endblock name %}
+        {% block basics %}
+            <div class="row">
+                <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
+            </div>
+            <div class="row">
+                <div class="col-sm">Name</div>
+                <div class="col-sm">{{ object.name }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Player</div>
+                <div class="col-sm">{{ object.player }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Concept</div>
+                <div class="col-sm">{{ object.concept }}</div>
+            </div>
+        {% endblock basics %}
     {% endblock statistics %}
     {% block flavor %}
     {% endblock flavor %}

@@ -20,6 +20,56 @@
         <div class="col-sm">{{ form.demeanor }}</div>
     </div>
     <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">Attributes</h2>
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ form.get_heading }}">Physical</h3>
+        <h3 class="col-sm {{ form.get_heading }}">Social</h3>
+        <h3 class="col-sm {{ form.get_heading }}">Mental</h3>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Strength
+        </div>
+        <div class="col-sm dots">{{ form.strength }}</div>
+        <div class="col-sm">
+            Charisma
+        </div>
+        <div class="col-sm dots">{{ form.charisma }}</div>
+        <div class="col-sm">
+            Perception
+        </div>
+        <div class="col-sm dots">{{ form.perception }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Dexterity
+        </div>
+        <div class="col-sm dots">{{ form.dexterity }}</div>
+        <div class="col-sm">
+            Manipulation
+        </div>
+        <div class="col-sm dots">{{ form.manipulation }}</div>
+        <div class="col-sm">
+            Intelligence
+        </div>
+        <div class="col-sm dots">{{ form.intelligence }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Stamina
+        </div>
+        <div class="col-sm dots">{{ form.stamina }}</div>
+        <div class="col-sm">
+            Appearance
+        </div>
+        <div class="col-sm dots">{{ form.appearance }}</div>
+        <div class="col-sm">
+            Wits
+        </div>
+        <div class="col-sm dots">{{ form.wits }}</div>
+    </div>
+    <div class="row">
         <div class="col-sm">Specialties</div>
         <div class="col-sm dots">{{ form.specialties }}</div>
     </div>

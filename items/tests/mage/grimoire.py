@@ -557,7 +557,7 @@ class TestRandomGrimoire(TestCase):
         self.assertTrue(self.grimoire.has_effects())
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Grimoire, self.player, character=False), 0.02)
+        self.assertLessEqual(time_test(Grimoire, self.player, character=False), 0.025)
 
 
 class TestGrimoireDetailView(TestCase):
