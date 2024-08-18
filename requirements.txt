@@ -9,3 +9,4 @@ pytest
 pytest-django
 djlint
 selenium
+numpy==1.26.4
