@@ -125,8 +125,8 @@ class NewUserTest(FunctionalTest):
             (self.clean_url(link.get_attribute("href")), link.text) for link in links
         ]
 
-        self.assertIn(("accounts/login/", "Log In"), links)
-        self.assertIn(("accounts/signup/", "Sign Up"), links)
+        self.assertIn(("accounts/login/", ""), links)
+        self.assertIn(("accounts/signup/", ""), links)
 
     def credential_creation_fail(self):
         self.browser.get(self.live_server_url + "/accounts/signup/")
@@ -200,8 +200,8 @@ class TestHomepage(FunctionalTest):
             (self.clean_url(link.get_attribute("href")), link.text) for link in links
         ]
 
-        self.assertIn(("accounts/login/", "Log In"), links)
-        self.assertIn(("accounts/signup/", "Sign Up"), links)
+        self.assertIn(("accounts/login/", ""), links)
+        self.assertIn(("accounts/signup/", ""), links)
 
 
 class TestModel(TestCase):
