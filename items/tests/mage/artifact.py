@@ -1,5 +1,7 @@
 from characters.models.mage import Effect
 from characters.models.mage.resonance import Resonance
+from core.utils import time_test
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from items.models.mage import Artifact
@@ -23,6 +25,7 @@ class TestArtifact(TestCase):
 
 class TestRandomArtifact(TestCase):
     def setUp(self):
+        self.player, _ = User.objects.get_or_create(username="Test")
         Effect.objects.create(name="Fireball", forces=3, prime=2)
         Effect.objects.create(name="F1", forces=1)
         Effect.objects.create(name="F2", forces=2)
@@ -47,6 +50,9 @@ class TestRandomArtifact(TestCase):
         self.assertTrue(a.has_power())
         self.assertEqual(a.quintessence_max, a.rank * 5)
         self.assertEqual(a.background_cost, a.rank * 2)
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Artifact, self.player, character=False), 0.01)
 
 
 class TestArtifactDetailView(TestCase):

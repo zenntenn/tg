@@ -1,9 +1,8 @@
 import cProfile
 import pstats
+import random
 from pstats import SortKey
 from time import time
-
-import random
 
 
 def add_dot(character, trait, maximum):
@@ -103,7 +102,9 @@ def time_test(cls, player, character=True, xp=0, random_name=True):
     start = time()
     for _ in range(10):
         create(cls, player, character=character, xp=xp, random_name=random_name)
-    print(f"Average Random {cls.__name__} Time:", (time() - start) / 10)
+    avg_time = (time() - start) / 10
+    print(f"Average Random {cls.__name__} Time:", avg_time)
+    return avg_time
 
 
 def create(cls, player, character=True, xp=0, random_name=True):
@@ -120,6 +121,8 @@ def create(cls, player, character=True, xp=0, random_name=True):
 
 
 def profile(cls, player, character=True, num_rows=10, xp=0):
-    cProfile.run(f"create({cls.__name__}, player, character={character}, xp={xp})", "tmp")
+    cProfile.run(
+        f"create({cls.__name__}, player, character={character}, xp={xp})", "tmp"
+    )
     p = pstats.Stats("tmp")
     p.sort_stats(SortKey.CUMULATIVE).print_stats(num_rows)
