@@ -3,6 +3,8 @@ from unittest.mock import Mock
 
 from characters.models.mage import Effect
 from characters.models.mage.resonance import Resonance
+from core.utils import time_test
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from items.models.mage.talisman import Talisman
@@ -33,6 +35,7 @@ class TestTalisman(TestCase):
 
 class TestRandomTalisman(TestCase):
     def setUp(self):
+        self.player, _ = User.objects.get_or_create(username="Test")
         Effect.objects.create(name="Fireball", forces=3, prime=2)
         Effect.objects.create(name="F1", forces=1)
         Effect.objects.create(name="F2", forces=2)
@@ -73,6 +76,9 @@ class TestRandomTalisman(TestCase):
         self.assertEqual(talisman.quintessence_max, 10)
         self.assertEqual(talisman.background_cost, 4)
         self.assertEqual(talisman.arete, 2)
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Talisman, self.player, character=False), 0.015)
 
 
 class TestTalismanDetailView(TestCase):

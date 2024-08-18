@@ -1,5 +1,7 @@
 from characters.models.mage import Effect
 from characters.models.mage.resonance import Resonance
+from core.utils import time_test
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from items.models.mage import Charm
@@ -23,6 +25,7 @@ class TestCharm(TestCase):
 
 class TestRandomCharm(TestCase):
     def setUp(self):
+        self.player, _ = User.objects.get_or_create(username="Test")
         Effect.objects.create(name="Fireball", forces=3, prime=2)
         Effect.objects.create(name="F1", forces=1)
         Effect.objects.create(name="F2", forces=2)
@@ -47,6 +50,9 @@ class TestRandomCharm(TestCase):
         self.assertTrue(c.has_power())
         self.assertEqual(c.arete, c.rank)
         self.assertEqual(c.background_cost, c.rank)
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Charm, self.player, character=False), 0.01)
 
 
 class TestCharmDetailView(TestCase):

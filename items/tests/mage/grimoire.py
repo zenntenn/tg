@@ -9,6 +9,8 @@ from characters.models.mage.focus import Instrument, Practice
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
 from core.models import Language, Noun
+from core.utils import time_test
+from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.test import TestCase
 from django.urls import reverse
@@ -176,6 +178,7 @@ class TestGrimoire(TestCase):
 
 class TestRandomGrimoire(TestCase):
     def setUp(self):
+        self.player, _ = User.objects.get_or_create(username="Test")
         self.grimoire = Grimoire.objects.create(name="Random Grimoire")
         for i in range(10):
             Noun.objects.create(name=f"Grimoire Noun {i}")
@@ -552,6 +555,9 @@ class TestRandomGrimoire(TestCase):
         self.assertTrue(self.grimoire.has_language())
         self.assertTrue(self.grimoire.has_spheres())
         self.assertTrue(self.grimoire.has_effects())
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Grimoire, self.player, character=False), 0.02)
 
 
 class TestGrimoireDetailView(TestCase):

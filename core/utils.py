@@ -98,6 +98,7 @@ def fast_selector(cls):
         index = random.randint(1, max_value)
     return cls.objects.get(pk=index)
 
+
 def time_test(cls, player, character=True, xp=0, random_name=True):
     start = time()
     for _ in range(10):
