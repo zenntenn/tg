@@ -85,3 +85,11 @@ def get_gameline_name(s):
         return "Wraith: the Oblivion"
     elif s == "cta":
         return "Changeling: the Dreaming"
+
+
+def fast_selector(cls):
+    max_value = cls.objects.last().id
+    index = random.randint(1, max_value)
+    while not cls.objects.filter(pk=index).exists():
+        index = random.randint(1, max_value)
+    return cls.objects.get(pk=index)
