@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ gameline }} House Rules
+{% endblock title %}
+{% block content %}
+    {% load field %}
+    <div class="centertext container">
+        {% for chron in chronicles %}
+            <div class="row border">
+                {% if chron == None %}
+                    <h2 class="col-sm border centertext">No Chronicle</h2>
+                {% else %}
+                    <h2 class="col-sm border centertext">
+                        <a href={{ chron.get_absolute_url }}>{{ chron.name }}</a>
+                    </h2>
+                {% endif %}
+            </div>
+            <div class="row border">
+                <h3 class="col-sm border">House Rules</h3>
+            </div>
+            {% for hr in object_list %}
+                {% if hr.chronicle == chron %}
+                    {% if hr.gameline == gameline_code %}
+                        <div class="row border">
+                            <div class="col-sm border"">{{ hr.name }}
+                            </div>
+                            <div class="col-sm border">{{ hr.display_sources }}</div>
+                            <div class="col-sm border">{{ hr.description }}</div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock content %}
