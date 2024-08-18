@@ -5,6 +5,7 @@ from characters.models.core import (
     MeritFlaw,
     MeritFlawRating,
 )
+from characters.models.core.specialty import Specialty
 from core.models import Number
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -36,6 +37,13 @@ class TestHuman(TestCase):
             mf = MeritFlaw.objects.create(name=f"Flaw {i}")
             mf.allowed_types.add(human)
             mf.add_rating(-i)
+
+        for i in range(10):
+            for stat in self.character.get_attributes():
+                Specialty.objects.create(
+                    name=f"{stat.replace('_', ' ').title()} Specialty {i}",
+                    stat=stat,
+                )
 
     def test_add_willpower(self):
         self.assertEqual(self.character.willpower, 3)
@@ -174,6 +182,254 @@ class TestHuman(TestCase):
         self.assertTrue(self.character.add_derangement(d))
         self.assertFalse(self.character.add_derangement(d))
 
+    def set_attributes(self):
+        self.character.strength = 5
+        self.character.dexterity = 4
+        self.character.stamina = 3
+        self.character.perception = 2
+        self.character.intelligence = 1
+        self.character.wits = 2
+        self.character.charisma = 3
+        self.character.manipulation = 4
+        self.character.appearance = 5
+
+    def test_get_attributes(self):
+        self.assertEqual(
+            self.character.get_attributes(),
+            {
+                "strength": 1,
+                "dexterity": 1,
+                "stamina": 1,
+                "perception": 1,
+                "intelligence": 1,
+                "wits": 1,
+                "charisma": 1,
+                "manipulation": 1,
+                "appearance": 1,
+            },
+        )
+        self.set_attributes()
+        self.assertEqual(
+            self.character.get_attributes(),
+            {
+                "strength": 5,
+                "dexterity": 4,
+                "stamina": 3,
+                "perception": 2,
+                "intelligence": 1,
+                "wits": 2,
+                "charisma": 3,
+                "manipulation": 4,
+                "appearance": 5,
+            },
+        )
+
+    def test_get_physical_attributes(self):
+        self.assertEqual(
+            self.character.get_physical_attributes(),
+            {
+                "strength": 1,
+                "dexterity": 1,
+                "stamina": 1,
+            },
+        )
+        self.set_attributes()
+        self.assertEqual(
+            self.character.get_physical_attributes(),
+            {
+                "strength": 5,
+                "dexterity": 4,
+                "stamina": 3,
+            },
+        )
+
+    def test_get_mental_attributes(self):
+        self.assertEqual(
+            self.character.get_mental_attributes(),
+            {
+                "perception": 1,
+                "intelligence": 1,
+                "wits": 1,
+            },
+        )
+        self.set_attributes()
+        self.assertEqual(
+            self.character.get_mental_attributes(),
+            {
+                "perception": 2,
+                "intelligence": 1,
+                "wits": 2,
+            },
+        )
+
+    def test_get_social_attributes(self):
+        self.assertEqual(
+            self.character.get_social_attributes(),
+            {
+                "charisma": 1,
+                "manipulation": 1,
+                "appearance": 1,
+            },
+        )
+        self.set_attributes()
+        self.assertEqual(
+            self.character.get_social_attributes(),
+            {
+                "charisma": 3,
+                "manipulation": 4,
+                "appearance": 5,
+            },
+        )
+
+    def test_add_attribute(self):
+        self.character.strength = 1
+        self.assertTrue(self.character.add_attribute("strength"))
+        self.assertEqual(self.character.strength, 2)
+        self.character.strength = 5
+        self.assertFalse(self.character.add_attribute("strength", maximum=5))
+        self.assertEqual(self.character.strength, 5)
+        self.assertTrue(self.character.add_attribute("strength", maximum=6))
+        self.assertEqual(self.character.strength, 6)
+
+    def test_filter_attributes(self):
+        self.character.strength = 5
+        self.assertEqual(
+            self.character.filter_attributes(maximum=4),
+            {
+                "dexterity": 1,
+                "stamina": 1,
+                "intelligence": 1,
+                "wits": 1,
+                "perception": 1,
+                "appearance": 1,
+                "manipulation": 1,
+                "charisma": 1,
+            },
+        )
+        self.assertEqual(
+            self.character.filter_attributes(maximum=5),
+            {
+                "strength": 5,
+                "dexterity": 1,
+                "stamina": 1,
+                "intelligence": 1,
+                "wits": 1,
+                "perception": 1,
+                "appearance": 1,
+                "manipulation": 1,
+                "charisma": 1,
+            },
+        )
+        self.character.strength = 4
+        self.assertEqual(self.character.filter_attributes(minimum=3), {"strength": 4})
+        self.assertEqual(
+            self.character.filter_attributes(minimum=3, maximum=5), {"strength": 4}
+        )
+        self.assertEqual(self.character.filter_attributes(minimum=5, maximum=6), {})
+
+    def test_has_attributes(self):
+        triple = [
+            self.character.total_physical_attributes(),
+            self.character.total_mental_attributes(),
+            self.character.total_social_attributes(),
+        ]
+        triple.sort()
+        self.assertNotEqual(triple, [6, 8, 10])
+        self.character.strength = 3
+        self.character.dexterity = 4
+        self.character.stamina = 3
+        self.character.intelligence = 3
+        self.character.wits = 3
+        self.character.perception = 2
+        self.character.charisma = 2
+        self.character.manipulation = 2
+        self.character.appearance = 2
+        triple = [
+            self.character.total_physical_attributes(),
+            self.character.total_mental_attributes(),
+            self.character.total_social_attributes(),
+        ]
+        triple.sort()
+        self.assertEqual(triple, [6, 8, 10])
+        self.character.perception = 3
+        triple = [
+            self.character.total_physical_attributes(),
+            self.character.total_mental_attributes(),
+            self.character.total_social_attributes(),
+        ]
+        triple.sort()
+        self.assertNotEqual(triple, [6, 8, 10])
+
+    def test_total_physical_attribute(self):
+        self.character.strength = 1
+        self.character.dexterity = 2
+        self.character.stamina = 3
+        self.assertEqual(self.character.total_physical_attributes(), 6)
+        self.character.stamina = 2
+        self.assertEqual(self.character.total_physical_attributes(), 5)
+
+    def test_total_mental_attribute(self):
+        self.character.perception = 1
+        self.character.intelligence = 2
+        self.character.wits = 3
+        self.assertEqual(self.character.total_mental_attributes(), 6)
+        self.character.wits = 2
+        self.assertEqual(self.character.total_mental_attributes(), 5)
+
+    def test_total_social_attribute(self):
+        self.character.charisma = 1
+        self.character.manipulation = 2
+        self.character.appearance = 3
+        self.assertEqual(self.character.total_social_attributes(), 6)
+        self.character.appearance = 2
+        self.assertEqual(self.character.total_social_attributes(), 5)
+
+    def test_total_attributes(self):
+        self.character.strength = 3
+        self.character.dexterity = 2
+        self.character.stamina = 4
+        self.assertEqual(self.character.total_attributes(), 15)
+
+
+class TestRandomHuman(TestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(username="Test")
+        self.character = Human.objects.create(name="", owner=self.user)
+        for i in range(10):
+            Archetype.objects.create(name=f"Archetype {i}")
+        for i in range(10):
+            for attribute in self.character.get_attributes():
+                Specialty.objects.create(
+                    name=f"{attribute.replace('_', ' ').title()} Specialty {i}",
+                    stat=attribute,
+                )
+        human = ObjectType.objects.get_or_create(name="human")[0]
+        for i in range(1, 6):
+            for j in [-1, 1]:
+                if j == 1:
+                    mf = MeritFlaw.objects.create(name=f"Merit {i}")
+                    mf.add_rating(i)
+                    mf.allowed_types.add(human)
+                else:
+                    mf = MeritFlaw.objects.create(name=f"Flaw {i}")
+                    mf.add_rating(-i)
+                    mf.allowed_types.add(human)
+
+    def test_random_attribute(self):
+        num = self.character.total_attributes()
+        self.character.random_attribute()
+        self.assertEqual(self.character.total_attributes(), num + 1)
+
+    def test_random_attributes(self):
+        self.character.random_attributes()
+        triple = [
+            self.character.total_mental_attributes(),
+            self.character.total_physical_attributes(),
+            self.character.total_social_attributes(),
+        ]
+        triple.sort(key=lambda x: -x)
+        self.assertEqual(triple, [10, 8, 6])
+
 
 class TestHumanDetailView(TestCase):
     def setUp(self) -> None:
@@ -202,6 +458,15 @@ class TestHumanCreateView(TestCase):
             "history": "Test",
             "goals": "Test",
             "notes": "Test",
+            "strength": 1,
+            "dexterity": 1,
+            "stamina": 1,
+            "charisma": 1,
+            "manipulation": 1,
+            "appearance": 1,
+            "perception": 1,
+            "intelligence": 1,
+            "wits": 1,
         }
         self.url = Human.get_creation_url()
 
@@ -236,6 +501,15 @@ class TestHumanUpdateView(TestCase):
             "history": "Test",
             "goals": "Test",
             "notes": "Test",
+            "strength": 1,
+            "dexterity": 1,
+            "stamina": 1,
+            "charisma": 1,
+            "manipulation": 1,
+            "appearance": 1,
+            "perception": 1,
+            "intelligence": 1,
+            "wits": 1,
         }
         self.url = self.human.get_update_url()
 

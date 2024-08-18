@@ -35,6 +35,15 @@ class HumanCreateView(CreateView):
         "history",
         "goals",
         "notes",
+        "strength",
+        "dexterity",
+        "stamina",
+        "perception",
+        "intelligence",
+        "wits",
+        "charisma",
+        "manipulation",
+        "appearance",
     ]
     template_name = "characters/core/human/form.html"
 
@@ -65,5 +74,14 @@ class HumanUpdateView(UpdateView):
         "history",
         "goals",
         "notes",
+        "strength",
+        "dexterity",
+        "stamina",
+        "perception",
+        "intelligence",
+        "wits",
+        "charisma",
+        "manipulation",
+        "appearance",
     ]
     template_name = "characters/core/human/form.html"
