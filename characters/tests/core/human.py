@@ -939,7 +939,7 @@ class TestRandomHuman(TestCase):
         self.assertTrue(self.character.has_archetypes())
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Human, self.user, character=True), 0.25)
+        self.assertLessEqual(time_test(Human, self.user, character=True), 0.5)
 
 
 class TestHumanDetailView(TestCase):

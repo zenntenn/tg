@@ -40,12 +40,14 @@ class TestRandomRote(TestCase):
 class TestRoteCreateView(TestCase):
     def setUp(self):
         e = Effect.objects.create(name="Test Effect")
+        att = Attribute.objects.create(name="A", property_name="a")
+        abb = Ability.objects.create(name="B", property_name="b")
         self.valid_data = {
             "name": "Test Rote",
             "effect": e.id,
             "description": "Test",
-            "attribute": "tmp",
-            "ability": "tmp",
+            "attribute": att.id,
+            "ability": abb.id,
         }
         self.url = Rote.get_creation_url()
 
@@ -68,12 +70,14 @@ class TestRoteUpdateView(TestCase):
     def setUp(self):
         e = Effect.objects.create(name="Test Effect")
         self.rote = Rote.objects.create(name="Test Rote", description="Test")
+        att = Attribute.objects.create(name="A", property_name="a")
+        abb = Ability.objects.create(name="B", property_name="b")
         self.valid_data = {
             "name": "Test Rote 2",
             "effect": e.id,
             "description": "Test",
-            "attribute": "tmp",
-            "ability": "tmp",
+            "attribute": att.id,
+            "ability": abb.id,
         }
         self.url = self.rote.get_update_url()
 
