@@ -97,7 +97,17 @@ class Effect(Model):
         )
 
     def is_learnable(self, mage):
-        for sphere in mage.get_spheres().keys():
+        for sphere in [
+            "correspondence",
+            "time",
+            "spirit",
+            "matter",
+            "life",
+            "forces",
+            "entropy",
+            "mind",
+            "prime",
+        ]:
             if getattr(self, sphere) > getattr(mage, sphere):
                 return False
         return True

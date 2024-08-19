@@ -1,6 +1,9 @@
+from characters.models.core.ability import Ability
+from characters.models.core.attribute import Attribute
 from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Practice
 from core.models import Model
+from core.utils import weighted_choice
 from django.db import models
 from django.urls import reverse
 
@@ -12,8 +15,8 @@ class Rote(Model):
     practice = models.ForeignKey(
         Practice, on_delete=models.SET_NULL, null=True, blank=True
     )
-    attribute = models.CharField(max_length=50)
-    ability = models.CharField(max_length=50)
+    attribute = models.ForeignKey(Attribute, on_delete=models.SET_NULL, null=True)
+    ability = models.ForeignKey(Ability, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Rote"
@@ -31,3 +34,24 @@ class Rote(Model):
 
     def get_heading(self):
         return "mtas_heading"
+
+    def random(self, mage=None):
+        self.update_status("Ran")
+        self.name = f"{self.effect.name} Rote {Rote.objects.filter(effect=self.effect).count() + 1}"
+
+        if mage is not None:
+            self.practice = self.mage.practices.order_by("?").first()
+            attribute = weighted_choice(self.mage.get_attributes())
+            ability = weighted_choice(
+                {
+                    k: v
+                    for k, v in self.mage.get_abilities().items()
+                    if k in self.practice.abilities
+                }
+            )
+            self.attribute = Attribute.objects.get(property_name=attribute)
+            self.ability = Attribute.objects.get(property_name=ability)
+        else:
+            self.practice = Practice.objects.order_by("?").first()
+            self.attribute = Attribute.objects.order_by("?").first()
+            self.ability = self.practice.abilities.order_by("?").first()

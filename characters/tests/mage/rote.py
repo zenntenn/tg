@@ -1,4 +1,7 @@
+from characters.models.core.ability import Ability
+from characters.models.core.attribute import Attribute
 from characters.models.mage.effect import Effect
+from characters.models.mage.focus import Practice
 from characters.models.mage.rote import Rote
 from django.test import TestCase
 from django.urls import reverse
@@ -16,6 +19,22 @@ class TestRoteDetailView(TestCase):
     def test_effect_detail_view_templates(self):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/mage/rote/detail.html")
+
+
+class TestRandomRote(TestCase):
+    def setUp(self):
+        self.effect = Effect.objects.create(name="Test Effect")
+        occult = Ability.objects.create(name="Occult", property_name="occult")
+        self.practice = Practice.objects.create(name="Test Practice")
+        self.practice.abilities.add(occult)
+        Attribute.objects.create(name="Strength", property_name="strength")
+        self.rote = Rote.objects.create(effect=self.effect)
+
+    def test_random(self):
+        self.rote.random()
+        self.assertIsNotNone(self.rote.practice)
+        self.assertIsNotNone(self.rote.attribute)
+        self.assertIsNotNone(self.rote.ability)
 
 
 class TestRoteCreateView(TestCase):

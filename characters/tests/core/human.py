@@ -9,6 +9,7 @@ from characters.models.core import (
 )
 from characters.models.core.specialty import Specialty
 from core.models import Language, Number
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -936,6 +937,9 @@ class TestRandomHuman(TestCase):
         self.assertFalse(self.character.has_archetypes())
         self.character.random_archetypes()
         self.assertTrue(self.character.has_archetypes())
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Human, self.user, character=True), 0.25)
 
 
 class TestHumanDetailView(TestCase):
