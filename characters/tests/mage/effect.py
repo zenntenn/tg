@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from characters.models.mage import Effect
 from django.test import TestCase
 from django.urls import reverse
@@ -17,11 +19,51 @@ class TestEffect(TestCase):
             mind=1,
             prime=1,
         )
+        Mage = namedtuple(
+            "Mage",
+            [
+                "forces",
+                "matter",
+                "life",
+                "spirit",
+                "correspondence",
+                "time",
+                "entropy",
+                "prime",
+                "mind",
+            ],
+        )
+        self.mage1 = Mage(
+            forces=2,
+            matter=2,
+            life=2,
+            spirit=2,
+            correspondence=2,
+            time=2,
+            entropy=2,
+            prime=2,
+            mind=2,
+        )
+        self.mage2 = Mage(
+            forces=2,
+            matter=2,
+            life=2,
+            spirit=2,
+            correspondence=0,
+            time=2,
+            entropy=2,
+            prime=2,
+            mind=2,
+        )
 
     def test_save(self):
         self.effect.save()
         self.assertEqual(self.effect.rote_cost, 9)
         self.assertEqual(self.effect.max_sphere, 1)
+
+    def test_is_learnable(self):
+        self.assertTrue(self.effect.is_learnable(self.mage1))
+        self.assertFalse(self.effect.is_learnable(self.mage2))
 
 
 class TestEffectDetailView(TestCase):
