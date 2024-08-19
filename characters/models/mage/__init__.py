@@ -10,3 +10,4 @@ from .focus import (
 )
 from .resonance import Resonance
 from .sphere import Sphere
+from .mtahuman import MtAHuman

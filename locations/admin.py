@@ -1,4 +1,5 @@
 from django.contrib import admin
+from characters.models.mage.mtahuman import MtAHuman
 from locations.models.core import City, LocationModel
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.library import Library
@@ -34,3 +35,4 @@ class SectorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(HorizonRealm)
+admin.site.register(MtAHuman)
