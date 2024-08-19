@@ -4,6 +4,7 @@ from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.library import Library
 from locations.models.mage.realm import HorizonRealm
 from locations.models.mage.sector import Sector
+from locations.models.werewolf.caern import Caern
 
 # Register your models here.
 admin.site.register(LocationModel)
@@ -34,3 +35,7 @@ class SectorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(HorizonRealm)
+
+@admin.register(Caern)
+class CaernAdmin(admin.ModelAdmin):
+    list_display = ("name",)
