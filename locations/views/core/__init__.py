@@ -10,7 +10,8 @@ from locations.models.mage.library import Library
 from locations.models.mage.node import Node
 from locations.models.mage.realm import HorizonRealm
 from locations.models.mage.sector import Sector
-from locations.views import mage
+from locations.models.werewolf.caern import Caern
+from locations.views import mage, werewolf
 
 from .city import CityCreateView, CityDetailView, CityUpdateView
 from .location import LocationCreateView, LocationDetailView, LocationUpdateView
@@ -24,6 +25,7 @@ class GenericLocationDetailView(View):
         "sector": mage.SectorDetailView,
         "library": mage.LibraryDetailView,
         "horizon_realm": mage.RealmDetailView,
+        "caern": werewolf.CaernDetailView,
     }
 
     def get(self, request, *args, **kwargs):
@@ -40,6 +42,7 @@ class LocationIndexView(View):
         "sector": Sector,
         "library": Library,
         "horizon_realm": HorizonRealm,
+        "caern": Caern,
     }
 
     def get(self, request, *args, **kwargs):
