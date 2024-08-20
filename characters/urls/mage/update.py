@@ -54,4 +54,9 @@ urls = [
         views.mage.RoteUpdateView.as_view(),
         name="rote",
     ),
+    path(
+        "mtahuman/<pk>/",
+        views.mage.MtAHumanUpdateView.as_view(),
+        name="mtahuman",
+    ),
 ]

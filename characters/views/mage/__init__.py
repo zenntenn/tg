@@ -21,5 +21,6 @@ from .focus import (
     TenetDetailView,
     TenetUpdateView,
 )
+from .mtahuman import MtAHumanCreateView, MtAHumanDetailView, MtAHumanUpdateView
 from .resonance import ResonanceCreateView, ResonanceDetailView, ResonanceUpdateView
 from .rote import RoteCreateView, RoteDetailView, RoteUpdateView

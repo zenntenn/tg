@@ -19,6 +19,7 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
+from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.rote import Rote
 from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.spirit import Spirit
@@ -150,3 +151,6 @@ class SpiritCharmAdmin(admin.ModelAdmin):
 @admin.register(Spirit)
 class SpiritCharacterAdmin(admin.ModelAdmin):
     list_display = ("name",)
+
+
+admin.site.register(MtAHuman)
