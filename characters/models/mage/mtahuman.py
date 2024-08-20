@@ -1,9 +1,46 @@
 from characters.models.core.human import Human
 from django.db import models
+from django.urls import reverse
 
 
 class MtAHuman(Human):
     type = "mta_human"
+
+    primary_abilities = [
+        "awareness",
+        "art",
+        "leadership",
+        "martial_arts",
+        "meditation",
+        "research",
+        "survival",
+        "technology",
+        "cosmology",
+        "enigmas",
+        "esoterica",
+        "law",
+        "occult",
+        "politics",
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+    ]
 
     awareness = models.IntegerField(default=0)
     art = models.IntegerField(default=0)
@@ -136,17 +173,17 @@ class MtAHuman(Human):
         secondary_talents = {
             k: v
             for k, v in self.get_talents().items()
-            if k not in PRIMARY_ABILITIES and v != 0
+            if k not in self.primary_abilities and v != 0
         }
         secondary_skills = {
             k: v
             for k, v in self.get_skills().items()
-            if k not in PRIMARY_ABILITIES and v != 0
+            if k not in self.primary_abilities and v != 0
         }
         secondary_knowledges = {
             k: v
             for k, v in self.get_knowledges().items()
-            if k not in PRIMARY_ABILITIES and v != 0
+            if k not in self.primary_abilities and v != 0
         }
 
         if "History Knowledge" in secondary_knowledges:
@@ -330,3 +367,10 @@ class MtAHuman(Human):
             }
         )
         return tmp
+
+    def get_update_url(self):
+        return reverse("characters:mage:update:mtahuman", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:mtahuman")

@@ -152,4 +152,5 @@ class SpiritCharmAdmin(admin.ModelAdmin):
 class SpiritCharacterAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
+
 admin.site.register(MtAHuman)

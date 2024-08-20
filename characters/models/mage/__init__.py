@@ -8,6 +8,6 @@ from .focus import (
     SpecializedPractice,
     Tenet,
 )
+from .mtahuman import MtAHuman
 from .resonance import Resonance
 from .sphere import Sphere
-from .mtahuman import MtAHuman
