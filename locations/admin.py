@@ -36,6 +36,7 @@ class SectorAdmin(admin.ModelAdmin):
 
 admin.site.register(HorizonRealm)
 
+
 @admin.register(Caern)
 class CaernAdmin(admin.ModelAdmin):
     list_display = ("name",)

@@ -1,16 +1,29 @@
+from django.views.generic import CreateView, DetailView, UpdateView
+from locations.models.werewolf.caern import Caern
+
 
 class CaernDetailView(DetailView):
     model = Caern
-    template_name = "wod/locations/werewolf/caern/detail.html"
+    template_name = "locations/werewolf/caern/detail.html"
 
 
 class CaernCreateView(CreateView):
     model = Caern
-    fields = "__all__"
-    template_name = "wod/locations/werewolf/caern/form.html"
+    fields = [
+        "name",
+        "description",
+        "rank",
+        "caern_type",
+    ]
+    template_name = "locations/werewolf/caern/form.html"
 
 
 class CaernUpdateView(UpdateView):
     model = Caern
-    fields = "__all__"
-    template_name = "wod/locations/werewolf/caern/form.html"
+    fields = [
+        "name",
+        "description",
+        "rank",
+        "caern_type",
+    ]
+    template_name = "locations/werewolf/caern/form.html"

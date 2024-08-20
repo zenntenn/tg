@@ -1,4 +1,9 @@
-class Caern(Location):
+from django.db import models
+from django.urls import reverse
+from locations.models.core.location import LocationModel
+
+
+class Caern(LocationModel):
     type = "caern"
 
     rank = models.IntegerField(default=0)
@@ -25,7 +30,11 @@ class Caern(Location):
         verbose_name_plural = "Caerns"
 
     def get_update_url(self):
-        return reverse("wod:locations:werewolf:update_caern", args=[str(self.id)])
+        return reverse("locations:werewolf:update:caern", args=[str(self.id)])
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("locations:werewolf:create:caern")
 
     def get_heading(self):
         return "wta_heading"
