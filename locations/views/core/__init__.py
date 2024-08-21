@@ -26,6 +26,7 @@ class GenericLocationDetailView(View):
         "library": mage.LibraryDetailView,
         "horizon_realm": mage.RealmDetailView,
         "caern": werewolf.CaernDetailView,
+        "chantry": mage.ChantryDetailView,
     }
 
     def get(self, request, *args, **kwargs):
@@ -43,6 +44,7 @@ class LocationIndexView(View):
         "library": Library,
         "horizon_realm": HorizonRealm,
         "caern": Caern,
+        "chantry": Chantry
     }
 
     def get(self, request, *args, **kwargs):
