@@ -24,4 +24,9 @@ urls = [
         views.mage.LibraryCreateView.as_view(),
         name="library",
     ),
+    path(
+        "chantry/",
+        views.mage.ChantryCreateView.as_view(),
+        name="chantry",
+    ),
 ]
