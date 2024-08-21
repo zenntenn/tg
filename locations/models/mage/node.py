@@ -1,10 +1,12 @@
 # TODO: MeritFlaw should check for Node Object in allowed types
+import random
 from characters.models.core import MeritFlaw
 from characters.models.mage.resonance import Resonance
-from core.models import Model
+from core.models import Model, Noun
 from django.db import models
 from django.db.models import F, Q
 from django.urls import reverse
+from core.utils import weighted_choice
 from locations.models.core import LocationModel
 
 
@@ -196,6 +198,102 @@ class Node(LocationModel):
         self.quintessence_per_week = int(self.points * float(self.get_ratio_display()))
         self.tass_per_week = self.points - self.quintessence_per_week
         return True
+
+    def random_rank(self, rank=None):
+        if rank is None:
+            rank = random.randint(1, 5)
+        self.set_rank(rank)
+
+    def random_mf(self, minimum=-10, maximum=10):
+        possibility = self.filter_mf(minimum=minimum, maximum=maximum)
+        choice = random.choice(possibility)
+        possible_ratings = choice.ratings
+        possible_ratings = [x for x in possible_ratings if minimum <= x <= maximum]
+        r = 0
+        if self.mf_rating(choice) < 0:
+            possible_ratings = [
+                x for x in possible_ratings if x < self.mf_rating(choice)
+            ]
+        if self.mf_rating(choice) > 0:
+            possible_ratings = [
+                x for x in possible_ratings if x > self.mf_rating(choice)
+            ]
+        if len(possible_ratings) == 0:
+            return False
+        r = random.choice(possible_ratings)
+        return self.add_mf(choice, r)
+
+    def random_resonance(self, sphere=None, favored_list=None):
+        if random.random() < 0.7:
+            possible = self.filter_resonance(minimum=1, maximum=4, sphere=sphere)
+            if len(possible) > 0:
+                choice = random.choice(possible)
+                if self.add_resonance(choice):
+                    return True
+        while True:
+            if favored_list is not None:
+                choices = {i: 1 for i in range(1, Resonance.objects.last().id + 1)}
+                for resonance in favored_list:
+                    choices[resonance.id] += 100
+            else:
+                choices = {i: 1 for i in range(1, Resonance.objects.last().id + 1)}
+            index = weighted_choice(choices, floor=1, ceiling=1000000)
+            if Resonance.objects.filter(pk=index).exists():
+                choice = Resonance.objects.get(pk=index)
+                if self.check_resonance(choice, sphere=sphere):
+                    if self.add_resonance(choice):
+                        return True
+
+    def random_forms(self):
+        quintessence, tass = Noun.objects.order_by("?")[:2]
+        self.set_output_forms(quintessence.name.title(), tass.name.title())
+
+    def random_ratio(self):
+        choice = random.choice([-2, -1, -1, 0, 0, 0, 1, 1, 2])
+        self.set_ratio(choice)
+        self.points -= self.ratio
+
+    def random_size(self):
+        choice = random.choice([-2, -1, -1, 0, 0, 0, 1, 1, 2])
+        self.set_size(choice)
+        self.points -= self.size
+
+    def random_name(self):
+        if not self.has_name():
+            if NodeResonanceRating.objects.filter(node=self).count() > 0:
+                highest_res_rating = (
+                    NodeResonanceRating.objects.filter(node=self)
+                    .order_by("-rating")
+                    .first()
+                ).resonance.name.title()
+            else:
+                highest_res_rating = ""
+            n = Noun.objects.order_by("?").first()
+            name = f"{highest_res_rating} {n.name.title()}".strip()
+            return self.set_name(name)
+        return True
+
+    def random(self, rank=None, favored_list=None):
+        self.update_status("Ran")
+        self.gauntlet = 3
+        self.random_rank(rank=rank)
+        while not self.has_resonance():
+            self.random_resonance(favored_list=favored_list)
+        self.random_ratio()
+        self.random_size()
+        self.random_forms()
+        while random.random() < 0.2 and self.points > 1:
+            self.random_resonance(favored_list=favored_list)
+        while random.random() < 0.4 and self.points > 1:
+            current = self.total_mf()
+            self.random_mf(maximum=self.points - 1)
+            new = self.total_mf()
+            self.points -= new - current
+        self.resonance_postprocessing()
+        self.update_output()
+        self.points = 0
+        self.random_name()
+
 
 
 class NodeMeritFlawRating(models.Model):
