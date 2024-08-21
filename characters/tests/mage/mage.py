@@ -1440,11 +1440,11 @@ class TestRandomMage(TestCase):
         self.character.random_effects()
         self.assertTrue(self.character.has_effects())
 
-    # def test_created_node_when_has_node(self):
-    #     self.character.node = 3
-    #     self.assertFalse(self.character.has_node())
-    #     self.character.random_node()
-    #     self.assertTrue(self.character.has_node())
+    def test_created_node_when_has_node(self):
+        self.character.node = 3
+        self.assertFalse(self.character.has_node())
+        self.character.random_node()
+        self.assertTrue(self.character.has_node())
 
     # def test_created_library_when_has_library(self):
     #     self.character.library = 3

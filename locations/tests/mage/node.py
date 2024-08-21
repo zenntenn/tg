@@ -1,3 +1,6 @@
+from unittest import mock
+from unittest.mock import Mock
+
 from characters.models.core import MeritFlaw
 from characters.models.mage import Resonance
 from core.models import Noun
@@ -197,6 +200,79 @@ class TestNode(TestCase):
         self.node.set_rank(3)
         self.assertFalse(self.node.has_output())
         self.node.update_output()
+        self.assertTrue(self.node.has_output())
+
+
+class TestRandomNode(TestCase):
+    def setUp(self):
+        node = ObjectType.objects.create(name="Node", type="loc", gameline="mta")
+        for i in range(1, 11):
+            Resonance.objects.create(name=f"Resonance {i}")
+        for i in range(1, 6):
+            for j in [1, -1]:
+                if j == 1:
+                    t = "Merit"
+                else:
+                    t = "Flaw"
+                tmp = MeritFlaw.objects.create(name=f"Node {t} {i}")
+                tmp.add_rating(i * j)
+                tmp.allowed_types.add(node)
+        self.node = Node.objects.create(name="")
+        for i in range(10):
+            Noun.objects.create(name=f"Node Noun {i}")
+
+    def test_random_name(self):
+        self.assertFalse(self.node.has_name())
+        self.node.random_name()
+        self.assertTrue(self.node.has_name())
+
+    def test_random_rank(self):
+        self.assertEqual(self.node.rank, 0)
+        self.node.random_rank()
+        self.assertNotEqual(self.node.rank, 0)
+
+    def test_random_resonance(self):
+        self.assertEqual(self.node.total_resonance(), 0)
+        self.node.random_resonance()
+        self.assertEqual(self.node.total_resonance(), 1)
+
+    def test_random_mf(self):
+        num = self.node.total_mf()
+        while not self.node.random_mf(minimum=0):
+            assert False
+        self.assertGreater(self.node.total_mf(), num)
+
+    def test_random_size(self):
+        mocker = Mock()
+        mocker.side_effect = [0, 2]
+        with mock.patch("random.choice", mocker):
+            self.node.random_size()
+            self.assertEqual(self.node.size, 0)
+            self.node.random_size()
+            self.assertEqual(self.node.size, 2)
+
+    def test_random_ratio(self):
+        mocker = Mock()
+        mocker.side_effect = [0, 2]
+        with mock.patch("random.choice", mocker):
+            self.node.random_ratio()
+            self.assertEqual(self.node.ratio, 0)
+            self.node.random_ratio()
+            self.assertEqual(self.node.ratio, 2)
+
+    def test_random_forms(self):
+        self.assertFalse(self.node.has_output_forms())
+        self.node.random_forms()
+        self.assertTrue(self.node.has_output_forms())
+
+    def test_random(self):
+        self.assertEqual(self.node.points, 0)
+        self.node.random()
+        self.assertGreaterEqual(self.node.total_resonance(), self.node.rank)
+        self.assertNotEqual(self.node.rank, 0)
+        self.assertEqual(self.node.points, 0)
+        self.assertTrue(self.node.has_resonance())
+        self.assertTrue(self.node.has_output_forms())
         self.assertTrue(self.node.has_output())
 
 
