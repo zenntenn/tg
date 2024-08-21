@@ -1,3 +1,4 @@
+from .cabal import Cabal
 from .effect import Effect
 from .faction import MageFaction
 from .focus import (

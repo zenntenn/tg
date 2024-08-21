@@ -64,4 +64,9 @@ urls = [
         views.mage.MageUpdateView.as_view(),
         name="mage",
     ),
+    path(
+        "cabal/<pk>/",
+        views.mage.CabalUpdateView.as_view(),
+        name="cabal",
+    ),
 ]

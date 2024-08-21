@@ -1,4 +1,3 @@
-from characters.models.mage import Effect
 from django.db import models
 from django.urls import reverse
 
@@ -10,7 +9,9 @@ class Charm(Wonder):
     type = "charm"
 
     arete = models.IntegerField(default=0)
-    power = models.ForeignKey(Effect, blank=True, null=True, on_delete=models.SET_NULL)
+    power = models.ForeignKey(
+        "characters.Effect", blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
         verbose_name = "Charm"
@@ -31,6 +32,8 @@ class Charm(Wonder):
         return self.power is not None
 
     def random_power(self):
+        from characters.models.mage import Effect
+
         e = Effect.objects.filter(max_sphere=self.rank).order_by("?").first()
         return self.set_power(e)
 

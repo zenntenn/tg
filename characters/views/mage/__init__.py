@@ -1,3 +1,4 @@
+from .cabal import CabalCreateView, CabalDetailView, CabalUpdateView
 from .effect import EffectCreateView, EffectDetailView, EffectUpdateView
 from .faction import MageFactionCreateView, MageFactionDetailView, MageFactionUpdateView
 from .focus import (
