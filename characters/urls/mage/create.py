@@ -59,4 +59,9 @@ urls = [
         views.mage.MtAHumanCreateView.as_view(),
         name="mtahuman",
     ),
+    path(
+        "mage/",
+        views.mage.MageCreateView.as_view(),
+        name="mage",
+    ),
 ]

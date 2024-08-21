@@ -20,6 +20,7 @@ from characters.models.mage.focus import (
     Tenet,
 )
 from characters.models.mage.mtahuman import MtAHuman
+from characters.models.mage.mage import Mage, ResRating
 from characters.models.mage.rote import Rote
 from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.spirit import Spirit
@@ -154,3 +155,20 @@ class SpiritCharacterAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MtAHuman)
+@admin.register(Mage)
+class MageAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "owner",
+        "arete",
+        "affiliation",
+        "faction",
+        "subfaction",
+        "essence",
+        "affinity_sphere",
+        "chronicle",
+    )
+    list_filter = ("owner", "arete", "essence", "affinity_sphere", "chronicle")
+
+
+admin.site.register(ResRating)

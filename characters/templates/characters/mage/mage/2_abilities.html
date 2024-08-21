@@ -1,0 +1,807 @@
+{% extends "wod/characters/mage/mage/detail.html" %}
+{% block abilities %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">Abilities</h2>
+        </div>
+        <div class="row">
+            <h3 class="col-sm {{ object.get_heading }}">Talents</h3>
+            <h3 class="col-sm {{ object.get_heading }}">Skills</h3>
+            <h3 class="col-sm {{ object.get_heading }}">Knowledges</h3>
+        </div>
+        <div class="row">
+            <div class="col-sm">Alertness</div>
+            <div class="col-sm">{{ form.alertness }}</div>
+            <div class="col-sm">Crafts</div>
+            <div class="col-sm">{{ form.crafts }}</div>
+            <div class="col-sm">Academics</div>
+            <div class="col-sm">{{ form.academics }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Art</div>
+            <div class="col-sm">{{ form.art }}</div>
+            <div class="col-sm">Drive</div>
+            <div class="col-sm">{{ form.drive }}</div>
+            <div class="col-sm">Computer</div>
+            <div class="col-sm">{{ form.computer }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Athletics</div>
+            <div class="col-sm">{{ form.athletics }}</div>
+            <div class="col-sm">Etiquette</div>
+            <div class="col-sm">{{ form.etiquette }}</div>
+            <div class="col-sm">Cosmology</div>
+            <div class="col-sm">{{ form.cosmology }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Awareness</div>
+            <div class="col-sm">{{ form.awareness }}</div>
+            <div class="col-sm">Firearms</div>
+            <div class="col-sm">{{ form.firearms }}</div>
+            <div class="col-sm">
+                Enigmas
+            </div>
+            <div class="col-sm">
+                {{ form.enigmas }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Brawl
+            </div>
+            <div class="col-sm">
+                {{ form.brawl }}
+            </div>
+            <div class="col-sm">
+                Martial Arts
+            </div>
+            <div class="col-sm">
+                {{ form.martial_arts }}
+            </div>
+            <div class="col-sm">
+                Esoterica
+            </div>
+            <div class="col-sm">
+                {{ form.esoterica }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Empathy
+            </div>
+            <div class="col-sm">
+                {{ form.empathy }}
+            </div>
+            <div class="col-sm">
+                Meditation
+            </div>
+            <div class="col-sm">
+                {{ form.meditation }}
+            </div>
+            <div class="col-sm">
+                Investigation
+            </div>
+            <div class="col-sm">
+                {{ form.investigation }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Expression
+            </div>
+            <div class="col-sm">
+                {{ form.expression }}
+            </div>
+            <div class="col-sm">
+                Melee
+            </div>
+            <div class="col-sm">
+                {{ form.melee }}
+            </div>
+            <div class="col-sm">
+                Law
+            </div>
+            <div class="col-sm">
+                {{ form.law }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Intimidation
+            </div>
+            <div class="col-sm">
+                {{ form.intimidation }}
+            </div>
+            <div class="col-sm">
+                Research
+            </div>
+            <div class="col-sm">
+                {{ form.research }}
+            </div>
+            <div class="col-sm">
+                Medicine
+            </div>
+            <div class="col-sm">
+                {{ form.medicine }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Leadership
+            </div>
+            <div class="col-sm">
+                {{ form.leadership }}
+            </div>
+            <div class="col-sm">
+                Stealth
+            </div>
+            <div class="col-sm">
+                {{ form.stealth }}
+            </div>
+            <div class="col-sm">
+                Occult
+            </div>
+            <div class="col-sm">
+                {{ form.occult }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Streetwise
+            </div>
+            <div class="col-sm">
+                {{ form.streetwise }}
+            </div>
+            <div class="col-sm">
+                Survival
+            </div>
+            <div class="col-sm">
+                {{ form.survival }}
+            </div>
+            <div class="col-sm">
+                Politics
+            </div>
+            <div class="col-sm">
+                {{ form.politics }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Subterfuge
+            </div>
+            <div class="col-sm">
+                {{ form.subterfuge }}
+            </div>
+            <div class="col-sm">
+                Technology
+            </div>
+            <div class="col-sm">
+                {{ form.technology }}
+            </div>
+            <div class="col-sm">
+                Science
+            </div>
+            <div class="col-sm">
+                {{ form.science }}
+            </div>
+        </div>
+        <div class="row">
+            <h2 class="col-sm {{ object.get_heading }}">
+                Secondary Abilities
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Animal Kinship
+            </div>
+            <div class="col-sm">
+                {{ form.animal_kinship }}
+            </div>
+            <div class="col-sm">
+                Acrobatics
+            </div>
+            <div class="col-sm">
+                {{ form.acrobatics }}
+            </div>
+            <div class="col-sm">
+                Area Knowledge
+            </div>
+            <div class="col-sm">
+                {{ form.area_knowledge }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Blatancy
+            </div>
+            <div class="col-sm">
+                {{ form.blatancy }}
+            </div>
+            <div class="col-sm">
+                Archery
+            </div>
+            <div class="col-sm">
+                {{ form.archery }}
+            </div>
+            <div class="col-sm">
+                Belief Systems
+            </div>
+            <div class="col-sm">
+                {{ form.belief_systems }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Carousing
+            </div>
+            <div class="col-sm">
+                {{ form.carousing }}
+            </div>
+            <div class="col-sm">
+                Biotech
+            </div>
+            <div class="col-sm">
+                {{ form.biotech }}
+            </div>
+            <div class="col-sm">
+                Cryptography
+            </div>
+            <div class="col-sm">
+                {{ form.cryptography }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Flying
+            </div>
+            <div class="col-sm">
+                {{ form.flying }}
+            </div>
+            <div class="col-sm">
+                Energy Weapons
+            </div>
+            <div class="col-sm">
+                {{ form.energy_weapons }}
+            </div>
+            <div class="col-sm">
+                Demolitions
+            </div>
+            <div class="col-sm">
+                {{ form.demolitions }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                High Ritual
+            </div>
+            <div class="col-sm">
+                {{ form.high_ritual }}
+            </div>
+            <div class="col-sm">
+                Hypertech
+            </div>
+            <div class="col-sm">
+                {{ form.hypertech }}
+            </div>
+            <div class="col-sm">
+                Finance
+            </div>
+            <div class="col-sm">
+                {{ form.finance }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Lucid Dreaming
+            </div>
+            <div class="col-sm">
+                {{ form.lucid_dreaming }}
+            </div>
+            <div class="col-sm">
+                Jetpack
+            </div>
+            <div class="col-sm">
+                {{ form.jetpack }}
+            </div>
+            <div class="col-sm">
+                Lore
+            </div>
+            <div class="col-sm">
+                {{ form.lore }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Search
+            </div>
+            <div class="col-sm">
+                {{ form.search }}
+            </div>
+            <div class="col-sm">
+                Riding
+            </div>
+            <div class="col-sm">
+                {{ form.riding }}
+            </div>
+            <div class="col-sm">
+                Media
+            </div>
+            <div class="col-sm">
+                {{ form.media }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Seduction
+            </div>
+            <div class="col-sm">
+                {{ form.seduction }}
+            </div>
+            <div class="col-sm">
+                Torture
+            </div>
+            <div class="col-sm">
+                {{ form.torture }}
+            </div>
+            <div class="col-sm">
+                Pharmacopeia
+            </div>
+            <div class="col-sm">
+                {{ form.pharmacopeia }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Cooking
+            </div>
+            <div class="col-sm">
+                {{ form.cooking }}
+            </div>
+            <div class="col-sm">
+                Blind Fighting
+            </div>
+            <div class="col-sm">
+                {{ form.blind_fighting }}
+            </div>
+            <div class="col-sm">
+                Conspiracy Theory
+            </div>
+            <div class="col-sm">
+                {{ form.conspiracy_theory }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Diplomacy
+            </div>
+            <div class="col-sm">
+                {{ form.diplomacy }}
+            </div>
+            <div class="col-sm">
+                Climbing
+            </div>
+            <div class="col-sm">
+                {{ form.climbing }}
+            </div>
+            <div class="col-sm">
+                Chantry Politics
+            </div>
+            <div class="col-sm">
+                {{ form.chantry_politics }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Instruction
+            </div>
+            <div class="col-sm">
+                {{ form.instruction }}
+            </div>
+            <div class="col-sm">
+                Disguise
+            </div>
+            <div class="col-sm">
+                {{ form.disguise }}
+            </div>
+            <div class="col-sm">
+                Covert Culture
+            </div>
+            <div class="col-sm">
+                {{ form.covert_culture }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Intrigue
+            </div>
+            <div class="col-sm">
+                {{ form.intrigue }}
+            </div>
+            <div class="col-sm">
+                Elusion
+            </div>
+            <div class="col-sm">
+                {{ form.elusion }}
+            </div>
+            <div class="col-sm">
+                Helmsman
+            </div>
+            <div class="col-sm">
+                {{ form.helmsman }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Intuition
+            </div>
+            <div class="col-sm">
+                {{ form.intuition }}
+            </div>
+            <div class="col-sm">
+                Escapology
+            </div>
+            <div class="col-sm">
+                {{ form.escapology }}
+            </div>
+            <div class="col-sm">
+                History
+            </div>
+            <div class="col-sm">
+                {{ form.history_knowledge }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Mimicry
+            </div>
+            <div class="col-sm">
+                {{ form.mimicry }}
+            </div>
+            <div class="col-sm">
+                Fast Draw
+            </div>
+            <div class="col-sm">
+                {{ form.fast_draw }}
+            </div>
+            <div class="col-sm">
+                Power Brokering
+            </div>
+            <div class="col-sm">
+                {{ form.power_brokering }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Negotiation
+            </div>
+            <div class="col-sm">
+                {{ form.negotiation }}
+            </div>
+            <div class="col-sm">
+                Fast Talk
+            </div>
+            <div class="col-sm">
+                {{ form.fast_talk }}
+            </div>
+            <div class="col-sm">
+                Propaganda
+            </div>
+            <div class="col-sm">
+                {{ form.propaganda }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Newspeak
+            </div>
+            <div class="col-sm">
+                {{ form.newspeak }}
+            </div>
+            <div class="col-sm">
+                Fencing
+            </div>
+            <div class="col-sm">
+                {{ form.fencing }}
+            </div>
+            <div class="col-sm">
+                Theology
+            </div>
+            <div class="col-sm">
+                {{ form.theology }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Scan
+            </div>
+            <div class="col-sm">
+                {{ form.scan }}
+            </div>
+            <div class="col-sm">
+                Fortune Telling
+            </div>
+            <div class="col-sm">
+                {{ form.fortune_telling }}
+            </div>
+            <div class="col-sm">
+                Unconventional Warfare
+            </div>
+            <div class="col-sm">
+                {{ form.unconventional_warface }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Scrounging
+            </div>
+            <div class="col-sm">
+                {{ form.scrounging }}
+            </div>
+            <div class="col-sm">
+                Gambling
+            </div>
+            <div class="col-sm">
+                {{ form.gambling }}
+            </div>
+            <div class="col-sm">
+                Vice
+            </div>
+            <div class="col-sm">
+                {{ form.vice }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Style
+            </div>
+            <div class="col-sm">
+                {{ form.style }}
+            </div>
+            <div class="col-sm">
+                Gunsmith
+            </div>
+            <div class="col-sm">
+                {{ form.gunsmith }}
+            </div>
+            <div class="col-sm">
+                Cultural Savvy
+            </div>
+            <div class="col-sm">
+                {{ form.cultural_savvy }}
+            </div>
+        </div>
+        <div class="row">
+            {% if object.faction.name == "Akashayana" %}
+                <div class="col-sm">
+                    Do
+                </div>
+                <div class="col-sm">
+                    {{ form.do }}
+                </div>
+            {% else %}
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                </div>
+            {% endif %}
+            <div class="col-sm">
+                Heavy Weapons
+            </div>
+            <div class="col-sm">
+                {{ form.heavy_weapons }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Hunting
+            </div>
+            <div class="col-sm">
+                {{ form.hunting }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Hypnotism
+            </div>
+            <div class="col-sm">
+                {{ form.hypnotism }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Jury-Rigging
+            </div>
+            <div class="col-sm">
+                {{ form.jury_rigging }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Microgravity Operations
+            </div>
+            <div class="col-sm">
+                {{ form.microgravity_operations }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Misdirection
+            </div>
+            <div class="col-sm">
+                {{ form.misdirection }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Networking
+            </div>
+            <div class="col-sm">
+                {{ form.networking }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Pilot
+            </div>
+            <div class="col-sm">
+                {{ form.pilot }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Psychology
+            </div>
+            <div class="col-sm">
+                {{ form.psychology }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Security
+            </div>
+            <div class="col-sm">
+                {{ form.security }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Speed Reading
+            </div>
+            <div class="col-sm">
+                {{ form.speed_reading }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+                Swimming
+            </div>
+            <div class="col-sm">
+                {{ form.swimming }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <input class="btn btn-primary" name="Back" type="submit" value="Back"/>
+                <input class="btn btn-primary"
+                       name="Random Abilities"
+                       type="submit"
+                       value="Random Abilities"/>
+                <input class="btn btn-primary"
+                       name="Assign Abilities"
+                       type="submit"
+                       value="Assign Abilities"/>
+            </div>
+        </div>
+    </form>
+{% endblock abilities %}
+{% block backgrounds %}
+{% endblock backgrounds %}
+{% block advantages %}
+{% endblock advantages %}
+{% block powers %}
+{% endblock powers %}
+{% block mfs %}
+{% endblock mfs %}
+{% block languages %}
+{% endblock languages %}
+{% block appearance %}
+{% endblock appearance %}
+{% block history %}
+{% endblock history %}
+{% block advancement %}
+{% endblock advancement %}
+{% block update %}
+{% endblock update %}
