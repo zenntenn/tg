@@ -4,6 +4,7 @@ from collections import defaultdict
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from core.utils import add_dot, weighted_choice
@@ -11,6 +12,7 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 from locations.models.mage.library import Library
+from locations.models.mage.node import Node
 
 
 class Mage(MtAHuman):
@@ -114,7 +116,7 @@ class Mage(MtAHuman):
     resonance = models.ManyToManyField("Resonance", through="ResRating")
 
     rote_points = models.IntegerField(default=6)
-    effects = models.ManyToManyField(Effect, blank=True, through=Rote)
+    rotes = models.ManyToManyField(Rote, blank=True)
 
     quintessence = models.IntegerField(default=0)
     paradox = models.IntegerField(default=0)
@@ -149,7 +151,11 @@ class Mage(MtAHuman):
     #     super().__init__(*args, **kwargs)
 
     def get_update_url(self):
-        return reverse("wod:characters:mage:update_mage", kwargs={"pk": self.pk})
+        return reverse("characters:mage:update:mage", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:mage")
 
     def add_ability(self, ability, maximum=4):
         if ability == "do":
@@ -315,10 +321,6 @@ class Mage(MtAHuman):
                     }
                 )
             )
-        for paradigm in self.paradigms.all():
-            for practice in paradigm.practices.all():
-                practices[practice] += 1
-
         self.practices.add(weighted_choice(practices))
         while random.random() < 0.1:
             self.practices.add(
@@ -426,8 +428,8 @@ class Mage(MtAHuman):
     def random_arete(self):
         target = random.randint(1, 3)
         self.arete = 1
-        for _ in range(target - 1):
-            self.spend_freebies("arete")
+        # for _ in range(target - 1):
+        #     self.spend_freebies("arete")
 
     def has_essence(self):
         return self.essence != ""
@@ -513,13 +515,16 @@ class Mage(MtAHuman):
                     return choice
 
     def random_ability(self, maximum=4):
+        PRACTICE_ABILITY_WEIGHTING = 5
+        PRIMARY_ABILITY_WEIGHTING = 5
+
         possibilities = self.filter_abilities(maximum=maximum)
         for practice in self.practices.all():
-            for ability in practice.abilities:
-                if ability in possibilities:
-                    possibilities[ability] += PRACTICE_ABILITY_WEIGHTING
+            for ability in practice.abilities.all():
+                if ability.property_name in possibilities:
+                    possibilities[ability.property_name] += PRACTICE_ABILITY_WEIGHTING
         for ability in possibilities:
-            if ability in PRIMARY_ABILITIES:
+            if ability in self.primary_abilities:
                 possibilities[ability] *= PRIMARY_ABILITY_WEIGHTING
         choice = weighted_choice(possibilities, ceiling=100)
         self.add_ability(choice, 5)
@@ -530,32 +535,33 @@ class Mage(MtAHuman):
         while self.total_talents() < ability_types[0]:
             possibilities = self.get_talents()
             for practice in self.practices.all():
-                for ability in practice.abilities:
-                    if ability in possibilities:
-                        possibilities[ability] += 3
+                for ability in practice.abilities.all():
+                    if ability.property_name in possibilities:
+                        possibilities[ability.property_name] += 3
             ability_choice = weighted_choice(possibilities, ceiling=100)
             self.add_ability(ability_choice, maximum=3)
         while self.total_skills() < ability_types[1]:
             possibilities = self.get_skills()
             for practice in self.practices.all():
-                for ability in practice.abilities:
-                    if ability in possibilities:
-                        possibilities[ability] += 3
+                for ability in practice.abilities.all():
+                    if ability.property_name in possibilities:
+                        possibilities[ability.property_name] += 3
             ability_choice = weighted_choice(possibilities, ceiling=100)
             self.add_ability(ability_choice, maximum=3)
         while self.total_knowledges() < ability_types[2]:
             possibilities = self.get_knowledges()
             for practice in self.practices.all():
-                for ability in practice.abilities:
-                    if ability in possibilities:
-                        possibilities[ability] += 3
+                for ability in practice.abilities.all():
+                    if ability.property_name in possibilities:
+                        possibilities[ability.property_name] += 3
             ability_choice = weighted_choice(possibilities, ceiling=100)
             self.add_ability(ability_choice, maximum=3)
 
     def add_effect(self, effect):
         if effect.is_learnable(self):
-            Rote.objects.create(effect=effect, mage=self)
+            r = Rote.objects.create(effect=effect)
             self.rote_points -= effect.cost()
+            self.rotes.add(r)
             return True
         return False
 
@@ -580,7 +586,7 @@ class Mage(MtAHuman):
             self.random_effect()
 
     def total_effects(self):
-        return sum(x.cost() for x in self.effects.all())
+        return sum(x.effect.cost() for x in self.rotes.all())
 
     def has_specialties(self):
         output = super().has_specialties()
@@ -879,9 +885,7 @@ class Mage(MtAHuman):
         self.random_resonance()
         self.random_finishing_touches()
         self.random_mage_history()
-        self.random_freebies()
         self.mf_based_corrections()
-        self.random_xp()
         self.random_effects()
         self.random_specialties()
         self.random_node(favored_list=self.resonance.all())

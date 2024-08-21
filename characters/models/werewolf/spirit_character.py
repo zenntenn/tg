@@ -4,8 +4,8 @@ from django.db import models
 from django.urls import reverse
 
 
-class Spirit(Character):
-    type = "spirit"
+class SpiritCharacter(Character):
+    type = "spirit_character"
 
     willpower = models.IntegerField(default=0)
     rage = models.IntegerField(default=0)

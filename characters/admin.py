@@ -19,11 +19,11 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
-from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.mage import Mage, ResRating
+from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.rote import Rote
 from characters.models.werewolf.charm import SpiritCharm
-from characters.models.werewolf.spirit import Spirit
+from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
 from django.contrib import admin
 
@@ -149,12 +149,14 @@ class SpiritCharmAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
-@admin.register(Spirit)
+@admin.register(SpiritCharacter)
 class SpiritCharacterAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
 admin.site.register(MtAHuman)
+
+
 @admin.register(Mage)
 class MageAdmin(admin.ModelAdmin):
     list_display = (

@@ -1,3 +1,3 @@
 from .charm import SpiritCharm
-from .spirit import Spirit
+from .spirit_character import SpiritCharacter
 from .totem import Totem
