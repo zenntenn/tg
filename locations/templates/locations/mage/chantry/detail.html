@@ -1,0 +1,158 @@
+{% extends "locations/core/location/detail.html" %}
+{% block prominents %}
+    <div class="row">
+        <div class="col-sm">Faction</div>
+        <div class="col-sm">{{ factions }}</div>
+        <div class="col-sm">Season</div>
+        <div class="col-sm">{{ object.get_season_display }}</div>
+        <div class="col-sm">Type</div>
+        <div class="col-sm">{{ object.get_chantry_type_display }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">Leadership Type</div>
+        <div class="col-sm">{{ object.get_leadership_type_display }}</div>
+        <div class="col-sm">Rank</div>
+        <div class="col-sm">{{ object.rank }}</div>
+        <div class="col-sm"></div>
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Leaders</h3>
+    </div>
+    {% for leader in object.leaders.all %}
+        <div class="row">
+            <a class="col-sm" href="{{ leader.get_absolute_url }}">{{ leader.name }}</a>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-sm">Ambassador</div>
+        <a class="col-sm" href="{{ object.ambassador.get_absolute_url }}">{{ object.ambassador.name }}</a>
+        <div class="col-sm">Node Tender</div>
+        <a class="col-sm" href="{{ object.node_tender.get_absolute_url }}">{{ object.node_tender.name }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Investigators</div>
+    </div>
+    {% for character in object.investigator.all %}
+        <div class="row">
+            <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-sm">Guardians</div>
+    </div>
+    {% for character in object.guardian.all %}
+        <div class="row">
+            <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-sm">Teachers</div>
+    </div>
+    {% for character in object.teacher.all %}
+        <div class="row">
+            <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+        </div>
+    {% endfor %}
+{% endblock prominents %}
+{% block other %}
+    <div class="row">
+        <div class="col-sm">Allies</div>
+        <div class="col-sm">{{ object.allies }}</div>
+        <div class="col-sm">Backup</div>
+        <div class="col-sm">{{ object.backup }}</div>
+        <div class="col-sm">Cult</div>
+        <div class="col-sm">
+            {{ object.cult }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Elders
+        </div>
+        <div class="col-sm">
+            {{ object.elders }}
+        </div>
+        <div class="col-sm">
+            Retainers
+        </div>
+        <div class="col-sm">
+            {{ object.retainers }}
+        </div>
+        <div class="col-sm">
+            Spies
+        </div>
+        <div class="col-sm">
+            {{ object.spies }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Arcane
+        </div>
+        <div class="col-sm">
+            {{ object.arcane }}
+        </div>
+        <div class="col-sm">
+            Enhancement
+        </div>
+        <div class="col-sm">
+            {{ object.enhancement }}
+        </div>
+        <div class="col-sm">
+            Integrated Effects
+        </div>
+        <div class="col-sm">
+            {{ object.integrated_effects }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Resources
+        </div>
+        <div class="col-sm">
+            {{ object.resources }}
+        </div>
+        <div class="col-sm">
+            Requisitions
+        </div>
+        <div class="col-sm">
+            {{ object.requisitions }}
+        </div>
+    </div>
+    <h2 class="col-sm {{ object.get_heading }}">
+        Cabals
+    </h2>
+    {% for cabal in object.cabals.all %}
+        <div class="row">
+            <a class="col-sm" href={{ cabal.get_absolute_url }}>
+                <h3 class="{{ object.get_heading }}">
+                    {{ cabal.name }}
+                </h3>
+            </a>
+        </div>
+        {% for member in cabal.members.all %}
+            <div class="row">
+                <div class="col-sm">
+                    <a class="col-sm" href={{ member.get_absolute_url }}>{{ member.name }}</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <h2 class="col-sm {{ object.get_heading }}">
+        Nodes
+    </h2>
+    {% for node in object.nodes.all %}
+        <div class="row">
+            <a class="col-sm" href={{ node.get_absolute_url }}>{{ node.name }}</a>
+        </div>
+    {% endfor %}
+    <h2 class="col-sm {{ object.get_heading }}">
+        <a href={{ object.chantry_library.get_absolute_url }}>Library</a>
+    </h2>
+    {% for book in object.chantry_library.books.all %}
+        <div class="row">
+            <a class="col-sm" href={{ book.get_absolute_url }}>{{ book.name }}</a>
+        </div>
+    {% endfor %}
+{% endblock other %}

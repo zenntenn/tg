@@ -1,7 +1,7 @@
-from characters.models.mage.cabal import Cabal
 from django.contrib import admin
 from locations.models.core import City, LocationModel
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
+from locations.models.mage.chantry import Chantry
 from locations.models.mage.library import Library
 from locations.models.mage.realm import HorizonRealm
 from locations.models.mage.sector import Sector
@@ -43,6 +43,6 @@ class CaernAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
-@admin.register(Cabal)
-class CabalAdmin(admin.ModelAdmin):
-    list_display = ("name", "leader")
+@admin.register(Chantry)
+class ChantryAdmin(admin.ModelAdmin):
+    list_display = ("name", "rank", "parent", "faction")

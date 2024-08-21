@@ -24,4 +24,9 @@ urls = [
         views.mage.RealmUpdateView.as_view(),
         name="realm",
     ),
+    path(
+        "chantry/<pk>/",
+        views.mage.ChantryUpdateView.as_view(),
+        name="chantry",
+    ),
 ]
