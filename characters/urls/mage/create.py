@@ -64,4 +64,9 @@ urls = [
         views.mage.MageCreateView.as_view(),
         name="mage",
     ),
+    path(
+        "cabal/",
+        views.mage.CabalCreateView.as_view(),
+        name="cabal",
+    ),
 ]

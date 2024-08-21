@@ -45,6 +45,7 @@ class GenericCharacterDetailView(View):
 class GenericGroupDetailView(View):
     group_views = {
         "group": GroupDetailView,
+        "cabal": mage.CabalDetailView,
     }
 
     def get(self, request, *args, **kwargs):

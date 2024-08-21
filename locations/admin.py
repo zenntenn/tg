@@ -1,4 +1,5 @@
 from django.contrib import admin
+from characters.models.mage.cabal import Cabal
 from locations.models.core import City, LocationModel
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.library import Library
@@ -40,3 +41,8 @@ admin.site.register(HorizonRealm)
 @admin.register(Caern)
 class CaernAdmin(admin.ModelAdmin):
     list_display = ("name",)
+
+
+@admin.register(Cabal)
+class CabalAdmin(admin.ModelAdmin):
+    list_display = ("name", "leader")

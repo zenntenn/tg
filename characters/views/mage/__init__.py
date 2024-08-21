@@ -32,3 +32,4 @@ from .mage import (
 from .mtahuman import MtAHumanCreateView, MtAHumanDetailView, MtAHumanUpdateView
 from .resonance import ResonanceCreateView, ResonanceDetailView, ResonanceUpdateView
 from .rote import RoteCreateView, RoteDetailView, RoteUpdateView
+from .cabal import CabalCreateView, CabalDetailView,CabalUpdateView
