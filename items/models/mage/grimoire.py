@@ -358,8 +358,30 @@ class Grimoire(Wonder):
                 num_effects -= self.abilities.count() - 1
             if self.is_primer:
                 num_effects -= 1
-            if num_effects < 0:
-                num_effects = 0
+            while num_effects < 0:
+                options = []
+                if self.spheres.count() > 1:
+                    options.append("spheres")
+                elif self.practices.count() > 1:
+                    options.append("practices")
+                elif self.abilities.count() > 1:
+                    options.append("abilities")
+                choice = random.choice(options)
+                if choice == "spheres":
+                    self.spheres.remove(self.spheres.last())
+                if choice == "practices":
+                    self.practices.remove(self.practices.last())
+                if choice == "abilities":
+                    self.practices.remove(self.practices.last())
+                num_effects = (
+                    self.rank
+                    + 3
+                    - self.spheres.count()
+                    - self.practices.count()
+                    - self.abilities.count()
+                )
+                if self.is_primer:
+                    num_effects -= 1
             effects = list(effects.order_by("?")[:num_effects])
         self.set_effects(effects)
 
