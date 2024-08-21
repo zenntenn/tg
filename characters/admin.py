@@ -10,6 +10,7 @@ from characters.models.core import (
     Specialty,
 )
 from characters.models.mage import Effect, Resonance
+from characters.models.mage.cabal import Cabal
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import (
     CorruptedPractice,
@@ -174,3 +175,8 @@ class MageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ResRating)
+
+
+@admin.register(Cabal)
+class CabalAdmin(admin.ModelAdmin):
+    list_display = ("name", "leader")

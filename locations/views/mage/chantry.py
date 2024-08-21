@@ -1,8 +1,8 @@
 from typing import Any
+
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
-
 from locations.models.mage.chantry import Chantry
 
 
@@ -25,11 +25,79 @@ class ChantryDetailView(DetailView):
 
 class ChantryCreateView(CreateView):
     model = Chantry
-    fields = "__all__"
+    fields = [
+        "name",
+        "parent",
+        "description",
+        "faction",
+        "leadership_type",
+        "leaders",
+        "season",
+        "chantry_type",
+        "rank",
+        "points",
+        "allies",
+        "arcane",
+        "backup",
+        "cult",
+        "elders",
+        "integrated_effects",
+        "retainers",
+        "spies",
+        "resources",
+        "enhancement",
+        "requisitions",
+        "reality_zone_rating",
+        "node_rating",
+        "library_rating",
+        "chantry_library",
+        "nodes",
+        "members",
+        "cabals",
+        "ambassador",
+        "node_tender",
+        "investigator",
+        "guardian",
+        "teacher",
+    ]
     template_name = "locations/mage/chantry/form.html"
 
 
 class ChantryUpdateView(UpdateView):
     model = Chantry
-    fields = "__all__"
+    fields = [
+        "name",
+        "parent",
+        "description",
+        "faction",
+        "leadership_type",
+        "leaders",
+        "season",
+        "chantry_type",
+        "rank",
+        "points",
+        "allies",
+        "arcane",
+        "backup",
+        "cult",
+        "elders",
+        "integrated_effects",
+        "retainers",
+        "spies",
+        "resources",
+        "enhancement",
+        "requisitions",
+        "reality_zone_rating",
+        "node_rating",
+        "library_rating",
+        "chantry_library",
+        "nodes",
+        "members",
+        "cabals",
+        "ambassador",
+        "node_tender",
+        "investigator",
+        "guardian",
+        "teacher",
+    ]
     template_name = "locations/mage/chantry/form.html"

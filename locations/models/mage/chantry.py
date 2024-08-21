@@ -1,20 +1,20 @@
 import random
-from django.urls import reverse
+
 from characters.models.core.human import Human
-from characters.models.mage.faction import MageFaction
 from characters.models.mage.resonance import Resonance
 from core.utils import add_dot, weighted_choice
-from locations.models.core.location import LocationModel
 from django.db import models
-
+from django.urls import reverse
+from locations.models.core.location import LocationModel
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
+
 
 class Chantry(LocationModel):
     type = "chantry"
 
     faction = models.ForeignKey(
-        MageFaction, blank=True, null=True, on_delete=models.SET_NULL
+        "characters.MageFaction", blank=True, null=True, on_delete=models.SET_NULL
     )
 
     LEADERSHIP_CHOICES = [
@@ -42,7 +42,11 @@ class Chantry(LocationModel):
         ("autumn", "Autumn"),
     ]
 
-    season = models.CharField(max_length=100, null=True, choices=SEASONS,)
+    season = models.CharField(
+        max_length=100,
+        null=True,
+        choices=SEASONS,
+    )
 
     CHANTRY_TYPES = [
         ("exploration", "Exploration"),
@@ -58,7 +62,11 @@ class Chantry(LocationModel):
         ("diplomatic", "Diplomatic"),
     ]
 
-    chantry_type = models.CharField(max_length=100, null=True, choices=CHANTRY_TYPES,)
+    chantry_type = models.CharField(
+        max_length=100,
+        null=True,
+        choices=CHANTRY_TYPES,
+    )
 
     rank = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
@@ -84,7 +92,7 @@ class Chantry(LocationModel):
     nodes = models.ManyToManyField(Node, blank=True)
 
     members = models.ManyToManyField(Human, blank=True, related_name="member_of")
-    cabals = models.ManyToManyField(Cabal, blank=True)
+    cabals = models.ManyToManyField("characters.Cabal", blank=True)
 
     ambassador = models.ForeignKey(
         Human,
@@ -136,7 +144,11 @@ class Chantry(LocationModel):
         verbose_name_plural = "Chantries"
 
     def get_update_url(self):
-        return reverse("wod:locations:mage:update_chantry", args=[str(self.id)])
+        return reverse("locations:mage:update:chantry", args=[str(self.id)])
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("locations:mage:create:chantry")
 
     def get_heading(self):
         return "mtas_heading"
@@ -302,6 +314,8 @@ class Chantry(LocationModel):
         return True
 
     def random_populate(self):
+        from characters.models.mage.cabal import Cabal
+
         while sum(x.chantry for x in self.members.all()) < self.points:
             c = Cabal.objects.create(
                 name=f"{self.name} Cabal {self.cabals.count()}", owner=self.owner
@@ -415,6 +429,18 @@ class Chantry(LocationModel):
         return self.faction is not None
 
     def random_faction(self, faction=None):
+        from characters.models.mage.faction import MageFaction
+
         if faction is None:
-            faction = weighted_random_faction()
+            faction_probs = {}
+            for faction in MageFaction.objects.all():
+                if faction.parent is None:
+                    faction_probs[faction] = 30
+                elif faction.parent.parent is None:
+                    faction_probs[faction] = 10
+                elif faction.parent.parent.parent is None:
+                    faction_probs[faction] = 1
+                else:
+                    faction_probs[faction] = 0
+                faction = weighted_choice(faction_probs, ceiling=100)
         return self.set_faction(faction)

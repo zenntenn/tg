@@ -62,7 +62,7 @@ class Group(Model):
             self.members.set(member_type.objects.order_by("?")[:num_chars])
         else:
             if user is None:
-                user = User.objects.create_user(username="New User")
+                user = User.objects.get_or_create(username="New User")[0]
             for _ in range(num_chars):
                 if not random_names:
                     name = f"{self.name} {self.members.count() + 1}"

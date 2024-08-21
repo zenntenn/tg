@@ -6,6 +6,7 @@ from game.models import Chronicle, ObjectType
 from locations.forms.core.location_creation import LocationCreationForm
 from locations.models.core.city import City
 from locations.models.core.location import LocationModel
+from locations.models.mage.chantry import Chantry
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
 from locations.models.mage.realm import HorizonRealm
@@ -44,7 +45,7 @@ class LocationIndexView(View):
         "library": Library,
         "horizon_realm": HorizonRealm,
         "caern": Caern,
-        "chantry": Chantry
+        "chantry": Chantry,
     }
 
     def get(self, request, *args, **kwargs):
