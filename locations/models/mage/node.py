@@ -1,12 +1,13 @@
 # TODO: MeritFlaw should check for Node Object in allowed types
 import random
+
 from characters.models.core import MeritFlaw
 from characters.models.mage.resonance import Resonance
 from core.models import Model, Noun
+from core.utils import weighted_choice
 from django.db import models
 from django.db.models import F, Q
 from django.urls import reverse
-from core.utils import weighted_choice
 from locations.models.core import LocationModel
 
 
@@ -207,8 +208,10 @@ class Node(LocationModel):
     def random_mf(self, minimum=-10, maximum=10):
         possibility = self.filter_mf(minimum=minimum, maximum=maximum)
         choice = random.choice(possibility)
-        possible_ratings = choice.ratings
-        possible_ratings = [x for x in possible_ratings if minimum <= x <= maximum]
+        possible_ratings = choice.ratings.all()
+        possible_ratings = [
+            x.value for x in possible_ratings if minimum <= x.value <= maximum
+        ]
         r = 0
         if self.mf_rating(choice) < 0:
             possible_ratings = [
@@ -293,7 +296,6 @@ class Node(LocationModel):
         self.update_output()
         self.points = 0
         self.random_name()
-
 
 
 class NodeMeritFlawRating(models.Model):

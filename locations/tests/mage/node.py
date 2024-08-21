@@ -1,5 +1,6 @@
 from unittest import mock
 from unittest.mock import Mock
+
 from characters.models.core import MeritFlaw
 from characters.models.mage import Resonance
 from core.models import Noun
@@ -201,8 +202,10 @@ class TestNode(TestCase):
         self.node.update_output()
         self.assertTrue(self.node.has_output())
 
+
 class TestRandomNode(TestCase):
     def setUp(self):
+        node = ObjectType.objects.create(name="Node", type="loc", gameline="mta")
         for i in range(1, 11):
             Resonance.objects.create(name=f"Resonance {i}")
         for i in range(1, 6):
@@ -211,7 +214,9 @@ class TestRandomNode(TestCase):
                     t = "Merit"
                 else:
                     t = "Flaw"
-                NodeMeritFlaw.objects.create(name=f"Node {t} {i}", ratings=[i * j])
+                tmp = MeritFlaw.objects.create(name=f"Node {t} {i}")
+                tmp.add_rating(i * j)
+                tmp.allowed_types.add(node)
         self.node = Node.objects.create(name="")
         for i in range(10):
             Noun.objects.create(name=f"Node Noun {i}")
@@ -269,7 +274,6 @@ class TestRandomNode(TestCase):
         self.assertTrue(self.node.has_resonance())
         self.assertTrue(self.node.has_output_forms())
         self.assertTrue(self.node.has_output())
-
 
 
 class TestNodeDetailView(TestCase):

@@ -888,7 +888,7 @@ class Mage(MtAHuman):
         self.mf_based_corrections()
         self.random_effects()
         self.random_specialties()
-        # self.random_node(favored_list=self.resonance.all())
+        self.random_node(favored_list=self.resonance.all())
         # self.random_library()
 
 
