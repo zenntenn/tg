@@ -1,3 +1,4 @@
+from .cabal import CabalCreateView, CabalDetailView, CabalUpdateView
 from .effect import EffectCreateView, EffectDetailView, EffectUpdateView
 from .faction import MageFactionCreateView, MageFactionDetailView, MageFactionUpdateView
 from .focus import (
@@ -32,4 +33,3 @@ from .mage import (
 from .mtahuman import MtAHumanCreateView, MtAHumanDetailView, MtAHumanUpdateView
 from .resonance import ResonanceCreateView, ResonanceDetailView, ResonanceUpdateView
 from .rote import RoteCreateView, RoteDetailView, RoteUpdateView
-from .cabal import CabalCreateView, CabalDetailView,CabalUpdateView

@@ -1,3 +1,4 @@
+from .cabal import Cabal
 from .effect import Effect
 from .faction import MageFaction
 from .focus import (
@@ -11,4 +12,3 @@ from .focus import (
 from .mtahuman import MtAHuman
 from .resonance import Resonance
 from .sphere import Sphere
-from .cabal import Cabal

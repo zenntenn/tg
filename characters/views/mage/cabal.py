@@ -1,6 +1,6 @@
+from characters.models.mage.cabal import Cabal
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from characters.models.mage.cabal import Cabal
 
 class CabalDetailView(DetailView):
     model = Cabal
@@ -9,11 +9,11 @@ class CabalDetailView(DetailView):
 
 class CabalCreateView(CreateView):
     model = Cabal
-    fields = "__all__"
+    fields = ["name", "description", "members", "leader"]
     template_name = "characters/mage/cabal/form.html"
 
 
 class CabalUpdateView(UpdateView):
     model = Cabal
-    fields = "__all__"
+    fields = ["name", "description", "members", "leader"]
     template_name = "characters/mage/cabal/form.html"

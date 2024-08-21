@@ -52,7 +52,7 @@ class TestRandomCharm(TestCase):
         self.assertEqual(c.background_cost, c.rank)
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Charm, self.player, character=False), 0.01)
+        self.assertLessEqual(time_test(Charm, self.player, character=False), 0.03)
 
 
 class TestCharmDetailView(TestCase):

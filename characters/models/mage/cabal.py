@@ -1,7 +1,8 @@
-from django.urls import reverse
-
 from characters.models.core.group import Group
-
+from characters.models.mage.faction import MageFaction
+from characters.models.mage.mage import Mage
+from core.utils import weighted_choice
+from django.urls import reverse
 
 
 class Cabal(Group):
@@ -25,9 +26,18 @@ class Cabal(Group):
         faction=None,
         chantry=0,
     ):
-
+        faction_probs = {}
         if faction is None:
-            mage_faction = weighted_random_faction()
+            for faction in MageFaction.objects.all():
+                if faction.parent is None:
+                    faction_probs[faction] = 30
+                elif faction.parent.parent is None:
+                    faction_probs[faction] = 10
+                elif faction.parent.parent.parent is None:
+                    faction_probs[faction] = 1
+                else:
+                    faction_probs[faction] = 0
+            mage_faction = weighted_choice(faction_probs, ceiling=100)
         else:
             mage_faction = faction
         affiliation = None
@@ -56,4 +66,8 @@ class Cabal(Group):
         )
 
     def get_update_url(self):
-        return reverse("wod:characters:mage:update_cabal", kwargs={"pk": self.pk})
+        return reverse("characters:mage:update:cabal", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:mage:create:cabal")
