@@ -1,11 +1,11 @@
-from characters.models.werewolf.spirit import Spirit
+from characters.models.werewolf.spirit_character import SpiritCharacter
 from django.test import TestCase
 from django.urls import reverse
 
 
 class TestSpiritDetailView(TestCase):
     def setUp(self) -> None:
-        self.spirit = Spirit.objects.create(name="Test Spirit")
+        self.spirit = SpiritCharacter.objects.create(name="Test Spirit")
         self.url = self.spirit.get_absolute_url()
 
     def test_spirit_detail_view_status_code(self):
@@ -27,7 +27,7 @@ class TestSpiritCreateView(TestCase):
             "gnosis": 1,
             "essence": 20,
         }
-        self.url = Spirit.get_creation_url()
+        self.url = SpiritCharacter.get_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -40,13 +40,13 @@ class TestSpiritCreateView(TestCase):
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Spirit.objects.count(), 1)
-        self.assertEqual(Spirit.objects.first().name, "Spirit")
+        self.assertEqual(SpiritCharacter.objects.count(), 1)
+        self.assertEqual(SpiritCharacter.objects.first().name, "Spirit")
 
 
 class TestSpiritUpdateView(TestCase):
     def setUp(self):
-        self.spirit = Spirit.objects.create(
+        self.spirit = SpiritCharacter.objects.create(
             name="Test Spirit",
             description="Test description",
         )

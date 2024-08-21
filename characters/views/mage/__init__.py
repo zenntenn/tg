@@ -21,6 +21,14 @@ from .focus import (
     TenetDetailView,
     TenetUpdateView,
 )
+from .mage import (
+    MageCreateView,
+    MageDetailView,
+    MageUpdateView,
+    load_factions,
+    load_mf_ratings,
+    load_subfactions,
+)
 from .mtahuman import MtAHumanCreateView, MtAHumanDetailView, MtAHumanUpdateView
 from .resonance import ResonanceCreateView, ResonanceDetailView, ResonanceUpdateView
 from .rote import RoteCreateView, RoteDetailView, RoteUpdateView

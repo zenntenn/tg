@@ -26,8 +26,9 @@ class GenericCharacterDetailView(View):
     character_views = {
         "character": CharacterDetailView,
         "human": HumanDetailView,
-        "spirit": werewolf.SpiritDetailView,
+        "spirit_character": werewolf.SpiritDetailView,
         "mta_human": mage.MtAHumanDetailView,
+        "mage": mage.MageDetailView,
     }
 
     def get(self, request, *args, **kwargs):

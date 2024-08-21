@@ -1,0 +1,1025 @@
+{% extends "core/form.html" %}
+{% block formdetails %}
+    method="post"
+    id="mageForm"
+    data-factions-url="{% url 'characters:mage:ajax:load_factions' %}"
+    data-subfactions-url="{% url 'characters:mage:ajax:load_subfactions' %}"
+    action=""
+    novalidate
+{% endblock formdetails %}
+{% block contents %}
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="centertext container">
+        <div class="row">
+            <div class="col-sm">Name</div>
+            <div class="col-sm">{{ form.name }}</div>
+            <div class="col-sm">Nature</div>
+            <div class="col-sm">{{ form.nature }}</div>
+            <div class="col-sm">Affiliation</div>
+            <div class="col-sm">{{ form.affiliation }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Chronicle</div>
+            <div class="col-sm">{{ form.chronicle }}</div>
+            <div class="col-sm">Demeanor</div>
+            <div class="col-sm">{{ form.demeanor }}</div>
+            <div class="col-sm">Faction</div>
+            <div class="col-sm">{{ form.faction }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Essence</div>
+            <div class="col-sm">{{ form.essence }}</div>
+            <div class="col-sm">Concept</div>
+            <div class="col-sm">{{ form.concept }}</div>
+            <div class="col-sm">Subfaction</div>
+            <div class="col-sm">{{ form.subfaction }}</div>
+        </div>
+        <div class="row">
+            <h2 class="col-sm {{ form.get_heading }}">Attributes</h2>
+        </div>
+        <div class="row">
+            <h3 class="col-sm {{ form.get_heading }}">Physical</h3>
+            <h3 class="col-sm {{ form.get_heading }}">Social</h3>
+            <h3 class="col-sm {{ form.get_heading }}">Mental</h3>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Strength
+            </div>
+            <div class="col-sm">{{ form.strength }}</div>
+            <div class="col-sm">
+                Charisma
+            </div>
+            <div class="col-sm">{{ form.charisma }}</div>
+            <div class="col-sm">
+                Perception
+            </div>
+            <div class="col-sm">{{ form.perception }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Dexterity
+            </div>
+            <div class="col-sm">{{ form.dexterity }}</div>
+            <div class="col-sm">
+                Manipulation
+            </div>
+            <div class="col-sm">{{ form.manipulation }}</div>
+            <div class="col-sm">
+                Intelligence
+            </div>
+            <div class="col-sm">{{ form.intelligence }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                Stamina
+            </div>
+            <div class="col-sm">{{ form.stamina }}</div>
+            <div class="col-sm">
+                Appearance
+            </div>
+            <div class="col-sm">{{ form.appearance }}</div>
+            <div class="col-sm">
+                Wits
+            </div>
+            <div class="col-sm">{{ form.wits }}</div>
+        </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">Abilities</h2>
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ form.get_heading }}">Talents</h3>
+        <h3 class="col-sm {{ form.get_heading }}">Skills</h3>
+        <h3 class="col-sm {{ form.get_heading }}">Knowledges</h3>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Alertness
+            {% if alertness_spec %}({{ alertness_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.alertness }}</div>
+        <div class="col-sm">
+            Crafts
+            {% if crafts_spec %}({{ crafts_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.crafts }}</div>
+        <div class="col-sm">
+            Academics
+            {% if academics_spec %}({{ academics_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.academics }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Art
+            {% if art_spec %}({{ art_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.art }}</div>
+        <div class="col-sm">
+            Drive
+            {% if drive_spec %}({{ drive_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.drive }}</div>
+        <div class="col-sm">
+            Computer
+            {% if computer_spec %}({{ computer_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.computer }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Athletics
+            {% if athletics_spec %}({{ athletics_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.athletics }}</div>
+        <div class="col-sm">
+            Etiquette
+            {% if etiquette_spec %}({{ etiquette_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.etiquette }}</div>
+        <div class="col-sm">
+            Cosmology
+            {% if cosmology_spec %}({{ cosmology_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.cosmology }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Awareness
+            {% if awareness_spec %}({{ awareness_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.awareness }}</div>
+        <div class="col-sm">
+            Firearms
+            {% if firearms_spec %}({{ firearms_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.firearms }}</div>
+        <div class="col-sm">
+            Enigmas
+            {% if enigmas_spec %}({{ enigmas_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.enigmas }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Brawl
+            {% if brawl_spec %}({{ brawl_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.brawl }}</div>
+        <div class="col-sm">
+            Martial Arts
+            {% if martial_arts_spec %}({{ martial_arts_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.martial_arts }}</div>
+        <div class="col-sm">
+            Esoterica
+            {% if esoterica_spec %}({{ esoterica_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.esoterica }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Empathy
+            {% if empathy_spec %}({{ empathy_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.empathy }}</div>
+        <div class="col-sm">
+            Meditation
+            {% if meditation_spec %}({{ meditation_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.meditation }}</div>
+        <div class="col-sm">
+            Investigation
+            {% if investigation_spec %}({{ investigation_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.investigation }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Expression
+            {% if expression_spec %}({{ expression_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.expression }}</div>
+        <div class="col-sm">
+            Melee
+            {% if melee_spec %}({{ melee_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.melee }}</div>
+        <div class="col-sm">
+            Law
+            {% if law_spec %}({{ law_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.law }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Intimidation
+            {% if intimidation_spec %}({{ intimidation_spec }}){% endif %}
+        </div>
+        <div class="col-sm">{{ form.intimidation }}</div>
+        <div class="col-sm">
+            Research
+            {% if research_spec %}({{ research_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.research }}
+        </div>
+        <div class="col-sm">
+            Medicine
+            {% if medicine_spec %}({{ medicine_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.medicine }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Leadership
+            {% if leadership_spec %}({{ leadership_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.leadership }}
+        </div>
+        <div class="col-sm">
+            Stealth
+            {% if stealth_spec %}({{ stealth_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.stealth }}
+        </div>
+        <div class="col-sm">
+            Occult
+            {% if occult_spec %}({{ occult_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.occult }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Streetwise
+            {% if streetwise_spec %}({{ streetwise_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.streetwise }}
+        </div>
+        <div class="col-sm">
+            Survival
+            {% if survival_spec %}({{ survival_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.survival }}
+        </div>
+        <div class="col-sm">
+            Politics
+            {% if politics_spec %}({{ politics_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.politics }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Subterfuge
+            {% if subterfuge_spec %}({{ subterfuge_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.subterfuge }}
+        </div>
+        <div class="col-sm">
+            Technology
+            {% if technology_spec %}({{ technology_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.technology }}
+        </div>
+        <div class="col-sm">
+            Science
+            {% if science_spec %}({{ science_spec }}){% endif %}
+        </div>
+        <div class="col-sm">
+            {{ form.science }}
+        </div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Secondary Abilities
+        </h2>
+    </div>
+    {% for tal, ski, kno in form.get_secondaries_for_display %}
+        <div class="row">
+            <div class="col-sm">
+                {{ tal|first }}
+            </div>
+            {% if tal|slice:"1:"|first != 0 %}
+                <div class="col-sm">
+                    {{ tal|slice:"1:"|first }}
+                </div>
+            {% else %}
+                <div class="col-sm">
+                </div>
+            {% endif %}
+            <div class="col-sm">
+                {{ ski|first }}
+            </div>
+            {% if ski|slice:"1:"|first != 0 %}
+                <div class="col-sm">
+                    {{ ski|slice:"1:"|first }}
+                </div>
+            {% else %}
+                <div class="col-sm">
+                </div>
+            {% endif %}
+            <div class="col-sm">
+                {{ kno|first }}
+            </div>
+            {% if kno|slice:"1:"|first != 0 %}
+                <div class="col-sm">
+                    {{ kno|slice:"1:"|first }}
+                </div>
+            {% else %}
+                <div class="col-sm">
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% if form.faction.name == "Akashayana" %}
+        <div class="row">
+            <div class="col-sm">
+                Do
+                {% if do_spec %}({{ do_spec }}){% endif %}
+            </div>
+            <div class="col-sm">
+                {{ form.do }}
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+    {% endif %}
+<div class="row">
+    <h2 class="col-sm {{ form.get_heading }}">
+        Advantages
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Willpower
+    </div>
+    <div class="col-sm">
+        {{ form.willpower }}
+    </div>
+    <div class="col-sm">
+        Arete
+    </div>
+    <div class="col-sm">
+        {{ form.arete }}
+    </div>
+    <div class="col-sm">
+        Affinity Sphere
+    </div>
+    <div class="col-sm">
+        {{ form.get_affinity_sphere_display }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Quintessence
+    </div>
+    <div class="col-sm">
+        {{ form.quintessence }}
+    </div>
+    <div class="col-sm">
+        Paradox
+    </div>
+    <div class="col-sm">
+        {{ form.paradox }}
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+    </div>
+</div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Backgrounds
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Allies
+        </div>
+        <div class="col-sm">
+            {{ form.allies }}
+        </div>
+        <div class="col-sm">
+            Alternate Identity
+        </div>
+        <div class="col-sm">
+            {{ form.alternate_identity }}
+        </div>
+        {% if form.affiliation.name == "Technocratic Union" %}
+            <div class="col-sm">
+                Cloaking
+            </div>
+        {% else %}
+            <div class="col-sm">
+                Arcane
+            </div>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.arcane }}
+        </div>
+    </div>
+    <div class="row">
+        {% if form.affiliation.name == "Technocratic Union" %}
+            <div class="col-sm">
+                Genius
+            </div>
+        {% else %}
+            <div class="col-sm">
+                Avatar
+            </div>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.avatar }}
+        </div>
+        <div class="col-sm">
+            Backup
+        </div>
+        <div class="col-sm">
+            {{ form.backup }}
+        </div>
+        <div class="col-sm">
+            Blessing
+        </div>
+        <div class="col-sm">
+            {{ form.blessing }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Certification
+        </div>
+        <div class="col-sm">
+            {{ form.certification }}
+        </div>
+        {% if form.affiliation.name == "Technocratic Union" %}
+            <div class="col-sm">
+                Construct
+            </div>
+        {% else %}
+            <div class="col-sm">
+                Chantry
+            </div>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.chantry }}
+        </div>
+        <div class="col-sm">
+            Contacts
+        </div>
+        <div class="col-sm">
+            {{ form.contacts }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Cult
+        </div>
+        <div class="col-sm">
+            {{ form.cult }}
+        </div>
+        <div class="col-sm">
+            Demesne
+        </div>
+        <div class="col-sm">
+            {{ form.demesne }}
+        </div>
+        <div class="col-sm">
+            Destiny
+        </div>
+        <div class="col-sm">
+            {{ form.destiny }}
+        </div>
+    </div>
+    <div class="row">
+        {% if form.affiliation.name == "Technocratic Union" %}
+            <div class="col-sm">
+                Hypercram
+            </div>
+        {% else %}
+            <div class="col-sm">
+                Dream
+            </div>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.dream }}
+        </div>
+        <div class="col-sm">
+            Enhancement
+        </div>
+        <div class="col-sm">
+            {{ form.enhancement }}
+        </div>
+        <div class="col-sm">
+            Fame
+        </div>
+        <div class="col-sm">
+            {{ form.fame }}
+        </div>
+    </div>
+    <div class="row">
+        {% if form.affiliation.name == "Technocratic Union" %}
+            <div class="col-sm">
+                Companion
+            </div>
+        {% else %}
+            <div class="col-sm">
+                Familiar
+            </div>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.familiar }}
+        </div>
+        <div class="col-sm">
+            Influence
+        </div>
+        <div class="col-sm">
+            {{ form.influence }}
+        </div>
+        <div class="col-sm">
+            Legend
+        </div>
+        <div class="col-sm">
+            {{ form.legend }}
+        </div>
+    </div>
+    <div class="row">
+        {% if form.library_owned is None %}
+            <div class="col-sm">
+                Library
+            </div>
+        {% else %}
+            <a class="col-sm" href={{ form.library_owned.get_absolute_url }}>Library</a>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.library }}
+        </div>
+        <div class="col-sm">
+            Mentor
+        </div>
+        <div class="col-sm">
+            {{ form.mentor }}
+        </div>
+        {% if form.node_owned is None %}
+            <div class="col-sm">
+                Node
+            </div>
+        {% else %}
+            <a class="col-sm" href={{ form.node_owned.get_absolute_url }}>Node</a>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.node }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Past Lives
+        </div>
+        <div class="col-sm">
+            {{ form.past_lives }}
+        </div>
+        <div class="col-sm">
+            Patron
+        </div>
+        <div class="col-sm">
+            {{ form.patron }}
+        </div>
+        <div class="col-sm">
+            Rank
+        </div>
+        <div class="col-sm">
+            {{ form.rank }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Resources
+        </div>
+        <div class="col-sm">
+            {{ form.resources }}
+        </div>
+        <div class="col-sm">
+            Retainers
+        </div>
+        <div class="col-sm">
+            {{ form.retainers }}
+        </div>
+        {% if form.affiliation.name == "Technocratic Union" %}
+            <div class="col-sm">
+                Laboratory
+            </div>
+        {% else %}
+            <div class="col-sm">
+                Sanctum
+            </div>
+        {% endif %}
+        <div class="col-sm">
+            {{ form.sanctum }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Spies
+        </div>
+        <div class="col-sm">
+            {{ form.spies }}
+        </div>
+        <div class="col-sm">
+            Status
+        </div>
+        <div class="col-sm">
+            {{ form.status_background }}
+        </div>
+        <div class="col-sm">
+            Totem
+        </div>
+        <div class="col-sm">
+            {{ form.totem }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Wonder
+        </div>
+        <div class="col-sm">
+            {{ form.wonder }}
+        </div>
+        {% if form.affiliation.name == 'Technocratic Union' %}
+            <div class="col-sm">
+                Requisitions
+            </div>
+            <div class="col-sm">
+                {{ form.requisitions }}
+            </div>
+            <div class="col-sm">
+                Secret Weapons
+            </div>
+            <div class="col-sm">
+                {{ form.secret_weapons }}
+            </div>
+        {% else %}
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Spheres
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            {{ form.get_corr_name_display }}
+        </div>
+        <div class="col-sm">
+            {{ form.correspondence }}
+        </div>
+        <div class="col-sm">
+            Mind
+        </div>
+        <div class="col-sm">
+            {{ form.mind }}
+        </div>
+        <div class="col-sm">
+            {{ form.get_prime_name_display }}
+        </div>
+        <div class="col-sm">
+            {{ form.prime }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Entropy
+        </div>
+        <div class="col-sm">
+            {{ form.entropy }}
+        </div>
+        <div class="col-sm">
+            Life
+        </div>
+        <div class="col-sm">
+            {{ form.life }}
+        </div>
+        <div class="col-sm">
+            {{ form.get_spirit_name_display }}
+        </div>
+        <div class="col-sm">
+            {{ form.spirit }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Forces
+        </div>
+        <div class="col-sm">
+            {{ form.forces }}
+        </div>
+        <div class="col-sm">
+            Matter
+        </div>
+        <div class="col-sm">
+            {{ form.matter }}
+        </div>
+        <div class="col-sm">
+            Time
+        </div>
+        <div class="col-sm">
+            {{ form.time }}
+        </div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Rotes
+        </h2>
+    </div>
+    {% for row in rotes %}
+        <div class="row">
+            {% for rote in row %}
+                <a class="col-sm" href={{ rote.get_absolute_url }}>{{ rote.name }}</a>
+                <div class="col-sm">
+                    {{ rote.effect.spheres }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Resonance
+        </h2>
+    </div>
+    <div class="row">
+        {% for res in resonance %}
+            <div class="col-sm">
+                {{ res.resonance }}
+            </div>
+            <div class="col-sm">
+                {{ res.rating }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Focus
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Paradigm
+        </div>
+        <div class="col-sm">
+            {% for paradigm in form.paradigms.all %}
+                <a href="{{ paradigm.get_absolute_url }}">{{ paradigm }}</a>
+                <br />
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Practices
+        </div>
+        <div class="col-sm">
+            {% for practice in form.practices.all %}
+                <a href="{{ practice.get_absolute_url }}">{{ practice }}</a>
+                <br />
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Instruments
+        </div>
+        <div class="col-sm">
+            {% for instrument in form.instruments.all %}
+                <a href="{{ instrument.get_absolute_url }}">{{ instrument }}</a>
+                <br />
+            {% endfor %}
+        </div>
+    </div>
+        <div class="row">
+            <h2 class="col-sm {{ form.get_heading }}">Merits and Flaws</h2>
+        </div>
+        <div class="row">
+            {% for mf, rating in form.get_mf_and_rating_list %}
+                <a class="col-sm" href="{{ mf.get_absolute_url }}">{{ mf }}: {{ rating }}</a>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <h2 class="col-sm {{ form.get_heading }}">Languages</h2>
+        </div>
+        <div class="row">
+            {% for lang in form.languages.all %}<div class="col-sm">{{ lang }}</div>{% endfor %}
+        </div>
+    <div class="row">
+        <h2 class="col-sm {{ form.get_heading }}">
+            Appearance
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Date of Birth
+        </div>
+        <div class="col-sm">
+            {{ form.date_of_birth }}
+        </div>
+        <div class="col-sm">
+            Apparent Age
+        </div>
+        <div class="col-sm">
+            {{ form.apparent_age }}
+        </div>
+        <div class="col-sm">
+            Age of Awakening
+        </div>
+        <div class="col-sm">
+            {{ form.age_of_awakening }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Hair
+        </div>
+        <div class="col-sm">
+            {{ form.hair }}
+        </div>
+        <div class="col-sm">
+            Eyes
+        </div>
+        <div class="col-sm">
+            {{ form.eyes }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Ethnicity
+        </div>
+        <div class="col-sm">
+            {{ form.ethnicity }}
+        </div>
+        <div class="col-sm">
+            Nationality
+        </div>
+        <div class="col-sm">
+            {{ form.nationality }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Height
+        </div>
+        <div class="col-sm">
+            {{ form.height }}
+        </div>
+        <div class="col-sm">
+            Weight
+        </div>
+        <div class="col-sm">
+            {{ form.weight }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Age
+        </div>
+        <div class="col-sm">
+            {{ form.age }}
+        </div>
+        <div class="col-sm">
+            Sex
+        </div>
+        <div class="col-sm">
+            {{ form.sex }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Description
+        </div>
+        <div class="col-sm">
+            {{ form.description }}
+        </div>
+    </div>
+<div class="row">
+    <h2 class="col-sm {{ form.get_heading }}">
+        History
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Childhood
+    </div>
+    <div class="col-sm">
+        {{ form.childhood }}
+    </div>
+    <div class="col-sm">
+        History
+    </div>
+    <div class="col-sm">
+        {{ form.history }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Awakening
+    </div>
+    <div class="col-sm">
+        {{ form.awakening }}
+    </div>
+    <div class="col-sm">
+        Seekings
+    </div>
+    <div class="col-sm">
+        {{ form.seekings }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Quiets
+    </div>
+    <div class="col-sm">
+        {{ form.quiets }}
+    </div>
+    <div class="col-sm">
+        Avatar Description
+    </div>
+    <div class="col-sm">
+        {{ form.avatar_description }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Goals
+    </div>
+    <div class="col-sm">
+        {{ form.goals }}
+    </div>
+    <div class="col-sm">
+        Notes
+    </div>
+    <div class="col-sm">
+        {{ form.notes }}
+    </div>
+</div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+ $("#id_affiliation").change(function () {
+    var url = $("#mageForm").attr("data-factions-url");  // get the url of the `load_character_type` view
+    var affiliationId = $(this).val();  // get the selected gameline ID from the HTML input                  
+    $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-character-type/)
+        data: {
+        'affiliation': affiliationId       // add the gameline id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_character_type` view function
+        $("#id_faction").html(data);  // replace the contents of the character_type input with the data that came from the server
+        // $("#id_subfaction").html('<option value="">----</option>');
+        }
+    });
+    });
+        
+// this one is for fetching subfaction data
+$("#id_faction").change(function () { //django-model-form created this id
+var url = $("#mageForm").attr("data-subfactions-url");  // get the url of the `load_subfactions` view
+var factionId = $(this).val();  // get the selected affiliation ID from the HTML input
+        
+$.ajax({                       // initialize an AJAX request
+    url: '{% url 'characters:mage:ajax:load_subfactions' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-factions/) person_form.html template has this url var
+    data: {
+    'faction': factionId       // add the affiliation id to the GET parameters
+    },
+    success: function (data) {   // `data` is the return of the `load_factions` view function
+    $("#id_subfaction").html(data);  // replace the contents of the faction input with the data that came from the server
+    }
+});
+});
+    </script>
+{% endblock contents %}
+{% block buttons %}
+    <input class="btn btn-primary" name="Full Random" type="submit" value="Full Random" />
+    <input class="btn btn-primary" name="Random Basics" type="submit" value="Random Basics" />
+    <input class="btn btn-primary" name="Save" type="submit" value="Save" />
+{% endblock buttons %}
