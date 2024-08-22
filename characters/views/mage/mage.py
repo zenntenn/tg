@@ -6,7 +6,7 @@ from characters.models.mage.mage import Mage, ResRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.views.core.human import HumanDetailView
-from django.forms import formset_factory
+from django.forms import BaseModelForm, formset_factory
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 
@@ -235,8 +235,18 @@ class MageCreateView(CreateView):
         "paradox",
         "quiet",
         "quiet_type",
+        "affiliation",
+        "faction",
+        "subfaction",
     ]
     template_name = "characters/mage/mage/form.html"
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['affiliation'].queryset = MageFaction.objects.filter(parent=None)
+        form.fields['faction'].queryset = MageFaction.objects.none()
+        form.fields['subfaction'].queryset = MageFaction.objects.none()
+        return form
 
 
 class MageUpdateView(UpdateView):
@@ -414,5 +424,8 @@ class MageUpdateView(UpdateView):
         "paradox",
         "quiet",
         "quiet_type",
+        "affiliation",
+        "faction",
+        "subfaction",
     ]
     template_name = "characters/mage/mage/form.html"
