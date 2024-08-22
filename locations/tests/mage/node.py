@@ -9,7 +9,7 @@ from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 
 class TestNode(TestCase):
     def setUp(self):
-        node = ObjectType.objects.create(name="Node", type="loc", gameline="mta")
+        node = ObjectType.objects.create(name="node", type="loc", gameline="mta")
         for i in range(1, 11):
             Resonance.objects.create(name=f"Resonance {i}")
         for i in range(1, 6):
