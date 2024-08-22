@@ -61,8 +61,13 @@ urls = [
     ),
     path(
         "mage/",
-        views.mage.MageCreateView.as_view(),
+        views.mage.MageBasicsView.as_view(),
         name="mage",
+    ),
+    path(
+        "mage/full/",
+        views.mage.MageCreateView.as_view(),
+        name="mage_full",
     ),
     path(
         "cabal/",

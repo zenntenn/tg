@@ -1717,7 +1717,7 @@ class TestMageCreateView(TestCase):
             "quiet": 0,
             "quiet_type": "none",
         }
-        self.url = Mage.get_creation_url()
+        self.url = Mage.get_full_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -1919,3 +1919,49 @@ class TestMageHumanUpdateView(TestCase):
         self.assertEqual(response.status_code, 302)
         self.mage.refresh_from_db()
         self.assertEqual(self.mage.name, "Test Mage 2")
+
+
+class TestMageBasicsView(TestCase):
+    def setUp(self):
+        self.player = User.objects.create_user(username="Test")
+        self.n = Archetype.objects.create(name="Nature")
+        self.d = Archetype.objects.create(name="Demeanor")
+        self.affiliation = MageFaction.objects.create(name="Affiliation")
+        self.faction = MageFaction.objects.create(
+            name="factio", parent=self.affiliation
+        )
+        self.subfaction = MageFaction.objects.create(
+            name="subfaction", parent=self.faction
+        )
+        self.valid_data = {
+            "name": "Test",
+            "nature": self.n.id,
+            "demeanor": self.d.id,
+            "concept": "Concept",
+            "affiliation": self.affiliation.id,
+            "faction": self.faction.id,
+            "subfaction": self.subfaction.id,
+            "essence": "Dynamic",
+        }
+        self.url = Mage.get_creation_url()
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/mage/mage/magebasics.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Mage.objects.count(), 1)
+        self.assertEqual(Mage.objects.first().name, "Test")
+        self.assertEqual(Mage.objects.first().nature, self.n)
+        self.assertEqual(Mage.objects.first().demeanor, self.d)
+        self.assertEqual(Mage.objects.first().concept, "Concept")
+        self.assertEqual(Mage.objects.first().affiliation, self.affiliation)
+        self.assertEqual(Mage.objects.first().faction, self.faction)
+        self.assertEqual(Mage.objects.first().subfaction, self.subfaction)
+        self.assertEqual(Mage.objects.first().essence, "Dynamic")

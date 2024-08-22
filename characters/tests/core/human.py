@@ -1072,7 +1072,7 @@ class TestHumanBasicsView(TestCase):
         self.assertEqual(Human.objects.first().demeanor, self.d)
 
 
-class TestHumanUpdateView(TestCase):
+class TestAttributeView(TestCase):
     def setUp(self):
         self.player = User.objects.create_user(username="Test")
         self.human = Human.objects.create(

@@ -23,6 +23,7 @@ from .focus import (
     TenetUpdateView,
 )
 from .mage import (
+    MageBasicsView,
     MageCreateView,
     MageDetailView,
     MageUpdateView,

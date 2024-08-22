@@ -157,6 +157,10 @@ class Mage(MtAHuman):
     def get_creation_url(cls):
         return reverse("characters:mage:create:mage")
 
+    @classmethod
+    def get_full_creation_url(cls):
+        return reverse("characters:mage:create:mage_full")
+
     def add_ability(self, ability, maximum=4):
         if ability == "do":
             if self.faction is not None:
