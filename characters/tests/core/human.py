@@ -979,7 +979,7 @@ class TestHumanCreateView(TestCase):
             "intelligence": 1,
             "wits": 1,
         }
-        self.url = Human.get_creation_url()
+        self.url = Human.get_full_creation_url()
 
     def test_create_view_status_code(self):
         response = self.client.get(self.url)
@@ -1037,3 +1037,34 @@ class TestHumanUpdateView(TestCase):
         self.assertEqual(response.status_code, 302)
         self.human.refresh_from_db()
         self.assertEqual(self.human.name, "Test Human Updated")
+
+
+class TestHumanBasicsView(TestCase):
+    def setUp(self):
+        self.player = User.objects.create_user(username="Test")
+        self.n = Archetype.objects.create(name="Nature")
+        self.d = Archetype.objects.create(name="Demeanor")
+        self.valid_data = {
+            "name": "Test Human",
+            "nature": self.n.id,
+            "demeanor": self.d.id,
+            "concept": "Test character",
+        }
+        self.url = Human.get_creation_url()
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/core/human/humanbasics.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Human.objects.count(), 1)
+        self.assertEqual(Human.objects.first().name, "Test Human")
+        self.assertEqual(Human.objects.first().concept, "Test character")
+        self.assertEqual(Human.objects.first().nature, self.n)
+        self.assertEqual(Human.objects.first().demeanor, self.d)

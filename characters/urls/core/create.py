@@ -16,8 +16,13 @@ urls = [
     ),
     path(
         "human/",
-        views.core.HumanCreateView.as_view(),
+        views.core.HumanBasicsView.as_view(),
         name="human",
+    ),
+    path(
+        "human/full/",
+        views.core.HumanCreateView.as_view(),
+        name="human_full",
     ),
     path(
         "archetypes/",

@@ -16,7 +16,7 @@ from .derangement import (
     DerangementUpdateView,
 )
 from .group import GroupCreateView, GroupDetailView, GroupUpdateView
-from .human import HumanCreateView, HumanDetailView, HumanUpdateView
+from .human import HumanBasicsView, HumanCreateView, HumanDetailView, HumanUpdateView
 from .meritflaw import MeritFlawCreateView, MeritFlawDetailView, MeritFlawUpdateView
 from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdateView
 
@@ -55,7 +55,9 @@ class GenericGroupDetailView(View):
 
 
 class CharacterIndexView(View):
-    chars = {}
+    chars = {
+        "human": Human,
+    }
 
     def get(self, request, *args, **kwargs):
         context = self.get_context(kwargs)

@@ -1,4 +1,5 @@
 import random
+
 from characters.models.core import MeritFlaw
 from characters.models.mage.resonance import Resonance
 from core.models import Model, Noun
