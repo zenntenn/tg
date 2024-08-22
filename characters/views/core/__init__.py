@@ -16,7 +16,14 @@ from .derangement import (
     DerangementUpdateView,
 )
 from .group import GroupCreateView, GroupDetailView, GroupUpdateView
-from .human import HumanBasicsView, HumanCreateView, HumanDetailView, HumanUpdateView
+from .human import (
+    HumanAttributeView,
+    HumanBasicsView,
+    HumanCharacterCreationView,
+    HumanCreateView,
+    HumanDetailView,
+    HumanUpdateView,
+)
 from .meritflaw import MeritFlawCreateView, MeritFlawDetailView, MeritFlawUpdateView
 from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdateView
 
@@ -25,7 +32,7 @@ from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdate
 class GenericCharacterDetailView(View):
     character_views = {
         "character": CharacterDetailView,
-        "human": HumanDetailView,
+        "human": HumanCharacterCreationView,
         "spirit_character": werewolf.SpiritDetailView,
         "mta_human": mage.MtAHumanDetailView,
         "mage": mage.MageDetailView,
