@@ -1,6 +1,4 @@
-# TODO: MeritFlaw should check for Node Object in allowed types
 import random
-
 from characters.models.core import MeritFlaw
 from characters.models.mage.resonance import Resonance
 from core.models import Model, Noun
@@ -8,6 +6,7 @@ from core.utils import weighted_choice
 from django.db import models
 from django.db.models import F, Q
 from django.urls import reverse
+from game.models import ObjectType
 from locations.models.core import LocationModel
 
 
@@ -71,6 +70,11 @@ class Node(LocationModel):
         return True
 
     def add_mf(self, mf, rating):
+        node = ObjectType.objects.get_or_create(
+            name="node", type="loc", gameline="mta"
+        )[0]
+        if not node in mf.allowed_types.all():
+            return False
         if not mf.ratings.filter(value=rating).exists():
             return False
         if mf in self.merits_and_flaws.all():
@@ -93,7 +97,13 @@ class Node(LocationModel):
         return sum(x.rating for x in NodeMeritFlawRating.objects.filter(node=self))
 
     def filter_mf(self, minimum=-10, maximum=10):
-        new_mfs = MeritFlaw.objects.exclude(pk__in=self.merits_and_flaws.all())
+        node = ObjectType.objects.get_or_create(
+            name="node", type="loc", gameline="mta"
+        )[0]
+
+        new_mfs = MeritFlaw.objects.filter(allowed_types__in=[node.pk]).exclude(
+            pk__in=self.merits_and_flaws.all()
+        )
         had_mf_ratings = NodeMeritFlawRating.objects.all()
         had_mf_ratings = had_mf_ratings.filter(rating__lt=F("mf__max_rating"))
 
