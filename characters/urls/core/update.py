@@ -16,7 +16,7 @@ urls = [
     ),
     path(
         "human/<pk>/",
-        views.core.HumanUpdateView.as_view(),
+        views.core.HumanCharacterCreationView.as_view(),
         name="human",
     ),
     path(

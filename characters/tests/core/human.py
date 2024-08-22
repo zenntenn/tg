@@ -945,14 +945,16 @@ class TestRandomHuman(TestCase):
 class TestHumanDetailView(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="Test")
-        self.human = Human.objects.create(name="Test Human", owner=self.player)
+        self.human = Human.objects.create(
+            name="Test Human", owner=self.player, status="App"
+        )
         self.url = self.human.get_absolute_url()
 
     def test_human_detail_view_status_code(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_mage_detail_view_templates(self):
+    def test_human_detail_view_templates(self):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/core/human/detail.html")
 
@@ -1068,3 +1070,65 @@ class TestHumanBasicsView(TestCase):
         self.assertEqual(Human.objects.first().concept, "Test character")
         self.assertEqual(Human.objects.first().nature, self.n)
         self.assertEqual(Human.objects.first().demeanor, self.d)
+
+
+class TestHumanUpdateView(TestCase):
+    def setUp(self):
+        self.player = User.objects.create_user(username="Test")
+        self.human = Human.objects.create(
+            name="Test Human",
+            owner=self.player,
+        )
+        self.valid_data = {
+            "strength": 2,
+            "dexterity": 2,
+            "stamina": 2,
+            "charisma": 3,
+            "manipulation": 2,
+            "appearance": 3,
+            "perception": 3,
+            "intelligence": 4,
+            "wits": 3,
+        }
+        self.url = self.human.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/core/human/attributes.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.human.refresh_from_db()
+        self.assertEqual(self.human.strength, 2)
+        self.assertEqual(self.human.dexterity, 2)
+        self.assertEqual(self.human.stamina, 2)
+        self.assertEqual(self.human.charisma, 3)
+        self.assertEqual(self.human.manipulation, 2)
+        self.assertEqual(self.human.appearance, 3)
+        self.assertEqual(self.human.perception, 3)
+        self.assertEqual(self.human.intelligence, 4)
+        self.assertEqual(self.human.wits, 3)
+        self.assertEqual(self.human.creation_status, 2)
+
+
+class TestHumanCharacterCreationView(TestCase):
+    def setUp(self) -> None:
+        self.player = User.objects.create_user(username="Test")
+        self.human = Human.objects.create(
+            name="Test Human",
+            owner=self.player,
+        )
+        self.url = self.human.get_absolute_url()
+
+    def test_creation_status_selector(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/core/human/attributes.html")
+        self.human.creation_status = 2
+        self.human.save()
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/core/human/detail.html")
