@@ -429,3 +429,18 @@ class MageUpdateView(UpdateView):
         "subfaction",
     ]
     template_name = "characters/mage/mage/form.html"
+
+
+class MageBasicsView(CreateView):
+    model = Mage
+    fields = [
+        "name",
+        "nature",
+        "demeanor",
+        "concept",
+        "affiliation",
+        "faction",
+        "subfaction",
+        "essence",
+    ]
+    template_name = "characters/mage/mage/magebasics.html"
