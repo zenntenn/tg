@@ -1,10 +1,8 @@
 import random
 
-from characters.models.mage.faction import MageFaction
 from core.utils import weighted_choice
 from django.db import models
 from django.urls import reverse
-from items.models.mage.grimoire import Grimoire
 from locations.models.core.location import LocationModel
 
 
@@ -13,9 +11,9 @@ class Library(LocationModel):
 
     rank = models.IntegerField(default=1)
     faction = models.ForeignKey(
-        MageFaction, null=True, blank=True, on_delete=models.SET_NULL
+        "characters.MageFaction", null=True, blank=True, on_delete=models.SET_NULL
     )
-    books = models.ManyToManyField(Grimoire, blank=True)
+    books = models.ManyToManyField("items.Grimoire", blank=True)
 
     class Meta:
         verbose_name = "Library"
@@ -65,6 +63,8 @@ class Library(LocationModel):
             self.add_book(book)
 
     def random_faction(self, faction=None):
+        from characters.models.mage.faction import MageFaction
+
         if faction is None:
             faction_probs = {}
 
@@ -81,6 +81,9 @@ class Library(LocationModel):
         self.set_faction(faction)
 
     def random_book(self):
+        from characters.models.mage.faction import MageFaction
+        from items.models.mage.grimoire import Grimoire
+
         book = Grimoire.objects.create(name="", owner=self.owner)
         rank = random.randint(1, self.rank)
         if (
