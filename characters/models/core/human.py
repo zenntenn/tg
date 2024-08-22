@@ -113,6 +113,10 @@ class Human(Character):
         return reverse("characters:update:human", kwargs={"pk": self.pk})
 
     @classmethod
+    def get_full_creation_url(cls):
+        return reverse("characters:create:human_full")
+
+    @classmethod
     def get_creation_url(cls):
         return reverse("characters:create:human")
 

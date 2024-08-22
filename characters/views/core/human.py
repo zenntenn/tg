@@ -86,3 +86,14 @@ class HumanUpdateView(UpdateView):
         "appearance",
     ]
     template_name = "characters/core/human/form.html"
+
+
+class HumanBasicsView(CreateView):
+    model = Human
+    fields = [
+        "name",
+        "nature",
+        "demeanor",
+        "concept",
+    ]
+    template_name = "characters/core/human/humanbasics.html"
