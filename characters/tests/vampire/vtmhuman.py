@@ -185,3 +185,202 @@ class TestVtMHuman(TestCase):
                 "status_background": 5,
             },
         )
+
+
+class TestVtMHumanDetailView(TestCase):
+    def setUp(self) -> None:
+        self.vtmhuman = VtMHuman.objects.create(name="Test VtMHuman")
+        self.url = self.vtmhuman.get_absolute_url()
+
+    def test_effect_detail_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_effect_detail_view_templates(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/vampire/vtmhuman/detail.html")
+
+
+class TestVtMHumanCreateView(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            "name": "Test VtMHuman",
+            "description": "Test",
+            "willpower": 3,
+            "age": 200,
+            "apparent_age": 18,
+            "hair": "Asfa",
+            "eyes": "asf",
+            "ethnicity": "asfa",
+            "nationality": "asfasf",
+            "height": "afasf",
+            "weight": "Asfas",
+            "sex": "asfasf",
+            "childhood": "asfasf",
+            "history": "afasf",
+            "goals": "asfasf",
+            "notes": "asfasf",
+            "strength": 1,
+            "dexterity": 1,
+            "stamina": 1,
+            "perception": 0,
+            "intelligence": 0,
+            "wits": 0,
+            "charisma": 0,
+            "manipulation": 0,
+            "appearance": 0,
+            "alertness": 0,
+            "athletics": 0,
+            "brawl": 0,
+            "empathy": 0,
+            "expression": 0,
+            "intimidation": 0,
+            "streetwise": 0,
+            "subterfuge": 0,
+            "crafts": 0,
+            "drive": 0,
+            "etiquette": 0,
+            "firearms": 0,
+            "melee": 0,
+            "stealth": 0,
+            "academics": 0,
+            "computer": 0,
+            "investigation": 0,
+            "medicine": 0,
+            "science": 0,
+            "contacts": 0,
+            "mentor": 0,
+            "xp": 0,
+            "awareness": 0,
+            "leadership": 0,
+            "animal_ken": 0,
+            "larceny": 0,
+            "performance": 0,
+            "survival": 0,
+            "finance": 0,
+            "law": 0,
+            "occult": 0,
+            "politics": 0,
+            "technology": 0,
+            "allies": 0,
+            "alternate_identity": 0,
+            "black_hand_membership": 0,
+            "domain": 0,
+            "fame": 0,
+            "generation": 0,
+            "herd": 0,
+            "influence": 0,
+            "resources": 0,
+            "retainers": 0,
+            "rituals": 0,
+            "status_background": 0,
+        }
+        self.url = VtMHuman.get_creation_url()
+
+    def test_create_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/vampire/vtmhuman/form.html")
+
+    def test_create_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(VtMHuman.objects.count(), 1)
+        self.assertEqual(VtMHuman.objects.first().name, "Test VtMHuman")
+
+
+class TestVtMHumanUpdateView(TestCase):
+    def setUp(self):
+        self.vtmhuman = VtMHuman.objects.create(
+            name="Test VtMHuman", description="Test"
+        )
+        self.valid_data = {
+            "name": "Test VtMHuman 2",
+            "description": "Tst",
+            "willpower": 3,
+            "age": 200,
+            "apparent_age": 18,
+            "hair": "Asfa",
+            "eyes": "asf",
+            "ethnicity": "asfa",
+            "nationality": "asfasf",
+            "height": "afasf",
+            "weight": "Asfas",
+            "sex": "asfasf",
+            "childhood": "asfasf",
+            "history": "afasf",
+            "goals": "asfasf",
+            "notes": "asfasf",
+            "strength": 1,
+            "dexterity": 1,
+            "stamina": 1,
+            "perception": 0,
+            "intelligence": 0,
+            "wits": 0,
+            "charisma": 0,
+            "manipulation": 0,
+            "appearance": 0,
+            "alertness": 0,
+            "athletics": 0,
+            "brawl": 0,
+            "empathy": 0,
+            "expression": 0,
+            "intimidation": 0,
+            "streetwise": 0,
+            "subterfuge": 0,
+            "crafts": 0,
+            "drive": 0,
+            "etiquette": 0,
+            "firearms": 0,
+            "melee": 0,
+            "stealth": 0,
+            "academics": 0,
+            "computer": 0,
+            "investigation": 0,
+            "medicine": 0,
+            "science": 0,
+            "contacts": 0,
+            "mentor": 0,
+            "xp": 0,
+            "awareness": 0,
+            "leadership": 0,
+            "animal_ken": 0,
+            "larceny": 0,
+            "performance": 0,
+            "survival": 0,
+            "finance": 0,
+            "law": 0,
+            "occult": 0,
+            "politics": 0,
+            "technology": 0,
+            "allies": 0,
+            "alternate_identity": 0,
+            "black_hand_membership": 0,
+            "domain": 0,
+            "fame": 0,
+            "generation": 0,
+            "herd": 0,
+            "influence": 0,
+            "resources": 0,
+            "retainers": 0,
+            "rituals": 0,
+            "status_background": 0,
+        }
+        self.url = self.vtmhuman.get_update_url()
+
+    def test_update_view_status_code(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_view_template(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "characters/vampire/vtmhuman/form.html")
+
+    def test_update_view_successful_post(self):
+        response = self.client.post(self.url, data=self.valid_data)
+        self.assertEqual(response.status_code, 302)
+        self.vtmhuman.refresh_from_db()
+        self.assertEqual(self.vtmhuman.name, "Test VtMHuman 2")

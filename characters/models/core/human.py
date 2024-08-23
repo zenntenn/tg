@@ -109,6 +109,9 @@ class Human(Character):
         verbose_name = "Human"
         verbose_name_plural = "Humans"
 
+    def get_full_update_url(self):
+        return reverse("characters:update:human_full", kwargs={"pk": self.pk})
+
     def get_update_url(self):
         return reverse("characters:update:human", kwargs={"pk": self.pk})
 

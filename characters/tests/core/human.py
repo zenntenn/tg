@@ -1024,7 +1024,7 @@ class TestHumanUpdateView(TestCase):
             "intelligence": 1,
             "wits": 1,
         }
-        self.url = self.human.get_update_url()
+        self.url = self.human.get_full_update_url()
 
     def test_update_view_status_code(self):
         response = self.client.get(self.url)

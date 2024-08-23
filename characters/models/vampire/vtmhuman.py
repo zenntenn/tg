@@ -1,5 +1,6 @@
 from characters.models.core.human import Human
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -34,6 +35,13 @@ class VtMHuman(Human):
     class Meta:
         verbose_name = "Human (Vampire)"
         verbose_name_plural = "Humans (Vampire)"
+
+    def get_update_url(self):
+        return reverse("characters:vampire:update:vtmhuman", kwargs={"pk": self.pk})
+
+    @classmethod
+    def get_creation_url(cls):
+        return reverse("characters:vampire:create:vtmhuman")
 
     def get_heading(self):
         return "vtm_heading"
