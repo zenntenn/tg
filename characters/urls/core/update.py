@@ -15,6 +15,11 @@ urls = [
         name="group",
     ),
     path(
+        "human/full/<pk>/",
+        views.core.HumanUpdateView.as_view(),
+        name="human_full",
+    ),
+    path(
         "human/<pk>/",
         views.core.HumanCharacterCreationView.as_view(),
         name="human",

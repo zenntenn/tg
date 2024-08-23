@@ -1,6 +1,6 @@
 from characters.forms.core.character_creation import CharacterCreationForm
 from characters.models.core import Character, Derangement, Group, Human
-from characters.views import mage, werewolf
+from characters.views import mage, vampire, werewolf
 from core.utils import get_gameline_name
 from django.forms import BaseModelForm
 from django.http import Http404, HttpResponse
@@ -36,6 +36,7 @@ class GenericCharacterDetailView(View):
         "spirit_character": werewolf.SpiritDetailView,
         "mta_human": mage.MtAHumanDetailView,
         "mage": mage.MageDetailView,
+        "vtm_human": vampire.VtMHumanDetailView,
     }
 
     def get(self, request, *args, **kwargs):
