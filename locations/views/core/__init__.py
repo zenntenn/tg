@@ -34,6 +34,7 @@ class GenericLocationDetailView(View):
         loc = LocationModel.objects.get(pk=kwargs["pk"])
         if loc.type in self.views:
             return self.views[loc.type].as_view()(request, *args, **kwargs)
+        return redirect("locations:index wod")
 
 
 class LocationIndexView(View):

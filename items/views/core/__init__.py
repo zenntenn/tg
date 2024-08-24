@@ -61,7 +61,7 @@ class GenericItemDetailView(View):
         item = ItemModel.objects.get(pk=kwargs["pk"])
         if item.type in self.views:
             return self.views[item.type].as_view()(request, *args, **kwargs)
-        return redirect("items:index")
+        return redirect("items:index wod")
 
 
 class ItemIndexView(View):

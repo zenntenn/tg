@@ -67,11 +67,13 @@ class GenericCharacterDetailView(View):
         char = Character.objects.get(pk=kwargs["pk"])
         if char.type in self.character_views:
             return self.character_views[char.type].as_view()(request, *args, **kwargs)
+        return redirect("characters:index wod")
 
     def post(self, request, *args, **kwargs):
         char = Character.objects.get(pk=kwargs["pk"])
         if char.type in self.character_views:
             return self.character_views[char.type].as_view()(request, *args, **kwargs)
+        return redirect("characters:index wod")
 
 
 class GenericGroupDetailView(View):
@@ -84,6 +86,7 @@ class GenericGroupDetailView(View):
         group = Group.objects.get(pk=kwargs["pk"])
         if group.type in self.group_views:
             return self.group_views[group.type].as_view()(request, *args, **kwargs)
+        return redirect("characters:index wod")
 
 
 class CharacterIndexView(View):
