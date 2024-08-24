@@ -66,6 +66,7 @@ class Practice(Model):
 class SpecializedPractice(Practice):
     type = "specialized_practice"
 
+    parent_practice = models.ForeignKey(Practice, blank=True, null=True, on_delete=models.SET_NULL)
     faction = models.ForeignKey(
         "characters.MageFaction", blank=True, null=True, on_delete=models.SET_NULL
     )
@@ -84,6 +85,7 @@ class SpecializedPractice(Practice):
 class CorruptedPractice(Practice):
     type = "corrupted_practice"
 
+    parent_practice = models.ForeignKey(Practice, blank=True, null=True, on_delete=models.SET_NULL)
     extra_benefit = models.TextField(default="")
     price = models.TextField(default="")
 

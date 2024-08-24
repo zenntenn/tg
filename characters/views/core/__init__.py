@@ -1,5 +1,29 @@
 from characters.forms.core.character_creation import CharacterCreationForm
 from characters.models.core import Character, Derangement, Group, Human
+from characters.models.core.ability import Ability
+from characters.models.core.archetype import Archetype
+from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.specialty import Specialty
+from characters.models.core.statistic import Statistic
+from characters.models.mage.effect import Effect
+from characters.models.mage.faction import MageFaction
+from characters.models.mage.focus import (
+    CorruptedPractice,
+    Instrument,
+    Paradigm,
+    Practice,
+    SpecializedPractice,
+    Tenet,
+)
+from characters.models.mage.mage import Mage
+from characters.models.mage.mtahuman import MtAHuman
+from characters.models.mage.resonance import Resonance
+from characters.models.mage.rote import Rote
+from characters.models.mage.sphere import Sphere
+from characters.models.vampire.vtmhuman import VtMHuman
+from characters.models.werewolf.charm import SpiritCharm
+from characters.models.werewolf.spirit_character import SpiritCharacter
+from characters.models.werewolf.totem import Totem
 from characters.views import mage, vampire, werewolf
 from core.utils import get_gameline_name
 from django.forms import BaseModelForm
@@ -65,6 +89,31 @@ class GenericGroupDetailView(View):
 class CharacterIndexView(View):
     chars = {
         "human": Human,
+        "statistic": Statistic,
+        "specialty": Specialty,
+        "merit_flaw": MeritFlaw,
+        "group": Group,
+        "derangement": Derangement,
+        "character": Character,
+        "archetype": Archetype,
+        "ability": Ability,
+        "vtm_human": VtMHuman,
+        "totem": Totem,
+        "spirit": SpiritCharacter,
+        "spirit_charm": SpiritCharm,
+        "sphere": Sphere,
+        "rote": Rote,
+        "resonance": Resonance,
+        "instrument": Instrument,
+        "practice": Practice,
+        "specialized_practice": SpecializedPractice,
+        "corrupted_practice": CorruptedPractice,
+        "tenet": Tenet,
+        "paradigm": Paradigm,
+        "mage_faction": MageFaction,
+        "effect": Effect,
+        "mage": Mage,
+        "mta_human": MtAHuman,
     }
 
     def get(self, request, *args, **kwargs):
