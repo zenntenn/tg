@@ -59,7 +59,7 @@ class Chronicle(models.Model):
         choices=[
             ("vtm_heading", "Vampire: the Masquerade"),
             ("wta_heading", "Werewolf: the Apocalypse"),
-            ("mtas_heading", "Mage: the Ascension"),
+            ("mta_heading", "Mage: the Ascension"),
             ("ctd_heading", "Changeling: the Dreaming"),
             ("wto_heading", "Wraith: the Oblivion"),
             ("wod_heading", "World of Darkness"),

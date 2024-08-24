@@ -50,7 +50,7 @@ class Effect(Model):
         return reverse("characters:mage:create:effect")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def save(self, *args, **kwargs):
         self.rote_cost = self.cost()

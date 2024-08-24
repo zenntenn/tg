@@ -17,4 +17,4 @@ class HorizonRealm(LocationModel):
         return reverse("locations:mage:create:realm")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"

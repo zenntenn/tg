@@ -32,7 +32,7 @@ class Resonance(Model):
         return reverse("characters:mage:create:resonance")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def __str__(self):
         return self.name.title()

@@ -167,7 +167,7 @@ class MtAHuman(Human):
         verbose_name_plural = "Humans (Mage)"
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def get_secondaries_for_display(self):
         secondary_talents = {

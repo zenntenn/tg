@@ -33,4 +33,4 @@ class Sector(LocationModel):
         return reverse("locations:mage:create:sector")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"

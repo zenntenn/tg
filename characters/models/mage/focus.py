@@ -24,7 +24,7 @@ class Instrument(Model):
         return reverse("characters:mage:create:instrument")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
 
 class Practice(Model):
@@ -51,7 +51,7 @@ class Practice(Model):
         return reverse("characters:mage:create:practice")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def add_ability(self, ability):
         self.abilities.add(ability)
@@ -66,7 +66,13 @@ class Practice(Model):
 class SpecializedPractice(Practice):
     type = "specialized_practice"
 
-    parent_practice = models.ForeignKey(Practice, blank=True, null=True, on_delete=models.SET_NULL, related_name="specialization")
+    parent_practice = models.ForeignKey(
+        Practice,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="specialization",
+    )
     faction = models.ForeignKey(
         "characters.MageFaction", blank=True, null=True, on_delete=models.SET_NULL
     )
@@ -85,7 +91,13 @@ class SpecializedPractice(Practice):
 class CorruptedPractice(Practice):
     type = "corrupted_practice"
 
-    parent_practice = models.ForeignKey(Practice, blank=True, null=True, on_delete=models.SET_NULL, related_name="corruption")
+    parent_practice = models.ForeignKey(
+        Practice,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="corruption",
+    )
     extra_benefit = models.TextField(default="")
     price = models.TextField(default="")
 
@@ -139,7 +151,7 @@ class Tenet(Model):
         return reverse("characters:mage:create:tenet")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
 
 class Paradigm(Model):
@@ -162,7 +174,7 @@ class Paradigm(Model):
         return reverse("characters:mage:create:paradigm")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def get_associated_practices(self):
         associated_practices = Practice.objects.none()

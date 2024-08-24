@@ -63,7 +63,7 @@ class Node(LocationModel):
         return reverse("locations:mage:create:node")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def set_rank(self, rank):
         self.rank = rank

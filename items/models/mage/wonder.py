@@ -46,7 +46,7 @@ class Wonder(ItemModel):
         return reverse("items:mage:create:wonder")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def set_rank(self, rank):
         self.rank = rank

@@ -1,3 +1,5 @@
+from typing import Any
+
 from characters.models.mage.focus import (
     CorruptedPractice,
     Instrument,
@@ -6,6 +8,7 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
+from core.utils import display_queryset
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
@@ -31,6 +34,17 @@ class ParadigmDetailView(DetailView):
     model = Paradigm
     template_name = "characters/mage/paradigm/detail.html"
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["tenets"] = display_queryset(self.object.tenets.all())
+        context["associated_practices"] = display_queryset(
+            self.object.get_associated_practices()
+        )
+        context["limited_practices"] = display_queryset(
+            self.object.get_limited_practices()
+        )
+        return context
+
 
 class ParadigmCreateView(CreateView):
     model = Paradigm
@@ -47,6 +61,14 @@ class ParadigmUpdateView(UpdateView):
 class PracticeDetailView(DetailView):
     model = Practice
     template_name = "characters/mage/practice/detail.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["resonance"] = display_queryset(
+            self.object.common_resonance_traits.all()
+        )
+        context["instruments"] = display_queryset(self.object.instruments.all())
+        return context
 
 
 class PracticeCreateView(CreateView):
@@ -77,7 +99,7 @@ class PracticeUpdateView(UpdateView):
     template_name = "characters/mage/practice/form.html"
 
 
-class CorruptedPracticeDetailView(DetailView):
+class CorruptedPracticeDetailView(PracticeDetailView):
     model = CorruptedPractice
     template_name = "characters/mage/corrupted_practice/detail.html"
 
@@ -114,7 +136,7 @@ class CorruptedPracticeUpdateView(UpdateView):
     template_name = "characters/mage/corrupted_practice/form.html"
 
 
-class SpecializedPracticeDetailView(DetailView):
+class SpecializedPracticeDetailView(PracticeDetailView):
     model = SpecializedPractice
     template_name = "characters/mage/specialized_practice/detail.html"
 
@@ -152,6 +174,16 @@ class SpecializedPracticeUpdateView(UpdateView):
 class TenetDetailView(DetailView):
     model = Tenet
     template_name = "characters/mage/tenet/detail.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["associated_practices"] = display_queryset(
+            self.object.associated_practices.all()
+        )
+        context["limited_practices"] = display_queryset(
+            self.object.limited_practices.all()
+        )
+        return context
 
 
 class TenetCreateView(CreateView):

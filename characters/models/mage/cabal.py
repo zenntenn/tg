@@ -13,7 +13,7 @@ class Cabal(Group):
         verbose_name_plural = "Cabals"
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def random(
         self,

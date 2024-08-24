@@ -127,3 +127,7 @@ def profile(cls, player, character=True, num_rows=10, xp=0):
     )
     p = pstats.Stats("tmp")
     p.sort_stats(SortKey.CUMULATIVE).print_stats(num_rows)
+
+
+def display_queryset(prop):
+    return "<br>".join([f'<a href="{x.get_absolute_url()}">{x}</a>' for x in prop])

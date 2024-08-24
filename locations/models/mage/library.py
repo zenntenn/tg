@@ -27,7 +27,7 @@ class Library(LocationModel):
         return reverse("locations:mage:create:library")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def add_book(self, grimoire):
         self.books.add(grimoire)

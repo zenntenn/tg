@@ -38,7 +38,7 @@ class MageFaction(Model):
         return reverse("characters:mage:create:mage_faction")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def get_all_paradigms(self):
         factions = [self]

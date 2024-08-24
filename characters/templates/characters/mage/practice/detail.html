@@ -11,11 +11,11 @@
     </div>
     <div class="row">
         <div class="col-sm">Instruments</div>
-        <div class="col-sm">{{ object.instruments.all }}</div>
+        <div class="col-sm">{{ instruments|safe }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Common Resonance Traits</div>
-        <div class="col-sm">{{ object.common_resonance_traits.all }}</div>
+        <div class="col-sm">{{ resonance|safe }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Description</div>

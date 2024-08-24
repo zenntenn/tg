@@ -33,7 +33,7 @@ class Rote(Model):
         return reverse("characters:mage:create:rote")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def random(self, mage=None):
         self.update_status("Ran")

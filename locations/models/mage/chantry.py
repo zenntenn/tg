@@ -151,7 +151,7 @@ class Chantry(LocationModel):
         return reverse("locations:mage:create:chantry")
 
     def get_heading(self):
-        return "mtas_heading"
+        return "mta_heading"
 
     def random_name(self, name=None):
         if name is not None:

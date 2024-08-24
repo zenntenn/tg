@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}
+    {{ object.name|safe }}
+{% endblock title %}
+{% block content %}
+    {% csrf_token %}
+    <div class="centertext container">
+        {% block contents %}
+        <div class="row">
+            <h1 class="col-sm {{ object.gameline }}_heading"><a href={{ object.url }}>{{ object.name }}</a></h1>
+        </div>
+        <div class="row">
+            <div class="col-sm">{{ object.get_gameline_display }} {{ object.get_edition_display }}
+                {% if object.storytellers_vault %} Storyteller's Vault {% endif %}
+            </div>
+        </div>
+        {% endblock contents %}
+        {% block update %}
+        {% endblock update %}
+    </div>
+{% endblock content %}
