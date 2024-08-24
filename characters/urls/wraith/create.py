@@ -6,6 +6,6 @@ urls = [
     path(
         "wtohuman/",
         views.wraith.WtOHumanCreateView.as_view(),
-        name="wtohuman",
+        name="wto_human",
     ),
 ]

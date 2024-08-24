@@ -132,10 +132,16 @@ class CharacterIndexView(View):
         if action == "create":
             if gameline == "wod":
                 redi = f"characters:create:{char_type}"
+            elif gameline == "vtm":
+                redi = f"characters:vampire:create:{char_type}"
             elif gameline == "wta":
                 redi = f"characters:werewolf:create:{char_type}"
             elif gameline == "mta":
                 redi = f"characters:mage:create:{char_type}"
+            elif gameline == "wto":
+                redi = f"characters:wraith:create:{char_type}"
+            elif gameline == "ctd":
+                redi = f"characters:changeling:create:{char_type}"
             return redirect(redi)
         elif action == "random":
             if request.user.is_authenticated:
