@@ -24,7 +24,7 @@ from characters.models.vampire.vtmhuman import VtMHuman
 from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
-from characters.views import mage, vampire, werewolf
+from characters.views import mage, vampire, werewolf, wraith
 from core.utils import get_gameline_name
 from django.forms import BaseModelForm
 from django.http import Http404, HttpResponse
@@ -61,6 +61,7 @@ class GenericCharacterDetailView(View):
         "mta_human": mage.MtAHumanDetailView,
         "mage": mage.MageDetailView,
         "vtm_human": vampire.VtMHumanDetailView,
+        "wto_human": wraith.WtOHumanDetailView,
     }
 
     def get(self, request, *args, **kwargs):

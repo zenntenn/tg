@@ -23,9 +23,11 @@ from characters.models.mage.focus import (
 from characters.models.mage.mage import Mage, ResRating
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.rote import Rote
+from characters.models.vampire.vtmhuman import VtMHuman
 from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
+from characters.models.wraith.wtohuman import WtOHuman
 from django.contrib import admin
 
 # Register your models here.
@@ -180,3 +182,7 @@ admin.site.register(ResRating)
 @admin.register(Cabal)
 class CabalAdmin(admin.ModelAdmin):
     list_display = ("name", "leader")
+
+
+admin.site.register(VtMHuman)
+admin.site.register(WtOHuman)
