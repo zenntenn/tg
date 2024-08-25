@@ -1,0 +1,280 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">
+        Backgrounds
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Allies
+    </div>
+    <div class="col-sm dots">
+        {{ form.allies }}
+    </div>
+    <div class="col-sm">
+        Alternate Identity
+    </div>
+    <div class="col-sm dots">
+        {{ form.alternate_identity }}
+    </div>
+    {% if form.affiliation.name == "Technocratic Union" %}
+        <div class="col-sm">
+            Cloaking
+        </div>
+    {% else %}
+        <div class="col-sm">
+            Arcane
+        </div>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.arcane }}
+    </div>
+</div>
+<div class="row">
+    {% if form.affiliation.name == "Technocratic Union" %}
+        <div class="col-sm">
+            Genius
+        </div>
+    {% else %}
+        <div class="col-sm">
+            Avatar
+        </div>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.avatar }}
+    </div>
+    <div class="col-sm">
+        Backup
+    </div>
+    <div class="col-sm dots">
+        {{ form.backup }}
+    </div>
+    <div class="col-sm">
+        Blessing
+    </div>
+    <div class="col-sm dots">
+        {{ form.blessing }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Certification
+    </div>
+    <div class="col-sm dots">
+        {{ form.certification }}
+    </div>
+    {% if form.affiliation.name == "Technocratic Union" %}
+        <div class="col-sm">
+            Construct
+        </div>
+    {% else %}
+        <div class="col-sm">
+            Chantry
+        </div>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.chantry }}
+    </div>
+    <div class="col-sm">
+        Contacts
+    </div>
+    <div class="col-sm dots">
+        {{ form.contacts }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Cult
+    </div>
+    <div class="col-sm dots">
+        {{ form.cult }}
+    </div>
+    <div class="col-sm">
+        Demesne
+    </div>
+    <div class="col-sm dots">
+        {{ form.demesne }}
+    </div>
+    <div class="col-sm">
+        Destiny
+    </div>
+    <div class="col-sm dots">
+        {{ form.destiny }}
+    </div>
+</div>
+<div class="row">
+    {% if form.affiliation.name == "Technocratic Union" %}
+        <div class="col-sm">
+            Hypercram
+        </div>
+    {% else %}
+        <div class="col-sm">
+            Dream
+        </div>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.dream }}
+    </div>
+    <div class="col-sm">
+        Enhancement
+    </div>
+    <div class="col-sm dots">
+        {{ form.enhancement }}
+    </div>
+    <div class="col-sm">
+        Fame
+    </div>
+    <div class="col-sm dots">
+        {{ form.fame }}
+    </div>
+</div>
+<div class="row">
+    {% if form.affiliation.name == "Technocratic Union" %}
+        <div class="col-sm">
+            Companion
+        </div>
+    {% else %}
+        <div class="col-sm">
+            Familiar
+        </div>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.familiar }}
+    </div>
+    <div class="col-sm">
+        Influence
+    </div>
+    <div class="col-sm dots">
+        {{ form.influence }}
+    </div>
+    <div class="col-sm">
+        Legend
+    </div>
+    <div class="col-sm dots">
+        {{ form.legend }}
+    </div>
+</div>
+<div class="row">
+    {% if form.library_owned is None %}
+        <div class="col-sm">
+            Library
+        </div>
+    {% else %}
+        <a class="col-sm" href={{ form.library_owned.get_absolute_url }}>Library</a>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.library }}
+    </div>
+    <div class="col-sm">
+        Mentor
+    </div>
+    <div class="col-sm dots">
+        {{ form.mentor }}
+    </div>
+    {% if form.node_owned is None %}
+        <div class="col-sm">
+            Node
+        </div>
+    {% else %}
+        <a class="col-sm" href={{ form.node_owned.get_absolute_url }}>Node</a>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.node }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Past Lives
+    </div>
+    <div class="col-sm dots">
+        {{ form.past_lives }}
+    </div>
+    <div class="col-sm">
+        Patron
+    </div>
+    <div class="col-sm dots">
+        {{ form.patron }}
+    </div>
+    <div class="col-sm">
+        Rank
+    </div>
+    <div class="col-sm dots">
+        {{ form.rank }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Resources
+    </div>
+    <div class="col-sm dots">
+        {{ form.resources }}
+    </div>
+    <div class="col-sm">
+        Retainers
+    </div>
+    <div class="col-sm dots">
+        {{ form.retainers }}
+    </div>
+    {% if form.affiliation.name == "Technocratic Union" %}
+        <div class="col-sm">
+            Laboratory
+        </div>
+    {% else %}
+        <div class="col-sm">
+            Sanctum
+        </div>
+    {% endif %}
+    <div class="col-sm dots">
+        {{ form.sanctum }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Spies
+    </div>
+    <div class="col-sm dots">
+        {{ form.spies }}
+    </div>
+    <div class="col-sm">
+        Status
+    </div>
+    <div class="col-sm dots">
+        {{ form.status_background }}
+    </div>
+    <div class="col-sm">
+        Totem
+    </div>
+    <div class="col-sm dots">
+        {{ form.totem }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Wonder
+    </div>
+    <div class="col-sm dots">
+        {{ form.wonder }}
+    </div>
+    {% if form.affiliation.name == 'Technocratic Union' %}
+        <div class="col-sm">
+            Requisitions
+        </div>
+        <div class="col-sm dots">
+            {{ form.requisitions }}
+        </div>
+        <div class="col-sm">
+            Secret Weapons
+        </div>
+        <div class="col-sm dots">
+            {{ form.secret_weapons }}
+        </div>
+    {% else %}
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+        </div>
+    {% endif %}
+</div>

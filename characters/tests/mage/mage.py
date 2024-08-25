@@ -1536,7 +1536,9 @@ class TestRandomMage(TestCase):
 class TestMageDetailView(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="User1", password="12345")
-        self.mage = Mage.objects.create(name="Test Mage", owner=self.player)
+        self.mage = Mage.objects.create(
+            name="Test Mage", owner=self.player, status="App"
+        )
         self.url = self.mage.get_absolute_url()
 
     def test_mage_detail_view_status_code(self):
@@ -1736,7 +1738,9 @@ class TestMageCreateView(TestCase):
 
 class TestMageHumanUpdateView(TestCase):
     def setUp(self):
-        self.mage = Mage.objects.create(name="Test Mage", description="Test")
+        self.mage = Mage.objects.create(
+            name="Test Mage", description="Test", status="App"
+        )
         self.valid_data = {
             "name": "Test Mage 2",
             "description": 0,
@@ -1904,7 +1908,7 @@ class TestMageHumanUpdateView(TestCase):
             "quiet": 0,
             "quiet_type": "none",
         }
-        self.url = self.mage.get_update_url()
+        self.url = self.mage.get_full_update_url()
 
     def test_update_view_status_code(self):
         response = self.client.get(self.url)

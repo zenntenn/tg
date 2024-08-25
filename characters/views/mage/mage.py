@@ -1,5 +1,6 @@
 from typing import Any
 
+from characters.models.core.archetype import Archetype
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.mage import Mage, ResRating
@@ -7,7 +8,9 @@ from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.views.core.human import HumanAttributeView, HumanDetailView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
+from django import forms
 from django.forms import BaseModelForm, formset_factory
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 
@@ -446,33 +449,292 @@ class MageBasicsView(CreateView):
     ]
     template_name = "characters/mage/mage/magebasics.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["nature"].queryset = Archetype.objects.all().order_by("name")
+        form.fields["demeanor"].queryset = Archetype.objects.all().order_by("name")
+        form.fields["affiliation"].queryset = MageFaction.objects.filter(parent=None)
+        form.fields["faction"].queryset = MageFaction.objects.none()
+        form.fields["subfaction"].queryset = MageFaction.objects.none()
+        return form
+
+    def form_invalid(self, form):
+        errors = form.errors
+        if "faction" in errors:
+            del errors["faction"]
+        if "subfaction" in errors:
+            del errors["subfaction"]
+
+        if not errors:
+            return self.form_valid(form)
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.faction = MageFaction.objects.get(pk=form.data["faction"])
+        form.instance.subfaction = MageFaction.objects.get(pk=form.data["subfaction"])
+        return super().form_valid(form)
+
 
 class MageAttributeView(HumanAttributeView):
     model = Mage
-    template_name = "characters/mage/mage/attributes.html"
+    template_name = "characters/mage/mage/chargen.html"
 
 
 class MageAbilityView(MtAHumanAbilityView):
     model = Mage
-    template_name = "characters/mage/mage/abilities.html"
+    template_name = "characters/mage/mage/chargen.html"
 
 
 class MageBackgroundsView(UpdateView):
     model = Mage
-    fields = []
-    template_name = "characters/mage/mage/backgrounds.html"
+    fields = [
+        "allies",
+        "alternate_identity",
+        "arcane",
+        "avatar",
+        "backup",
+        "blessing",
+        "certification",
+        "chantry",
+        "contacts",
+        "cult",
+        "demesne",
+        "destiny",
+        "dream",
+        "enhancement",
+        "fame",
+        "familiar",
+        "influence",
+        "legend",
+        "library",
+        "node",
+        "past_lives",
+        "patron",
+        "rank",
+        "requisitions",
+        "resources",
+        "retainers",
+        "sanctum",
+        "secret_weapons",
+        "spies",
+        "status_background",
+        "totem",
+        "mentor",
+        "wonder",
+    ]
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["requisitions"].required = False
+        form.fields["secret_weapons"].required = False
+        return form
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        print(form.errors)
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        allies = form.cleaned_data.get("allies")
+        alternate_identity = form.cleaned_data.get("alternate_identity")
+        arcane = form.cleaned_data.get("arcane")
+        avatar = form.cleaned_data.get("avatar")
+        backup = form.cleaned_data.get("backup")
+        blessing = form.cleaned_data.get("blessing")
+        certification = form.cleaned_data.get("certification")
+        chantry = form.cleaned_data.get("chantry")
+        cult = form.cleaned_data.get("cult")
+        contacts = form.cleaned_data.get("contacts")
+        demesne = form.cleaned_data.get("demesne")
+        destiny = form.cleaned_data.get("destiny")
+        dream = form.cleaned_data.get("dream")
+        enhancement = form.cleaned_data.get("enhancement")
+        fame = form.cleaned_data.get("fame")
+        familiar = form.cleaned_data.get("familiar")
+        influence = form.cleaned_data.get("influence")
+        legend = form.cleaned_data.get("legend")
+        library = form.cleaned_data.get("library")
+        node = form.cleaned_data.get("node")
+        past_lives = form.cleaned_data.get("past_lives")
+        patron = form.cleaned_data.get("patron")
+        rank = form.cleaned_data.get("rank")
+        requisitions = form.cleaned_data.get("requisitions")
+        resources = form.cleaned_data.get("resources")
+        retainers = form.cleaned_data.get("retainers")
+        sanctum = form.cleaned_data.get("sanctum")
+        secret_weapons = form.cleaned_data.get("secret_weapons")
+        spies = form.cleaned_data.get("spies")
+        status_background = form.cleaned_data.get("status_background")
+        totem = form.cleaned_data.get("totem")
+        wonder = form.cleaned_data.get("wonder")
+        mentor = form.cleaned_data.get("mentor")
+
+        if secret_weapons is None:
+            secret_weapons = 0
+        if requisitions is None:
+            requisitions = 0
+
+        for background in [
+            allies,
+            alternate_identity,
+            contacts,
+            arcane,
+            avatar,
+            backup,
+            blessing,
+            certification,
+            chantry,
+            cult,
+            demesne,
+            destiny,
+            dream,
+            enhancement,
+            fame,
+            familiar,
+            influence,
+            legend,
+            library,
+            node,
+            past_lives,
+            patron,
+            rank,
+            requisitions,
+            mentor,
+            resources,
+            retainers,
+            sanctum,
+            secret_weapons,
+            spies,
+            status_background,
+            totem,
+            wonder,
+        ]:
+            if background < 0 or background > 5:
+                form.add_error(None, "Backgrounds must range from 0-5")
+                return self.form_invalid(form)
+
+        bg_points = (
+            sum(
+                [
+                    allies,
+                    alternate_identity,
+                    arcane,
+                    avatar,
+                    backup,
+                    blessing,
+                    certification,
+                    chantry,
+                    cult,
+                    demesne,
+                    destiny,
+                    dream,
+                    enhancement,
+                    fame,
+                    familiar,
+                    contacts,
+                    influence,
+                    legend,
+                    library,
+                    mentor,
+                    node,
+                    past_lives,
+                    patron,
+                    rank,
+                    requisitions,
+                    resources,
+                    retainers,
+                    sanctum,
+                    secret_weapons,
+                    spies,
+                    status_background,
+                    totem,
+                    wonder,
+                ]
+            )
+            + enhancement
+            + sanctum
+            + totem
+        )
+        if bg_points != self.object.background_points:
+            form.add_error(
+                None, f"Backgrounds must total {self.object.background_points} points"
+            )
+            return self.form_invalid(form)
+        self.object.creation_status += 1
+        self.object.save()
+        return super().form_valid(form)
 
 
 class MageFocusView(UpdateView):
     model = Mage
-    fields = []
-    template_name = "characters/mage/mage/focus.html"
+    fields = ["paradigms", "practices", "instruments"]
+    template_name = "characters/mage/mage/chargen.html"
 
 
 class MageSpheresView(UpdateView):
     model = Mage
-    fields = []
-    template_name = "characters/mage/mage/spheres.html"
+    fields = [
+        "arete",
+        "correspondence",
+        "time",
+        "spirit",
+        "forces",
+        "matter",
+        "life",
+        "entropy",
+        "mind",
+        "prime",
+        "affinity_sphere",
+        "corr_name",
+        "prime_name",
+        "spirit_name",
+    ]
+    template_name = "characters/mage/mage/chargen.html"
+
+    def form_valid(self, form):
+        arete = form.cleaned_data.get("arete")
+        correspondence = form.cleaned_data.get("correspondence")
+        time = form.cleaned_data.get("time")
+        spirit = form.cleaned_data.get("spirit")
+        forces = form.cleaned_data.get("forces")
+        matter = form.cleaned_data.get("matter")
+        life = form.cleaned_data.get("life")
+        entropy = form.cleaned_data.get("entropy")
+        mind = form.cleaned_data.get("mind")
+        prime = form.cleaned_data.get("prime")
+        affinity_sphere = form.cleaned_data.get("affinity_sphere")
+        corr_name = form.cleaned_data.get("corr_name")
+        prime_name = form.cleaned_data.get("prime_name")
+        spirit_name = form.cleaned_data.get("spirit_name")
+
+        if arete > 3:
+            form.add_error(None, "Arete may not exceed 3 at character creation")
+            return self.form_invalid(form)
+
+        for sphere in [
+            correspondence,
+            time,
+            spirit,
+            forces,
+            matter,
+            life,
+            entropy,
+            mind,
+            prime,
+        ]:
+            if sphere < 0 or sphere > arete:
+                form.add_error(None, "Spheres must range from 0-Arete Rating")
+                return self.form_invalid(form)
+
+        tot_spheres = sum(
+            [correspondence, time, spirit, forces, matter, life, entropy, mind, prime]
+        )
+        if tot_spheres != 6:
+            form.add_error(None, "Spheres must total 6")
+            return self.form_invalid(form)
+        self.object.creation_status += 1
+        self.object.save()
+        return super().form_valid(form)
 
 
 class MageCharacterCreationView(View):
@@ -480,8 +742,10 @@ class MageCharacterCreationView(View):
         1: MageAttributeView,
         2: MageAbilityView,
         3: MageBackgroundsView,
-        4: MageFocusView,
-        5: MageSpheresView,
+        5: MageFocusView,
+        4: MageSpheresView,
+        # biographical info
+        # freebies
     }
 
     def get(self, request, *args, **kwargs):
@@ -490,7 +754,7 @@ class MageCharacterCreationView(View):
             return self.creation_status[char.creation_status].as_view()(
                 request, *args, **kwargs
             )
-        return HumanDetailView.as_view()(request, *args, **kwargs)
+        return MageDetailView.as_view()(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         char = Mage.objects.get(pk=kwargs["pk"])
@@ -498,4 +762,4 @@ class MageCharacterCreationView(View):
             return self.creation_status[char.creation_status].as_view()(
                 request, *args, **kwargs
             )
-        return HumanDetailView.as_view()(request, *args, **kwargs)
+        return MageDetailView.as_view()(request, *args, **kwargs)

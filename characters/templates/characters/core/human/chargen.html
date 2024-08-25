@@ -9,9 +9,13 @@
         </div>
     {% endblock name %}
     {% block basics %}
-        {% include "characters/mage/mage/mage_basics_block_display.html" %}
+        {% include "characters/core/human/basics_block_display.html" %}
     {% endblock basics %}
     {% block attributes %}
-        {% include "characters/core/human/attribute_block_form.html" %}
+        {% if object.status == 1 %}
+            {% include "characters/core/human/attribute_block_form.html" %}
+        {% elif object.status > 1 %}
+            {% include "characters/core/human/attribute_block_display.html" %}
+        {% endif %}
     {% endblock attributes %}
 {% endblock contents %}

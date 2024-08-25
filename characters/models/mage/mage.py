@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
@@ -61,6 +61,7 @@ class Mage(MtAHuman):
     matter = models.IntegerField(default=0)
     life = models.IntegerField(default=0)
 
+    tenets = models.ManyToManyField(Tenet, blank=True)
     paradigms = models.ManyToManyField(Paradigm, blank=True)
     practices = models.ManyToManyField(Practice, blank=True)
     instruments = models.ManyToManyField(Instrument, blank=True)
@@ -152,6 +153,9 @@ class Mage(MtAHuman):
 
     def get_update_url(self):
         return reverse("characters:mage:update:mage", kwargs={"pk": self.pk})
+
+    def get_full_update_url(self):
+        return reverse("characters:mage:update:mage_full", kwargs={"pk": self.pk})
 
     @classmethod
     def get_creation_url(cls):

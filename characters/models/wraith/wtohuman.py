@@ -33,11 +33,11 @@ class WtOHuman(Human):
         verbose_name_plural = "Humans (Wraith)"
 
     def get_update_url(self):
-        return reverse("characters:wraith:update:wtohuman", kwargs={"pk": self.pk})
+        return reverse("characters:wraith:update:wto_human", kwargs={"pk": self.pk})
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("characters:wraith:create:wtohuman")
+        return reverse("characters:wraith:create:wto_human")
 
     def get_heading(self):
         return "wto_heading"
