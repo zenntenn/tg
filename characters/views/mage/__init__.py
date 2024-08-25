@@ -24,6 +24,7 @@ from .focus import (
 )
 from .mage import (
     MageBasicsView,
+    MageCharacterCreationView,
     MageCreateView,
     MageDetailView,
     MageUpdateView,
@@ -31,6 +32,11 @@ from .mage import (
     load_mf_ratings,
     load_subfactions,
 )
-from .mtahuman import MtAHumanCreateView, MtAHumanDetailView, MtAHumanUpdateView
+from .mtahuman import (
+    MtAHumanAbilityView,
+    MtAHumanCreateView,
+    MtAHumanDetailView,
+    MtAHumanUpdateView,
+)
 from .resonance import ResonanceCreateView, ResonanceDetailView, ResonanceUpdateView
 from .rote import RoteCreateView, RoteDetailView, RoteUpdateView

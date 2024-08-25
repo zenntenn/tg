@@ -5,7 +5,8 @@ from characters.models.mage.faction import MageFaction
 from characters.models.mage.mage import Mage, ResRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
-from characters.views.core.human import HumanDetailView
+from characters.views.core.human import HumanAttributeView, HumanDetailView
+from characters.views.mage.mtahuman import MtAHumanAbilityView
 from django.forms import BaseModelForm, formset_factory
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
@@ -444,3 +445,57 @@ class MageBasicsView(CreateView):
         "essence",
     ]
     template_name = "characters/mage/mage/magebasics.html"
+
+
+class MageAttributeView(HumanAttributeView):
+    model = Mage
+    template_name = "characters/mage/mage/attributes.html"
+
+
+class MageAbilityView(MtAHumanAbilityView):
+    model = Mage
+    template_name = "characters/mage/mage/abilities.html"
+
+
+class MageBackgroundsView(UpdateView):
+    model = Mage
+    fields = []
+    template_name = "characters/mage/mage/backgrounds.html"
+
+
+class MageFocusView(UpdateView):
+    model = Mage
+    fields = []
+    template_name = "characters/mage/mage/focus.html"
+
+
+class MageSpheresView(UpdateView):
+    model = Mage
+    fields = []
+    template_name = "characters/mage/mage/spheres.html"
+
+
+class MageCharacterCreationView(View):
+    creation_status = {
+        1: MageAttributeView,
+        2: MageAbilityView,
+        3: MageBackgroundsView,
+        4: MageFocusView,
+        5: MageSpheresView,
+    }
+
+    def get(self, request, *args, **kwargs):
+        char = Mage.objects.get(pk=kwargs["pk"])
+        if char.creation_status in self.creation_status and char.status == "Un":
+            return self.creation_status[char.creation_status].as_view()(
+                request, *args, **kwargs
+            )
+        return HumanDetailView.as_view()(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        char = Mage.objects.get(pk=kwargs["pk"])
+        if char.creation_status in self.creation_status and char.status == "Un":
+            return self.creation_status[char.creation_status].as_view()(
+                request, *args, **kwargs
+            )
+        return HumanDetailView.as_view()(request, *args, **kwargs)

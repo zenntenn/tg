@@ -60,8 +60,13 @@ urls = [
         name="mtahuman",
     ),
     path(
-        "mage/<pk>/",
+        "mage/full/<pk>/",
         views.mage.MageUpdateView.as_view(),
+        name="mage_full",
+    ),
+    path(
+        "mage/<pk>/",
+        views.mage.MageCharacterCreationView.as_view(),
         name="mage",
     ),
     path(

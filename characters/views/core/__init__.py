@@ -59,7 +59,7 @@ class GenericCharacterDetailView(View):
         "human": HumanCharacterCreationView,
         "spirit_character": werewolf.SpiritDetailView,
         "mta_human": mage.MtAHumanDetailView,
-        "mage": mage.MageDetailView,
+        "mage": mage.MageCharacterCreationView,
         "vtm_human": vampire.VtMHumanDetailView,
         "wto_human": wraith.WtOHumanDetailView,
     }

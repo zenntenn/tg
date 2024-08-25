@@ -126,6 +126,21 @@ class HumanAttributeView(UpdateView):
         manipulation = form.cleaned_data.get("manipulation")
         appearance = form.cleaned_data.get("appearance")
 
+        for attribute in [
+            strength,
+            dexterity,
+            stamina,
+            perception,
+            intelligence,
+            wits,
+            charisma,
+            manipulation,
+            appearance,
+        ]:
+            if attribute < 1 or attribute > 5:
+                form.add_error(None, "Attributes must range from 1-5")
+                return self.form_invalid(form)
+
         triple = [
             strength + dexterity + stamina,
             perception + intelligence + wits,
