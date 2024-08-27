@@ -690,6 +690,11 @@ class MageSpheresView(UpdateView):
         "spirit_name",
     ]
     template_name = "characters/mage/mage/chargen.html"
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["affinity_sphere"].queryset = self.object.get_affinity_sphere_options()
+        return form
 
     def form_valid(self, form):
         arete = form.cleaned_data.get("arete")

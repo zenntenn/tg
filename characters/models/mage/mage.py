@@ -7,6 +7,7 @@ from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
+from characters.models.mage.sphere import Sphere
 from core.utils import add_dot, weighted_choice
 from django.db import models
 from django.db.models import Q
@@ -68,22 +69,26 @@ class Mage(MtAHuman):
 
     arete = models.IntegerField(default=0)
 
-    affinity_sphere = models.CharField(
-        max_length=100,
-        blank=True,
+    affinity_sphere = models.ForeignKey(Sphere, on_delete=models.SET_NULL,
         null=True,
-        choices=[
-            ("correspondence", "Correspondence"),
-            ("time", "Time"),
-            ("spirit", "Spirit"),
-            ("mind", "Mind"),
-            ("entropy", "Entropy"),
-            ("prime", "Prime"),
-            ("forces", "Forces"),
-            ("matter", "Matter"),
-            ("life", "Life"),
-        ],
-    )
+        blank=True,)
+
+    # affinity_sphere = models.CharField(
+    #     max_length=100,
+    #     blank=True,
+    #     null=True,
+    #     choices=[
+    #         ("correspondence", "Correspondence"),
+    #         ("time", "Time"),
+    #         ("spirit", "Spirit"),
+    #         ("mind", "Mind"),
+    #         ("entropy", "Entropy"),
+    #         ("prime", "Prime"),
+    #         ("forces", "Forces"),
+    #         ("matter", "Matter"),
+    #         ("life", "Life"),
+    #     ],
+    # )
 
     CORR_NAMES = [("correspondence", "Correspondence"), ("data", "Data")]
     PRIME_NAMES = [("prime", "Prime"), ("primal_utility", "Primal Utility")]
@@ -375,16 +380,29 @@ class Mage(MtAHuman):
 
     def has_spheres(self):
         if self.affinity_sphere is not None:
-            aff_flag = getattr(self, self.affinity_sphere) > 0
+            aff_flag = getattr(self, self.affinity_sphere.property_name) > 0
         else:
             aff_flag = False
         total = self.total_spheres() == 6
         return aff_flag and total
 
     def set_affinity_sphere(self, affinity):
-        self.affinity_sphere = affinity
+        self.affinity_sphere = Sphere.objects.get(property_name=affinity)
         self.add_sphere(affinity)
         return True
+    
+    def get_affinity_sphere_options(self):
+        q = Sphere.objects.none()
+        if self.affiliation is not None:
+            q |= self.affiliation.affinities.all()
+        if self.faction is not None:
+            q |= self.faction.affinities.all()
+        if self.subfaction is not None:
+            q |= self.subfaction.affinities.all()
+        q = q.distinct()
+        if q.count() == 0:
+            return Sphere.objects.all()
+        return q
 
     def has_affinity_sphere(self):
         return self.affinity_sphere is not None

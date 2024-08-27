@@ -328,6 +328,18 @@ class TestChantry(TestCase):
         node = ObjectType.objects.get_or_create(
             name="node", type="loc", gameline="mta"
         )[0]
+        
+        Sphere.objects.get_or_create(
+            name="Correspondence", property_name="correspondence"
+        )[0]
+        Sphere.objects.get_or_create(name="Spirit", property_name="spirit")[0]
+        Sphere.objects.get_or_create(name="Time", property_name="time")[0]
+        Sphere.objects.get_or_create(name="Forces", property_name="forces")[0]
+        Sphere.objects.get_or_create(name="Matter", property_name="matter")[0]
+        Sphere.objects.get_or_create(name="Life", property_name="life")[0]
+        Sphere.objects.get_or_create(name="Entropy", property_name="entropy")[0]
+        Sphere.objects.get_or_create(name="Prime", property_name="prime")[0]
+        Sphere.objects.get_or_create(name="Mind", property_name="mind")[0]
 
         self.character = Mage.objects.create(name="", owner=self.player)
         for i in range(10):
@@ -662,15 +674,15 @@ class TestChantry(TestCase):
                 if sphere_1 != sphere_2:
                     for i in range(6):
                         for j in range(6):
-                            d = {str(sphere_1): i, str(sphere_2): j}
+                            d = {sphere_1.property_name: i, sphere_2.property_name: j}
                             Effect.objects.create(
-                                name=f"{str(sphere_1)}/{str(sphere_2)} Test Effect {5*i+j}",
+                                name=f"{sphere_1.name}/{sphere_2.name} Test Effect {5*i+j}",
                                 **d,
                             )
             for i in range(5):
                 Resonance.objects.get_or_create(
-                    name=f"{str(sphere_1).title()} Resonance {i}",
-                    **{str(sphere_1): True},
+                    name=f"{sphere_1.name} Resonance {i}",
+                    **{sphere_1.property_name: True},
                 )
 
     def test_trait_cost(self):
@@ -1481,15 +1493,15 @@ class TestRandomChantry(TestCase):
                 if sphere_1 != sphere_2:
                     for i in range(6):
                         for j in range(6):
-                            d = {str(sphere_1): i, str(sphere_2): j}
+                            d = {sphere_1.property_name: i, sphere_2.property_name: j}
                             Effect.objects.create(
-                                name=f"{str(sphere_1)}/{str(sphere_2)} Test Effect {5*i+j}",
+                                name=f"{sphere_1.name}/{sphere_2.name} Test Effect {5*i+j}",
                                 **d,
                             )
             for i in range(5):
                 Resonance.objects.get_or_create(
-                    name=f"{str(sphere_1).title()} Resonance {i}",
-                    **{str(sphere_1): True},
+                    name=f"{sphere_1.name} Resonance {i}",
+                    **{sphere_1.property_name: True},
                 )
 
     def test_random_points(self):

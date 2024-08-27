@@ -340,13 +340,13 @@ class Grimoire(Wonder):
         if effects is None:
             effects = []
 
-            kwargs = {f"{sphere}__gt": 0 for sphere in self.spheres.all()}
+            kwargs = {f"{sphere.property_name}__gt": 0 for sphere in self.spheres.all()}
             q_objects = Q()
             for key, value in kwargs.items():
                 q_objects |= Q(**{key: value})
             effects = Effect.objects.filter(q_objects)
 
-            kwargs = {f"{sphere}__lte": self.rank for sphere in Sphere.objects.all()}
+            kwargs = {f"{sphere.property_name}__lte": self.rank for sphere in Sphere.objects.all()}
             for key, value in kwargs.items():
                 effects = effects.filter(Q(**{key: value}))
             num_effects = self.rank
@@ -414,7 +414,7 @@ class Grimoire(Wonder):
                 noun = Noun.objects.order_by("?").first().name.title()
                 noun2 = Noun.objects.order_by("?").first().name.title()
                 resonance = (
-                    Resonance.objects.filter(Q(**{str(sphere): True}))
+                    Resonance.objects.filter(Q(**{sphere.property_name: True}))
                     .order_by("?")
                     .first()
                     .name.title()

@@ -297,15 +297,15 @@ class TestRandomLibrary(TestCase):
                 if sphere_1 != sphere_2:
                     for i in range(6):
                         for j in range(6):
-                            d = {str(sphere_1): i, str(sphere_2): j}
+                            d = {sphere_1.property_name: i, sphere_2.property_name: j}
                             Effect.objects.create(
-                                name=f"{str(sphere_1)}/{str(sphere_2)} Test Effect {5*i+j}",
+                                name=f"{sphere_1.name}/{sphere_2.name} Test Effect {5*i+j}",
                                 **d,
                             )
             for i in range(5):
                 Resonance.objects.get_or_create(
-                    name=f"{str(sphere_1).title()} Resonance {i}",
-                    **{str(sphere_1): True},
+                    name=f"{sphere_1.name} Resonance {i}",
+                    **{sphere_1.property_name: True},
                 )
 
     def test_increase_rank(self):

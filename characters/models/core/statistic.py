@@ -8,4 +8,4 @@ class Statistic(models.Model):
     property_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.property_name
+        return self.name
