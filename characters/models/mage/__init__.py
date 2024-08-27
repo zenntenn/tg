@@ -9,6 +9,7 @@ from .focus import (
     SpecializedPractice,
     Tenet,
 )
+from .mage import Mage
 from .mtahuman import MtAHuman
 from .resonance import Resonance
 from .sphere import Sphere

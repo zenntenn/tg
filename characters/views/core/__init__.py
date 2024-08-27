@@ -26,6 +26,7 @@ from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
 from characters.views import mage, vampire, werewolf, wraith
 from core.utils import get_gameline_name
+from core.views.generic import DictView
 from django.forms import BaseModelForm
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
@@ -53,8 +54,8 @@ from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdate
 
 
 # Create your views here.
-class GenericCharacterDetailView(View):
-    character_views = {
+class GenericCharacterDetailView(DictView):
+    view_mapping = {
         "character": CharacterDetailView,
         "human": HumanCharacterCreationView,
         "spirit_character": werewolf.SpiritDetailView,
@@ -63,18 +64,9 @@ class GenericCharacterDetailView(View):
         "vtm_human": vampire.VtMHumanDetailView,
         "wto_human": wraith.WtOHumanDetailView,
     }
-
-    def get(self, request, *args, **kwargs):
-        char = Character.objects.get(pk=kwargs["pk"])
-        if char.type in self.character_views:
-            return self.character_views[char.type].as_view()(request, *args, **kwargs)
-        return redirect("characters:index wod")
-
-    def post(self, request, *args, **kwargs):
-        char = Character.objects.get(pk=kwargs["pk"])
-        if char.type in self.character_views:
-            return self.character_views[char.type].as_view()(request, *args, **kwargs)
-        return redirect("characters:index wod")
+    model_class = Character
+    key_property = "type"
+    default_redirect = "characters:index wod"
 
 
 class GenericGroupDetailView(View):

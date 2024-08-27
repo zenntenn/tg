@@ -328,7 +328,7 @@ class TestChantry(TestCase):
         node = ObjectType.objects.get_or_create(
             name="node", type="loc", gameline="mta"
         )[0]
-        
+
         Sphere.objects.get_or_create(
             name="Correspondence", property_name="correspondence"
         )[0]

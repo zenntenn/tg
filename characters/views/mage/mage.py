@@ -8,6 +8,7 @@ from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.views.core.human import HumanAttributeView, HumanDetailView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
+from core.views.generic import DictView
 from django import forms
 from django.forms import BaseModelForm, formset_factory
 from django.http import HttpResponse
@@ -690,10 +691,12 @@ class MageSpheresView(UpdateView):
         "spirit_name",
     ]
     template_name = "characters/mage/mage/chargen.html"
-    
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["affinity_sphere"].queryset = self.object.get_affinity_sphere_options()
+        form.fields[
+            "affinity_sphere"
+        ].queryset = self.object.get_affinity_sphere_options()
         return form
 
     def form_valid(self, form):
@@ -742,29 +745,19 @@ class MageSpheresView(UpdateView):
         return super().form_valid(form)
 
 
-class MageCharacterCreationView(View):
-    creation_status = {
+class MageCharacterCreationView(DictView):
+    view_mapping = {
         1: MageAttributeView,
         2: MageAbilityView,
         3: MageBackgroundsView,
         5: MageFocusView,
         4: MageSpheresView,
-        # biographical info
         # freebies
+        # biographical info
     }
+    model_class = Mage
+    key_property = "creation_status"
+    default_redirect = MageDetailView
 
-    def get(self, request, *args, **kwargs):
-        char = Mage.objects.get(pk=kwargs["pk"])
-        if char.creation_status in self.creation_status and char.status == "Un":
-            return self.creation_status[char.creation_status].as_view()(
-                request, *args, **kwargs
-            )
-        return MageDetailView.as_view()(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        char = Mage.objects.get(pk=kwargs["pk"])
-        if char.creation_status in self.creation_status and char.status == "Un":
-            return self.creation_status[char.creation_status].as_view()(
-                request, *args, **kwargs
-            )
-        return MageDetailView.as_view()(request, *args, **kwargs)
+    def is_valid_key(self, obj, key):
+        return key in self.view_mapping and obj.status == "Un"

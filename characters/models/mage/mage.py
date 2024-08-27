@@ -69,9 +69,12 @@ class Mage(MtAHuman):
 
     arete = models.IntegerField(default=0)
 
-    affinity_sphere = models.ForeignKey(Sphere, on_delete=models.SET_NULL,
+    affinity_sphere = models.ForeignKey(
+        Sphere,
+        on_delete=models.SET_NULL,
         null=True,
-        blank=True,)
+        blank=True,
+    )
 
     # affinity_sphere = models.CharField(
     #     max_length=100,
@@ -390,7 +393,7 @@ class Mage(MtAHuman):
         self.affinity_sphere = Sphere.objects.get(property_name=affinity)
         self.add_sphere(affinity)
         return True
-    
+
     def get_affinity_sphere_options(self):
         q = Sphere.objects.none()
         if self.affiliation is not None:

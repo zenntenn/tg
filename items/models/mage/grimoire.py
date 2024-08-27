@@ -346,7 +346,10 @@ class Grimoire(Wonder):
                 q_objects |= Q(**{key: value})
             effects = Effect.objects.filter(q_objects)
 
-            kwargs = {f"{sphere.property_name}__lte": self.rank for sphere in Sphere.objects.all()}
+            kwargs = {
+                f"{sphere.property_name}__lte": self.rank
+                for sphere in Sphere.objects.all()
+            }
             for key, value in kwargs.items():
                 effects = effects.filter(Q(**{key: value}))
             num_effects = self.rank
