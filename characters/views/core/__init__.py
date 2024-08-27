@@ -69,17 +69,14 @@ class GenericCharacterDetailView(DictView):
     default_redirect = "characters:index wod"
 
 
-class GenericGroupDetailView(View):
-    group_views = {
+class GenericGroupDetailView(DictView):
+    view_mapping = {
         "group": GroupDetailView,
         "cabal": mage.CabalDetailView,
     }
-
-    def get(self, request, *args, **kwargs):
-        group = Group.objects.get(pk=kwargs["pk"])
-        if group.type in self.group_views:
-            return self.group_views[group.type].as_view()(request, *args, **kwargs)
-        return redirect("characters:index wod")
+    model_class = Group
+    key_property = "type"
+    default_redirect = "characters:index wod"
 
 
 class CharacterIndexView(View):

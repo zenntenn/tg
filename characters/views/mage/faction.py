@@ -1,50 +1,48 @@
+from typing import Any
+
 from characters.models.mage.faction import MageFaction
-from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, View
+from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class MageFactionDetailView(View):
-    def get(self, request, *args, **kwargs):
-        magefaction = MageFaction.objects.get(pk=kwargs["pk"])
-        context = self.get_context(magefaction)
-        return render(request, "characters/mage/faction/detail.html", context)
+class MageFactionDetailView(DetailView):
+    model = MageFaction
+    template_name = "characters/mage/faction/detail.html"
 
-    def get_context(self, magefaction):
-        context = {}
-        context["object"] = magefaction
-        context["languages"] = ", ".join([str(x) for x in magefaction.languages.all()])
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["languages"] = ", ".join([str(x) for x in self.object.languages.all()])
         context["affinities"] = ", ".join(
-            [x.name for x in magefaction.affinities.all()]
+            [x.name for x in self.object.affinities.all()]
         )
         context["paradigms"] = ", ".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
-                for x in magefaction.paradigms.all()
+                for x in self.object.paradigms.all()
             ]
         )
         context["practices"] = ", ".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
-                for x in magefaction.practices.all()
+                for x in self.object.practices.all()
             ]
         )
         context["media"] = ", ".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
-                for x in magefaction.media.all()
+                for x in self.object.media.all()
             ]
         )
         context["materials"] = ", ".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
-                for x in magefaction.materials.all()
+                for x in self.object.materials.all()
             ]
         )
-        context["year"] = abs(magefaction.founded)
+        context["year"] = abs(self.object.founded)
         context["subfactions"] = ", ".join(
             [
                 f'<a href="{x.get_absolute_url()}">{x}</a>'
-                for x in MageFaction.objects.filter(parent=magefaction)
+                for x in MageFaction.objects.filter(parent=self.object)
             ]
         )
         return context

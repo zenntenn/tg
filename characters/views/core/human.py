@@ -1,5 +1,6 @@
 from characters.models.core import Human
 from characters.views.core.character import CharacterDetailView
+from core.views.generic import DictView
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
@@ -155,21 +156,11 @@ class HumanAttributeView(UpdateView):
         return super().form_valid(form)
 
 
-class HumanCharacterCreationView(View):
-    creation_status = {1: HumanAttributeView}
+class HumanCharacterCreationView(DictView):
+    view_mapping = {1: HumanAttributeView}
+    model_class = Human
+    key_property = "creation_status"
+    default_redirect = HumanDetailView
 
-    def get(self, request, *args, **kwargs):
-        char = Human.objects.get(pk=kwargs["pk"])
-        if char.creation_status in self.creation_status and char.status == "Un":
-            return self.creation_status[char.creation_status].as_view()(
-                request, *args, **kwargs
-            )
-        return HumanDetailView.as_view()(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        char = Human.objects.get(pk=kwargs["pk"])
-        if char.creation_status in self.creation_status and char.status == "Un":
-            return self.creation_status[char.creation_status].as_view()(
-                request, *args, **kwargs
-            )
-        return HumanDetailView.as_view()(request, *args, **kwargs)
+    def is_valid_key(self, obj, key):
+        return key in self.view_mapping and obj.status == "Un"

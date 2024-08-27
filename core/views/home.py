@@ -1,12 +1,14 @@
 from core.models import NewsItem
-from django.shortcuts import render
-from django.views import View
+from django.views.generic import ListView
 
 
-class HomeView(View):
-    """This View controls the main landing page for the site"""
+class HomeListView(ListView):
+    model = NewsItem
+    template_name = "home.html"
+    context_object_name = "news"
+    ordering = ["-date"]
 
-    def get(self, request):
-        context = {"user": request.user}
-        context["news"] = NewsItem.objects.order_by("-date")
-        return render(request, "core/index.html", context=context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        return context

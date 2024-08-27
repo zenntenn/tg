@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from core.utils import get_gameline_name
+from core.views.generic import DictView
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views import View
@@ -42,8 +43,8 @@ from .thrownweapon import (
 from .weapon import WeaponCreateView, WeaponDetailView, WeaponUpdateView
 
 
-class GenericItemDetailView(View):
-    views = {
+class GenericItemDetailView(DictView):
+    view_mapping = {
         "item": ItemDetailView,
         "weapon": WeaponDetailView,
         "melee_weapon": MeleeWeaponDetailView,
@@ -56,12 +57,9 @@ class GenericItemDetailView(View):
         "grimoire": mage.GrimoireDetailView,
         "fetish": werewolf.FetishDetailView,
     }
-
-    def get(self, request, *args, **kwargs):
-        item = ItemModel.objects.get(pk=kwargs["pk"])
-        if item.type in self.views:
-            return self.views[item.type].as_view()(request, *args, **kwargs)
-        return redirect("items:index wod")
+    model_class = ItemModel
+    key_property = "type"
+    default_redirect = "items:index wod"
 
 
 class ItemIndexView(View):

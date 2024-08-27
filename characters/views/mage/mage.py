@@ -4,16 +4,17 @@ from characters.models.core.archetype import Archetype
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.mage import Mage, ResRating
-from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
-from characters.views.core.human import HumanAttributeView, HumanDetailView
+from characters.views.core.human import (
+    HumanAttributeView,
+    HumanCharacterCreationView,
+    HumanDetailView,
+)
 from characters.views.mage.mtahuman import MtAHumanAbilityView
-from core.views.generic import DictView
-from django import forms
 from django.forms import BaseModelForm, formset_factory
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, UpdateView, View
+from django.shortcuts import render
+from django.views.generic import CreateView, UpdateView
 
 
 def load_factions(request):
@@ -745,7 +746,7 @@ class MageSpheresView(UpdateView):
         return super().form_valid(form)
 
 
-class MageCharacterCreationView(DictView):
+class MageCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MageAttributeView,
         2: MageAbilityView,
@@ -758,6 +759,3 @@ class MageCharacterCreationView(DictView):
     model_class = Mage
     key_property = "creation_status"
     default_redirect = MageDetailView
-
-    def is_valid_key(self, obj, key):
-        return key in self.view_mapping and obj.status == "Un"

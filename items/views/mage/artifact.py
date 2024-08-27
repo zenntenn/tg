@@ -1,22 +1,21 @@
+from typing import Any
+
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, View
+from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.mage import WonderResonanceRating
 from items.models.mage.artifact import Artifact
 
 
-class ArtifactDetailView(View):
-    def get(self, request, *args, **kwargs):
-        artifact = Artifact.objects.get(pk=kwargs["pk"])
-        context = self.get_context(artifact)
-        return render(request, "items/mage/artifact/detail.html", context)
+class ArtifactDetailView(DetailView):
+    model = Artifact
+    template_name = "items/mage/artifact/detail.html"
 
-    def get_context(self, artifact):
-        return {
-            "object": artifact,
-            "resonance": WonderResonanceRating.objects.filter(wonder=artifact).order_by(
-                "resonance__name"
-            ),
-        }
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["resonance"] = WonderResonanceRating.objects.filter(
+            wonder=self.object
+        ).order_by("resonance__name")
+        return context
 
 
 class ArtifactCreateView(CreateView):

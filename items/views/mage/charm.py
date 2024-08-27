@@ -1,21 +1,20 @@
+from typing import Any
+
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, View
+from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.mage import Charm, WonderResonanceRating
 
 
-class CharmDetailView(View):
-    def get(self, request, *args, **kwargs):
-        charm = Charm.objects.get(pk=kwargs["pk"])
-        context = self.get_context(charm)
-        return render(request, "items/mage/charm/detail.html", context)
+class CharmDetailView(DetailView):
+    model = Charm
+    template_name = "items/mage/charm/detail.html"
 
-    def get_context(self, charm):
-        return {
-            "object": charm,
-            "resonance": WonderResonanceRating.objects.filter(wonder=charm).order_by(
-                "resonance__name"
-            ),
-        }
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["resonance"] = WonderResonanceRating.objects.filter(
+            wonder=self.object
+        ).order_by("resonance__name")
+        return context
 
 
 class CharmCreateView(CreateView):

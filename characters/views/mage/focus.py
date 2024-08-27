@@ -9,7 +9,7 @@ from characters.models.mage.focus import (
     Tenet,
 )
 from core.utils import display_queryset
-from django.views import View
+from core.views.generic import DictView
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
@@ -210,19 +210,12 @@ class TenetUpdateView(UpdateView):
     template_name = "characters/mage/tenet/form.html"
 
 
-class GenericPracticeDetailView(View):
-    practice_views = {
+class GenericPracticeDetailView(DictView):
+    view_mapping = {
         "practice": PracticeDetailView,
         "specialized_practice": SpecializedPracticeDetailView,
         "corrupted_practice": CorruptedPracticeDetailView,
     }
-
-    def get(self, request, *args, **kwargs):
-        p = Practice.objects.get(pk=kwargs["pk"])
-        if p.type in self.practice_views:
-            return self.practice_views[p.type].as_view()(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        p = Practice.objects.get(pk=kwargs["pk"])
-        if p.type in self.practice_views:
-            return self.practice_views[p.type].as_view()(request, *args, **kwargs)
+    model_class = Practice
+    key_property = "type"
+    default_redirect = "characters:index mage"

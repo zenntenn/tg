@@ -1,21 +1,19 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, View
+from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.mage import Wonder, WonderResonanceRating
 
 
-class WonderDetailView(View):
-    def get(self, request, *args, **kwargs):
-        wonder = Wonder.objects.get(pk=kwargs["pk"])
-        context = self.get_context(wonder)
-        return render(request, "items/mage/wonder/detail.html", context)
+class WonderDetailView(DetailView):
+    model = Wonder
+    template_name = "items/mage/wonder/detail.html"
 
-    def get_context(self, wonder):
-        return {
-            "object": wonder,
-            "resonance": WonderResonanceRating.objects.filter(wonder=wonder).order_by(
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["resonance"] = "resonance": WonderResonanceRating.objects.filter(wonder=wonder).order_by(
                 "resonance__name"
-            ),
-        }
+            )
+        return context
+
 
 
 class WonderCreateView(CreateView):

@@ -1,19 +1,18 @@
+from typing import Any
+
 from characters.models.core import MeritFlaw
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, UpdateView, View
+from django.views.generic import CreateView, DetailView, UpdateView
 
 
 # Create your views here.
-class MeritFlawDetailView(View):
-    def get(self, request, *args, **kwargs):
-        mf = MeritFlaw.objects.get(pk=kwargs["pk"])
-        context = self.get_context(mf)
-        return render(request, "characters/core/meritflaw/detail.html", context)
+class MeritFlawDetailView(DetailView):
+    model = MeritFlaw
+    template_name = "characters/core/meritflaw/detail.html"
 
-    def get_context(self, mf):
-        context = {}
-        context["object"] = mf
-        mf_ratings = list(mf.ratings.values_list("value", flat=True))
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        mf_ratings = list(self.object.ratings.values_list("value", flat=True))
         mf_ratings.sort()
         context["ratings"] = ", ".join([str(x) for x in mf_ratings])
         return context

@@ -1,25 +1,23 @@
+from typing import Any
+
 from django.shortcuts import render
-from django.views import View
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 
 
-class NodeDetailView(View):
-    def get(self, request, *args, **kwargs):
-        node = Node.objects.get(pk=kwargs["pk"])
-        context = self.get_context(node)
-        return render(request, "locations/mage/node/detail.html", context)
+class NodeDetailView(DetailView):
+    model = Node
+    template_name = "locations/mage/node/detail.html"
 
-    def get_context(self, node):
-        return {
-            "object": node,
-            "resonance": NodeResonanceRating.objects.filter(node=node).order_by(
-                "resonance__name"
-            ),
-            "merits_and_flaws": NodeMeritFlawRating.objects.filter(node=node).order_by(
-                "mf__name"
-            ),
-        }
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["resonance"] = NodeResonanceRating.objects.filter(
+            node=self.object
+        ).order_by("resonance__name")
+        context["merits_and_flaws"] = NodeMeritFlawRating.objects.filter(
+            node=self.object
+        ).order_by("mf__name")
+        return context
 
 
 class NodeCreateView(CreateView):

@@ -1,4 +1,5 @@
 from core.utils import get_gameline_name, level_name, tree_sort
+from core.views.generic import DictView
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views import View
@@ -18,8 +19,8 @@ from .city import CityCreateView, CityDetailView, CityUpdateView
 from .location import LocationCreateView, LocationDetailView, LocationUpdateView
 
 
-class GenericLocationDetailView(View):
-    views = {
+class GenericLocationDetailView(DictView):
+    view_mapping = {
         "location": LocationDetailView,
         "city": CityDetailView,
         "node": mage.NodeDetailView,
@@ -30,11 +31,9 @@ class GenericLocationDetailView(View):
         "chantry": mage.ChantryDetailView,
     }
 
-    def get(self, request, *args, **kwargs):
-        loc = LocationModel.objects.get(pk=kwargs["pk"])
-        if loc.type in self.views:
-            return self.views[loc.type].as_view()(request, *args, **kwargs)
-        return redirect("locations:index wod")
+    model_class = LocationModel
+    key_property = "type"
+    default_redirect = "locations:index wod"
 
 
 class LocationIndexView(View):

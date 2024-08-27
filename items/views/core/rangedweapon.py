@@ -1,9 +1,8 @@
 from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.core import RangedWeapon
 
+
 # Create your views here.
-
-
 class RangedWeaponDetailView(DetailView):
     model = RangedWeapon
     template_name = "items/core/rangedweapon/detail.html"
