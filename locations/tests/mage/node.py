@@ -3,6 +3,7 @@ from unittest.mock import Mock
 
 from characters.models.core import MeritFlaw
 from characters.models.mage import Resonance
+from characters.tests.utils import mage_setup
 from core.models import Noun
 from django.test import TestCase
 from django.urls import reverse
@@ -12,24 +13,8 @@ from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 
 class TestNode(TestCase):
     def setUp(self):
-        node = ObjectType.objects.create(name="node", type="loc", gameline="mta")
-        for i in range(1, 11):
-            Resonance.objects.create(name=f"Resonance {i}")
-        for i in range(1, 6):
-            for j in [1, -1]:
-                if j == 1:
-                    t = "Merit"
-                else:
-                    t = "Flaw"
-                tmp = MeritFlaw.objects.create(name=f"Node {t} {i}")
-                tmp.add_rating(i * j)
-                tmp.allowed_types.add(node)
+        mage_setup()
         self.node = Node.objects.create(name="Test Node")
-        for i in range(10):
-            Noun.objects.create(name=f"Node Noun {i}")
-
-    # def test_gauntlet_rating(self):
-    #     self.assertEqual(self.node.gauntlet, 3)
 
     def test_add_resonance(self):
         res = Resonance.objects.order_by("?").first()
@@ -38,10 +23,10 @@ class TestNode(TestCase):
         self.assertEqual(self.node.resonance_rating(res), 1)
 
     def test_filter_resonance(self):
-        self.assertEqual(len(self.node.filter_resonance()), 10)
+        self.assertEqual(len(self.node.filter_resonance()), 65)
         for res in Resonance.objects.order_by("?")[:3]:
             self.assertTrue(self.node.add_resonance(res))
-        self.assertEqual(len(self.node.filter_resonance(maximum=0)), 7)
+        self.assertEqual(len(self.node.filter_resonance(maximum=0)), 62)
 
     def test_total_resonance(self):
         resonance = Resonance.objects.order_by("?")[:2]
@@ -205,21 +190,8 @@ class TestNode(TestCase):
 
 class TestRandomNode(TestCase):
     def setUp(self):
-        node = ObjectType.objects.create(name="node", type="loc", gameline="mta")
-        for i in range(1, 11):
-            Resonance.objects.create(name=f"Resonance {i}")
-        for i in range(1, 6):
-            for j in [1, -1]:
-                if j == 1:
-                    t = "Merit"
-                else:
-                    t = "Flaw"
-                tmp = MeritFlaw.objects.create(name=f"Node {t} {i}")
-                tmp.add_rating(i * j)
-                tmp.allowed_types.add(node)
+        mage_setup()
         self.node = Node.objects.create(name="")
-        for i in range(10):
-            Noun.objects.create(name=f"Node Noun {i}")
 
     def test_random_name(self):
         self.assertFalse(self.node.has_name())
