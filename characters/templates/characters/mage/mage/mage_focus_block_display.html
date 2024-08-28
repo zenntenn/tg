@@ -1,0 +1,38 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">
+        Focus
+    </h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Paradigm
+    </div>
+    <div class="col-sm">
+        {% for paradigm in object.paradigms.all %}
+            <a href="{{ paradigm.get_absolute_url }}">{{ paradigm }}</a>
+            <br />
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Practices
+    </div>
+    <div class="col-sm">
+        {% for practice in object.practices.all %}
+            <a href="{{ practice.get_absolute_url }}">{{ practice }}</a>
+            <br />
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Instruments
+    </div>
+    <div class="col-sm">
+        {% for instrument in object.instruments.all %}
+            <a href="{{ instrument.get_absolute_url }}">{{ instrument }}</a>
+            <br />
+        {% endfor %}
+    </div>
+</div>

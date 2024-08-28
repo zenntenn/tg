@@ -62,9 +62,30 @@ class Mage(MtAHuman):
     matter = models.IntegerField(default=0)
     life = models.IntegerField(default=0)
 
-    tenets = models.ManyToManyField(Tenet, blank=True)
-    paradigms = models.ManyToManyField(Paradigm, blank=True)
-    practices = models.ManyToManyField(Practice, blank=True)
+    metaphysical_tenet = models.ForeignKey(
+        Tenet,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="metaphysical_tenet_of",
+    )
+    personal_tenet = models.ForeignKey(
+        Tenet,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="personal_tenet_of",
+    )
+    ascension_tenet = models.ForeignKey(
+        Tenet,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="ascension_tenet_of",
+    )
+
+    other_tenets = models.ManyToManyField(Tenet, blank=True)
+    practices = models.ManyToManyField(Practice, blank=True, through="PracticeRating")
     instruments = models.ManyToManyField(Instrument, blank=True)
 
     arete = models.IntegerField(default=0)
@@ -75,23 +96,6 @@ class Mage(MtAHuman):
         null=True,
         blank=True,
     )
-
-    # affinity_sphere = models.CharField(
-    #     max_length=100,
-    #     blank=True,
-    #     null=True,
-    #     choices=[
-    #         ("correspondence", "Correspondence"),
-    #         ("time", "Time"),
-    #         ("spirit", "Spirit"),
-    #         ("mind", "Mind"),
-    #         ("entropy", "Entropy"),
-    #         ("prime", "Prime"),
-    #         ("forces", "Forces"),
-    #         ("matter", "Matter"),
-    #         ("life", "Life"),
-    #     ],
-    # )
 
     CORR_NAMES = [("correspondence", "Correspondence"), ("data", "Data")]
     PRIME_NAMES = [("prime", "Prime"), ("primal_utility", "Primal Utility")]
@@ -929,3 +933,12 @@ class ResRating(models.Model):
     class Meta:
         verbose_name = "Mage Resonance Rating"
         verbose_name_plural = "Mage Resonance Ratings"
+
+
+class PracticeRating(models.Model):
+    mage = models.ForeignKey(Mage, on_delete=models.SET_NULL, null=True)
+    practice = models.ForeignKey(Practice, on_delete=models.SET_NULL, null=True)
+    rating = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.mage.name}: {self.practice}: {self.rating}"

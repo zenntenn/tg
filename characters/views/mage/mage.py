@@ -1,9 +1,11 @@
 from typing import Any
 
+from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.models.core.archetype import Archetype
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.mage import Mage, ResRating
+from characters.models.mage.focus import Tenet
+from characters.models.mage.mage import Mage, PracticeRating, ResRating
 from characters.models.mage.rote import Rote
 from characters.views.core.human import (
     HumanAttributeView,
@@ -12,7 +14,7 @@ from characters.views.core.human import (
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from django.forms import BaseModelForm, formset_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
 
@@ -669,8 +671,57 @@ class MageBackgroundsView(UpdateView):
 
 class MageFocusView(UpdateView):
     model = Mage
-    fields = ["paradigms", "practices", "instruments"]
+    fields = [
+        "metaphysical_tenet",
+        "personal_tenet",
+        "ascension_tenet",
+        "other_tenets",
+        # "practices",
+    ]
     template_name = "characters/mage/mage/chargen.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["metaphysical_tenet"].queryset = Tenet.objects.filter(
+            tenet_type="met"
+        )
+        form.fields["personal_tenet"].queryset = Tenet.objects.filter(tenet_type="per")
+        form.fields["ascension_tenet"].queryset = Tenet.objects.filter(tenet_type="asc")
+        form.fields["other_tenets"].queryset = Tenet.objects.filter(tenet_type="oth")
+        return form
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["practice_formset"] = PracticeRatingFormSet(self.request.POST)
+        else:
+            context["practice_formset"] = PracticeRatingFormSet()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        practice_formset = context["practice_formset"]
+        if practice_formset.is_valid():
+            self.object = form.save()
+            for practice_form in practice_formset:
+                practice = practice_form.cleaned_data.get("practice")
+                rating = practice_form.cleaned_data.get("rating")
+                if practice is not None and rating is not None:
+                    # Manually create and save PracticeRating objects
+                    pr = PracticeRating.objects.create(
+                        mage=self.object, practice=practice, rating=rating
+                    )
+            # TODO: Check relevant abilities, must have at least 2 dots in associated abilities per dot of practice, this replaces the Do rules
+            # TODO: Must have Arete number of practice dots
+            self.object.creation_status += 1
+            self.object.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
 
 
 class MageSpheresView(UpdateView):
@@ -732,6 +783,7 @@ class MageSpheresView(UpdateView):
             prime,
         ]:
             if sphere < 0 or sphere > arete:
+                # TODO: Must have a dot in affinity sphere
                 form.add_error(None, "Spheres must range from 0-Arete Rating")
                 return self.form_invalid(form)
 
@@ -751,8 +803,8 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         1: MageAttributeView,
         2: MageAbilityView,
         3: MageBackgroundsView,
-        5: MageFocusView,
         4: MageSpheresView,
+        5: MageFocusView,
         # freebies
         # biographical info
     }

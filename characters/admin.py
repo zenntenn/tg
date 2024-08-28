@@ -20,7 +20,7 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
-from characters.models.mage.mage import Mage, ResRating
+from characters.models.mage.mage import Mage, PracticeRating, ResRating
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.rote import Rote
 from characters.models.vampire.vtmhuman import VtMHuman
@@ -186,3 +186,4 @@ class CabalAdmin(admin.ModelAdmin):
 
 admin.site.register(VtMHuman)
 admin.site.register(WtOHuman)
+admin.site.register(PracticeRating)
