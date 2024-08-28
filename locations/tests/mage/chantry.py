@@ -229,7 +229,6 @@ class TestRandomChantry(TestCase):
         self.node2 = Node.objects.create(name="node2", rank=1)
         self.human = Human.objects.create(name="human")
         self.cabal = Cabal.objects.create(name="cabal")
-        self.faction = MageFaction.objects.create(name="faction")
         self.player = User.objects.create_user(username="Test")
         self.character = Mage.objects.create(name="", owner=self.player)
         self.grimoire = Grimoire.objects.create(name="Random Grimoire")
