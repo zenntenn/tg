@@ -4,7 +4,7 @@ from django.views.generic import ListView
 
 class HomeListView(ListView):
     model = NewsItem
-    template_name = "home.html"
+    template_name = "core/index.html"
     context_object_name = "news"
     ordering = ["-date"]
 

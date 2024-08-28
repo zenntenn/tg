@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.mage import Wonder, WonderResonanceRating
@@ -9,11 +11,10 @@ class WonderDetailView(DetailView):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["resonance"] = "resonance": WonderResonanceRating.objects.filter(wonder=wonder).order_by(
-                "resonance__name"
-            )
+        context["resonance"] = WonderResonanceRating.objects.filter(
+            wonder=self.object
+        ).order_by("resonance__name")
         return context
-
 
 
 class WonderCreateView(CreateView):
