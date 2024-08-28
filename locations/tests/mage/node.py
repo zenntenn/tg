@@ -5,6 +5,8 @@ from characters.models.core import MeritFlaw
 from characters.models.mage import Resonance
 from characters.tests.utils import mage_setup
 from core.models import Noun
+from core.utils import time_test
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from game.models import ObjectType
@@ -246,6 +248,12 @@ class TestRandomNode(TestCase):
         self.assertTrue(self.node.has_resonance())
         self.assertTrue(self.node.has_output_forms())
         self.assertTrue(self.node.has_output())
+
+    def test_creation_time(self):
+        self.assertLessEqual(
+            time_test(Node, User.objects.create_user(username="Test"), character=False),
+            2,
+        )
 
 
 class TestNodeDetailView(TestCase):

@@ -14,6 +14,7 @@ from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
 from core.models import Language, Noun
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from game.models import ObjectType
@@ -332,6 +333,9 @@ class TestRandomChantry(TestCase):
         leadership_choices = [choice[0] for choice in Chantry.LEADERSHIP_CHOICES]
 
         self.assertIn(chantry.leadership_type, leadership_choices)
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Chantry, self.player, character=False), 15)
 
 
 class TestChantryDetailView(TestCase):

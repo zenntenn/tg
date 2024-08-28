@@ -15,6 +15,7 @@ from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
 from core.models import Language, Noun
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from game.models import ObjectType
@@ -747,6 +748,9 @@ class TestRandomMage(TestCase):
     def test_random_ability(self):
         self.character.random_ability()
         self.assertGreater(self.character.total_abilities(), 0)
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Mage, self.player, character=True), 0.5)
 
 
 class TestMageDetailView(TestCase):
