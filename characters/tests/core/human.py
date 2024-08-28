@@ -1128,7 +1128,7 @@ class TestHumanCharacterCreationView(TestCase):
     def test_creation_status_selector(self):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/core/human/attributes.html")
-        self.human.creation_status = 2
+        self.human.creation_status = 10
         self.human.save()
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/core/human/detail.html")

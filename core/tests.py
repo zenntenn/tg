@@ -50,8 +50,8 @@ class FunctionalTest(LiveServerTestCase):
         return url.replace(self.live_server_url + "/", "")
 
 
-class TestHomeView(TestCase):
-    """Manages Tests for the HomeView and Template"""
+class TestHomeListView(TestCase):
+    """Manages Tests for the HomeListView and Template"""
 
     def setUp(self) -> None:
         User.objects.create_user("Test User", "test@user.com", "testpass")

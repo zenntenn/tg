@@ -156,8 +156,34 @@ class HumanAttributeView(UpdateView):
         return super().form_valid(form)
 
 
+class HumanBiographicalInformation(UpdateView):
+    model = Human
+    fields = [
+        "age",
+        "apparent_age",
+        "date_of_birth",
+        "hair",
+        "eyes",
+        "ethnicity",
+        "nationality",
+        "height",
+        "weight",
+        "sex",
+        "childhood",
+        "history",
+        "goals",
+        "notes",
+    ]
+    template_name = "characters/core/human/bio.html"
+
+    def form_valid(self, form):
+        self.object.creation_status += 1
+        self.object.save()
+        return super().form_valid(form)
+
+
 class HumanCharacterCreationView(DictView):
-    view_mapping = {1: HumanAttributeView}
+    view_mapping = {1: HumanAttributeView, 2: HumanBiographicalInformation}
     model_class = Human
     key_property = "creation_status"
     default_redirect = HumanDetailView
