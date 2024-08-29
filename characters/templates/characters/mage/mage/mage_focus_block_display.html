@@ -1,38 +1,37 @@
+{% load dots %}
 <div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">
-        Focus
-    </h2>
+    <h2 class="col-sm {{ object.get_heading }}">Focus</h2>
 </div>
 <div class="row">
-    <div class="col-sm">
-        Paradigm
-    </div>
-    <div class="col-sm">
-        {% for paradigm in object.paradigms.all %}
-            <a href="{{ paradigm.get_absolute_url }}">{{ paradigm }}</a>
-            <br />
-        {% endfor %}
-    </div>
+    <h3 class="col-sm {{ object.get_heading }}">Tenets</h3>
 </div>
 <div class="row">
-    <div class="col-sm">
-        Practices
-    </div>
-    <div class="col-sm">
-        {% for practice in object.practices.all %}
-            <a href="{{ practice.get_absolute_url }}">{{ practice }}</a>
-            <br />
-        {% endfor %}
-    </div>
+    <div class="col-sm">Metaphysical</div>
+    <a class="col-sm"
+       href="{{ object.metaphysical_tenet.get_absolute_url }}">{{ object.metaphysical_tenet }}</a>
 </div>
 <div class="row">
-    <div class="col-sm">
-        Instruments
-    </div>
-    <div class="col-sm">
-        {% for instrument in object.instruments.all %}
-            <a href="{{ instrument.get_absolute_url }}">{{ instrument }}</a>
-            <br />
-        {% endfor %}
-    </div>
+    <div class="col-sm">Personal</div>
+    <a class="col-sm" href="{{ object.personal_tenet.get_absolute_url }}">{{ object.personal_tenet }}</a>
 </div>
+<div class="row">
+    <div class="col-sm">Ascension</div>
+    <a class="col-sm" href="{{ object.ascension_tenet.get_absolute_url }}">{{ object.ascension_tenet }}</a>
+</div>
+<div class="row">
+    <h4 class="col-sm {{ object.get_heading }}">Other Tenets</h4>
+</div>
+{% for tenet in object.other_tenets.all %}
+    <div class="row">
+        <a class="col-sm" href="{{ tenet.get_absolute_url }}">{{ tenet }}</a>
+    </div>
+{% endfor %}
+<div class="row">
+    <h3 class="col-sm {{ object.get_heading }}">Practices</h3>
+</div>
+{% for pr in practices %}
+    <div class="row">
+        <a class="col-sm" href="{{ pr.practice.get_absolute_url }}">{{ pr.practice }}</a>
+        <div class="col-sm dots">{{ pr.rating|dots }}</div>
+    </div>
+{% endfor %}

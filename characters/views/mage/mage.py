@@ -65,6 +65,7 @@ class MageDetailView(HumanDetailView):
             for i in range(0, len(all_effects), row_length)
         ]
         context["rotes"] = all_effects
+        context["practices"] = PracticeRating.objects.filter(mage=self.object)
         return context
 
 
@@ -534,10 +535,6 @@ class MageBackgroundsView(UpdateView):
         form.fields["secret_weapons"].required = False
         return form
 
-    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        print(form.errors)
-        return super().form_invalid(form)
-
     def form_valid(self, form):
         allies = form.cleaned_data.get("allies")
         alternate_identity = form.cleaned_data.get("alternate_identity")
@@ -693,9 +690,11 @@ class MageFocusView(UpdateView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         if self.request.POST:
-            context["practice_formset"] = PracticeRatingFormSet(self.request.POST)
+            context["practice_formset"] = PracticeRatingFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
-            context["practice_formset"] = PracticeRatingFormSet()
+            context["practice_formset"] = PracticeRatingFormSet(instance=self.object)
         return context
 
     def form_valid(self, form):
@@ -703,25 +702,36 @@ class MageFocusView(UpdateView):
         practice_formset = context["practice_formset"]
         if practice_formset.is_valid():
             self.object = form.save()
+            ratings = [x.cleaned_data.get("rating") for x in practice_formset]
+            practice_total = sum(ratings)
+            if practice_total != self.object.arete:
+                form.add_error(None, "Starting Practices must add up to Arete rating")
+                return self.form_invalid(form)
             for practice_form in practice_formset:
                 practice = practice_form.cleaned_data.get("practice")
                 rating = practice_form.cleaned_data.get("rating")
-                if practice is not None and rating is not None:
-                    # Manually create and save PracticeRating objects
+                ability_total = 0
+                for ability in practice.abilities.all():
+                    ability_total += getattr(self.object, ability.property_name, 0)
+                if (
+                    practice is not None
+                    and rating is not None
+                    and rating <= ability_total / 2
+                ):
                     pr = PracticeRating.objects.create(
                         mage=self.object, practice=practice, rating=rating
                     )
-            # TODO: Check relevant abilities, must have at least 2 dots in associated abilities per dot of practice, this replaces the Do rules
-            # TODO: Must have Arete number of practice dots
+                else:
+                    form.add_error(
+                        None,
+                        "You must have at least 2 dots in associated abilities for each dot of a Practice",
+                    )
+                    return super().form_invalid(form)
             self.object.creation_status += 1
             self.object.save()
-            return super().form_valid(form)
+            return HttpResponseRedirect(self.get_success_url())
         else:
             return self.form_invalid(form)
-
-    def form_invalid(self, form):
-        context = self.get_context_data(form=form)
-        return self.render_to_response(context)
 
 
 class MageSpheresView(UpdateView):
@@ -782,9 +792,15 @@ class MageSpheresView(UpdateView):
             mind,
             prime,
         ]:
-            if sphere < 0 or sphere > arete:
-                # TODO: Must have a dot in affinity sphere
-                form.add_error(None, "Spheres must range from 0-Arete Rating")
+            if (
+                sphere < 0
+                or sphere > arete
+                or getattr(self.object, self.object.affinity_sphere.property_name) == 0
+            ):
+                form.add_error(
+                    None,
+                    "Spheres must range from 0-Arete Rating and Affinity Sphere must be nonzero",
+                )
                 return self.form_invalid(form)
 
         tot_spheres = sum(

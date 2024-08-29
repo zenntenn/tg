@@ -43,6 +43,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         let formCount = {{ practice_formset.total_form_count }};
+        console.log({{ practice_formset.total_form_count }})
         const emptyFormTemplate = document.getElementById("empty-form").innerHTML;
         const formsetDiv = document.getElementById("practice-formset");
 
@@ -58,7 +59,7 @@
 
             // Update the management form to include the new form
             formCount++;
-            document.getElementById("id_form-TOTAL_FORMS").value = formCount;
+            document.getElementById("id_practicerating_set-TOTAL_FORMS").value = formCount;
         });
     });
 </script>
