@@ -40,10 +40,24 @@
         {% endif %}
     {% endblock powers %}
     {% block focus %}
-    {% if object.creation_status == 5 %}
-        {% include "characters/mage/mage/mage_focus_block_form.html" %}
-    {% elif object.creation_status > 5 %}
-        {% include "characters/mage/mage/mage_focus_block_display.html" %}
-    {% endif %}
-{% endblock focus %}
+        {% if object.creation_status == 5 %}
+            {% include "characters/mage/mage/mage_focus_block_form.html" %}
+        {% elif object.creation_status > 5 %}
+            {% include "characters/mage/mage/mage_focus_block_display.html" %}
+        {% endif %}
+    {% endblock focus %}
+    {% block appearance %}
+        {% if object.creation_status == 6 %}
+            {% include "characters/mage/mage/mage_appearance_block_form.html" %}
+        {% elif object.creation_status > 6 %}
+            {% include "characters/mage/mage/mage_appearance_block_display.html" %}
+        {% endif %}
+    {% endblock appearance %}
+    {% block history %}
+        {% if object.creation_status == 6 %}
+            {% include "characters/mage/mage/mage_history_block_form.html" %}
+        {% elif object.creation_status > 6 %}
+            {% include "characters/mage/mage/mage_history_block_display.html" %}
+        {% endif %}
+    {% endblock history %}
 {% endblock contents %}

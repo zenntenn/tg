@@ -25,7 +25,7 @@
         <div class="col-sm">Arete</div>
         <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
         <div class="col-sm">Affinity Sphere</div>
-        <div class="col-sm">{{ object.get_affinity_sphere_display }}</div>
+        <div class="col-sm">{{ object.affinity_sphere.name }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Quintessence</div>
@@ -125,74 +125,10 @@
     {% endblock focus %}
 {% endblock powers %}
 {% block appearance %}
-    <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">Appearance</h2>
-    </div>
-    <div class="row">
-        <div class="col-sm">Date of Birth</div>
-        <div class="col-sm">{{ object.date_of_birth }}</div>
-        <div class="col-sm">Apparent Age</div>
-        <div class="col-sm">{{ object.apparent_age }}</div>
-        <div class="col-sm">Age of Awakening</div>
-        <div class="col-sm">{{ object.age_of_awakening }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Hair</div>
-        <div class="col-sm">{{ object.hair }}</div>
-        <div class="col-sm">Eyes</div>
-        <div class="col-sm">{{ object.eyes }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Ethnicity</div>
-        <div class="col-sm">{{ object.ethnicity }}</div>
-        <div class="col-sm">Nationality</div>
-        <div class="col-sm">{{ object.nationality }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Height</div>
-        <div class="col-sm">{{ object.height }}</div>
-        <div class="col-sm">Weight</div>
-        <div class="col-sm">{{ object.weight }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Age</div>
-        <div class="col-sm">{{ object.age }}</div>
-        <div class="col-sm">Sex</div>
-        <div class="col-sm">{{ object.sex }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Description</div>
-        <div class="col-sm">{{ object.description }}</div>
-    </div>
+    {% include "characters/mage/mage/mage_appearance_block_display.html" %}
 {% endblock appearance %}
 {% block history %}
-    <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">History</h2>
-    </div>
-    <div class="row">
-        <div class="col-sm">Childhood</div>
-        <div class="col-sm">{{ object.childhood }}</div>
-        <div class="col-sm">History</div>
-        <div class="col-sm">{{ object.history }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Awakening</div>
-        <div class="col-sm">{{ object.awakening }}</div>
-        <div class="col-sm">Seekings</div>
-        <div class="col-sm">{{ object.seekings }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Quiets</div>
-        <div class="col-sm">{{ object.quiets }}</div>
-        <div class="col-sm">Avatar Description</div>
-        <div class="col-sm">{{ object.avatar_description }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Goals</div>
-        <div class="col-sm">{{ object.goals }}</div>
-        <div class="col-sm">Notes</div>
-        <div class="col-sm">{{ object.notes }}</div>
-    </div>
+    {% include "characters/mage/mage/mage_history_block_display.html" %}
 {% endblock history %}
 {% block advancement %}
     <div class="row">
