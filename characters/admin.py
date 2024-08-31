@@ -139,7 +139,50 @@ class MageFactionAdmin(admin.ModelAdmin):
     list_display = ("name", "parent")
 
 
-admin.site.register(Rote)
+@admin.register(Rote)
+class RoteAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "practice",
+        "attribute",
+        "ability",
+        "correspondence",
+        "entropy",
+        "forces",
+        "matter",
+        "mind",
+        "life",
+        "prime",
+        "spirit",
+        "time",
+    )
+
+    def correspondence(self, obj):
+        return obj.effect.correspondence
+
+    def time(self, obj):
+        return obj.effect.time
+
+    def spirit(self, obj):
+        return obj.effect.spirit
+
+    def matter(self, obj):
+        return obj.effect.matter
+
+    def life(self, obj):
+        return obj.effect.life
+
+    def forces(self, obj):
+        return obj.effect.forces
+
+    def entropy(self, obj):
+        return obj.effect.entropy
+
+    def mind(self, obj):
+        return obj.effect.mind
+
+    def prime(self, obj):
+        return obj.effect.prime
 
 
 @admin.register(Totem)

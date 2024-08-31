@@ -8,6 +8,7 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
+from characters.models.mage.rote import Rote
 from core.utils import display_queryset
 from core.views.generic import DictView
 from django.views.generic import CreateView, DetailView, UpdateView
@@ -61,14 +62,14 @@ class ParadigmUpdateView(UpdateView):
 class PracticeDetailView(DetailView):
     model = Practice
     template_name = "characters/mage/practice/detail.html"
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["resonance"] = display_queryset(
-            self.object.common_resonance_traits.all()
-        )
-        context["instruments"] = display_queryset(self.object.instruments.all())
+        context['rotes'] = Rote.objects.filter(practice=self.object)
+        context['specializations'] = SpecializedPractice.objects.filter(parent_practice=self.object)
+        context['corruptions'] = CorruptedPractice.objects.filter(parent_practice=self.object)
         return context
+    
 
 
 class PracticeCreateView(CreateView):

@@ -2,33 +2,110 @@
 {% block contents %}
     {% load dots %}
     <div class="row">
-        <div class="col-sm">Name</div>
-        <div class="col-sm">{{ object.name }}</div>
+        <h1 class="col-sm {{ object.get_heading }}">{{ object.name }}</h1>
     </div>
     <div class="row">
-        <div class="col-sm">Abilities</div>
-        <div class="col-sm">{{ object.abilities.all }}</div>
+        <h2 class="col-sm {{ object.get_heading }}">Abilities</h2>
     </div>
     <div class="row">
-        <div class="col-sm">Instruments</div>
-        <div class="col-sm">{{ instruments|safe }}</div>
+        {% for abb in object.abilities.all %}
+            {% if forloop.counter0|divisibleby:3 %}
+            </div>
+            <div class="row">
+            {% endif %}
+            <div class="col-sm-4">{{ abb }}</div>
+            {% if forloop.last %}</div>{% endif %}
+    {% empty %}
     </div>
-    <div class="row">
-        <div class="col-sm">Common Resonance Traits</div>
-        <div class="col-sm">{{ resonance|safe }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Description</div>
-        <div class="col-sm">{{ object.description }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Benefit</div>
-        <div class="col-sm">{{ object.benefit }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Penalty</div>
-        <div class="col-sm">{{ object.penalty }}</div>
-    </div>
-    {% block specialization %}
-    {% endblock specialization %}
+{% endfor %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Instruments</h2>
+</div>
+<div class="row">
+    {% for abb in object.instruments.all %}
+        {% if forloop.counter0|divisibleby:3 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <a class="col-sm-4" href="{{ abb.get_absolute_url }}">{{ abb }}</a>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Common Resonance Traits</h2>
+</div>
+<div class="row">
+    {% for abb in object.common_resonance_traits.all %}
+        {% if forloop.counter0|divisibleby:3 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <a class="col-sm-4" href="{{ abb.get_absolute_url }}">{{ abb }}</a>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Description</h2>
+</div>
+<div class="row">
+    <div class="col-sm">{{ object.description }}</div>
+</div>
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Benefit</h2>
+</div>
+<div class="row">
+    <div class="col-sm">{{ object.benefit }}</div>
+</div>
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Penalty</h2>
+</div>
+<div class="row">
+    <div class="col-sm">{{ object.penalty }}</div>
+</div>
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
+</div>
+<div class="row">
+    {% for abb in rotes %}
+        {% if forloop.counter0|divisibleby:3 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <a class="col-sm-4" href="{{ abb.get_absolute_url }}">{{ abb }}</a>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Specializations</h2>
+</div>
+<div class="row">
+    {% for abb in specializations %}
+        {% if forloop.counter0|divisibleby:3 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <div class="col-sm-4" ><a href="{{ abb.get_absolute_url }}">{{ abb }}</a> <a href="{{ abb.faction.get_absolute_url }}">({{ abb.faction }})</a></div>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Corruptions</h2>
+</div>
+<div class="row">
+    {% for abb in corruptions %}
+        {% if forloop.counter0|divisibleby:3 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <a class="col-sm-4" href="{{ abb.get_absolute_url }}">{{ abb }}</a>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}
+{% block specialization %}
+{% endblock specialization %}
 {% endblock contents %}
