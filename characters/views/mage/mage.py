@@ -6,6 +6,7 @@ from characters.models.core.meritflaw import MeritFlaw
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Tenet
 from characters.models.mage.mage import Mage, PracticeRating, ResRating
+from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.views.core.human import (
     HumanAttributeView,
@@ -13,6 +14,7 @@ from characters.views.core.human import (
     HumanDetailView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
+from core.widgets import AutocompleteTextInput
 from django import forms
 from django.forms import BaseModelForm, SelectDateWidget, formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
@@ -736,7 +738,6 @@ class MageFocusView(UpdateView):
 
 
 class MageSpheresView(UpdateView):
-    # TODO: Add Resonance here
     model = Mage
     fields = [
         "arete",
@@ -753,6 +754,7 @@ class MageSpheresView(UpdateView):
         "corr_name",
         "prime_name",
         "spirit_name",
+        "resonance",
     ]
     template_name = "characters/mage/mage/chargen.html"
 
@@ -761,6 +763,9 @@ class MageSpheresView(UpdateView):
         form.fields[
             "affinity_sphere"
         ].queryset = self.object.get_affinity_sphere_options()
+        form.fields["resonance"].widget = AutocompleteTextInput(
+            suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
+        )
         return form
 
     def form_valid(self, form):
@@ -778,6 +783,8 @@ class MageSpheresView(UpdateView):
         corr_name = form.cleaned_data.get("corr_name")
         prime_name = form.cleaned_data.get("prime_name")
         spirit_name = form.cleaned_data.get("spirit_name")
+        resonance = form.data.get("resonance")
+        self.object.add_resonance(resonance)
 
         if arete > 3:
             form.add_error(None, "Arete may not exceed 3 at character creation")
@@ -815,8 +822,17 @@ class MageSpheresView(UpdateView):
         self.object.save()
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        errors = form.errors
+        if "resonance" in errors and "resonance" in form.data:
+            del errors["resonance"]
+        if not errors:
+            return self.form_valid(form)
+        return super().form_invalid(form)
+
 
 class MageExtrasView(UpdateView):
+
     model = Mage
     fields = [
         "date_of_birth",
