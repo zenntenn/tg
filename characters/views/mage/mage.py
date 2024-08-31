@@ -13,7 +13,8 @@ from characters.views.core.human import (
     HumanDetailView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
-from django.forms import BaseModelForm, formset_factory
+from django import forms
+from django.forms import BaseModelForm, SelectDateWidget, formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
@@ -735,6 +736,7 @@ class MageFocusView(UpdateView):
 
 
 class MageSpheresView(UpdateView):
+    # TODO: Add Resonance here
     model = Mage
     fields = [
         "arete",
@@ -814,6 +816,38 @@ class MageSpheresView(UpdateView):
         return super().form_valid(form)
 
 
+class MageExtrasView(UpdateView):
+    model = Mage
+    fields = [
+        "date_of_birth",
+        "apparent_age",
+        "age_of_awakening",
+        "hair",
+        "eyes",
+        "ethnicity",
+        "nationality",
+        "height",
+        "weight",
+        "age",
+        "sex",
+        "description",
+        "childhood",
+        "history",
+        "awakening",
+        "seekings",
+        "quiets",
+        "avatar_description",
+        "goals",
+        "notes",
+    ]
+    template_name = "characters/mage/mage/chargen.html"
+
+    def form_valid(self, form):
+        self.object.creation_status += 1
+        self.object.save()
+        return super().form_valid(form)
+
+
 class MageCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MageAttributeView,
@@ -821,8 +855,10 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         3: MageBackgroundsView,
         4: MageSpheresView,
         5: MageFocusView,
-        # freebies
-        # biographical info
+        6: MageExtrasView,
+        # freebies: includes merits and flaws and languages (which are a merit anyway)
+        # Rotes
+        # Nodes/Libraries/Wonders
     }
     model_class = Mage
     key_property = "creation_status"

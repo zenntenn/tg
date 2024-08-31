@@ -62,14 +62,17 @@ class ParadigmUpdateView(UpdateView):
 class PracticeDetailView(DetailView):
     model = Practice
     template_name = "characters/mage/practice/detail.html"
-    
+
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['rotes'] = Rote.objects.filter(practice=self.object)
-        context['specializations'] = SpecializedPractice.objects.filter(parent_practice=self.object)
-        context['corruptions'] = CorruptedPractice.objects.filter(parent_practice=self.object)
+        context["rotes"] = Rote.objects.filter(practice=self.object)
+        context["specializations"] = SpecializedPractice.objects.filter(
+            parent_practice=self.object
+        )
+        context["corruptions"] = CorruptedPractice.objects.filter(
+            parent_practice=self.object
+        )
         return context
-    
 
 
 class PracticeCreateView(CreateView):
