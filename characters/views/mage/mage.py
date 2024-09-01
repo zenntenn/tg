@@ -1,5 +1,6 @@
 from typing import Any
 
+from characters.forms.core.advancement import AdvancementForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.models.core.archetype import Archetype
 from characters.models.core.meritflaw import MeritFlaw
@@ -19,7 +20,7 @@ from django import forms
 from django.forms import BaseModelForm, SelectDateWidget, formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, FormView, UpdateView
 
 
 def load_factions(request):
@@ -864,6 +865,12 @@ class MageExtrasView(UpdateView):
         return super().form_valid(form)
 
 
+class MageFreebiesView(UpdateView):
+    model = Mage
+    form_class = AdvancementForm
+    template_name = "characters/mage/mage/chargen.html"
+
+
 class MageCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MageAttributeView,
@@ -872,6 +879,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         4: MageSpheresView,
         5: MageFocusView,
         6: MageExtrasView,
+        7: MageFreebiesView,
         # freebies: includes merits and flaws and languages (which are a merit anyway)
         # Rotes
         # Nodes/Libraries/Wonders
