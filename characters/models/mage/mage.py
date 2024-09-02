@@ -298,49 +298,50 @@ class Mage(MtAHuman):
 
     def has_focus(self):
         return (
-            self.paradigms.count() > 0
-            and self.practices.count() > 0
+            # self.paradigms.count() > 0
+            self.practices.count() > 0
             and self.instruments.count() >= 7
         )
 
     def set_focus(self, paradigms, practices, instruments):
         if len(instruments) < 7:
             return False
-        self.paradigms.set(paradigms)
+        # self.paradigms.set(paradigms)
         self.practices.set(practices)
         self.instruments.set(instruments)
         return True
 
     def random_focus(self):
-        paradigms = {x: 1 for x in Paradigm.objects.all()}
+        # paradigms = {x: 1 for x in Paradigm.objects.all()}
         practices = {x: 1 for x in Practice.objects.all()}
         instruments = {x: 1 for x in Instrument.objects.all()}
         if self.affiliation:
-            for paradigm in self.affiliation.paradigms.all():
-                paradigms[paradigm] += 1
+            # for paradigm in self.affiliation.paradigms.all():
+            #     paradigms[paradigm] += 1
             for practice in self.affiliation.practices.all():
                 practices[practice] += 1
         if self.faction:
-            for paradigm in self.faction.paradigms.all():
-                paradigms[paradigm] += 1
+            # for paradigm in self.faction.paradigms.all():
+            #     paradigms[paradigm] += 1
             for practice in self.faction.practices.all():
                 practices[practice] += 1
         if self.subfaction:
-            for paradigm in self.subfaction.paradigms.all():
-                paradigms[paradigm] += 1
+            # for paradigm in self.subfaction.paradigms.all():
+            #     paradigms[paradigm] += 1
             for practice in self.subfaction.practices.all():
                 practices[practice] += 1
-        self.paradigms.add(weighted_choice(paradigms))
+        # self.paradigms.add(weighted_choice(paradigms))
         while random.random() < 0.1:
-            self.paradigms.add(
-                weighted_choice(
-                    {
-                        k: v
-                        for k, v in paradigms.items()
-                        if k not in self.paradigms.all()
-                    }
-                )
-            )
+            pass
+            # self.paradigms.add(
+            #     weighted_choice(
+            #         {
+            #             k: v
+            #             for k, v in paradigms.items()
+            #             if k not in self.paradigms.all()
+            #         }
+            #     )
+            # )
         self.practices.add(weighted_choice(practices))
         while random.random() < 0.1:
             self.practices.add(
