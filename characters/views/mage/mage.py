@@ -1078,6 +1078,8 @@ class MageFreebiesView(UpdateView):
             self.object.spent_freebies.append(
                 self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
             )
+        if self.object.freebies == 0:
+            self.object.creation_status += 1
         self.object.save()
         return super().form_valid(form)
 
