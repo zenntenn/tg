@@ -87,7 +87,9 @@
         </div>
         <div class="row">
         {% endif %}
-        <div class="col-sm-4" ><a href="{{ abb.get_absolute_url }}">{{ abb }}</a> <a href="{{ abb.faction.get_absolute_url }}">({{ abb.faction }})</a></div>
+        <div class="col-sm-4">
+            <a href="{{ abb.get_absolute_url }}">{{ abb }}</a> <a href="{{ abb.faction.get_absolute_url }}">({{ abb.faction }})</a>
+        </div>
         {% if forloop.last %}</div>{% endif %}
 {% empty %}
 </div>

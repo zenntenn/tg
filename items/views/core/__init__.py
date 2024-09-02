@@ -110,7 +110,8 @@ class ItemIndexView(View):
                 rank = int(request.POST["rank"])
             try:
                 item.random(rank=rank)
-            except:
+            except Exception as e:
+                print(e)
                 raise Http404
             item.save()
             return redirect(item.get_absolute_url())

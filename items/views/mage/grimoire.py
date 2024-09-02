@@ -32,16 +32,16 @@ class GrimoireDetailView(DetailView):
             ]
         )
         context["year"] = abs(self.object.date_written)
-        all_effects = list(self.object.effects.all())
-        row_length = 2
-        all_effects = [
-            all_effects[i : i + row_length]
-            for i in range(0, len(all_effects), row_length)
-        ]
-        if len(all_effects) != 0:
-            while len(all_effects[-1]) < row_length:
-                all_effects[-1].append(empty_rote)
-        context["effects"] = all_effects
+        # all_effects = list(self.object.effects.all())
+        # row_length = 2
+        # all_effects = [
+        #     all_effects[i : i + row_length]
+        #     for i in range(0, len(all_effects), row_length)
+        # ]
+        # if len(all_effects) != 0:
+        #     while len(all_effects[-1]) < row_length:
+        #         all_effects[-1].append(empty_rote)
+        # context["effects"] = all_effects
         return context
 
 
@@ -62,7 +62,7 @@ class GrimoireCreateView(CreateView):
         "cover_material",
         "inner_material",
         "medium",
-        "effects",
+        "rotes",
     ]
     template_name = "items/mage/grimoire/form.html"
 

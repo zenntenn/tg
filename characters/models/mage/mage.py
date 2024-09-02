@@ -461,7 +461,7 @@ class Mage(MtAHuman):
 
     def random_arete(self):
         target = random.randint(1, 3)
-        self.arete = 1
+        self.arete = target
         # for _ in range(target - 1):
         #     self.spend_freebies("arete")
 
@@ -594,6 +594,7 @@ class Mage(MtAHuman):
     def add_effect(self, effect):
         if effect.is_learnable(self):
             r = Rote.objects.create(effect=effect)
+            r.random_name()
             self.rote_points -= effect.cost()
             self.rotes.add(r)
             return True
@@ -613,6 +614,7 @@ class Mage(MtAHuman):
     def random_effect(self):
         options = self.filter_effects(max_cost=self.rote_points)
         effect = random.choice(options)
+        effect.random(self)
         self.add_effect(effect)
 
     def random_effects(self):

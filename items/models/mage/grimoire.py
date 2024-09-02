@@ -6,6 +6,7 @@ from characters.models.core.ability import Ability
 from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Instrument, Practice
 from characters.models.mage.resonance import Resonance
+from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
 from core.models import Language, Noun
 from core.utils import weighted_choice
@@ -48,7 +49,7 @@ class Grimoire(Wonder):
         related_name="is_inner",
     )
     medium = models.ForeignKey(Medium, null=True, blank=True, on_delete=models.SET_NULL)
-    effects = models.ManyToManyField(Effect, blank=True)
+    rotes = models.ManyToManyField(Rote, blank=True)
 
     class Meta:
         verbose_name = "Grimoire"
@@ -132,14 +133,14 @@ class Grimoire(Wonder):
     def has_rank(self):
         return self.rank != 0
 
-    def set_effects(self, effects):
-        self.effects.set(effects)
+    def set_rotes(self, rotes):
+        self.rotes.set(rotes)
         self.save()
         return True
 
-    def has_effects(self):
+    def has_rotes(self):
         tot = (
-            self.effects.count()
+            self.rotes.count()
             + self.practices.count()
             + self.spheres.count()
             + self.abilities.count()
@@ -334,10 +335,10 @@ class Grimoire(Wonder):
             rank = max(min(roll, 5), 1)
         self.set_rank(rank)
 
-    def random_effects(self, effects=None):
+    def random_rotes(self, rotes=None):
         if self.spheres.count() == 0:
-            raise ValueError("Spheres must be determiend before Effects")
-        if effects is None:
+            raise ValueError("Spheres must be determiend before rotes")
+        if rotes is None:
             effects = []
 
             kwargs = {f"{sphere.property_name}__gt": 0 for sphere in self.spheres.all()}
@@ -352,16 +353,16 @@ class Grimoire(Wonder):
             }
             for key, value in kwargs.items():
                 effects = effects.filter(Q(**{key: value}))
-            num_effects = self.rank
+            num_rotes = self.rank
             if self.spheres.count() > 1:
-                num_effects -= self.spheres.count() - 1
+                num_rotes -= self.spheres.count() - 1
             if self.practices.count() > 1:
-                num_effects -= self.practices.count() - 1
+                num_rotes -= self.practices.count() - 1
             if self.abilities.count() > 1:
-                num_effects -= self.abilities.count() - 1
+                num_rotes -= self.abilities.count() - 1
             if self.is_primer:
-                num_effects -= 1
-            while num_effects < 0:
+                num_rotes -= 1
+            while num_rotes < 0:
                 options = []
                 if self.spheres.count() > 1:
                     options.append("spheres")
@@ -376,7 +377,7 @@ class Grimoire(Wonder):
                     self.practices.remove(self.practices.last())
                 if choice == "abilities":
                     self.practices.remove(self.practices.last())
-                num_effects = (
+                num_rotes = (
                     self.rank
                     + 3
                     - self.spheres.count()
@@ -384,9 +385,13 @@ class Grimoire(Wonder):
                     - self.abilities.count()
                 )
                 if self.is_primer:
-                    num_effects -= 1
-            effects = list(effects.order_by("?")[:num_effects])
-        self.set_effects(effects)
+                    num_rotes -= 1
+
+            rotes = list(effects.order_by("?")[:num_rotes])
+            rotes = [Rote.objects.create(effect=x) for x in rotes]
+            for x in rotes:
+                x.random(book=self)
+        self.set_rotes(rotes)
 
     def random_spheres(self, spheres=None):
         if spheres is None:
@@ -448,7 +453,7 @@ class Grimoire(Wonder):
         language=None,
         abilities=None,
         spheres=None,
-        effects=None,
+        rotes=None,
     ):
         self.update_status("Ran")
         self.random_rank(rank)
@@ -465,6 +470,6 @@ class Grimoire(Wonder):
         self.random_abilities(abilities)
         self.random_language(language)
         self.random_spheres(spheres)
-        self.random_effects(effects)
+        self.random_rotes(rotes)
         self.random_name()
         self.save()

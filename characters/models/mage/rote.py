@@ -35,9 +35,17 @@ class Rote(Model):
     def get_heading(self):
         return "mta_heading"
 
-    def random(self, mage=None):
+    def random_name(self):
+        self.name = (
+            f"{self.effect.name} Rote {Rote.objects.filter(effect=self.effect).count()}"
+        )
+        self.save()
+
+    def random(self, mage=None, book=None):
         self.update_status("Ran")
-        self.name = f"{self.effect.name} Rote {Rote.objects.filter(effect=self.effect).count() + 1}"
+        self.name = (
+            f"{self.effect.name} Rote {Rote.objects.filter(effect=self.effect).count()}"
+        )
 
         if mage is not None:
             self.practice = self.mage.practices.order_by("?").first()
@@ -51,7 +59,12 @@ class Rote(Model):
             )
             self.attribute = Attribute.objects.get(property_name=attribute)
             self.ability = Attribute.objects.get(property_name=ability)
+        elif book is not None:
+            self.practice = book.practices.order_by("?").first()
+            self.attribute = Attribute.objects.order_by("?").first()
+            self.ability = book.abilities.order_by("?").first()
         else:
             self.practice = Practice.objects.order_by("?").first()
             self.attribute = Attribute.objects.order_by("?").first()
             self.ability = self.practice.abilities.order_by("?").first()
+        self.save()

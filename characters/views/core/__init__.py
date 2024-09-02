@@ -142,14 +142,11 @@ class CharacterIndexView(View):
                     name=request.POST["name"], owner=user
                 )
             except KeyError:
+                print("KEYERROR")
                 raise Http404
-            if request.POST["rank"] is None:
-                rank = None
-            else:
-                rank = int(request.POST["rank"])
             try:
-                char.random(rank=rank)
-            except:
+                char.random()
+            except Exception as e:
                 raise Http404
             char.save()
             return redirect(char.get_absolute_url())
