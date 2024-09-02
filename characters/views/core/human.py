@@ -1,6 +1,7 @@
 from characters.models.core import Human
 from characters.models.core.ability import Ability
 from characters.models.core.attribute import Attribute
+from characters.models.core.background import Background
 from characters.models.core.meritflaw import MeritFlaw
 from characters.views.core.character import CharacterDetailView
 from core.views.generic import DictView
@@ -202,7 +203,7 @@ def load_examples(request):
     elif category_choice == "Ability":
         examples = Ability.objects.all()
     elif category_choice == "Background":
-        examples = []
+        examples = Background.objects.all()
     elif category_choice == "MeritFlaw":
         examples = MeritFlaw.objects.all()
     else:
@@ -218,7 +219,6 @@ def load_values(request):
     # category_choice = request.GET.get("category")
     mf = MeritFlaw.objects.get(pk=request.GET.get("example"))
     ratings = [x.value for x in mf.ratings.all()]
-    print(ratings)
     return render(
         request,
         "characters/core/human/load_values_dropdown_list.html",

@@ -219,7 +219,9 @@ class MageAdmin(admin.ModelAdmin):
     list_filter = ("owner", "arete", "essence", "affinity_sphere", "chronicle")
 
 
-admin.site.register(ResRating)
+@admin.register(ResRating)
+class ResRatingAdmin(admin.ModelAdmin):
+    list_display = ("mage", "resonance", "rating")
 
 
 @admin.register(Cabal)

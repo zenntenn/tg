@@ -15,9 +15,7 @@ CATEGORY_CHOICES = [
 
 class AdvancementForm(forms.Form):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
-    example = forms.ModelChoiceField(
-        queryset=Attribute.objects.none()
-    )  # Placeholder, will be dynamically populated
+    example = forms.ModelChoiceField(queryset=Attribute.objects.none(), required=False)
     value = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):

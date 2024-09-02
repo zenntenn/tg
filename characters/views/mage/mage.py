@@ -1,14 +1,19 @@
 from typing import Any
 
 from characters.forms.core.advancement import AdvancementForm
+from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
+from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
+from characters.models.core.attribute import Attribute
+from characters.models.core.background import Background
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Tenet
+from characters.models.mage.focus import Practice, Tenet
 from characters.models.mage.mage import Mage, PracticeRating, ResRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
+from characters.models.mage.sphere import Sphere
 from characters.views.core.human import (
     HumanAttributeView,
     HumanCharacterCreationView,
@@ -17,9 +22,11 @@ from characters.views.core.human import (
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.widgets import AutocompleteTextInput
 from django import forms
+from django.db.models import Q
 from django.forms import BaseModelForm, SelectDateWidget, formset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 
 
@@ -53,6 +60,73 @@ def load_mf_ratings(request):
     )
 
 
+class LoadExamplesView(View):
+    template_name = "characters/core/human/load_examples_dropdown_list.html"
+
+    def get(self, request, *args, **kwargs):
+        category_choice = request.GET.get("category")
+        object_id = request.GET.get("object")
+        m = Mage.objects.get(pk=object_id)
+
+        category_choice = request.GET.get("category")
+        if category_choice == "Attribute":
+            examples = Attribute.objects.all()
+            examples = [x for x in examples if getattr(m, x.property_name, 0) < 5]
+        elif category_choice == "Ability":
+            examples = Ability.objects.all()
+            examples = [
+                x
+                for x in examples
+                if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
+            ]
+        elif category_choice == "Background":
+            examples = Background.objects.all()
+            examples = [
+                x
+                for x in examples
+                if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
+            ]
+        elif category_choice == "MeritFlaw":
+            examples = m.filter_mfs()
+            if m.total_flaws() <= -7:
+                examples = examples.exclude(max_rating__lt=0)
+            examples = examples.exclude(min_rating__gt=m.freebies)
+        elif category_choice == "Sphere":
+            examples = Sphere.objects.all()
+            examples = [
+                x
+                for x in examples
+                if getattr(m, x.property_name, 0) < m.arete
+                and hasattr(m, x.property_name)
+            ]
+        elif category_choice == "Resonance":
+            examples = Resonance.objects.all()
+        elif category_choice == "Tenet":
+            metaphysical_tenet_q = (
+                Q(id=m.metaphysical_tenet.id) if m.metaphysical_tenet else Q()
+            )
+            personal_tenet_q = Q(id=m.personal_tenet.id) if m.personal_tenet else Q()
+            ascension_tenet_q = Q(id=m.ascension_tenet.id) if m.ascension_tenet else Q()
+            other_tenets_q = Q(id__in=m.other_tenets.all().values_list("id", flat=True))
+            related_tenets_q = (
+                metaphysical_tenet_q
+                | personal_tenet_q
+                | ascension_tenet_q
+                | other_tenets_q
+            )
+            examples = Tenet.objects.exclude(related_tenets_q)
+        elif category_choice == "Practice":
+            examples = Practice.objects.all()
+            ids = PracticeRating.objects.filter(mage=m, rating=5).values_list(
+                "practice__id", flat=True
+            )
+            examples = examples.exclude(pk__in=ids)
+        else:
+            examples = []
+
+        return render(request, self.template_name, {"examples": examples})
+
+
 class MageDetailView(HumanDetailView):
     model = Mage
     template_name = "characters/mage/mage/detail.html"
@@ -69,7 +143,9 @@ class MageDetailView(HumanDetailView):
             for i in range(0, len(all_effects), row_length)
         ]
         context["rotes"] = all_effects
-        context["practices"] = PracticeRating.objects.filter(mage=self.object)
+        context["practices"] = PracticeRating.objects.filter(
+            mage=self.object, rating__gt=0
+        )
         return context
 
 
@@ -479,8 +555,12 @@ class MageBasicsView(CreateView):
         return super().form_invalid(form)
 
     def form_valid(self, form):
-        form.instance.faction = MageFaction.objects.get(pk=form.data["faction"])
-        form.instance.subfaction = MageFaction.objects.get(pk=form.data["subfaction"])
+        if form.data["faction"]:
+            form.instance.faction = MageFaction.objects.get(pk=form.data["faction"])
+        if form.data["subfaction"]:
+            form.instance.subfaction = MageFaction.objects.get(
+                pk=form.data["subfaction"]
+            )
         return super().form_valid(form)
 
 
@@ -666,6 +746,9 @@ class MageBackgroundsView(UpdateView):
             )
             return self.form_invalid(form)
         self.object.creation_status += 1
+        self.object.quintessence = avatar
+        self.object.save()
+        self.object.willpower = 5
         self.object.save()
         return super().form_valid(form)
 
@@ -699,6 +782,9 @@ class MageFocusView(UpdateView):
             )
         else:
             context["practice_formset"] = PracticeRatingFormSet(instance=self.object)
+        context["resonance"] = ResRating.objects.filter(
+            mage=self.object, rating__gte=1
+        ).order_by("resonance__name")
         return context
 
     def form_valid(self, form):
@@ -820,6 +906,9 @@ class MageSpheresView(UpdateView):
             form.add_error(None, "Spheres must total 6")
             return self.form_invalid(form)
         self.object.creation_status += 1
+        for i in range(arete - 1):
+            self.object.freebies -= 4
+            self.object.freebie_spend_record("Arete", "arete", i + 2)
         self.object.save()
         return super().form_valid(form)
 
@@ -859,6 +948,16 @@ class MageExtrasView(UpdateView):
     ]
     template_name = "characters/mage/mage/chargen.html"
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["practices"] = PracticeRating.objects.filter(
+            mage=self.object, rating__gt=0
+        )
+        context["resonance"] = ResRating.objects.filter(
+            mage=self.object, rating__gte=1
+        ).order_by("resonance__name")
+        return context
+
     def form_valid(self, form):
         self.object.creation_status += 1
         self.object.save()
@@ -867,8 +966,137 @@ class MageExtrasView(UpdateView):
 
 class MageFreebiesView(UpdateView):
     model = Mage
-    form_class = AdvancementForm
+    form_class = MageAdvancementForm
     template_name = "characters/mage/mage/chargen.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["practices"] = PracticeRating.objects.filter(
+            mage=self.object, rating__gt=0
+        )
+        context["resonance"] = ResRating.objects.filter(
+            mage=self.object, rating__gte=1
+        ).order_by("resonance__name")
+        return context
+
+    def form_valid(self, form):
+        if form.data["category"] == "-----":
+            return super().form_invalid(form)
+        elif form.data["category"] == "MeritFlaw" and (
+            form.data["example"] == "" or form.data["value"] == ""
+        ):
+            return super().form_invalid(form)
+        elif (
+            form.data["category"]
+            in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
+            and form.data["example"] == ""
+        ):
+            return super().form_invalid(form)
+        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
+            return super().form_invalid(form)
+        trait_type = form.data["category"].lower()
+        cost = self.object.freebie_cost(trait_type)
+        if cost == "rating":
+            cost = int(form.data["value"])
+        if cost > self.object.freebies:
+            return super().form_invalid(form)
+        if form.data["category"] == "Attribute":
+            trait = Attribute.objects.get(pk=form.data["example"])
+            value = getattr(self.object, trait.property_name) + 1
+            self.object.add_attribute(trait.property_name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Ability":
+            trait = Ability.objects.get(pk=form.data["example"])
+            value = getattr(self.object, trait.property_name) + 1
+            self.object.add_ability(trait.property_name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Background":
+            trait = Background.objects.get(pk=form.data["example"])
+            value = getattr(self.object, trait.property_name) + 1
+            self.object.add_background(trait.property_name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Willpower":
+            trait = "Willpower"
+            value = self.object.willpower + 1
+            self.object.add_willpower()
+            self.object.freebies -= cost
+        elif form.data["category"] == "MeritFlaw":
+            trait = MeritFlaw.objects.get(pk=form.data["example"])
+            value = int(form.data["value"])
+            self.object.add_mf(trait, value)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Sphere":
+            trait = Sphere.objects.get(pk=form.data["example"])
+            value = getattr(self.object, trait.property_name) + 1
+            self.object.add_sphere(trait.property_name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Rotes":
+            trait = "Rote Points"
+            value = 4
+            self.object.rote_points += 4
+            self.object.freebies -= cost
+        elif form.data["category"] == "Resonance":
+            trait = Resonance.objects.get(name=form.data["resonance"])
+            value = self.object.resonance_rating(trait) + 1
+            self.object.add_resonance(trait.name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Tenet":
+            trait = Tenet.objects.get(pk=form.data["example"])
+            value = ""
+            self.object.add_tenet(trait)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Practice":
+            trait = Practice.objects.get(pk=form.data["example"])
+            value = self.object.practice_rating(trait) + 1
+            self.object.add_practice(trait)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Arete":
+            if self.object.arete >= 3:
+                return super().form_invalid(form)
+            trait = "Arete"
+            value = getattr(self.object, "arete") + 1
+            self.object.add_arete()
+            self.object.freebies -= cost
+        elif form.data["category"] == "Quintessence":
+            trait = "Quintessence"
+            value = 4
+            self.object.rote_points += 4
+            self.object.freebies -= cost
+        if form.data["category"] != "MeritFlaw":
+            self.object.spent_freebies.append(
+                self.object.freebie_spend_record(trait, trait_type, value)
+            )
+        else:
+            self.object.spent_freebies.append(
+                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
+            )
+        self.object.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if form.data["category"] == "-----":
+            return super().form_invalid(form)
+        elif form.data["category"] == "MeritFlaw" and (
+            form.data["example"] == "" or form.data["value"] == ""
+        ):
+            return super().form_invalid(form)
+        elif (
+            form.data["category"]
+            in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
+            and form.data["example"] == ""
+        ):
+            return super().form_invalid(form)
+        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
+            return super().form_invalid(form)
+        return self.form_valid(form)
 
 
 class MageCharacterCreationView(HumanCharacterCreationView):
