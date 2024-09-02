@@ -78,6 +78,10 @@ class SpecializedPractice(Practice):
     )
     extra_benefit = models.TextField(default="")
 
+    class Meta:
+        verbose_name = "Specialized Practice"
+        verbose_name_plural = "Specialized Practices"
+
     def get_update_url(self):
         return reverse(
             "characters:mage:update:specialized_practice", kwargs={"pk": self.pk}
@@ -100,6 +104,10 @@ class CorruptedPractice(Practice):
     )
     extra_benefit = models.TextField(default="")
     price = models.TextField(default="")
+
+    class Meta:
+        verbose_name = "Corrupted Practice"
+        verbose_name_plural = "Corrupted Practices"
 
     def get_update_url(self):
         return reverse(

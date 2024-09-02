@@ -1,4 +1,8 @@
 from characters.models.core import Human
+from characters.models.core.ability import Ability
+from characters.models.core.attribute import Attribute
+from characters.models.core.background import Background
+from characters.models.core.meritflaw import MeritFlaw
 from characters.views.core.character import CharacterDetailView
 from core.views.generic import DictView
 from django.shortcuts import redirect, render
@@ -190,3 +194,33 @@ class HumanCharacterCreationView(DictView):
 
     def is_valid_key(self, obj, key):
         return key in self.view_mapping and obj.status == "Un"
+
+
+def load_examples(request):
+    category_choice = request.GET.get("category")
+    if category_choice == "Attribute":
+        examples = Attribute.objects.all()
+    elif category_choice == "Ability":
+        examples = Ability.objects.all()
+    elif category_choice == "Background":
+        examples = Background.objects.all()
+    elif category_choice == "MeritFlaw":
+        examples = MeritFlaw.objects.all()
+    else:
+        examples = []
+    return render(
+        request,
+        "characters/core/human/load_examples_dropdown_list.html",
+        {"examples": examples},
+    )
+
+
+def load_values(request):
+    # category_choice = request.GET.get("category")
+    mf = MeritFlaw.objects.get(pk=request.GET.get("example"))
+    ratings = [x.value for x in mf.ratings.all()]
+    return render(
+        request,
+        "characters/core/human/load_values_dropdown_list.html",
+        {"values": ratings},
+    )

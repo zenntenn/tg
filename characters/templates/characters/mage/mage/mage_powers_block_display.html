@@ -2,49 +2,42 @@
 <div class="row">
     <div class="col-sm">Arete</div>
     <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
+    <div class="col-sm">Rote Points</div>
+    <div class="col-sm">{{ object.rote_points }}</div>
 </div>
 <div class="row">
     <h2 class="col-sm {{ object.get_heading }}">Spheres</h2>
 </div>
 <div class="row">
-    <div class="col-sm">
-        {{ object.get_corr_name_display }}
-    </div>
+    <div class="col-sm">{{ object.get_corr_name_display }}</div>
     <div class="col-sm dots">{{ object.correspondence|dots }}</div>
-    <div class="col-sm">
-        Mind
-    </div>
+    <div class="col-sm">Mind</div>
     <div class="col-sm dots">{{ object.mind|dots }}</div>
-    <div class="col-sm">
-        {{ object.get_prime_name_display }}
-    </div>
+    <div class="col-sm">{{ object.get_prime_name_display }}</div>
     <div class="col-sm dots">{{ object.prime|dots }}</div>
 </div>
 <div class="row">
-    <div class="col-sm">
-        Entropy
-    </div>
+    <div class="col-sm">Entropy</div>
     <div class="col-sm dots">{{ object.entropy|dots }}</div>
-    <div class="col-sm">
-        Life
-    </div>
+    <div class="col-sm">Life</div>
     <div class="col-sm dots">{{ object.life|dots }}</div>
-    <div class="col-sm">
-        {{ object.get_spirit_name_display }}
-    </div>
+    <div class="col-sm">{{ object.get_spirit_name_display }}</div>
     <div class="col-sm dots">{{ object.spirit|dots }}</div>
 </div>
 <div class="row">
-    <div class="col-sm">
-        Forces
-    </div>
+    <div class="col-sm">Forces</div>
     <div class="col-sm dots">{{ object.forces|dots }}</div>
-    <div class="col-sm">
-        Matter
-    </div>
+    <div class="col-sm">Matter</div>
     <div class="col-sm dots">{{ object.matter|dots }}</div>
-    <div class="col-sm">
-        Time
-    </div>
+    <div class="col-sm">Time</div>
     <div class="col-sm dots">{{ object.time|dots }}</div>
 </div>
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">Resonance</h2>
+    </div>
+    <div class="row">
+        {% for res in resonance %}
+            <div class="col-sm">{{ res.resonance }}</div>
+            <div class="col-sm dots">{{ res.rating }}</div>
+        {% endfor %}
+    </div>

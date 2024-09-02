@@ -924,6 +924,59 @@ class Mage(MtAHuman):
         self.random_node(favored_list=self.resonance.all())
         # self.random_library()
 
+    def freebie_cost(self, trait_type):
+        mage_costs = {
+            "sphere": 7,
+            "arete": 4,
+            "quintessence": 1,
+            "tenet": 0,
+            "practice": 1,
+            "rotes": 1,
+            "resonance": 3,
+        }
+        if trait_type in mage_costs.keys():
+            return mage_costs[trait_type]
+        return super().freebie_cost(trait_type)
+
+    def xp_cost(self, trait_type, trait_value):
+        mage_costs = {
+            "new_sphere": 10,
+            "affinity_sphere": 7,
+            "sphere": 8,
+            "arete": 8,
+            "tenet": 0,
+            "remove_tenet": 1,
+            "new_practice": 3,
+            "practice": 1,
+            "rotes": 1,
+        }
+        if trait_type == "sphere" and trait_value == 0:
+            return mage_costs["new_sphere"]
+        if trait_type == "practice" and trait_value == 0:
+            return mage_costs["new_practice"]
+        elif trait_type in mage_costs.keys():
+            return mage_costs[trait_type] * trait_value
+        return super().xp_cost(trait_type, trait_value)
+
+    def add_tenet(self, tenet):
+        if tenet.tenet_type not in ["met", "asc", "per"]:
+            self.other_tenets.add(tenet)
+            return True
+        # TODO: Logic for other tenets
+        return False
+
+    def add_practice(self, practice):
+        pr = PracticeRating.objects.get_or_create(mage=self, practice=practice)[0]
+        pr.rating += 1
+        pr.save()
+        return True
+
+    def practice_rating(self, practice):
+        prs = PracticeRating.objects.filter(mage=self)
+        if practice not in [x.practice for x in prs]:
+            return 0
+        return PracticeRating.objects.get(mage=self, practice=practice).rating
+
 
 class ResRating(models.Model):
     mage = models.ForeignKey("Mage", on_delete=models.SET_NULL, null=True)

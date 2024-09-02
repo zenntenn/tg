@@ -19,4 +19,9 @@ urls = [
         views.mage.load_mf_ratings,
         name="load_mf_ratings",
     ),
+    path(
+        "load_examples/",
+        views.mage.mage.LoadExamplesView.as_view(),
+        name="load_examples",
+    ),
 ]

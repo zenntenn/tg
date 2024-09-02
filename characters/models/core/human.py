@@ -97,12 +97,13 @@ class Human(Character):
     notes = models.TextField(default="", blank=True, null=True)
 
     xp = models.IntegerField(default=0)
-    spent_xp = models.TextField(default="")
+    spent_xp = models.JSONField(default=list)
 
     current_health_levels = models.CharField(default="", max_length=100, blank=True)
     max_health_levels = models.IntegerField(default=7)
 
-    freebies = 15
+    freebies = models.IntegerField(default=15)
+    spent_freebies = models.JSONField(default=list)
     background_points = 5
 
     class Meta:
@@ -670,3 +671,32 @@ class Human(Character):
         self.random_specialties()
         self.random_finishing_touches()
         self.random_history()
+
+    def freebie_cost(self, trait_type):
+        costs = {
+            "attribute": 5,
+            "ability": 2,
+            "background": 1,
+            "willpower": 1,
+            "meritflaw": "rating",
+        }
+        return costs[trait_type]
+
+    def freebie_spend_record(self, trait, trait_type, value, cost=None):
+        return {
+            "trait": trait,
+            "value": value,
+            "cost": cost or self.freebie_cost(trait_type),
+        }
+
+    def xp_cost(self, trait_type, trait_value):
+        costs = {
+            "new_ability": 3,
+            "attribute": 4,
+            "ability": 2,
+            "background": 3,
+            "willpower": 1,
+        }
+        if trait_type == "ability" and trait_value == 0:
+            return costs["new_ability"]
+        return costs["trait_type"] * trait_value

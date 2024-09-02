@@ -60,4 +60,9 @@
             {% include "characters/mage/mage/mage_history_block_display.html" %}
         {% endif %}
     {% endblock history %}
+    {% block freebies %}
+        {% if object.creation_status == 7 %}
+            {% include "characters/mage/mage/mage_freebies_form.html" %}
+        {% endif %}
+    {% endblock freebies %}
 {% endblock contents %}

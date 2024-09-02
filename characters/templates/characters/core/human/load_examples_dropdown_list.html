@@ -1,0 +1,8 @@
+<option value="">
+    ---------
+</option>
+{% for ex in examples %}
+    <option value="{{ ex.pk }}">
+        {{ ex.name }}
+    </option>
+{% endfor %}
