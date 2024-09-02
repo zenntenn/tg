@@ -32,6 +32,11 @@
             {% include "characters/mage/mage/mage_background_block_display.html" %}
         {% endif %}
     {% endblock backgrounds %}
+    {% block advantages %}
+        {% if object.creation_status > 4 %}
+            {% include "characters/mage/mage/mage_advantage_display.html" %}
+        {% endif %}
+    {% endblock advantages %}
     {% block powers %}
         {% if object.creation_status == 4 %}
             {% include "characters/mage/mage/mage_powers_block_form.html" %}

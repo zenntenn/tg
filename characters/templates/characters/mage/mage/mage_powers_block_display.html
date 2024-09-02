@@ -1,19 +1,23 @@
 {% load dots %}
-<div class="row">
-    <div class="col-sm">Arete</div>
-    <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
-    <div class="col-sm">Rote Points</div>
-    <div class="col-sm">{{ object.rote_points }}</div>
-</div>
+{% load get_specialty %}
 <div class="row">
     <h2 class="col-sm {{ object.get_heading }}">Spheres</h2>
 </div>
 <div class="row">
-    <div class="col-sm">{{ object.get_corr_name_display }}</div>
+    <div class="col-sm">
+        {{ object.get_corr_name_display }}
+        {% if object|get_specialty:'correspondence' %}({{ object|get_specialty:'correspondence' }}){% endif %}
+    </div>
     <div class="col-sm dots">{{ object.correspondence|dots }}</div>
-    <div class="col-sm">Mind</div>
+    <div class="col-sm">
+        Mind
+        {% if object|get_specialty:'mind' %}({{ object|get_specialty:'mind' }}){% endif %}
+    </div>
     <div class="col-sm dots">{{ object.mind|dots }}</div>
-    <div class="col-sm">{{ object.get_prime_name_display }}</div>
+    <div class="col-sm">
+        {{ object.get_prime_name_display }}
+        {% if object|get_specialty:'prime' %}({{ object|get_specialty:'prime' }}){% endif %}
+    </div>
     <div class="col-sm dots">{{ object.prime|dots }}</div>
 </div>
 <div class="row">
@@ -32,12 +36,25 @@
     <div class="col-sm">Time</div>
     <div class="col-sm dots">{{ object.time|dots }}</div>
 </div>
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Resonance</h2>
+</div>
+<div class="row">
+    {% for res in resonance %}
+        <div class="col-sm">{{ res.resonance }}</div>
+        <div class="col-sm dots">{{ res.rating }}</div>
+    {% endfor %}
+</div>
+{% block rotes %}
     <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">Resonance</h2>
+        <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
     </div>
-    <div class="row">
-        {% for res in resonance %}
-            <div class="col-sm">{{ res.resonance }}</div>
-            <div class="col-sm dots">{{ res.rating }}</div>
-        {% endfor %}
-    </div>
+    {% for row in rotes %}
+        <div class="row">
+            {% for rote in row %}
+                <a class="col-sm" href={{ rote.get_absolute_url }}>{{ rote.name }}</a>
+                <div class="col-sm dots">{{ rote.effect.spheres }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock rotes %}

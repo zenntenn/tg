@@ -4,122 +4,15 @@
 {% load resonance %}
 {% block basics %}
     {% include "characters/mage/mage/mage_basics_block_display.html" %}
-    {% if object.quiet != 0 %}
-        <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">Quiet</div>
-            <div class="col-sm dots">{{ object.quiet|dots }}</div>
-            <div class="col-sm">Quiet Type</div>
-            <div class="col-sm">{{ object.get_quiet_type_display }}</div>
-            <div class="col-sm"></div>
-        </div>
-    {% endif %}
 {% endblock basics %}
 {% block advantages %}
-    <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">Advantages</h2>
-    </div>
-    <div class="row">
-        <div class="col-sm">Willpower</div>
-        <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
-        <div class="col-sm">Arete</div>
-        <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
-        <div class="col-sm">Affinity Sphere</div>
-        <div class="col-sm">{{ object.affinity_sphere.name }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Quintessence</div>
-        <div class="col-sm dots">{{ object.quintessence }}</div>
-        <div class="col-sm">Paradox</div>
-        <div class="col-sm dots">{{ object.paradox }}</div>
-        <div class="col-sm"></div>
-        <div class="col-sm"></div>
-    </div>
+    {% include "characters/mage/mage/mage_advantage_display.html" %}
 {% endblock advantages %}
 {% block backgrounds %}
     {% include "characters/mage/mage/mage_background_block_display.html" %}
 {% endblock backgrounds %}
 {% block powers %}
-    {% block spheres %}
-        <div class="row">
-            <h2 class="col-sm {{ object.get_heading }}">Spheres</h2>
-        </div>
-        <div class="row">
-            <div class="col-sm">
-                {{ object.get_corr_name_display }}
-                {% if object|get_specialty:'correspondence' %}({{ object|get_specialty:'correspondence' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.correspondence|dots }}</div>
-            <div class="col-sm">
-                Mind
-                {% if object|get_specialty:'mind' %}({{ object|get_specialty:'mind' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.mind|dots }}</div>
-            <div class="col-sm">
-                {{ object.get_prime_name_display }}
-                {% if object|get_specialty:'prime' %}({{ object|get_specialty:'prime' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.prime|dots }}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">
-                Entropy
-                {% if object|get_specialty:'entropy' %}({{ object|get_specialty:'entropy' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.entropy|dots }}</div>
-            <div class="col-sm">
-                Life
-                {% if object|get_specialty:'life' %}({{ object|get_specialty:'life' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.life|dots }}</div>
-            <div class="col-sm">
-                {{ object.get_spirit_name_display }}
-                {% if object|get_specialty:'spirit' %}({{ object|get_specialty:'spirit' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.spirit|dots }}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">
-                Forces
-                {% if object|get_specialty:'forces' %}({{ object|get_specialty:'forces' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.forces|dots }}</div>
-            <div class="col-sm">
-                Matter
-                {% if object|get_specialty:'matter' %}({{ object|get_specialty:'matter' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.matter|dots }}</div>
-            <div class="col-sm">
-                Time
-                {% if object|get_specialty:'time' %}({{ object|get_specialty:'time' }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ object.time|dots }}</div>
-        </div>
-    {% endblock spheres %}
-    {% block rotes %}
-        <div class="row">
-            <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
-        </div>
-        {% for row in rotes %}
-            <div class="row">
-                {% for rote in row %}
-                    <a class="col-sm" href={{ rote.get_absolute_url }}>{{ rote.name }}</a>
-                    <div class="col-sm dots">{{ rote.effect.spheres }}</div>
-                {% endfor %}
-            </div>
-        {% endfor %}
-    {% endblock rotes %}
-    {% block resonance %}
-        <div class="row">
-            <h2 class="col-sm {{ object.get_heading }}">Resonance</h2>
-        </div>
-        <div class="row">
-            {% for res in resonance %}
-                <div class="col-sm">{{ res.resonance }}</div>
-                <div class="col-sm dots">{{ res.rating }}</div>
-            {% endfor %}
-        </div>
-    {% endblock resonance %}
+    {% include "characters/mage/mage/mage_powers_block_display.html" %}
     {% block focus %}
         {% include "characters/mage/mage/mage_focus_block_display.html" %}
     {% endblock focus %}

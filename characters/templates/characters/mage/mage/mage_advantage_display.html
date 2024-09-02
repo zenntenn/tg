@@ -1,0 +1,20 @@
+{% load dots %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Advantages</h2>
+</div>
+<div class="row">
+    <div class="col-sm">Willpower</div>
+    <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
+    <div class="col-sm">Arete</div>
+    <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
+    <div class="col-sm">Affinity Sphere</div>
+    <div class="col-sm">{{ object.affinity_sphere.name }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Quintessence</div>
+    <div class="col-sm dots">{{ object.quintessence }}</div>
+    <div class="col-sm">Paradox</div>
+    <div class="col-sm dots">{{ object.paradox }}</div>
+    <div class="col-sm">Rote Points</div>
+    <div class="col-sm">{{ object.rote_points }}</div>
+</div>
