@@ -83,28 +83,28 @@ class TestNode(TestCase):
     def test_resonance_postprocessing(self):
         merit1 = MeritFlaw.objects.create(name="Corrupted")
         merit1.add_rating(0)
-        # merit2 = MeritFlaw.objects.create(name="Sphere Attuned")
-        # merit2.add_rating(0)
+        merit2 = MeritFlaw.objects.create(name="Sphere Attuned (Forces)")
+        merit2.add_rating(0)
         Resonance.objects.create(name="Corrupted")
-        # Resonance.objects.create(
-        #     name="Sphered",
-        #     correspondence=True,
-        #     entropy=True,
-        #     forces=True,
-        #     matter=True,
-        #     life=True,
-        #     time=True,
-        #     prime=True,
-        #     spirit=True,
-        #     mind=True,
-        # )
+        Resonance.objects.create(
+            name="Sphered",
+            correspondence=True,
+            entropy=True,
+            forces=True,
+            matter=True,
+            life=True,
+            time=True,
+            prime=True,
+            spirit=True,
+            mind=True,
+        )
         self.node.merits_and_flaws.add(merit1)
-        # self.node.merits_and_flaws.add(merit2)
+        self.node.merits_and_flaws.add(merit2)
         self.node.save()
         self.node.resonance_postprocessing()
         self.assertEqual(self.node.total_resonance(), 2)
         self.assertIn("Corrupted", [x.name for x in self.node.resonance.all()])
-        # self.assertIn("Sphered", [x.name for x in self.node.resonance.all()])
+        self.assertIn("Sphered", [x.name for x in self.node.resonance.all()])
 
     def test_add_mf(self):
         num = self.node.total_mf()

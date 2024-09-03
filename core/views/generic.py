@@ -27,7 +27,6 @@ class DictView(View):
         return self.handle_request(request, *args, **kwargs)
 
     def is_valid_key(self, obj, key):
-        # Can be overridden to add additional conditions for key validity
         return key in self.view_mapping
 
     def get_default_redirect(self, request, *args, **kwargs):

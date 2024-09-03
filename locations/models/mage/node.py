@@ -2,6 +2,7 @@ import random
 
 from characters.models.core import MeritFlaw
 from characters.models.mage.resonance import Resonance
+from characters.models.mage.sphere import Sphere
 from core.models import Model, Noun
 from core.utils import weighted_choice
 from django.db import models
@@ -179,9 +180,17 @@ class Node(LocationModel):
             res, _ = Resonance.objects.get_or_create(name="Corrupted")
             self.add_resonance(res)
             self.add_resonance(res)
-        # if "Sphere Attuned" in [x.name for x in self.merits_and_flaws.all()]:
-        #     sphere = Sphere.objects.order_by("?").first()
-        #     self.random_resonance(sphere=sphere)
+        if any(
+            [x.name.startswith("Sphere Attuned") for x in self.merits_and_flaws.all()]
+        ):
+            for mf in [
+                x
+                for x in self.merits_and_flaws.all()
+                if x.name.startswith("Sphere Attuned")
+            ]:
+                sphere_name = mf.name.split("(")[-1].split(")")[0]
+                s = Sphere.objects.get(name=sphere_name)
+                self.random_resonance(sphere=s.property_name)
 
     def has_resonance(self):
         return self.total_resonance() >= self.rank

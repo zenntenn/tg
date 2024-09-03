@@ -760,7 +760,6 @@ class MageFocusView(UpdateView):
         "personal_tenet",
         "ascension_tenet",
         "other_tenets",
-        # "practices",
     ]
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1110,9 +1109,6 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         5: MageFocusView,
         6: MageExtrasView,
         7: MageFreebiesView,
-        # freebies: includes merits and flaws and languages (which are a merit anyway)
-        # Rotes
-        # Nodes/Libraries/Wonders
     }
     model_class = Mage
     key_property = "creation_status"

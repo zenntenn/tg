@@ -272,16 +272,18 @@ class Mage(MtAHuman):
 
     def has_focus(self):
         return (
-            # self.paradigms.count() > 0
-            self.practices.count() > 0
-            and self.instruments.count() >= 7
+            self.metaphysical_tenet
+            and self.personal_tenet
+            and self.ascension_tenet
+            and self.practices.count() == self.arete
         )
 
-    def set_focus(self, paradigms, practices, instruments):
+    def set_focus(self, tenets, practices, instruments):
+        for tenet in tenets:
+            self.add_tenet(tenet)
         if len(instruments) < 7:
             return False
-        # self.paradigms.set(paradigms)
-        self.practices.set(practices)
+        self.add_practice(practices)
         self.instruments.set(instruments)
         return True
 
@@ -451,8 +453,11 @@ class Mage(MtAHuman):
     def random_arete(self):
         target = random.randint(1, 3)
         self.arete = target
-        # for _ in range(target - 1):
-        #     self.spend_freebies("arete")
+        for i in range(target - 1):
+            self.spent_freebies.append(
+                self.freebie_spend_record("Arete", "arete", i + 2)
+            )
+        self.save()
 
     def has_essence(self):
         return self.essence != ""
@@ -953,7 +958,14 @@ class Mage(MtAHuman):
         if tenet.tenet_type not in ["met", "asc", "per"]:
             self.other_tenets.add(tenet)
             return True
-        # TODO: Logic for other tenets
+        if tenet.tenet_type == "met" and self.metaphysical_tenet is None:
+            self.metaphysical_tenet = tenet
+        elif tenet.tenet_type == "per" and self.personal_tenet is None:
+            self.personal_tenet = tenet
+        elif tenet.tenet_type == "asc" and self.ascension_tenet is None:
+            self.ascension_tenet = tenet
+        else:
+            self.other_tenets.add(tenet)
         return False
 
     def add_practice(self, practice):

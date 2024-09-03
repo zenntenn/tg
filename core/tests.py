@@ -32,7 +32,7 @@ class FunctionalTest(LiveServerTestCase):
     def tearDown(self) -> None:
         self.browser.quit()
 
-    def wait_for_row_in_list_table(self, row_text):  # pragma: no cover
+    def wait_for_row_in_list_table(self, row_text):
         start_time = time.time()
         while True:
             try:
@@ -150,16 +150,14 @@ class NewUserTest(FunctionalTest):
         submit_button.click()
 
     def test_create_account(self):
-        # User arrives on front page
+
         self.browser.get(self.live_server_url)
 
-        # User clicks signup
         self.client.get("/accounts/signup/")
         self.assertTemplateUsed(
             self.client.get("/accounts/signup/"), "accounts/signup.html"
         )
 
-        # User creates credentials
         self.credential_creation_fail()
 
         username = "test_user"
@@ -168,7 +166,6 @@ class NewUserTest(FunctionalTest):
         self.credential_creation_succeed(username, password)
         self.assertEqual(User.objects.count(), 1)
 
-        # User inputs credentials
         self.browser.get(self.live_server_url + "/accounts/login/")
         namebox = self.browser.find_element("id", "id_username")
         namebox.send_keys(username)
@@ -177,8 +174,6 @@ class NewUserTest(FunctionalTest):
         submit_button = self.browser.find_element("id", "login_button_id")
         submit_button.click()
 
-        # User is forwarded to account page
-        # Account page has user name on it
         links = self.browser.find_elements("tag name", "a")
         links = [
             (self.clean_url(link.get_attribute("href")), link.text) for link in links
@@ -205,7 +200,6 @@ class TestHomepage(FunctionalTest):
 
 class TestModel(TestCase):
     def setUp(self):
-        # Model is abstract, using a descendant class to test methods
         self.model = CharacterModel.objects.create(name="")
         self.user = User.objects.create_user(username="Test User")
 
@@ -349,7 +343,6 @@ class TestNewsItemCreateView(TestCase):
         self.valid_data = {
             "title": "Test News",
             "content": "News Test Content.",
-            # "date": now(),
         }
         self.url = NewsItem.get_creation_url()
 
@@ -373,7 +366,6 @@ class TestNewsItemUpdateView(TestCase):
         self.newsitem = NewsItem.objects.create(
             title="Test Title",
             content="Test Content",
-            # date=now(),
         )
         self.valid_data = {
             "title": "Test News 2",

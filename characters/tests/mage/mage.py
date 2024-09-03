@@ -206,7 +206,6 @@ class TestMage(TestCase):
         self.assertEqual(self.character.total_spheres(), 5)
 
     def test_mage_numbers(self):
-        # self.assertEqual(self.character.willpower, 5)
         self.assertEqual(self.character.background_points, 7)
 
     def test_add_background(self):
@@ -663,11 +662,11 @@ class TestRandomMage(TestCase):
         self.character.random_node()
         self.assertTrue(self.character.has_node())
 
-    # def test_created_library_when_has_library(self):
-    #     self.character.library = 3
-    #     self.assertFalse(self.character.has_library())
-    #     self.character.random_library()
-    #     self.assertTrue(self.character.has_library())
+    def test_created_library_when_has_library(self):
+        self.character.library = 3
+        self.assertFalse(self.character.has_library())
+        self.character.random_library()
+        self.assertTrue(self.character.has_library())
 
     def test_random_specialties(self):
         self.character.forces = 4
@@ -713,14 +712,14 @@ class TestRandomMage(TestCase):
         self.assertTrue(self.character.has_essence())
         self.assertTrue(self.character.has_effects())
         self.assertTrue(self.character.has_mage_history())
-        # if self.character.node != 0:
-        #     self.assertTrue(self.character.has_node())
-        # else:
-        #     self.assertFalse(self.character.has_node())
-        # if self.character.library != 0:
-        #     self.assertTrue(self.character.has_library())
-        # else:
-        #     self.assertFalse(self.character.has_library())
+        if self.character.node != 0:
+            self.assertTrue(self.character.has_node())
+        else:
+            self.assertFalse(self.character.has_node())
+        if self.character.library != 0:
+            self.assertTrue(self.character.has_library())
+        else:
+            self.assertFalse(self.character.has_library())
 
     def test_choose_random_resonance(self):
         res = self.character.choose_random_resonance()
