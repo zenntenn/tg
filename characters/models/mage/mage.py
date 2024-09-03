@@ -3,7 +3,13 @@ from collections import defaultdict
 
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
+from characters.models.mage.focus import (
+    Instrument,
+    Paradigm,
+    Practice,
+    SpecializedPractice,
+    Tenet,
+)
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
@@ -312,53 +318,67 @@ class Mage(MtAHuman):
         return True
 
     def random_focus(self):
-        # paradigms = {x: 1 for x in Paradigm.objects.all()}
+        self.metaphysical_tenet = (
+            Tenet.objects.filter(tenet_type="met").order_by("?").first()
+        )
+        self.ascension_tenet = (
+            Tenet.objects.filter(tenet_type="asc").order_by("?").first()
+        )
+        self.personal_tenet = (
+            Tenet.objects.filter(tenet_type="per").order_by("?").first()
+        )
+        while (
+            random.random() < 0.1 and Tenet.objects.filter(tenet_type="oth").count() > 0
+        ):
+            self.other_tenets.add(
+                Tenet.objects.filter(tenet_type="oth")
+                .exclude(pk__in=self.other_tenets.all())
+                .order_by("?")
+                .first()
+            )
         practices = {x: 1 for x in Practice.objects.all()}
-        instruments = {x: 1 for x in Instrument.objects.all()}
+        practices = {k: v for k, v in practices.items() if k.type == "practice"}
+        specialized_practice = SpecializedPractice.objects.get(faction=self.faction)
         if self.affiliation:
-            # for paradigm in self.affiliation.paradigms.all():
-            #     paradigms[paradigm] += 1
             for practice in self.affiliation.practices.all():
                 practices[practice] += 1
         if self.faction:
-            # for paradigm in self.faction.paradigms.all():
-            #     paradigms[paradigm] += 1
             for practice in self.faction.practices.all():
                 practices[practice] += 1
         if self.subfaction:
-            # for paradigm in self.subfaction.paradigms.all():
-            #     paradigms[paradigm] += 1
             for practice in self.subfaction.practices.all():
                 practices[practice] += 1
-        # self.paradigms.add(weighted_choice(paradigms))
-        while random.random() < 0.1:
-            pass
-            # self.paradigms.add(
-            #     weighted_choice(
-            #         {
-            #             k: v
-            #             for k, v in paradigms.items()
-            #             if k not in self.paradigms.all()
-            #         }
-            #     )
-            # )
-        self.practices.add(weighted_choice(practices))
-        while random.random() < 0.1:
-            self.practices.add(
-                weighted_choice(
-                    {
-                        k: v
-                        for k, v in practices.items()
-                        if k not in self.practices.all()
-                    }
-                )
+        for tenet in (
+            Tenet.objects.filter(
+                pk__in=[
+                    self.metaphysical_tenet.id,
+                    self.ascension_tenet.id,
+                    self.personal_tenet.id,
+                ]
             )
-
-        for practice in self.practices.all():
-            for instrument in practice.instruments.all():
-                instruments[instrument] += 1
-        while self.instruments.count() < 7:
-            self.instruments.add(weighted_choice(instruments))
+            | self.other_tenets.all()
+        ):
+            for practice in tenet.associated_practices.all():
+                practices[practice] += 1
+            for practice in tenet.limited_practices.all():
+                practices[practice] -= 1
+        practices[specialized_practice] = (
+            10 + practices[specialized_practice.parent_practice]
+        )
+        practices = {
+            k: v
+            for k, v in practices.items()
+            if k != specialized_practice.parent_practice and v > 0
+        }
+        min_key = min([x for x in practices.values()])
+        print(practices)
+        practices = {k: v for k, v in practices.items() if v > min_key}
+        print(practices)
+        while self.total_practices() < self.arete:
+            prac = weighted_choice(practices, ceiling=1000)
+            self.add_practice(prac)
+            practices[prac] += 1
+        self.save()
 
     def add_background(self, background, maximum=5):
         if background in ["requisitions", "secret_weapons"]:
@@ -419,8 +439,11 @@ class Mage(MtAHuman):
         self.set_affinity_sphere(random.choice(list(self.get_spheres().keys())))
 
     def random_sphere(self):
+        max_sphere = min(
+            [self.arete, max([self.practice_rating(x) for x in self.practices.all()])]
+        )
         if len(self.filter_spheres(maximum=self.arete - 1).keys()) != 0:
-            choice = weighted_choice(self.filter_spheres(maximum=self.arete - 1))
+            choice = weighted_choice(self.filter_spheres(maximum=max_sphere - 1))
             self.add_sphere(choice)
         else:
             raise ValueError(f"All Spheres Maxed out at Arete {self.arete}")
@@ -902,6 +925,7 @@ class Mage(MtAHuman):
             backgrounds = {}
         self.freebies = freebies
         self.xp = xp
+        self.random_arete()
         self.random_name(ethnicity=ethnicity)
         self.random_concept()
         self.random_archetypes()
@@ -913,7 +937,6 @@ class Mage(MtAHuman):
         self.random_attributes()
         self.random_abilities()
         self.random_backgrounds(backgrounds)
-        self.random_arete()
         self.random_affinity_sphere()
         self.random_spheres()
         self.random_history()
@@ -978,6 +1001,9 @@ class Mage(MtAHuman):
         if practice not in [x.practice for x in prs]:
             return 0
         return PracticeRating.objects.get(mage=self, practice=practice).rating
+
+    def total_practices(self):
+        return sum([self.practice_rating(x) for x in Practice.objects.all()])
 
 
 class ResRating(models.Model):
