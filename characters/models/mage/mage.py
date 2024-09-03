@@ -275,16 +275,14 @@ class Mage(MtAHuman):
             self.metaphysical_tenet
             and self.personal_tenet
             and self.ascension_tenet
-            and self.practices.count() == self.arete
+            and self.total_practices() == self.arete
         )
 
-    def set_focus(self, tenets, practices, instruments):
+    def set_focus(self, tenets, practices):
         for tenet in tenets:
             self.add_tenet(tenet)
-        if len(instruments) < 7:
-            return False
-        self.add_practice(practices)
-        self.instruments.set(instruments)
+        for prac in practices:
+            self.add_practice(prac)
         return True
 
     def random_focus(self):
@@ -308,7 +306,6 @@ class Mage(MtAHuman):
             )
         practices = {x: 1 for x in Practice.objects.all()}
         practices = {k: v for k, v in practices.items() if k.type == "practice"}
-        specialized_practice = SpecializedPractice.objects.get(faction=self.faction)
         if self.affiliation:
             for practice in self.affiliation.practices.all():
                 practices[practice] += 1
@@ -332,16 +329,19 @@ class Mage(MtAHuman):
                 practices[practice] += 1
             for practice in tenet.limited_practices.all():
                 practices[practice] -= 1
-        practices[specialized_practice] = (
-            10 + practices[specialized_practice.parent_practice]
-        )
-        practices = {
-            k: v
-            for k, v in practices.items()
-            if k != specialized_practice.parent_practice and v > 0
-        }
+        if SpecializedPractice.objects.filter(faction=self.faction).count() == 1:
+            specialized_practice = SpecializedPractice.objects.get(faction=self.faction)
+            practices[specialized_practice] = (
+                10 + practices[specialized_practice.parent_practice]
+            )
+            practices = {
+                k: v
+                for k, v in practices.items()
+                if k != specialized_practice.parent_practice and v > 0
+            }
         min_key = min([x for x in practices.values()])
-        practices = {k: v for k, v in practices.items() if v > min_key}
+        if set([x for x in practices.values()]) != {min_key}:
+            practices = {k: v for k, v in practices.items() if v > min_key}
         while self.total_practices() < self.arete:
             prac = weighted_choice(practices, ceiling=1000)
             self.add_practice(prac)
@@ -957,7 +957,6 @@ class Mage(MtAHuman):
     def add_tenet(self, tenet):
         if tenet.tenet_type not in ["met", "asc", "per"]:
             self.other_tenets.add(tenet)
-            return True
         if tenet.tenet_type == "met" and self.metaphysical_tenet is None:
             self.metaphysical_tenet = tenet
         elif tenet.tenet_type == "per" and self.personal_tenet is None:
@@ -966,7 +965,7 @@ class Mage(MtAHuman):
             self.ascension_tenet = tenet
         else:
             self.other_tenets.add(tenet)
-        return False
+        return True
 
     def add_practice(self, practice):
         pr = PracticeRating.objects.get_or_create(mage=self, practice=practice)[0]

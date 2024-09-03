@@ -7,6 +7,7 @@ from characters.models.mage import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Practice
 from characters.models.mage.resonance import Resonance
+from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
 from core.models import Language, Noun
@@ -40,8 +41,9 @@ class TestGrimoire(TestCase):
         self.cover_material = Material.objects.create(name="Test Cover Material")
         self.inner_material = Material.objects.create(name="Test Inner Material")
         self.medium = Medium.objects.create(name="Test Medium")
-        self.effects = [
-            Effect.objects.create(name=f"Test Effect {i}") for i in range(4)
+        self.rotes = [
+            Rote.objects.create(effect=Effect.objects.create(name=f"Test Effect {i}"))
+            for i in range(4)
         ]
         correspondence = Sphere.objects.create(
             name="Correspondence", property_name="correspondence"
@@ -161,20 +163,20 @@ class TestGrimoire(TestCase):
         self.grimoire.set_spheres(self.spheres)
         self.assertTrue(self.grimoire.has_spheres())
 
-    def test_set_effects(self):
-        self.assertEqual(self.grimoire.effects.count(), 0)
-        self.assertTrue(self.grimoire.set_effects(self.effects))
-        self.assertEqual(set(self.grimoire.effects.all()), set(self.effects))
+    def test_set_rotes(self):
+        self.assertEqual(self.grimoire.rotes.count(), 0)
+        self.assertTrue(self.grimoire.set_rotes(self.rotes))
+        self.assertEqual(set(self.grimoire.rotes.all()), set(self.rotes))
 
-    def test_has_effects(self):
+    def test_has_rotes(self):
         self.grimoire.rank = 4
         self.grimoire.save()
         self.grimoire.practices.add(Practice.objects.get(name="Test Practice 0"))
         self.grimoire.abilities.add(Ability.objects.get(name="Science"))
         self.grimoire.spheres.add(Sphere.objects.get(name="Forces"))
-        self.assertFalse(self.grimoire.has_effects())
-        self.grimoire.set_effects(self.effects)
-        self.assertTrue(self.grimoire.has_effects())
+        self.assertFalse(self.grimoire.has_rotes())
+        self.grimoire.set_rotes(self.rotes)
+        self.assertTrue(self.grimoire.has_rotes())
 
 
 class TestRandomGrimoire(TestCase):
@@ -282,15 +284,15 @@ class TestRandomGrimoire(TestCase):
         self.grimoire.random_spheres()
         self.assertTrue(self.grimoire.has_spheres())
 
-    def test_random_effects(self):
+    def test_random_rotes(self):
         self.grimoire.random_rank()
         self.grimoire.faction = MageFaction.objects.get(name="Test Faction 0")
         self.grimoire.practices.add(Practice.objects.get(name="Test Practice 0"))
         self.grimoire.abilities.add(Ability.objects.get(name="Awareness"))
         self.grimoire.spheres.add(Sphere.objects.get(name="Correspondence"))
-        self.assertFalse(self.grimoire.has_effects())
-        self.grimoire.random_effects()
-        self.assertTrue(self.grimoire.has_effects())
+        self.assertFalse(self.grimoire.has_rotes())
+        self.grimoire.random_rotes()
+        self.assertTrue(self.grimoire.has_rotes())
 
     def test_random(self):
         self.assertFalse(self.grimoire.has_rank())
@@ -303,7 +305,7 @@ class TestRandomGrimoire(TestCase):
         self.assertFalse(self.grimoire.has_abilities())
         self.assertFalse(self.grimoire.has_language())
         self.assertFalse(self.grimoire.has_spheres())
-        self.assertFalse(self.grimoire.has_effects())
+        self.assertFalse(self.grimoire.has_rotes())
         self.grimoire.random()
         self.assertTrue(self.grimoire.has_rank())
         self.assertTrue(self.grimoire.has_faction())
@@ -315,7 +317,7 @@ class TestRandomGrimoire(TestCase):
         self.assertTrue(self.grimoire.has_abilities())
         self.assertTrue(self.grimoire.has_language())
         self.assertTrue(self.grimoire.has_spheres())
-        self.assertTrue(self.grimoire.has_effects())
+        self.assertTrue(self.grimoire.has_rotes())
 
     def test_creation_time(self):
         self.assertLessEqual(time_test(Grimoire, self.player, character=False), 0.05)

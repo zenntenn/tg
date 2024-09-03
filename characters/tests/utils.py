@@ -7,7 +7,7 @@ from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
 from core.models import Language, Noun
@@ -457,6 +457,11 @@ def mage_setup():
         faction.practices.set(Practice.objects.all())
         faction.save()
         MageFaction.objects.create(name=f"sub-{faction.name}", parent=faction)
+    for tenet_type in ["asc", "met", "per"]:
+        for i in range(3):
+            Tenet.objects.create(
+                name=f"{tenet_type.title()} Tenet {i}", tenet_type=tenet_type
+            )
 
 
 def wraith_setup():

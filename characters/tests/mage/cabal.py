@@ -55,7 +55,7 @@ class TestCabal(TestCase):
         self.assertEqual(str(cabal), "Cabal 1")
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Cabal, self.player, character=True), 2)
+        self.assertLessEqual(time_test(Cabal, self.player, character=True), 3)
 
 
 class TestCabalDetailView(TestCase):

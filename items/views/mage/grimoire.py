@@ -74,6 +74,6 @@ class GrimoireUpdateView(UpdateView):
         "cover_material",
         "inner_material",
         "medium",
-        "effects",
+        "rotes",
     ]
     template_name = "items/mage/grimoire/form.html"

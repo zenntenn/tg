@@ -335,3 +335,6 @@ class NodeResonanceRating(models.Model):
     class Meta:
         verbose_name = "Node Resonance Rating"
         verbose_name_plural = "Node Resonance Ratings"
+
+    def __str__(self):
+        return f"{self.node}: {self.resonance} {self.rating}"

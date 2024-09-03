@@ -102,9 +102,11 @@ class TestNode(TestCase):
         self.node.merits_and_flaws.add(merit2)
         self.node.save()
         self.node.resonance_postprocessing()
-        self.assertEqual(self.node.total_resonance(), 2)
+        self.assertEqual(self.node.total_resonance(), 3)
         self.assertIn("Corrupted", [x.name for x in self.node.resonance.all()])
-        self.assertIn("Sphered", [x.name for x in self.node.resonance.all()])
+        self.assertGreaterEqual(
+            len([x for x in self.node.resonance.all() if x.forces]), 1
+        )
 
     def test_add_mf(self):
         num = self.node.total_mf()

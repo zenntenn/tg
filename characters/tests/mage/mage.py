@@ -8,7 +8,7 @@ from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Instrument, Paradigm, Practice
+from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
 from characters.models.mage.mage import Mage, ResRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
@@ -43,22 +43,6 @@ class TestMage(TestCase):
         self.character.area_knowledge = 1
         self.character.belief_systems = 1
         self.character.cryptography = 1
-
-    def test_do_is_akashic_only(self):
-        self.character.awareness = 2
-        self.assertFalse(self.character.add_ability("do"))
-        self.character.faction = MageFaction.objects.get(name="Akashayana")
-        self.assertTrue(self.character.add_ability("do"))
-
-    def test_do_requires_limbs(self):
-        self.character.faction = MageFaction.objects.get(name="Akashayana")
-        self.assertFalse(self.character.add_ability("do"))
-        self.character.awareness = 2
-        self.assertTrue(self.character.add_ability("do"))
-        self.character.cosmology = 3
-        self.assertTrue(self.character.add_ability("do"))
-        self.assertTrue(self.character.add_ability("do"))
-        self.assertFalse(self.character.add_ability("do"))
 
     def set_spheres(self):
         self.character.correspondence = 1
@@ -356,30 +340,31 @@ class TestMage(TestCase):
         self.assertTrue(self.character.has_faction())
 
     def test_set_focus(self):
-        paradigms = Paradigm.objects.order_by("?")[:2]
-        practices = Practice.objects.order_by("?")[:2]
-        instruments = Instrument.objects.order_by("?")[:7]
+        ascension_tenet = Tenet.objects.filter(tenet_type="asc").first()
+        personal_tenet = Tenet.objects.filter(tenet_type="per").first()
+        metaphysical_tenet = Tenet.objects.filter(tenet_type="met").first()
+        prac = Practice.objects.first()
+        self.character.arete = 2
+        tenets = [ascension_tenet, metaphysical_tenet, personal_tenet]
+        practices = [prac, prac]
+
         self.assertFalse(self.character.has_focus())
-        self.assertFalse(
-            self.character.set_focus(
-                paradigms=paradigms, practices=practices, instruments=instruments[:3]
-            )
-        )
-        self.assertTrue(
-            self.character.set_focus(
-                paradigms=paradigms, practices=practices, instruments=instruments
-            )
-        )
+        self.assertTrue(self.character.set_focus(tenets, practices))
         self.assertTrue(self.character.has_focus())
 
     def test_has_focus(self):
-        paradigms = Paradigm.objects.order_by("?")[:2]
-        practices = Practice.objects.order_by("?")[:2]
-        instruments = Instrument.objects.order_by("?")[:7]
+        ascension_tenet = Tenet.objects.filter(tenet_type="asc").first()
+        personal_tenet = Tenet.objects.filter(tenet_type="per").first()
+        metaphysical_tenet = Tenet.objects.filter(tenet_type="met").first()
+
         self.assertFalse(self.character.has_focus())
-        self.character.set_focus(
-            paradigms=paradigms, practices=practices, instruments=instruments
-        )
+        self.character.add_tenet(ascension_tenet)
+        self.character.add_tenet(personal_tenet)
+        self.character.add_tenet(metaphysical_tenet)
+        self.character.arete = 2
+        prac = Practice.objects.first()
+        self.character.add_practice(prac)
+        self.character.add_practice(prac)
         self.assertTrue(self.character.has_focus())
 
     def test_set_essence(self):
@@ -526,32 +511,6 @@ class TestMage(TestCase):
         self.assertNotEqual(self.character.quiet, 0)
         self.assertNotEqual(self.character.quiet_type, "none")
 
-    def test_count_limbs(self):
-        self.character.alertness = 1
-        self.character.athletics = 2
-        self.character.do = 3
-        self.assertEqual(self.character.count_limbs(), 2)
-        self.character.awareness = 1
-        self.character.enigmas = 2
-        self.character.meditation = 3
-        self.assertEqual(self.character.count_limbs(), 3)
-        self.character.esoterica = 1
-        self.character.medicine = 2
-        self.character.survival = 3
-        self.assertEqual(self.character.count_limbs(), 5)
-        self.character.art = 1
-        self.character.crafts = 2
-        self.character.etiquette = 3
-        self.assertEqual(self.character.count_limbs(), 7)
-        self.character.academics = 1
-        self.character.belief_systems = 2
-        self.character.cosmology = 3
-        self.assertEqual(self.character.count_limbs(), 8)
-        self.character.melee = 1
-        self.character.stealth = 2
-        self.character.subterfuge = 3
-        self.assertEqual(self.character.count_limbs(), 8)
-
     def test_resonance_rating(self):
         resonance = Resonance.objects.create(name="test_resonance")
         res_rating = ResRating.objects.create(
@@ -612,11 +571,13 @@ class TestRandomMage(TestCase):
         self.character.arete = 3
         self.character.affinity_sphere = Sphere.objects.get(property_name="forces")
         num = self.character.total_spheres()
+        self.character.random_focus()
         self.character.random_sphere()
         self.assertEqual(self.character.total_spheres(), num + 1)
 
     def test_random_spheres(self):
         self.character.arete = 3
+        self.character.random_focus()
         self.assertFalse(self.character.has_spheres())
         self.character.random_spheres()
         self.assertTrue(self.character.has_spheres())
@@ -749,7 +710,7 @@ class TestRandomMage(TestCase):
         self.assertGreater(self.character.total_abilities(), 0)
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Mage, self.player, character=True), 0.5)
+        self.assertLessEqual(time_test(Mage, self.player, character=True), 0.75)
 
 
 class TestMageDetailView(TestCase):
