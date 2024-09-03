@@ -219,7 +219,6 @@ class Scene(models.Model):
             character=character, message=message, display_name=display, scene=self
         )
         if message.startswith("/roll"):
-            # /roll <num_dice> difficulty <diff> <specialty>
             tmp = message.split("/roll")[1]
             parts = [x.strip() for x in tmp.split("difficulty")]
             num_dice = int(parts[0])

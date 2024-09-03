@@ -7,7 +7,6 @@ from game.models import Chronicle
 from polymorphic.models import PolymorphicModel
 
 
-# Create your models here.
 class Book(models.Model):
     name = models.TextField(default="")
     url = models.CharField(max_length=200, null=True, blank=True)

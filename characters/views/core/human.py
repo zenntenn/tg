@@ -215,7 +215,6 @@ def load_examples(request):
 
 
 def load_values(request):
-    # category_choice = request.GET.get("category")
     mf = MeritFlaw.objects.get(pk=request.GET.get("example"))
     ratings = [x.value for x in mf.ratings.all()]
     return render(

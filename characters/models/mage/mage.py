@@ -165,10 +165,6 @@ class Mage(MtAHuman):
         verbose_name = "Mage"
         verbose_name_plural = "Mages"
 
-    # def __init__(self, *args, **kwargs):
-    #     kwargs["willpower"] = kwargs.get("willpower") or 5
-    #     super().__init__(*args, **kwargs)
-
     def get_update_url(self):
         return reverse("characters:mage:update:mage", kwargs={"pk": self.pk})
 
@@ -184,35 +180,7 @@ class Mage(MtAHuman):
         return reverse("characters:mage:create:mage_full")
 
     def add_ability(self, ability, maximum=4):
-        if ability == "do":
-            if self.faction is not None:
-                if self.faction.name != "Akashayana":
-                    return False
-                return add_dot(self, ability, maximum=min(maximum, self.count_limbs()))
-            return False
         return add_dot(self, ability, maximum)
-
-    def count_limbs(self):
-        dharmamukti = self.alertness + self.athletics + self.do
-        dhyana = self.awareness + self.enigmas + self.meditation
-        jivahasta = self.esoterica + self.medicine + self.survival
-        karma = self.art + self.crafts + self.etiquette
-        prajna = self.academics + self.belief_systems + self.cosmology
-        shastamarga = self.academics + self.crafts + self.melee
-        sunyakaya = self.medicine + self.stealth + self.subterfuge
-        tricanmarga = self.acrobatics + self.athletics + self.esoterica
-        limbs = [
-            dharmamukti,
-            dhyana,
-            jivahasta,
-            karma,
-            prajna,
-            shastamarga,
-            sunyakaya,
-            tricanmarga,
-        ]
-        limbs = [x for x in limbs if x >= 2]
-        return len(limbs)
 
     def get_spheres(self):
         return {
@@ -371,9 +339,7 @@ class Mage(MtAHuman):
             if k != specialized_practice.parent_practice and v > 0
         }
         min_key = min([x for x in practices.values()])
-        print(practices)
         practices = {k: v for k, v in practices.items() if v > min_key}
-        print(practices)
         while self.total_practices() < self.arete:
             prac = weighted_choice(practices, ceiling=1000)
             self.add_practice(prac)
