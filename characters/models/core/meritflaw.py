@@ -3,8 +3,6 @@ from django.db import models
 from django.urls import reverse
 from game.models import ObjectType
 
-# Create your models here.
-
 
 class MeritFlaw(Model):
     type = "merit_flaw"

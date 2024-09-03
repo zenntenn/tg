@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 
-# Create your tests here.
 class TestCharacter(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="User1", password="12345")

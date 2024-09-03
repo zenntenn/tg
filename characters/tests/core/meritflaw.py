@@ -5,7 +5,6 @@ from django.utils.timezone import now
 from game.models import ObjectType
 
 
-# Create your tests here.
 class TestMeritFlaw(TestCase):
     def setUp(self):
         human = ObjectType.objects.create(name="Human", type="char", gameline="wod")

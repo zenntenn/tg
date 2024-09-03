@@ -6,7 +6,6 @@ from django.views.generic import CreateView, DetailView, UpdateView
 from game.models import Scene
 
 
-# Create your views here.
 class CharacterDetailView(DetailView):
     model = Character
     template_name = "characters/core/character/detail.html"

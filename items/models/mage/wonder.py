@@ -7,7 +7,6 @@ from django.urls import reverse
 from items.models.core import ItemModel
 
 
-# Create your models here.
 class WonderResonanceRating(models.Model):
     class Meta:
         verbose_name = "Wonder Resonance Rating"

@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 
-# Create your tests here.
 class TestArchetypeDetailView(TestCase):
     def setUp(self) -> None:
         self.archetype = Archetype.objects.create(name="Test Archetype")

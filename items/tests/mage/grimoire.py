@@ -216,31 +216,26 @@ class TestRandomGrimoire(TestCase):
 
     def test_random_practices(self):
         self.grimoire.faction = MageFaction.objects.get(name="Test Faction 0")
-        # Test that random_practices() returns a queryset
+
         self.assertTrue(isinstance(self.grimoire.random_practices(None), QuerySet))
 
-        # Test that random_practices() returns the correct number of practices
         random_num_practices = random.randint(1, 3)
         practices = Practice.objects.order_by("?")[:random_num_practices]
         self.assertEqual(
             len(self.grimoire.random_practices(practices)), random_num_practices
         )
 
-        # Test that random_practices() returns at least one practice
         self.assertTrue(len(self.grimoire.random_practices(None)) >= 1)
 
     def test_random_instruments(self):
-        # Test that random_instruments() returns a queryset
         self.assertTrue(isinstance(self.grimoire.random_instruments(None), QuerySet))
 
-        # Test that random_instruments() returns the correct number of instruments
         random_num_instruments = random.randint(1, 3)
         instruments = Instrument.objects.order_by("?")[:random_num_instruments]
         self.assertEqual(
             len(self.grimoire.random_instruments(instruments)), random_num_instruments
         )
 
-        # Test that random_instruments() returns at least one instrument
         self.assertTrue(len(self.grimoire.random_instruments(None)) >= 1)
 
     def test_random_focus(self):

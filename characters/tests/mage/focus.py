@@ -101,7 +101,6 @@ class TestParadigm(TestCase):
             ).exists()
         )
 
-        # Test with invalid tenets
         result_invalid = self.paradigm.set_tenets(
             self.tenet_1, self.tenet_4, self.tenet_5
         )

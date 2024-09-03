@@ -1,8 +1,6 @@
 from django.urls import reverse
 from items.models.core.weapon import Weapon
 
-# Create your models here.
-
 
 class ThrownWeapon(Weapon):
     type = "thrown_weapon"

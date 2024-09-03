@@ -5,7 +5,6 @@ from django.urls import reverse
 from locations.models.core import City
 
 
-# Create your tests here.
 class TestCity(TestCase):
     """Manage Tests for City"""
 

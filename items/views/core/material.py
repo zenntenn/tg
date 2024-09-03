@@ -1,8 +1,6 @@
 from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.core import Material
 
-# Create your views here.
-
 
 class MaterialDetailView(DetailView):
     model = Material

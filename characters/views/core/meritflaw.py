@@ -5,7 +5,6 @@ from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-# Create your views here.
 class MeritFlawDetailView(DetailView):
     model = MeritFlaw
     template_name = "characters/core/meritflaw/detail.html"

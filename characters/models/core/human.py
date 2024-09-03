@@ -15,7 +15,6 @@ from django.urls import reverse
 from game.models import ObjectType
 
 
-# Create your models here.
 class Human(Character):
     type = "human"
 
@@ -175,7 +174,6 @@ class Human(Character):
             return 2
         if damage_type == "L":
             return 1
-        # All other damage should be Aggravated
         return 0
 
     def add_aggravated(self):

@@ -4,7 +4,6 @@ from game.models import Chronicle, ObjectType, Scene, Story
 from locations.models.core import LocationModel
 
 
-# Create your tests here.
 class ChronicleTest(TestCase):
     def setUp(self):
         self.chronicle = Chronicle.objects.create(name="Test Chronicle")

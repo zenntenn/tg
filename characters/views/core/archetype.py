@@ -3,7 +3,6 @@ from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-# Create your views here.
 class ArchetypeDetailView(DetailView):
     model = Archetype
     template_name = "characters/core/archetype/detail.html"

@@ -9,7 +9,6 @@ from items.models.core.medium import Medium
 from .focus import Paradigm, Practice
 
 
-# Create your models here.
 class MageFaction(Model):
     type = "mage_faction"
 

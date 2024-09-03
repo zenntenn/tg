@@ -5,7 +5,6 @@ from django.urls import reverse
 from .location import LocationModel
 
 
-# Create your models here.
 class City(LocationModel):
     type = "city"
 

@@ -1,7 +1,6 @@
 from characters import views
 from django.urls import path
 
-# Create your URLs here
 app_name = "characters:detail"
 urls = [
     path("groups/<pk>/", views.core.GenericGroupDetailView.as_view(), name="group"),

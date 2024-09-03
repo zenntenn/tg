@@ -17,7 +17,6 @@ from django.utils.timezone import now
 from game.models import ObjectType
 
 
-# Create your tests here.
 class TestHuman(TestCase):
     def setUp(self) -> None:
         self.user = User.objects.create_user(username="Test")

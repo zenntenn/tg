@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 
-# Create your tests here.
 class TestSpecialtyDetailView(TestCase):
     def setUp(self) -> None:
         self.specialty = Specialty.objects.create(name="Test Specialty", stat="Test")

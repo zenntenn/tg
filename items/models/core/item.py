@@ -5,7 +5,6 @@ from django.urls import reverse
 from locations.models.core import LocationModel
 
 
-# Create your models here.
 class ItemModel(Model):
     type = "item"
 

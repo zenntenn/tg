@@ -4,7 +4,6 @@ from django.urls import reverse
 from .wonder import Wonder
 
 
-# Create your models here.
 class Charm(Wonder):
     type = "charm"
 

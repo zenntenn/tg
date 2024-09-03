@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 
-# Create your models here.
 class ObjectType(models.Model):
     name = models.CharField(max_length=100, default="")
     type = models.CharField(

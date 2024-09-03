@@ -3,7 +3,6 @@ from django.urls import reverse
 from items.models.mage.wonder import Wonder
 
 
-# Create your models here.
 class Fetish(Wonder):
     type = "fetish"
 

@@ -15,7 +15,6 @@ from items.models.mage.talisman import Talisman
 from items.models.werewolf.fetish import Fetish
 
 
-# Register your models here.
 @admin.register(ItemModel)
 class ItemAdmin(admin.ModelAdmin):
     list_display = ("name",)

@@ -2,7 +2,6 @@ from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.core import ItemModel
 
 
-# Create your views here.
 class ItemDetailView(DetailView):
     model = ItemModel
     template_name = "items/core/item/detail.html"

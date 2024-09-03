@@ -4,7 +4,6 @@ from django.test import TestCase
 from game.models import Chronicle
 
 
-# Create your tests here.
 class TestSignUpView(TestCase):
     """Class that Tests SignUpView"""
 
@@ -54,7 +53,7 @@ class TestProfileView(TestCase):
         self.client.login(username="Test User 1", password="testpass")
         response = self.client.get("/accounts/")
         self.assertTemplateUsed(response, "accounts/index.html")
-        # Check that character appears on user page
+
         self.assertContains(response, "Test Character 1")
         self.assertNotContains(response, "Test Character 2")
         self.assertContains(response, f"/characters/{self.char1.id}/")

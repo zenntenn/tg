@@ -21,7 +21,6 @@ os.environ["MOZ_HEADLESS"] = "1"
 MAX_WAIT = 10
 
 
-# Create your tests here.
 class FunctionalTest(LiveServerTestCase):
     """Base case for Functional Tests"""
 

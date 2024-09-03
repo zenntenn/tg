@@ -6,7 +6,6 @@ from items.models.core.item import ItemModel
 from locations.models.core import LocationModel
 
 
-# Create your models here.
 class Weapon(ItemModel):
     type = "weapon"
 

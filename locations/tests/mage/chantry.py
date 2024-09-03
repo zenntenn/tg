@@ -310,18 +310,14 @@ class TestRandomChantry(TestCase):
         chantry.random_faction()
         chantry.random_populate()
 
-        # Check that the number of members in the chantry is at least 3.
         self.assertGreaterEqual(chantry.members.count(), 3)
 
-        # Check that the total number of points of the cabals' members
-        # is less than or equal to the chantry's points.
         total_cabal_points = sum(
             sum(x.chantry for x in cabal.members.all())
             for cabal in self.chantry.cabals.all()
         )
         self.assertLessEqual(total_cabal_points, chantry.points)
 
-        # Check that each cabal has at least 3 members.
         for cabal in chantry.cabals.all():
             self.assertGreaterEqual(cabal.members.count(), 3)
 

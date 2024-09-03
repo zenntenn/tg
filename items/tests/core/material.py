@@ -3,7 +3,6 @@ from django.urls import reverse
 from items.models.core import Material
 
 
-# Create your tests here.
 class TestMaterialDetailView(TestCase):
     def setUp(self) -> None:
         self.material = Material.objects.create(name="Test Material")

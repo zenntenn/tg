@@ -2,7 +2,6 @@ from core.models import Model
 from django.urls import reverse
 
 
-# Create your models here.
 class Derangement(Model):
     type = "derangement"
 

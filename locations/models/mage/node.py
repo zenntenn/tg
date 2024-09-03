@@ -11,7 +11,6 @@ from game.models import ObjectType
 from locations.models.core import LocationModel
 
 
-# Create your models here.
 class SizeChoices(models.IntegerChoices):
     TINY = -2, "Household Object"
     SMALL = -1, "Small Room"

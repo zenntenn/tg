@@ -4,7 +4,6 @@ from django.db.models.signals import m2m_changed, post_save
 from django.urls import reverse
 
 
-# Create your models here.
 class CharacterModel(Model):
     npc = models.BooleanField(default=False)
 

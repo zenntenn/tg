@@ -4,7 +4,6 @@ from django.views.generic import CreateView, DetailView, UpdateView
 from locations.models import LocationModel
 
 
-# Create your views here.
 class LocationDetailView(DetailView):
     model = LocationModel
     template_name = "locations/core/location/detail.html"

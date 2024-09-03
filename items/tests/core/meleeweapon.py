@@ -3,7 +3,6 @@ from django.urls import reverse
 from items.models.core import MeleeWeapon
 
 
-# Create your tests here.
 class TestMeleeWeaponDetailView(TestCase):
     def setUp(self) -> None:
         self.item = MeleeWeapon.objects.create(name="Test Weapon")

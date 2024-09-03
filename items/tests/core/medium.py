@@ -3,7 +3,6 @@ from django.urls import reverse
 from items.models.core import Medium
 
 
-# Create your tests here.
 class TestMediumDetailView(TestCase):
     def setUp(self) -> None:
         self.medium = Medium.objects.create(

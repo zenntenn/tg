@@ -30,7 +30,6 @@ from characters.models.werewolf.totem import Totem
 from characters.models.wraith.wtohuman import WtOHuman
 from django.contrib import admin
 
-# Register your models here.
 admin.site.register(CharacterModel)
 
 

@@ -7,7 +7,6 @@ from locations.models.mage.realm import HorizonRealm
 from locations.models.mage.sector import Sector
 from locations.models.werewolf.caern import Caern
 
-# Register your models here.
 admin.site.register(LocationModel)
 
 

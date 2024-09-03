@@ -3,7 +3,6 @@ from django.urls import reverse
 from locations.models.core.location import LocationModel
 
 
-# Create your models here.
 class Sector(LocationModel):
     type = "sector"
 

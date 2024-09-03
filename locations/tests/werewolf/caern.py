@@ -2,7 +2,6 @@ from django.test import TestCase
 from locations.models.werewolf.caern import Caern
 
 
-# Create your tests here.
 class TestCaern(TestCase):
     def test_gauntlet(self):
         caern_1 = Caern.objects.create(name="Test Caern 1", rank=1)

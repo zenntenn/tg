@@ -2,7 +2,6 @@ from django.views.generic import CreateView, DetailView, UpdateView
 from items.models.core import ThrownWeapon
 
 
-# Create your views here.
 class ThrownWeaponDetailView(DetailView):
     model = ThrownWeapon
     template_name = "items/core/thrownweapon/detail.html"

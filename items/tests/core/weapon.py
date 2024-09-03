@@ -11,7 +11,6 @@ from items.models.core import (
 )
 
 
-# Create your tests here.
 class TestWeaponDetailView(TestCase):
     def setUp(self) -> None:
         self.item = Weapon.objects.create(name="Test Weapon")

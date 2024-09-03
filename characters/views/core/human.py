@@ -10,7 +10,6 @@ from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-# Create your views here.
 class HumanDetailView(CharacterDetailView):
     model = Human
     template_name = "characters/core/human/detail.html"

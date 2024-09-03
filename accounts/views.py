@@ -7,7 +7,6 @@ from django.views.generic import CreateView
 from items.models.core import ItemModel
 
 
-# Create your views here.
 class SignUp(CreateView):
     """View for the Sign Up Page"""
 

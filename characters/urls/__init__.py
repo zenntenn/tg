@@ -4,7 +4,6 @@ from django.urls import include, path
 from . import mage, vampire, werewolf, wraith
 from .core import ajax, create, detail, update
 
-# Create your URLs here
 urlpatterns = [
     path("vampire/", include((vampire.urls, "vampire"), namespace="vampire")),
     path("werewolf/", include((werewolf.urls, "werewolf"), namespace="werewolf")),

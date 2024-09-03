@@ -53,7 +53,6 @@ from .meritflaw import MeritFlawCreateView, MeritFlawDetailView, MeritFlawUpdate
 from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdateView
 
 
-# Create your views here.
 class GenericCharacterDetailView(DictView):
     view_mapping = {
         "character": CharacterDetailView,

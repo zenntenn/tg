@@ -8,7 +8,6 @@ from items.models.core import ItemModel
 from locations.models.core import LocationModel
 
 
-# Create your views here.
 class ChronicleDetailView(View):
     def get_context(self, pk):
         chronicle = Chronicle.objects.get(pk=pk)

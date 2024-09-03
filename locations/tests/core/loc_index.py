@@ -2,8 +2,6 @@ from django.test import TestCase
 from game.models import ObjectType
 from locations.models.core.location import LocationModel
 
-# Create your tests here.
-
 
 class TestLocationIndexView(TestCase):
     def setUp(self) -> None:

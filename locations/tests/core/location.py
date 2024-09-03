@@ -3,7 +3,6 @@ from django.urls import reverse
 from locations.models.core import LocationModel
 
 
-# Create your tests here.
 class TestLocation(TestCase):
     def setUp(self) -> None:
         self.location = LocationModel.objects.create(name="Location 1")
