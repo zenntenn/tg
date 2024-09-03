@@ -594,7 +594,7 @@ class Mage(MtAHuman):
     def add_effect(self, effect):
         if effect.is_learnable(self):
             r = Rote.objects.create(effect=effect)
-            r.random_name()
+            r.random(mage=self)
             self.rote_points -= effect.cost()
             self.rotes.add(r)
             return True
@@ -614,7 +614,6 @@ class Mage(MtAHuman):
     def random_effect(self):
         options = self.filter_effects(max_cost=self.rote_points)
         effect = random.choice(options)
-        effect.random(self)
         self.add_effect(effect)
 
     def random_effects(self):
@@ -925,7 +924,7 @@ class Mage(MtAHuman):
         self.random_effects()
         self.random_specialties()
         self.random_node(favored_list=self.resonance.all())
-        # self.random_library()
+        self.random_library()
 
     def freebie_cost(self, trait_type):
         mage_costs = {

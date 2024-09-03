@@ -48,17 +48,17 @@ class Rote(Model):
         )
 
         if mage is not None:
-            self.practice = self.mage.practices.order_by("?").first()
-            attribute = weighted_choice(self.mage.get_attributes())
+            self.practice = mage.practices.order_by("?").first()
+            attribute = weighted_choice(mage.get_attributes())
             ability = weighted_choice(
                 {
                     k: v
-                    for k, v in self.mage.get_abilities().items()
-                    if k in self.practice.abilities
+                    for k, v in mage.get_abilities().items()
+                    if k in [x.property_name for x in self.practice.abilities.all()]
                 }
             )
             self.attribute = Attribute.objects.get(property_name=attribute)
-            self.ability = Attribute.objects.get(property_name=ability)
+            self.ability = Ability.objects.get(property_name=ability)
         elif book is not None:
             self.practice = book.practices.order_by("?").first()
             self.attribute = Attribute.objects.order_by("?").first()
