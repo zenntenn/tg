@@ -17,7 +17,6 @@ class LocationCreateView(CreateView):
         "gauntlet",
         "shroud",
         "dimension_barrier",
-        "reality_zone",
         "description",
     ]
     template_name = "locations/core/location/form.html"
@@ -31,7 +30,6 @@ class LocationUpdateView(UpdateView):
         "gauntlet",
         "shroud",
         "dimension_barrier",
-        "reality_zone",
         "description",
     ]
     template_name = "locations/core/location/form.html"

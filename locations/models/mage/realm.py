@@ -1,9 +1,15 @@
+from django.db import models
 from django.urls import reverse
 from locations.models.core.location import LocationModel
+from locations.models.mage.realityzone import RealityZone
 
 
 class HorizonRealm(LocationModel):
     type = "horizon_realm"
+
+    reality_zone = models.ForeignKey(
+        RealityZone, blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
         verbose_name = "Horizon Realm"

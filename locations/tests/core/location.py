@@ -18,7 +18,7 @@ class TestLocation(TestCase):
 class TestLocationDetailView(TestCase):
     def setUp(self) -> None:
         self.location = LocationModel.objects.create(
-            name="Location 1", description="Test description", reality_zone="Test RZ"
+            name="Location 1", description="Test description"
         )
         self.url = self.location.get_absolute_url()
 
@@ -35,7 +35,6 @@ class TestLocationDetailView(TestCase):
         self.assertContains(response, self.location.name)
         self.assertContains(response, self.location.description)
         self.assertContains(response, self.location.gauntlet)
-        self.assertContains(response, self.location.reality_zone)
 
 
 class TestLocationCreateView(TestCase):
@@ -43,7 +42,6 @@ class TestLocationCreateView(TestCase):
         self.valid_data = {
             "name": "Test Name",
             "description": "Test Description",
-            "reality_zone": "Test RZ",
             "gauntlet": 6,
             "shroud": 5,
             "dimension_barrier": 5,
@@ -69,12 +67,11 @@ class TestLocationCreateView(TestCase):
 class TestLocationUpdateView(TestCase):
     def setUp(self):
         self.location = LocationModel.objects.create(
-            name="Location 1", description="Test description", reality_zone="Test RZ"
+            name="Location 1", description="Test description"
         )
         self.valid_data = {
             "name": "Test Name Updated",
             "description": "Test Description Updated",
-            "reality_zone": "Test RZ Updated",
             "gauntlet": 6,
             "shroud": 5,
             "dimension_barrier": 5,

@@ -21,7 +21,6 @@ class LocationModel(Model):
     gauntlet = models.IntegerField(default=7)
     shroud = models.IntegerField(default=7)
     dimension_barrier = models.IntegerField(default=6)
-    reality_zone = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "Location"

@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from locations.models.core.location import LocationModel
+from locations.models.mage.realityzone import RealityZone
 
 
 class Sector(LocationModel):
@@ -19,6 +20,9 @@ class Sector(LocationModel):
 
     sector_class = models.CharField(max_length=10, choices=SECTOR_CLASS, default="")
     constraints = models.TextField(default="")
+    reality_zone = models.ForeignKey(
+        RealityZone, blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
         verbose_name = "Sector"

@@ -23,7 +23,6 @@ class CityUpdateView(UpdateView):
         "gauntlet",
         "shroud",
         "dimension_barrier",
-        "reality_zone",
         "description",
         "population",
         "mood",

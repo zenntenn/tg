@@ -276,7 +276,6 @@ class TestNodeCreateView(TestCase):
     def setUp(self):
         self.valid_data = {
             "name": "Node",
-            "reality_zone": "Test RZ",
             "description": "Test",
             "rank": 2,
             "size": -1,
@@ -310,7 +309,6 @@ class TestNodeUpdateView(TestCase):
         )
         self.valid_data = {
             "name": "Node Updated",
-            "reality_zone": "Test RZ",
             "description": "Test",
             "rank": 2,
             "size": -1,

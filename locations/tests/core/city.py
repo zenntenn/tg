@@ -39,7 +39,6 @@ class TestCityCreateView(TestCase):
             "gauntlet": 6,
             "shroud": 5,
             "dimension_barrier": 5,
-            "reality_zone": "Reality Zone",
             "population": 800000,
             "mood": "None",
             "theme": "Test theme",
@@ -68,7 +67,6 @@ class TestCityUpdateView(TestCase):
         self.location = City.objects.create(
             name="Location 1",
             description="Test description",
-            reality_zone="Test RZ",
             population=10000,
         )
         self.valid_data = {
@@ -78,7 +76,6 @@ class TestCityUpdateView(TestCase):
             "gauntlet": 6,
             "shroud": 5,
             "dimension_barrier": 5,
-            "reality_zone": "Reality Zone",
             "population": 2,
             "mood": "None",
             "theme": "Test theme",
