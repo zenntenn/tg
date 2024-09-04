@@ -10,10 +10,13 @@ from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
+from characters.models.werewolf.totem import Totem
+from characters.models.werewolf.wtahuman import WtAHuman
 from core.models import Language, Noun
 from game.models import ObjectType
 from items.models.core.material import Material
 from items.models.core.medium import Medium
+from items.models.werewolf.fetish import Fetish
 
 
 def human_setup():
@@ -42,6 +45,62 @@ def vampire_setup():
 
 def werewolf_setup():
     human_setup()
+    w = WtAHuman.objects.create(name="")
+    # for i in range(5):
+    #     w = Werewolf.objects.create(name=f"Character {i}", owner=player)
+    for i in range(5):
+        Totem.objects.create(name=f"Totem {i}", cost=10 + i)
+        # for i in range(1, 6):
+        #     Gift.objects.create(name=f"Gift {i}", rank=i, allowed={"garou": []})
+        #     Gift.objects.create(name=f"Gift {5+i}", rank=i, allowed={"garou": []})
+        # t = Tribe.objects.create(name="Test Tribe", willpower=5)
+        # Tribe.objects.create(name="Test Tribe 2", willpower=3)
+        # Camp.objects.create(name="Test Camp", tribe=t)
+        # for t in Tribe.objects.all():
+        #     Gift.objects.create(name=f"{t.name} Gift", rank=1, allowed={"garou": [t.name]})
+        # for auspice in ["ragabash", "theurge", "philodox", "galliard", "ahroun"]:
+        #     Gift.objects.create(
+        #         name=f"{auspice.title()} Gift", rank=1, allowed={"garou": [auspice]}
+        #     )
+        # for breed in ["homid", "metis", "lupus"]:
+        #     Gift.objects.create(
+        #         name=f"{breed.title()} Gift", rank=1, allowed={"garou": [breed]}
+        #     )
+        # for i in range(6):
+        #     Rite.objects.create(name=f"Rite {i}", level=i)
+        #     Rite.objects.create(name=f"Rite {6+i}", level=i)
+        # for i in range(5):
+        #     MeritFlaw.objects.create(name=f"Merit {i}", ratings=[i], garou=True)
+        #     MeritFlaw.objects.create(name=f"Flaw {i}", ratings=[-i], garou=True)
+        # for i in range(10):
+        for trait in w.get_attributes():
+            Specialty.objects.create(
+                name=f"{trait.replace('_', ' ').title()} {i}", stat=trait
+            )
+
+        for trait in w.get_abilities():
+            Specialty.objects.create(
+                name=f"{trait.replace('_', ' ').title()} {i}", stat=trait
+            )
+    for i in range(20):
+        Archetype.objects.create(name=f"Archetype {i}")
+    # for i in range(3):
+    #     for j in range(3):
+    #         for k in range(3):
+    #             RenownIncident.objects.create(
+    #                 name=f"Incident {i}, {j}, {k}",
+    #                 glory=i - 1,
+    #                 honor=j - 1,
+    #                 wisdom=k - 1,
+    #             )
+    for i in range(6):
+        Fetish.objects.create(name=f"Fetish {i}", rank=i, gnosis=i)
+        Fetish.objects.create(name=f"Fetish {i+6}", rank=i, gnosis=i)
+        Fetish.objects.create(name=f"Fetish {i+12}", rank=i, gnosis=i)
+        Fetish.objects.create(name=f"Fetish {i+18}", rank=i, gnosis=i)
+        Fetish.objects.create(name=f"Fetish {i+24}", rank=i, gnosis=i)
+    # for i in range(10):
+    #     BattleScar.objects.create(name=f"Scar {i}")
 
 
 def mage_setup():
