@@ -32,4 +32,19 @@ urls = [
         views.werewolf.TribeUpdateView.as_view(),
         name="tribe",
     ),
+    path(
+        "gifts/<pk>/",
+        views.werewolf.GiftUpdateView.as_view(),
+        name="gift",
+    ),
+    path(
+        "renownincidents/<pk>/",
+        views.werewolf.RenownIncidentUpdateView.as_view(),
+        name="renownincident",
+    ),
+    path(
+        "battlescar/<pk>/",
+        views.werewolf.BattleScarUpdateView.as_view(),
+        name="battlescar",
+    ),
 ]

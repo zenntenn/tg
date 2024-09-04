@@ -24,7 +24,10 @@ from characters.models.mage.mage import Mage, PracticeRating, ResRating
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.rote import Rote
 from characters.models.vampire.vtmhuman import VtMHuman
+from characters.models.werewolf.battlescar import BattleScar
 from characters.models.werewolf.charm import SpiritCharm
+from characters.models.werewolf.gift import Gift
+from characters.models.werewolf.renownincident import RenownIncident
 from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
@@ -247,3 +250,27 @@ class RiteAdmin(admin.ModelAdmin):
 @admin.register(Tribe)
 class TribeAdmin(admin.ModelAdmin):
     list_display = ("name", "willpower")
+
+
+@admin.register(Gift)
+class GiftAdmin(admin.ModelAdmin):
+    list_display = ("name", "rank", "allowed")
+
+
+@admin.register(RenownIncident)
+class RenownIncidentAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "glory",
+        "honor",
+        "wisdom",
+        "posthumous",
+        "only_once",
+        "breed",
+        "rite",
+    )
+
+
+@admin.register(BattleScar)
+class BattleScarAdmin(admin.ModelAdmin):
+    list_display = ("name", "glory")

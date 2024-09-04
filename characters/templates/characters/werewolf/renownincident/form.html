@@ -1,0 +1,40 @@
+{% extends "core/form.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Glory</div>
+        <div class="col-sm">{{ form.glory }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Honor</div>
+        <div class="col-sm">{{ form.honor }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Wisdom</div>
+        <div class="col-sm">{{ form.wisdom }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Posthumous?</div>
+        <div class="col-sm">{{ form.posthumous }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Only Once?</div>
+        <div class="col-sm">{{ form.only_once }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Breed Restriction</div>
+        <div class="col-sm">{{ form.breed }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Rite Required</div>
+        <div class="col-sm">{{ form.rite.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+{% endblock contents %}
