@@ -27,4 +27,9 @@ urls = [
         views.werewolf.RiteUpdateView.as_view(),
         name="rite",
     ),
+    path(
+        "tribes/<pk>/",
+        views.werewolf.TribeUpdateView.as_view(),
+        name="tribe",
+    ),
 ]

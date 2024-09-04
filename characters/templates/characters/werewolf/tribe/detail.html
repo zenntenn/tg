@@ -1,0 +1,59 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Starting Willpower</div>
+        <div class="col-sm">{{ object.willpower }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Camps</div>
+        <div class="col-sm">{{ object.camp_list|safe }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ object.description }}</div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">Gifts</h2>
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Level 1</h3>
+    </div>
+    <div class="row">
+        {% for gift in object.gifts_level_1 %}<div class="col-sm">{{ gift|safe }}</div>{% endfor %}
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Level 2</h3>
+    </div>
+    <div class="row">
+        {% for gift in object.gifts_level_2 %}<div class="col-sm">{{ gift|safe }}</div>{% endfor %}
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Level 3</h3>
+    </div>
+    <div class="row">
+        {% for gift in object.gifts_level_3 %}<div class="col-sm">{{ gift|safe }}</div>{% endfor %}
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Level 4</h3>
+    </div>
+    <div class="row">
+        {% for gift in object.gifts_level_4 %}<div class="col-sm">{{ gift|safe }}</div>{% endfor %}
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Level 5</h3>
+    </div>
+    <div class="row">
+        {% for gift in object.gifts_level_5 %}<div class="col-sm">{{ gift|safe }}</div>{% endfor %}
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Level 6</h3>
+    </div>
+    <div class="row">
+        {% for gift in object.gifts_level_6 %}<div class="col-sm">{{ gift|safe }}</div>{% endfor %}
+    </div>
+{% endblock contents %}

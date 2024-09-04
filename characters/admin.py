@@ -28,6 +28,7 @@ from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
+from characters.models.werewolf.tribe import Tribe
 from characters.models.werewolf.wtahuman import WtAHuman
 from characters.models.wraith.wtohuman import WtOHuman
 from django.contrib import admin
@@ -241,3 +242,8 @@ admin.site.register(WtAHuman)
 @admin.register(Rite)
 class RiteAdmin(admin.ModelAdmin):
     list_display = ("name", "level", "type")
+
+
+@admin.register(Tribe)
+class TribeAdmin(admin.ModelAdmin):
+    list_display = ("name", "willpower")
