@@ -25,6 +25,7 @@ from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.rote import Rote
 from characters.models.vampire.vtmhuman import VtMHuman
 from characters.models.werewolf.charm import SpiritCharm
+from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
 from characters.models.werewolf.wtahuman import WtAHuman
@@ -235,3 +236,8 @@ admin.site.register(PracticeRating)
 
 
 admin.site.register(WtAHuman)
+
+
+@admin.register(Rite)
+class RiteAdmin(admin.ModelAdmin):
+    list_display = ("name", "level", "type")

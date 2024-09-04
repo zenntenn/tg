@@ -17,4 +17,5 @@ urls = [
         views.werewolf.TotemDetailView.as_view(),
         name="totem",
     ),
+    path("rites/<pk>/", views.werewolf.RiteDetailView.as_view(), name="rite"),
 ]
