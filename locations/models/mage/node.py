@@ -10,6 +10,7 @@ from django.db.models import F, Q
 from django.urls import reverse
 from game.models import ObjectType
 from locations.models.core import LocationModel
+from locations.models.mage.realityzone import RealityZone
 
 
 class SizeChoices(models.IntegerChoices):
@@ -50,6 +51,9 @@ class Node(LocationModel):
     tass_per_week = models.IntegerField(default=0)
     tass_form = models.CharField(default="", max_length=100)
     quintessence_form = models.CharField(default="", max_length=100)
+    reality_zone = models.ForeignKey(
+        RealityZone, blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
         verbose_name = "Node"

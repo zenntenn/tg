@@ -8,6 +8,7 @@ from django.urls import reverse
 from locations.models.core.location import LocationModel
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
+from locations.models.mage.realityzone import RealityZone
 
 
 class Chantry(LocationModel):
@@ -90,6 +91,9 @@ class Chantry(LocationModel):
         Library, on_delete=models.SET_NULL, blank=True, null=True
     )
     nodes = models.ManyToManyField(Node, blank=True)
+    reality_zone = models.ForeignKey(
+        RealityZone, blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     members = models.ManyToManyField(Human, blank=True, related_name="member_of")
     cabals = models.ManyToManyField("characters.Cabal", blank=True)

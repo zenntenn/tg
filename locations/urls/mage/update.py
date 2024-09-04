@@ -28,4 +28,9 @@ urls = [
         views.mage.ChantryUpdateView.as_view(),
         name="chantry",
     ),
+    path(
+        "realityzone/<pk>/",
+        views.mage.RealityZoneUpdateView.as_view(),
+        name="realityzone",
+    ),
 ]
