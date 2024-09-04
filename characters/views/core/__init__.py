@@ -62,6 +62,7 @@ class GenericCharacterDetailView(DictView):
         "mage": mage.MageCharacterCreationView,
         "vtm_human": vampire.VtMHumanDetailView,
         "wto_human": wraith.WtOHumanDetailView,
+        "wta_human": werewolf.WtAHumanDetailView,
     }
     model_class = Character
     key_property = "type"

@@ -17,4 +17,9 @@ urls = [
         views.werewolf.TotemCreateView.as_view(),
         name="totem",
     ),
+    path(
+        "wtahuman/",
+        views.werewolf.WtAHumanCreateView.as_view(),
+        name="wta_human",
+    ),
 ]

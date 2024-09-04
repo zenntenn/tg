@@ -17,4 +17,9 @@ urls = [
         views.werewolf.TotemUpdateView.as_view(),
         name="totem",
     ),
+    path(
+        "wtahuman/<pk>/",
+        views.werewolf.WtAHumanUpdateView.as_view(),
+        name="wta_human",
+    ),
 ]
