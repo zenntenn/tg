@@ -22,4 +22,9 @@ urls = [
         views.werewolf.WtAHumanUpdateView.as_view(),
         name="wta_human",
     ),
+    path(
+        "rites/<pk>/",
+        views.werewolf.RiteUpdateView.as_view(),
+        name="rite",
+    ),
 ]
