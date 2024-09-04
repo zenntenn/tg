@@ -27,4 +27,9 @@ urls = [
         views.werewolf.RiteCreateView.as_view(),
         name="rite",
     ),
+    path(
+        "tribes/",
+        views.werewolf.TribeCreateView.as_view(),
+        name="tribe",
+    ),
 ]
