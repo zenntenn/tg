@@ -1,5 +1,9 @@
 import random
 
+from characters.models.changeling.changeling import Changeling
+from characters.models.changeling.house import House
+from characters.models.changeling.kith import Kith
+from characters.models.changeling.legacy import Legacy
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute import Attribute
@@ -10,7 +14,14 @@ from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Paradigm, Practice, Tenet
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
+from characters.models.werewolf.battlescar import BattleScar
+from characters.models.werewolf.camp import Camp
+from characters.models.werewolf.garou import Werewolf
+from characters.models.werewolf.gift import Gift
+from characters.models.werewolf.renownincident import RenownIncident
+from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.totem import Totem
+from characters.models.werewolf.tribe import Tribe
 from characters.models.werewolf.wtahuman import WtAHuman
 from core.models import Language, Noun
 from game.models import ObjectType
@@ -45,62 +56,69 @@ def vampire_setup():
 
 def werewolf_setup():
     human_setup()
+    garou = ObjectType.objects.get_or_create(
+        name="werewolf", type="char", gameline="wta"
+    )[0]
+
     w = WtAHuman.objects.create(name="")
-    # for i in range(5):
-    #     w = Werewolf.objects.create(name=f"Character {i}", owner=player)
+    for i in range(5):
+        w = Werewolf.objects.create(name=f"Character {i}")
     for i in range(5):
         Totem.objects.create(name=f"Totem {i}", cost=10 + i)
-        # for i in range(1, 6):
-        #     Gift.objects.create(name=f"Gift {i}", rank=i, allowed={"garou": []})
-        #     Gift.objects.create(name=f"Gift {5+i}", rank=i, allowed={"garou": []})
-        # t = Tribe.objects.create(name="Test Tribe", willpower=5)
-        # Tribe.objects.create(name="Test Tribe 2", willpower=3)
-        # Camp.objects.create(name="Test Camp", tribe=t)
-        # for t in Tribe.objects.all():
-        #     Gift.objects.create(name=f"{t.name} Gift", rank=1, allowed={"garou": [t.name]})
-        # for auspice in ["ragabash", "theurge", "philodox", "galliard", "ahroun"]:
-        #     Gift.objects.create(
-        #         name=f"{auspice.title()} Gift", rank=1, allowed={"garou": [auspice]}
-        #     )
-        # for breed in ["homid", "metis", "lupus"]:
-        #     Gift.objects.create(
-        #         name=f"{breed.title()} Gift", rank=1, allowed={"garou": [breed]}
-        #     )
-        # for i in range(6):
-        #     Rite.objects.create(name=f"Rite {i}", level=i)
-        #     Rite.objects.create(name=f"Rite {6+i}", level=i)
-        # for i in range(5):
-        #     MeritFlaw.objects.create(name=f"Merit {i}", ratings=[i], garou=True)
-        #     MeritFlaw.objects.create(name=f"Flaw {i}", ratings=[-i], garou=True)
-        # for i in range(10):
+    for i in range(1, 6):
+        Gift.objects.create(name=f"Gift {i}", rank=i, allowed={"garou": []})
+        Gift.objects.create(name=f"Gift {5+i}", rank=i, allowed={"garou": []})
+    t = Tribe.objects.create(name="Test Tribe", willpower=5)
+    Tribe.objects.create(name="Test Tribe 2", willpower=3)
+    Camp.objects.create(name="Test Camp", tribe=t)
+    for t in Tribe.objects.all():
+        Gift.objects.create(name=f"{t.name} Gift", rank=1, allowed={"garou": [t.name]})
+    for auspice in ["ragabash", "theurge", "philodox", "galliard", "ahroun"]:
+        Gift.objects.create(
+            name=f"{auspice.title()} Gift", rank=1, allowed={"garou": [auspice]}
+        )
+    for breed in ["homid", "metis", "lupus"]:
+        Gift.objects.create(
+            name=f"{breed.title()} Gift", rank=1, allowed={"garou": [breed]}
+        )
+    for i in range(6):
+        Rite.objects.create(name=f"Rite {i}", level=i)
+        Rite.objects.create(name=f"Rite {6+i}", level=i)
+    for i in range(5):
+        mf = MeritFlaw.objects.create(name=f"Merit {i}")
+        mf.add_rating(i)
+        mf.allowed_types.add(garou)
+        mf = MeritFlaw.objects.create(name=f"Flaw {-i}")
+        mf.add_rating(-i)
+        mf.allowed_types.add(garou)
+    for i in range(10):
         for trait in w.get_attributes():
             Specialty.objects.create(
                 name=f"{trait.replace('_', ' ').title()} {i}", stat=trait
             )
-
         for trait in w.get_abilities():
             Specialty.objects.create(
                 name=f"{trait.replace('_', ' ').title()} {i}", stat=trait
             )
     for i in range(20):
         Archetype.objects.create(name=f"Archetype {i}")
-    # for i in range(3):
-    #     for j in range(3):
-    #         for k in range(3):
-    #             RenownIncident.objects.create(
-    #                 name=f"Incident {i}, {j}, {k}",
-    #                 glory=i - 1,
-    #                 honor=j - 1,
-    #                 wisdom=k - 1,
-    #             )
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                RenownIncident.objects.create(
+                    name=f"Incident {i}, {j}, {k}",
+                    glory=i - 1,
+                    honor=j - 1,
+                    wisdom=k - 1,
+                )
     for i in range(6):
         Fetish.objects.create(name=f"Fetish {i}", rank=i, gnosis=i)
         Fetish.objects.create(name=f"Fetish {i+6}", rank=i, gnosis=i)
         Fetish.objects.create(name=f"Fetish {i+12}", rank=i, gnosis=i)
         Fetish.objects.create(name=f"Fetish {i+18}", rank=i, gnosis=i)
         Fetish.objects.create(name=f"Fetish {i+24}", rank=i, gnosis=i)
-    # for i in range(10):
-    #     BattleScar.objects.create(name=f"Scar {i}")
+    for i in range(10):
+        BattleScar.objects.create(name=f"Scar {i}")
 
 
 def mage_setup():
@@ -529,3 +547,43 @@ def wraith_setup():
 
 def changeling_setup():
     human_setup()
+    changeling = ObjectType.objects.get_or_create(
+        name="changeling", type="char", gameline="ctd"
+    )[0]
+    for i in range(5):
+        c = Changeling.objects.create(name=f"Character {i}")
+
+    for i in range(10):
+        Kith.objects.create(
+            name=f"Kith {i}",
+            birthrights=["Birthright 1", "Birthright 2"],
+            frailty="",
+            description="",
+        )
+        House.objects.create(
+            name=f"House {i}",
+            court=["seelie", "unseelie"][i % 2],
+            boon="",
+            flaw="",
+            factions=[],
+        )
+        Legacy.objects.create(
+            name=f"Legacy {i}",
+            court=["seelie", "unseelie"][i % 2],
+        )
+        if i % 2 == 0:
+            mf = MeritFlaw.objects.create(name=f"Merit {i//2}")
+            mf.add_rating(i // 2 + 1)
+            mf.allowed_types.add(changeling)
+        else:
+            mf = MeritFlaw.objects.create(name=f"Flaw {i//2}")
+            mf.add_rating(-i // 2 - 1)
+            mf.allowed_types.add(changeling)
+        for ability in c.get_abilities():
+            Specialty.objects.create(
+                name=f"{ability.title()} Specialty {i}", stat=ability
+            )
+        for attribute in c.get_attributes():
+            Specialty.objects.create(
+                name=f"{attribute.title()} Specialty {i}", stat=attribute
+            )

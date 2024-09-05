@@ -47,4 +47,34 @@ urls = [
         views.werewolf.BattleScarUpdateView.as_view(),
         name="battlescar",
     ),
+    path(
+        "pack/<pk>/",
+        views.werewolf.PackUpdateView.as_view(),
+        name="pack",
+    ),
+    path(
+        "fomor/<pk>/",
+        views.werewolf.FomorUpdateView.as_view(),
+        name="fomor",
+    ),
+    path(
+        "werewolf/<pk>/",
+        views.werewolf.WerewolfUpdateView.as_view(),
+        name="werewolf",
+    ),
+    path(
+        "kinfolk/<pk>/",
+        views.werewolf.KinfolkUpdateView.as_view(),
+        name="kinfolk",
+    ),
+    path(
+        "camps/<pk>/",
+        views.werewolf.CampUpdateView.as_view(),
+        name="camp",
+    ),
+    path(
+        "fomoripower/<pk>/",
+        views.werewolf.FomoriPowerUpdateView.as_view(),
+        name="fomoripower",
+    ),
 ]

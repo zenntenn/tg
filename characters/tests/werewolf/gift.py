@@ -2,6 +2,14 @@ from characters.models.werewolf.gift import Gift
 from django.test import TestCase
 
 
+class TestGift(TestCase):
+    def setUp(self):
+        self.gift = Gift.objects.create()
+
+    def test_save(self):
+        self.assertIn("garou", self.gift.allowed)
+
+
 class TestGiftDetailView(TestCase):
     def setUp(self) -> None:
         self.gift = Gift.objects.create(name="Test Gift")

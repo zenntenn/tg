@@ -34,4 +34,10 @@ urls = [
         views.werewolf.RenownIncidentDetailView.as_view(),
         name="renownincident",
     ),
+    path("camps/<pk>/", views.werewolf.CampDetailView.as_view(), name="camp"),
+    path(
+        "fomoripower/<pk>/",
+        views.werewolf.FomoriPowerDetailView.as_view(),
+        name="fomoripower",
+    ),
 ]

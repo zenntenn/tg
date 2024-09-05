@@ -1,3 +1,11 @@
+from characters.models.changeling import (
+    Changeling,
+    CtDHuman,
+    House,
+    Kith,
+    Legacy,
+    Motley,
+)
 from characters.models.core import (
     Archetype,
     Character,
@@ -9,31 +17,42 @@ from characters.models.core import (
     MeritFlawRating,
     Specialty,
 )
-from characters.models.mage import Effect, Resonance
-from characters.models.mage.cabal import Cabal
-from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import (
+from characters.models.mage import (
+    Cabal,
     CorruptedPractice,
+    Effect,
     Instrument,
+    Mage,
+    MageFaction,
+    MtAHuman,
     Paradigm,
     Practice,
+    PracticeRating,
+    Resonance,
+    ResRating,
+    Rote,
     SpecializedPractice,
     Tenet,
 )
-from characters.models.mage.mage import Mage, PracticeRating, ResRating
-from characters.models.mage.mtahuman import MtAHuman
-from characters.models.mage.rote import Rote
-from characters.models.vampire.vtmhuman import VtMHuman
-from characters.models.werewolf.battlescar import BattleScar
-from characters.models.werewolf.charm import SpiritCharm
-from characters.models.werewolf.gift import Gift
-from characters.models.werewolf.renownincident import RenownIncident
-from characters.models.werewolf.rite import Rite
-from characters.models.werewolf.spirit_character import SpiritCharacter
-from characters.models.werewolf.totem import Totem
-from characters.models.werewolf.tribe import Tribe
-from characters.models.werewolf.wtahuman import WtAHuman
-from characters.models.wraith.wtohuman import WtOHuman
+from characters.models.vampire import VtMHuman
+from characters.models.werewolf import (
+    BattleScar,
+    Camp,
+    Fomor,
+    FomoriPower,
+    Gift,
+    Kinfolk,
+    Pack,
+    RenownIncident,
+    Rite,
+    SpiritCharacter,
+    SpiritCharm,
+    Totem,
+    Tribe,
+    Werewolf,
+    WtAHuman,
+)
+from characters.models.wraith import WtOHuman
 from django.contrib import admin
 
 admin.site.register(CharacterModel)
@@ -274,3 +293,60 @@ class RenownIncidentAdmin(admin.ModelAdmin):
 @admin.register(BattleScar)
 class BattleScarAdmin(admin.ModelAdmin):
     list_display = ("name", "glory")
+
+
+@admin.register(Camp)
+class CampAdmin(admin.ModelAdmin):
+    list_display = ("name", "tribe")
+
+
+@admin.register(Werewolf)
+class WerewolfAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "rank",
+        "auspice",
+        "breed",
+        "tribe",
+        "rage",
+        "gnosis",
+        "glory",
+        "wisdom",
+        "honor",
+    )
+
+
+@admin.register(Kinfolk)
+class KinfolkAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "breed",
+        "tribe",
+    )
+
+
+@admin.register(Pack)
+class PackAdmin(admin.ModelAdmin):
+    list_display = ("name", "leader", "totem")
+
+
+@admin.register(Fomor)
+class FomorAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
+@admin.register(FomoriPower)
+class FomoriPowerAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
+@admin.register(Changeling)
+class ChangelingAdmin(admin.ModelAdmin):
+    list_display = ("name", "kith")
+
+
+admin.site.register(Legacy)
+admin.site.register(CtDHuman)
+admin.site.register(House)
+admin.site.register(Kith)
+admin.site.register(Motley)

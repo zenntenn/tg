@@ -9,7 +9,8 @@ from .focus import (
     SpecializedPractice,
     Tenet,
 )
-from .mage import Mage
+from .mage import Mage, PracticeRating, ResRating
 from .mtahuman import MtAHuman
 from .resonance import Resonance
+from .rote import Rote
 from .sphere import Sphere

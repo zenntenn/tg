@@ -24,7 +24,7 @@ from characters.models.vampire.vtmhuman import VtMHuman
 from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
-from characters.views import mage, vampire, werewolf, wraith
+from characters.views import changeling, mage, vampire, werewolf, wraith
 from core.utils import get_gameline_name
 from core.views.generic import DictView
 from django.forms import BaseModelForm
@@ -63,6 +63,11 @@ class GenericCharacterDetailView(DictView):
         "vtm_human": vampire.VtMHumanDetailView,
         "wto_human": wraith.WtOHumanDetailView,
         "wta_human": werewolf.WtAHumanDetailView,
+        "kinfolk": werewolf.KinfolkDetailView,
+        "garou": werewolf.WerewolfDetailView,
+        "fomor": werewolf.FomorDetailView,
+        "changeling": changeling.ChangelingDetailView,
+        "ctd_human": changeling.CtDHumanDetailView,
     }
     model_class = Character
     key_property = "type"
@@ -73,6 +78,8 @@ class GenericGroupDetailView(DictView):
     view_mapping = {
         "group": GroupDetailView,
         "cabal": mage.CabalDetailView,
+        "pack": werewolf.PackDetailView,
+        "motley": changeling.MotleyDetailView,
     }
     model_class = Group
     key_property = "type"

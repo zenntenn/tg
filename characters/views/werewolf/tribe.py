@@ -8,8 +8,8 @@ class TribeDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # split gifts by level once implemented
-        # camp list
+        # TODO: split gifts by level once implemented
+        # TODO: camp list
         return context
 
 

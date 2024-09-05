@@ -38,13 +38,43 @@ urls = [
         name="renownincident",
     ),
     path(
-        "battlescar/create/",
+        "battlescar/",
         views.werewolf.BattleScarCreateView.as_view(),
         name="battlescar",
     ),
     path(
-        "gifts/create/",
+        "gifts/",
         views.werewolf.GiftCreateView.as_view(),
         name="gift",
+    ),
+    path(
+        "pack/",
+        views.werewolf.PackCreateView.as_view(),
+        name="pack",
+    ),
+    path(
+        "fomor/",
+        views.werewolf.FomorCreateView.as_view(),
+        name="fomor",
+    ),
+    path(
+        "werewolf/",
+        views.werewolf.WerewolfCreateView.as_view(),
+        name="werewolf",
+    ),
+    path(
+        "kinfolk/",
+        views.werewolf.KinfolkCreateView.as_view(),
+        name="kinfolk",
+    ),
+    path(
+        "camps/",
+        views.werewolf.CampCreateView.as_view(),
+        name="camp",
+    ),
+    path(
+        "fomoripower/",
+        views.werewolf.FomoriPowerCreateView.as_view(),
+        name="fomoripower",
     ),
 ]

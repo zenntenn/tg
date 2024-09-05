@@ -1,0 +1,154 @@
+{% extends "characters/werewolf/wtahuman/detail.html" %}
+{% load dots %}
+{% block basics %}
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+        <div class="col-sm">Nature</div>
+        <a class="col-sm" href="{{ object.nature.get_absolute_url }}">{{ object.nature }}</a>
+        <div class="col-sm">Tribe</div>
+        <a class="col-sm" href="{{ object.tribe.get_absolute_url }}">{{ object.tribe.name }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Player</div>
+        <div class="col-sm">{{ object.player }}</div>
+        <div class="col-sm">Demeanor</div>
+        <a class="col-sm" href="{{ object.demeanor.get_absolute_url }}">{{ object.demeanor }}</a>
+        <div class="col-sm">Relation</div>
+        <div class="col-sm">{{ object.relation }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm"></div>
+        <div class="col-sm">Concept</div>
+        <div class="col-sm">{{ object.concept }}</div>
+        <div class="col-sm">Breed</div>
+        <div class="col-sm">{{ object.get_breed_display }}</div>
+    </div>
+{% endblock basics %}
+{% block advantages %}
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">Advantages</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">Willpower</div>
+        <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
+        <div class="col-sm">Gnosis</div>
+        <div class="col-sm dots">{{ object.gnosis|dots:10 }}</div>
+    </div>
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">Renown</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">Glory</div>
+        <div class="col-sm dots">
+            {{ object.glory|dots:10 }}
+        </div>
+        <div class="col-sm">
+            Honor
+        </div>
+        <div class="col-sm dots">
+            {{ object.honor|dots:10 }}
+        </div>
+        <div class="col-sm">
+            Wisdom
+        </div>
+        <div class="col-sm dots">
+            {{ object.wisdom|dots:10 }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Temporary Glory
+        </div>
+        <div class="col-sm dots">
+            {{ object.temporary_glory|dots:10 }}
+        </div>
+        <div class="col-sm">
+            Temporary Honor
+        </div>
+        <div class="col-sm dots">
+            {{ object.temporary_honor|dots:10 }}
+        </div>
+        <div class="col-sm">
+            Temporary Wisdom
+        </div>
+        <div class="col-sm dots">
+            {{ object.temporary_wisdom|dots:10 }}
+        </div>
+    </div>
+{% endblock advantages %}
+{% block backgrounds %}
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">
+            Backgrounds
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Allies
+        </div>
+        <div class="col-sm dots">
+            {{ object.allies|dots }}
+        </div>
+        <div class="col-sm">
+            Contacts
+        </div>
+        <div class="col-sm dots">
+            {{ object.contacts|dots }}
+        </div>
+        <div class="col-sm">
+            Mentor
+        </div>
+        <div class="col-sm dots">
+            {{ object.mentor|dots }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+            Pure Breed
+        </div>
+        <div class="col-sm dots">
+            {{ object.pure_breed|dots }}
+        </div>
+        <div class="col-sm">
+            Resources
+        </div>
+        <div class="col-sm dots">
+            {{ object.resources|dots }}
+        </div>
+        <div class="col-sm">
+        </div>
+    </div>
+{% endblock backgrounds %}
+{% block powers %}
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">
+            Gifts
+        </h2>
+    </div>
+    {% for row in gifts %}
+        <div class="row">
+            {% for gift in row %}
+                <a class="col-sm" href="{{ gift.get_absolute_url }}">
+                    {{ gift.name }}
+                </a>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <h2 class="col-sm {{ object.get_heading }}">
+            Fetishes
+        </h2>
+    </div>
+    {% for fetish in object.fetishes_owned.all %}
+        <div class="row">
+            <a class="col-sm" href="{{ fetish.get_absolute_url }}">{{ fetish.name }}</a>
+        </div>
+    {% endfor %}
+{% endblock powers %}
