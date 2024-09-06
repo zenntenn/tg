@@ -23,4 +23,9 @@ urls = [
         views.mage.mage.LoadExamplesView.as_view(),
         name="load_examples",
     ),
+    path(
+        "get_abilities/",
+        views.mage.mage.get_abilities,
+        name="get_abilities",
+    ),
 ]
