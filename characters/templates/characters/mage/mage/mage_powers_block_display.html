@@ -49,12 +49,16 @@
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
     </div>
-    {% for row in rotes %}
-        <div class="row">
-            {% for rote in row %}
-                <a class="col-sm" href={{ rote.get_absolute_url }}>{{ rote.name }}</a>
-                <div class="col-sm dots">{{ rote.effect.spheres }}</div>
-            {% endfor %}
-        </div>
+    <div class="row">
+        {% for rote in object.rotes.all %}
+            {% if forloop.counter0|divisibleby:3 %}
+            </div>
+            <div class="row">
+            {% endif %}
+            <a class="col-sm-2" href="{{ rote.get_absolute_url }}">{{ rote.name }}</a>
+            <div class="col-sm-2 dots">{{ rote.effect.spheres }}</div>
+            {% if forloop.last %}</div>{% endif %}
+    {% empty %}
+    </div>
     {% endfor %}
 {% endblock rotes %}

@@ -3,6 +3,7 @@ from typing import Any
 from characters.forms.core.advancement import AdvancementForm
 from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
+from characters.forms.mage.rote import RoteCreationForm
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute import Attribute
@@ -20,11 +21,12 @@ from characters.views.core.human import (
     HumanDetailView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
+from core.models import Language
 from core.widgets import AutocompleteTextInput
 from django import forms
 from django.db.models import Q
 from django.forms import BaseModelForm, SelectDateWidget, formset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
@@ -125,6 +127,17 @@ class LoadExamplesView(View):
             examples = []
 
         return render(request, self.template_name, {"examples": examples})
+
+
+def get_abilities(request):
+    object_id = request.GET.get("object")
+    object = Mage.objects.get(id=object_id)
+    practice_id = request.GET.get("practice_id")
+    prac = Practice.objects.get(id=practice_id)
+    abilities = prac.abilities.all().order_by("name")
+    abilities = [x for x in abilities if getattr(object, x.property_name) > 0]
+    abilities_list = [{"id": ability.id, "name": ability.name} for ability in abilities]
+    return JsonResponse(abilities_list, safe=False)
 
 
 class MageDetailView(HumanDetailView):
@@ -1079,6 +1092,11 @@ class MageFreebiesView(UpdateView):
             )
         if self.object.freebies == 0:
             self.object.creation_status += 1
+            if "Language" not in self.object.merits_and_flaws.values_list(
+                "name", flat=True
+            ):
+                self.object.creation_status += 1
+                self.object.languages.add(Language.objects.get(name="English"))
         self.object.save()
         return super().form_valid(form)
 
@@ -1100,6 +1118,111 @@ class MageFreebiesView(UpdateView):
         return self.form_valid(form)
 
 
+class MageLanguagesView:
+    pass
+
+
+class MageRoteView(CreateView):
+
+    model = Rote
+    form_class = RoteCreationForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        mage_id = self.kwargs.get("pk")
+        context["object"] = Mage.objects.get(id=mage_id)
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        mage_id = self.kwargs.get("pk")
+        mage = Mage.objects.get(pk=mage_id)
+        kwargs["instance"] = mage
+        return kwargs
+
+    def form_invalid(self, form):
+        errors = form.errors
+        if "ability" in errors:
+            del errors["ability"]
+        if not errors:
+            return self.form_valid(form)
+        return super().form_invalid(form)
+
+    def form_valid(self, form, **kwargs):
+        context = self.get_context_data(**kwargs)
+        mage = context["object"]
+        if form.save(mage):
+            if mage.rote_points == 0:
+                mage.creation_status += 1
+                mage.save()
+                for step in [
+                    "node",
+                    "library",
+                    "familiar",
+                    "wonder",
+                    "enhancement",
+                    "sanctum",
+                    "allies",
+                ]:
+                    print("step", getattr(mage, step), mage.creation_status)
+                    if getattr(mage, step) == 0:
+                        mage.creation_status += 1
+                    else:
+                        mage.save()
+                        break
+            return HttpResponseRedirect(mage.get_absolute_url())
+        return super().form_invalid(form)
+
+
+class MageNodeView:
+    # Skip if Library == 0
+    # Skip if Familiar == 0
+    # Skip if Wonder == 0
+    # Skip if Enhancement == 0
+    # skip if sanctum == 0
+    # skip if allies == 0
+    pass
+
+
+class MageLibraryView:
+    # Skip if Familiar == 0
+    # Skip if Wonder == 0
+    # Skip if Enhancement == 0
+    # skip if sanctum == 0
+    # skip if allies == 0
+    pass
+
+
+class MageFamiliarView:
+    # Skip if Wonder == 0
+    pass
+
+
+class MageWonderView:
+    # Skip if Enhancement == 0
+    pass
+
+
+class MageEnhancementView:
+    # skip if sanctum == 0
+    # skip if allies == 0
+    pass
+
+
+class MageSanctumView:
+    # skip if allies == 0
+    pass
+
+
+class MageAlliesView:
+    pass
+
+
+class MageSpecialtiesView:
+    pass
+
+
 class MageCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MageAttributeView,
@@ -1109,6 +1232,16 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         5: MageFocusView,
         6: MageExtrasView,
         7: MageFreebiesView,
+        # 8: Languages
+        9: MageRoteView,
+        # 10: Node
+        # 11: Library
+        # 12: Familiar
+        # 13: Wonder
+        # 14: Enhancements
+        # 15: Sanctum
+        # 16: Allies
+        # 17: Specialties
     }
     model_class = Mage
     key_property = "creation_status"
