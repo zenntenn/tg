@@ -11,6 +11,7 @@ from locations.models.mage.chantry import Chantry
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
 from locations.models.mage.realm import HorizonRealm
+from locations.models.mage.sanctum import Sanctum
 from locations.models.mage.sector import Sector
 from locations.models.werewolf.caern import Caern
 from locations.views import mage, werewolf
@@ -28,6 +29,7 @@ class GenericLocationDetailView(DictView):
         "library": mage.LibraryDetailView,
         "horizon_realm": mage.RealmDetailView,
         "caern": werewolf.CaernDetailView,
+        "sanctum": mage.SanctumDetailView,
         "chantry": mage.ChantryDetailView,
     }
 
@@ -46,6 +48,7 @@ class LocationIndexView(View):
         "horizon_realm": HorizonRealm,
         "caern": Caern,
         "chantry": Chantry,
+        "sanctum": Sanctum,
     }
 
     def get(self, request, *args, **kwargs):

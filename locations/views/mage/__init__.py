@@ -7,4 +7,5 @@ from .realityzone import (
     RealityZoneUpdateView,
 )
 from .realm import RealmCreateView, RealmDetailView, RealmUpdateView
+from .sanctum import SanctumCreateView, SanctumDetailView, SanctumUpdateView
 from .sector import SectorCreateView, SectorDetailView, SectorUpdateView
