@@ -14,9 +14,14 @@ urls = [
         name="sector",
     ),
     path(
-        "realm/create/",
+        "realm/",
         views.mage.RealmCreateView.as_view(),
         name="realm",
+    ),
+    path(
+        "sanctum/",
+        views.mage.SanctumCreateView.as_view(),
+        name="sanctum",
     ),
     path(
         "library/",
