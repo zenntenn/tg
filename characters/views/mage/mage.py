@@ -1165,7 +1165,6 @@ class MageRoteView(CreateView):
                     "sanctum",
                     "allies",
                 ]:
-                    print("step", getattr(mage, step), mage.creation_status)
                     if getattr(mage, step) == 0:
                         mage.creation_status += 1
                     else:
