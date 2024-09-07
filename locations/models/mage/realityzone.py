@@ -6,7 +6,7 @@ from locations.models.core.location import LocationModel
 
 class ZoneRating(models.Model):
     zone = models.ForeignKey("RealityZone", on_delete=models.SET_NULL, null=True)
-    resonance = models.ForeignKey(Practice, on_delete=models.SET_NULL, null=True)
+    practice = models.ForeignKey(Practice, on_delete=models.SET_NULL, null=True)
     rating = models.IntegerField(default=0)
 
     class Meta:
@@ -35,3 +35,6 @@ class RealityZone(models.Model):
 
     def get_heading(self):
         return "mta_heading"
+
+    def __str__(self):
+        return self.name

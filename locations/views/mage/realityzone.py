@@ -10,7 +10,12 @@ class RealityZoneDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["practices"] = ZoneRating.objects.filter(zone=self.object)
+        context["positive_practices"] = ZoneRating.objects.filter(
+            zone=self.object, rating__gt=0
+        )
+        context["negative_practices"] = ZoneRating.objects.filter(
+            zone=self.object, rating__lt=0
+        )
         return context
 
 
