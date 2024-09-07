@@ -1,6 +1,7 @@
 from typing import Any
 
 from characters.forms.core.advancement import AdvancementForm
+from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
@@ -9,6 +10,8 @@ from characters.models.core.archetype import Archetype
 from characters.models.core.attribute import Attribute
 from characters.models.core.background import Background
 from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.specialty import Specialty
+from characters.models.core.statistic import Statistic
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Practice, Tenet
 from characters.models.mage.mage import Mage, PracticeRating, ResRating
@@ -165,7 +168,9 @@ class MageDetailView(HumanDetailView):
         )
         context["sanctum_owned"] = None
         if Sanctum.objects.filter(owned_by=self.object).count() > 0:
-            context['sanctum_owned'] = Sanctum.objects.filter(owned_by=self.object).last()
+            context["sanctum_owned"] = Sanctum.objects.filter(
+                owned_by=self.object
+            ).last()
         return context
 
 
@@ -1277,8 +1282,55 @@ class MageAlliesView:
     pass
 
 
-class MageSpecialtiesView:
-    pass
+class MageSpecialtiesView(FormView):
+    form_class = SpecialtiesForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        mage = Mage.objects.get(id=self.kwargs["pk"])
+        kwargs["object"] = mage
+        stats = (
+            list(Attribute.objects.all())
+            + list(Ability.objects.all())
+            + list(Sphere.objects.all())
+        )
+        stats = [x for x in stats if getattr(mage, x.property_name, 0) >= 4] + [
+            x
+            for x in stats
+            if getattr(mage, x.property_name, 0) >= 1
+            and x.property_name
+            in [
+                "arts",
+                "athletics",
+                "crafts",
+                "firearms",
+                "martial_arts",
+                "melee",
+                "academics",
+                "esoterica",
+                "lore",
+                "politics",
+                "science",
+            ]
+        ]
+        kwargs["specialties_needed"] = [x.property_name for x in stats]
+        return kwargs
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        for field in form.fields:
+            spec = Specialty.objects.get_or_create(name=form.data[field], stat=field)[0]
+            mage.specialties.add(spec)
+        mage.status = "Sub"
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
 
 
 class MageCharacterCreationView(HumanCharacterCreationView):
@@ -1290,16 +1342,16 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         5: MageFocusView,
         6: MageExtrasView,
         7: MageFreebiesView,
-        # 8: Languages
+        # 8: Languages,
         9: MageRoteView,
-        # 10: Node
-        # 11: Library
-        # 12: Familiar
-        # 13: Wonder
-        # 14: Enhancements
-        15: MageSanctumView
-        # 16: Allies
-        # 17: Specialties
+        # 10: Node,
+        # 11: Library,
+        # 12: Familiar,
+        # 13: Wonder,
+        # 14: Enhancements,
+        15: MageSanctumView,
+        # 16: Allies,
+        17: MageSpecialtiesView,
     }
     model_class = Mage
     key_property = "creation_status"

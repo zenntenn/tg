@@ -76,8 +76,13 @@
         {% endif %}
     {% endblock rotes %}
     {% block sanctum %}
-    {% if object.creation_status == 15 %}
-        {% include "characters/mage/mage/mage_sanctum_block_form.html" %}
-    {% endif %}
-{% endblock sanctum %}
+        {% if object.creation_status == 15 %}
+            {% include "characters/mage/mage/mage_sanctum_block_form.html" %}
+        {% endif %}
+    {% endblock sanctum %}
+    {% block specialties_form %}
+        {% if object.creation_status == 17 %}
+            {% include "characters/mage/mage/mage_specialties_block_form.html" %}
+        {% endif %}
+    {% endblock specialties_form %}
 {% endblock contents %}

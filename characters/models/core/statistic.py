@@ -1,7 +1,8 @@
 from django.db import models
+from polymorphic.models import PolymorphicModel
 
 
-class Statistic(models.Model):
+class Statistic(PolymorphicModel):
     type = "statistic"
 
     name = models.CharField(max_length=100)
