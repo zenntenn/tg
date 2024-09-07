@@ -75,4 +75,9 @@
             {% include "characters/mage/mage/mage_rote_form_block.html" %}
         {% endif %}
     {% endblock rotes %}
+    {% block sanctum %}
+    {% if object.creation_status == 15 %}
+        {% include "characters/mage/mage/mage_sanctum_block_form.html" %}
+    {% endif %}
+{% endblock sanctum %}
 {% endblock contents %}

@@ -9,4 +9,6 @@ def dots(value, maximum=5):
         return value
     if value > maximum:
         maximum = 10
+    if value < 0:
+        value = -value
     return "●" * value + "○" * (maximum - value)

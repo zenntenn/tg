@@ -30,6 +30,10 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
+from locations.forms.core.sanctum import SanctumForm
+from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
+from locations.models.mage.realityzone import RealityZone, ZoneRating
+from locations.models.mage.sanctum import Sanctum
 
 
 def load_factions(request):
@@ -1123,7 +1127,6 @@ class MageLanguagesView:
 
 
 class MageRoteView(CreateView):
-
     model = Rote
     form_class = RoteCreationForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1209,9 +1212,62 @@ class MageEnhancementView:
     pass
 
 
-class MageSanctumView:
+class MageSanctumView(CreateView):
     # skip if allies == 0
-    pass
+    model = Sanctum
+    form_class = SanctumForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        mage_id = self.kwargs.get("pk")
+        context["object"] = Mage.objects.get(id=mage_id)
+        context["rz_form"] = RealityZonePracticeRatingFormSet()
+        context["form"].fields["name"].initial = f"{context['object']}'s Sanctum"
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        rz_form = context["rz_form"]
+        practices = [
+            v
+            for k, v in form.data.items()
+            if k.startswith("zonerating_set-") and k.endswith("-practice")
+        ]
+        ratings = [
+            int(v)
+            for k, v in form.data.items()
+            if k.startswith("zonerating_set-") and k.endswith("-rating")
+        ]
+        pairs = [
+            (Practice.objects.get(id=practice), rating)
+            for practice, rating in zip(practices, ratings)
+            if rating != 0
+        ]
+        total_rating = sum([v for k, v in pairs])
+        total_positive = sum([v for k, v in pairs if v > 0])
+        if total_rating != 0:
+            return super().form_invalid(form)
+        if total_positive != mage.sanctum:
+            return super().form_invalid(form)
+        rz = RealityZone.objects.create(name=f"{mage.name}'s Sanctum Reality Zone")
+        for p, r in pairs:
+            ZoneRating.objects.create(zone=rz, practice=p, rating=r)
+        if form.save(mage, reality_zone=rz):
+            mage.creation_status += 1
+            mage.save()
+            for step in [
+                "allies",
+            ]:
+                if getattr(mage, step) == 0:
+                    mage.creation_status += 1
+                else:
+                    mage.save()
+                    break
+            mage.save()
+            return HttpResponseRedirect(mage.get_absolute_url())
+        return super().form_invalid(form)
 
 
 class MageAlliesView:
@@ -1238,7 +1294,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         # 12: Familiar
         # 13: Wonder
         # 14: Enhancements
-        # 15: Sanctum
+        15: MageSanctumView
         # 16: Allies
         # 17: Specialties
     }
