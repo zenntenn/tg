@@ -163,6 +163,9 @@ class MageDetailView(HumanDetailView):
         context["practices"] = PracticeRating.objects.filter(
             mage=self.object, rating__gt=0
         )
+        context["sanctum_owned"] = None
+        if Sanctum.objects.filter(owned_by=self.object).count() > 0:
+            context['sanctum_owned'] = Sanctum.objects.filter(owned_by=self.object).last()
         return context
 
 
