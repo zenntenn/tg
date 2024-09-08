@@ -4,8 +4,8 @@ from locations import views
 app_name = "locations:detail"
 urls = [
     path(
-        "realityzone/<pk>/",
+        "reality_zone/<pk>/",
         views.mage.RealityZoneDetailView.as_view(),
-        name="realityzone",
+        name="reality_zone",
     ),
 ]

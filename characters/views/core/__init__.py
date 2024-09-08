@@ -107,7 +107,7 @@ class CharacterIndexView(View):
         "human": Human,
         "statistic": Statistic,
         "specialty": Specialty,
-        "merit_flaw": MeritFlaw,
+        "meritflaw": MeritFlaw,
         "group": Group,
         "derangement": Derangement,
         "character": Character,
@@ -154,6 +154,20 @@ class CharacterIndexView(View):
                 redi = f"characters:wraith:create:{char_type}"
             elif gameline == "ctd":
                 redi = f"characters:changeling:create:{char_type}"
+            return redirect(redi)
+        if action == "index":
+            if gameline == "wod":
+                redi = f"characters:list:{char_type}"
+            elif gameline == "vtm":
+                redi = f"characters:vampire:list:{char_type}"
+            elif gameline == "wta":
+                redi = f"characters:werewolf:list:{char_type}"
+            elif gameline == "mta":
+                redi = f"characters:mage:list:{char_type}"
+            elif gameline == "wto":
+                redi = f"characters:wraith:list:{char_type}"
+            elif gameline == "ctd":
+                redi = f"characters:changeling:list:{char_type}"
             return redirect(redi)
         elif action == "random":
             if request.user.is_authenticated:

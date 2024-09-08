@@ -3,8 +3,8 @@ from locations import views
 
 urls = [
     path(
-        "realityzone/",
+        "reality_zone/",
         views.mage.RealityZoneListView.as_view(),
-        name="realityzone",
+        name="reality_zone",
     ),
 ]

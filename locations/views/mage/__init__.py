@@ -1,7 +1,7 @@
 from .chantry import ChantryCreateView, ChantryDetailView, ChantryUpdateView
 from .library import LibraryCreateView, LibraryDetailView, LibraryUpdateView
 from .node import NodeCreateView, NodeDetailView, NodeUpdateView
-from .realityzone import (
+from .reality_zone import (
     RealityZoneCreateView,
     RealityZoneDetailView,
     RealityZoneListView,

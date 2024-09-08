@@ -10,6 +10,7 @@ from locations.models.core.location import LocationModel
 from locations.models.mage.chantry import Chantry
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
+from locations.models.mage.reality_zone import RealityZone
 from locations.models.mage.realm import HorizonRealm
 from locations.models.mage.sanctum import Sanctum
 from locations.models.mage.sector import Sector
@@ -49,6 +50,7 @@ class LocationIndexView(View):
         "caern": Caern,
         "chantry": Chantry,
         "sanctum": Sanctum,
+        "reality_zone": RealityZone
     }
 
     def get(self, request, *args, **kwargs):
@@ -67,6 +69,14 @@ class LocationIndexView(View):
                 redi = f"locations:werewolf:create:{loc_type}"
             elif gameline == "mta":
                 redi = f"locations:mage:create:{loc_type}"
+            return redirect(redi)
+        elif action == "index":
+            if gameline == "wod":
+                redi = f"locations:list:{loc_type}"
+            elif gameline == "wta":
+                redi = f"locations:werewolf:list:{loc_type}"
+            elif gameline == "mta":
+                redi = f"locations:mage:list:{loc_type}"
             return redirect(redi)
         elif action == "random":
             if request.user.is_authenticated:

@@ -101,6 +101,14 @@ class ItemIndexView(View):
             elif gameline == "mta":
                 redi = f"items:mage:create:{item_type}"
             return redirect(redi)
+        elif action == "index":
+            if gameline == "wod":
+                redi = f"items:list:{item_type}"
+            elif gameline == "wta":
+                redi = f"items:werewolf:list:{item_type}"
+            elif gameline == "mta":
+                redi = f"items:mage:list:{item_type}"
+            return redirect(redi)
         elif action == "random":
             if request.user.is_authenticated:
                 user = request.user

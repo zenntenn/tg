@@ -35,7 +35,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from locations.forms.core.sanctum import SanctumForm
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
-from locations.models.mage.realityzone import RealityZone, ZoneRating
+from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.sanctum import Sanctum
 
 

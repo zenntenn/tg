@@ -1,7 +1,7 @@
 from characters.models.mage.focus import Practice
 from django import forms
 from django.forms import inlineformset_factory
-from locations.models.mage.realityzone import RealityZone, ZoneRating
+from locations.models.mage.reality_zone import RealityZone, ZoneRating
 
 
 class RealityZonePracticeRatingForm(forms.ModelForm):

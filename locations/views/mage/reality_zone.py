@@ -1,12 +1,12 @@
 from typing import Any
 
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
-from locations.models.mage.realityzone import RealityZone, ZoneRating
+from locations.models.mage.reality_zone import RealityZone, ZoneRating
 
 
 class RealityZoneDetailView(DetailView):
     model = RealityZone
-    template_name = "locations/mage/realityzone/detail.html"
+    template_name = "locations/mage/reality_zone/detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -22,16 +22,16 @@ class RealityZoneDetailView(DetailView):
 class RealityZoneCreateView(CreateView):
     model = RealityZone
     fields = ["name", "description", "practices"]
-    template_name = "locations/mage/realityzone/form.html"
+    template_name = "locations/mage/reality_zone/form.html"
 
 
 class RealityZoneUpdateView(UpdateView):
     model = RealityZone
     fields = ["name", "description", "practices"]
-    template_name = "locations/mage/realityzone/form.html"
+    template_name = "locations/mage/reality_zone/form.html"
 
 
 class RealityZoneListView(ListView):
     model = RealityZone
     ordering = ["name"]
-    template_name = "locations/mage/realityzone/list.html"
+    template_name = "locations/mage/reality_zone/list.html"

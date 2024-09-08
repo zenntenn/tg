@@ -10,7 +10,7 @@ from django.db.models import F, Q
 from django.urls import reverse
 from game.models import ObjectType
 from locations.models.core import LocationModel
-from locations.models.mage.realityzone import RealityZone
+from locations.models.mage.reality_zone import RealityZone
 
 
 class SizeChoices(models.IntegerChoices):
