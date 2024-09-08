@@ -1005,24 +1005,29 @@ class MageFreebiesView(UpdateView):
 
     def form_valid(self, form):
         if form.data["category"] == "-----":
+            form.add_error(None, "Must Choose Freebie Expenditure Type")
             return super().form_invalid(form)
         elif form.data["category"] == "MeritFlaw" and (
             form.data["example"] == "" or form.data["value"] == ""
         ):
+            form.add_error(None, "Must Choose Merit/Flaw and rating")
             return super().form_invalid(form)
         elif (
             form.data["category"]
             in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
             and form.data["example"] == ""
         ):
+            form.add_error(None, "Must Choose Trait")
             return super().form_invalid(form)
         elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
+            form.add_error(None, "Must Choose Resonance")
             return super().form_invalid(form)
         trait_type = form.data["category"].lower()
         cost = self.object.freebie_cost(trait_type)
         if cost == "rating":
             cost = int(form.data["value"])
         if cost > self.object.freebies:
+            form.add_error(None, "Not Enough Freebies!")
             return super().form_invalid(form)
         if form.data["category"] == "Attribute":
             trait = Attribute.objects.get(pk=form.data["example"])
@@ -1084,6 +1089,7 @@ class MageFreebiesView(UpdateView):
             trait = trait.name
         elif form.data["category"] == "Arete":
             if self.object.arete >= 3:
+                form.add_error(None, "Arete Cannot Be Raised Above 3 At Character Creation")
                 return super().form_invalid(form)
             trait = "Arete"
             value = getattr(self.object, "arete") + 1
@@ -1114,18 +1120,22 @@ class MageFreebiesView(UpdateView):
 
     def form_invalid(self, form):
         if form.data["category"] == "-----":
+            form.add_error(None, "Must Choose Freebie Expenditure Type")
             return super().form_invalid(form)
         elif form.data["category"] == "MeritFlaw" and (
             form.data["example"] == "" or form.data["value"] == ""
         ):
+            form.add_error(None, "Must Choose Merit/Flaw and rating")
             return super().form_invalid(form)
         elif (
             form.data["category"]
             in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
             and form.data["example"] == ""
         ):
+            form.add_error(None, "Must Choose Trait")
             return super().form_invalid(form)
         elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
+            form.add_error(None, "Must Choose Resonance")
             return super().form_invalid(form)
         return self.form_valid(form)
 
@@ -1256,8 +1266,10 @@ class MageSanctumView(CreateView):
         total_rating = sum([v for k, v in pairs])
         total_positive = sum([v for k, v in pairs if v > 0])
         if total_rating != 0:
+            form.add_error(None, "Ratings must total 0")
             return super().form_invalid(form)
         if total_positive != mage.sanctum:
+            form.add_error(None, "Positive Ratings must equal Sanctum rating")
             return super().form_invalid(form)
         rz = RealityZone.objects.create(name=f"{mage.name}'s Sanctum Reality Zone")
         for p, r in pairs:
