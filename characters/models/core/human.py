@@ -206,13 +206,13 @@ class Human(Character):
             mfr, _ = MeritFlawRating.objects.get_or_create(character=self, mf=mf)
             mfr.rating = rating
             mfr.save()
-            if mf.name in ["Language", "Natural Linguist"]:
+            if mf.name in ["Language", "Natural Linguist"] and self.status == "Ran":
                 num_languages = self.mf_rating(MeritFlaw.objects.get(name="Language"))
                 if self.merits_and_flaws.filter(name="Natural Linguist").exists():
                     num_languages *= 2
                 while self.languages.count() < num_languages:
                     self.add_random_language()
-            if mf.name == "Deranged":
+            if mf.name == "Deranged" and self.status == "Ran":
                 self.random_derangement()
             return True
         return False
