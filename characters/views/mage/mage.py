@@ -9,6 +9,7 @@ from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute import Attribute
 from characters.models.core.background import Background
+from characters.models.core.human import Human
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.core.statistic import Statistic
@@ -24,13 +25,14 @@ from characters.views.core.human import (
     HumanDetailView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
+from core.forms.language import HumanLanguageForm
 from core.models import Language
 from core.widgets import AutocompleteTextInput
 from django import forms
 from django.db.models import Q
 from django.forms import BaseModelForm, SelectDateWidget, formset_factory
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from locations.forms.core.sanctum import SanctumForm
@@ -1089,7 +1091,9 @@ class MageFreebiesView(UpdateView):
             trait = trait.name
         elif form.data["category"] == "Arete":
             if self.object.arete >= 3:
-                form.add_error(None, "Arete Cannot Be Raised Above 3 At Character Creation")
+                form.add_error(
+                    None, "Arete Cannot Be Raised Above 3 At Character Creation"
+                )
                 return super().form_invalid(form)
             trait = "Arete"
             value = getattr(self.object, "arete") + 1
@@ -1140,8 +1144,38 @@ class MageFreebiesView(UpdateView):
         return self.form_valid(form)
 
 
-class MageLanguagesView:
-    pass
+class MageLanguagesView(FormView):
+    form_class = HumanLanguageForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    # Overriding `get_form_kwargs` to pass custom arguments to the form
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        human_pk = self.kwargs.get("pk")
+        num_languages = Human.objects.get(pk=human_pk).num_languages()
+        kwargs.update({"pk": human_pk, "num_languages": int(num_languages)})
+        return kwargs
+
+    # Overriding `form_valid` to handle saving the data
+    def form_valid(self, form):
+        # Get the human instance from the pased `pk`
+        human_pk = self.kwargs.get("pk")
+        human = get_object_or_404(Human, pk=human_pk)
+
+        num_languages = form.cleaned_data.get("num_languages", 1)
+        for i in range(num_languages):
+            language_name = form.cleaned_data.get(f"language_{i}")
+            if language_name:
+                language, created = Language.objects.get_or_create(name=language_name)
+                human.languages.add(language)
+        human.creation_status += 1
+        human.save()
+        return HttpResponseRedirect(human.get_absolute_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        return context
 
 
 class MageRoteView(CreateView):
@@ -1231,7 +1265,6 @@ class MageEnhancementView:
 
 
 class MageSanctumView(CreateView):
-    # skip if allies == 0
     model = Sanctum
     form_class = SanctumForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1354,7 +1387,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         5: MageFocusView,
         6: MageExtrasView,
         7: MageFreebiesView,
-        # 8: Languages,
+        8: MageLanguagesView,
         9: MageRoteView,
         # 10: Node,
         # 11: Library,

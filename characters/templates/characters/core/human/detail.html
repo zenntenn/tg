@@ -61,12 +61,7 @@
         </div>
     {% endblock mfs %}
     {% block languages %}
-        <div class="row">
-            <h2 class="col-sm {{ object.get_heading }}">Languages</h2>
-        </div>
-        <div class="row">
-            {% for lang in object.languages.all %}<div class="col-sm">{{ lang }}</div>{% endfor %}
-        </div>
+        {% include "characters/core/human/langauge_display_block.html" %}
     {% endblock languages %}
 {% endblock statistics %}
 {% block flavor %}
