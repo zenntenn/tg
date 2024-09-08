@@ -11,7 +11,7 @@ from characters.models.mage.focus import (
 from characters.models.mage.rote import Rote
 from core.utils import display_queryset
 from core.views.generic import DictView
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class InstrumentDetailView(DetailView):
@@ -29,6 +29,12 @@ class InstrumentUpdateView(UpdateView):
     model = Instrument
     fields = ["name", "description"]
     template_name = "characters/mage/instrument/form.html"
+
+
+class InstrumentListView(ListView):
+    model = Instrument
+    ordering = ["name"]
+    template_name = "characters/mage/instrument/list.html"
 
 
 class ParadigmDetailView(DetailView):
@@ -57,6 +63,12 @@ class ParadigmUpdateView(UpdateView):
     model = Paradigm
     fields = ["name", "tenets", "description"]
     template_name = "characters/mage/paradigm/form.html"
+
+
+class ParadigmListView(ListView):
+    model = Paradigm
+    ordering = ["name"]
+    template_name = "characters/mage/paradigm/list.html"
 
 
 class PracticeDetailView(DetailView):
@@ -101,6 +113,12 @@ class PracticeUpdateView(UpdateView):
         "description",
     ]
     template_name = "characters/mage/practice/form.html"
+
+
+class PracticeListView(ListView):
+    model = Practice
+    ordering = ["name"]
+    template_name = "characters/mage/practice/list.html"
 
 
 class CorruptedPracticeDetailView(PracticeDetailView):
@@ -212,6 +230,12 @@ class TenetUpdateView(UpdateView):
         "description",
     ]
     template_name = "characters/mage/tenet/form.html"
+
+
+class TenetListView(ListView):
+    model = Tenet
+    ordering = ["name"]
+    template_name = "characters/mage/tenet/list.html"
 
 
 class GenericPracticeDetailView(DictView):

@@ -2,7 +2,7 @@ from typing import Any
 
 from characters.models.core import MeritFlaw
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class MeritFlawDetailView(DetailView):
@@ -27,3 +27,9 @@ class MeritFlawUpdateView(UpdateView):
     model = MeritFlaw
     fields = ["name", "description", "ratings", "allowed_types"]
     template_name = "characters/core/meritflaw/form.html"
+
+
+class MeritFlawListView(ListView):
+    model = MeritFlaw
+    ordering = ["name"]
+    template_name = "characters/core/meritflaw/list.html"

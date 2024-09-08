@@ -1,6 +1,6 @@
 from characters.models.werewolf.gift import Gift
 from django.shortcuts import render
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class GiftDetailView(DetailView):
@@ -28,3 +28,9 @@ class GiftUpdateView(UpdateView):
     model = Gift
     fields = ["name", "rank", "description"]
     template_name = "characters/werewolf/gift/form.html"
+
+
+class GiftListView(ListView):
+    model = Gift
+    ordering = ["name"]
+    template_name = "characters/werewolf/gift/list.html"

@@ -1,5 +1,5 @@
 from characters.models.werewolf.charm import SpiritCharm
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class SpiritCharmDetailView(DetailView):
@@ -17,3 +17,9 @@ class SpiritCharmUpdateView(UpdateView):
     model = SpiritCharm
     fields = ["name", "description"]
     template_name = "characters/werewolf/charm/form.html"
+
+
+class SpiritCharmListView(ListView):
+    model = SpiritCharm
+    ordering = ["name"]
+    template_name = "characters/werewolf/charm/list.html"

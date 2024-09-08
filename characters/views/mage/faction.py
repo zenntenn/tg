@@ -1,7 +1,7 @@
 from typing import Any
 
 from characters.models.mage.faction import MageFaction
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class MageFactionDetailView(DetailView):
@@ -82,3 +82,9 @@ class MageFactionUpdateView(UpdateView):
         "parent",
     ]
     template_name = "characters/mage/faction/form.html"
+
+
+class FactionListView(ListView):
+    model = MageFaction
+    ordering = ["name"]
+    template_name = "characters/mage/faction/list.html"

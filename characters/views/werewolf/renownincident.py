@@ -1,5 +1,5 @@
 from characters.models.werewolf.renownincident import RenownIncident
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class RenownIncidentDetailView(DetailView):
@@ -37,3 +37,9 @@ class RenownIncidentUpdateView(UpdateView):
         "rite",
     ]
     template_name = "characters/werewolf/renownincident/form.html"
+
+
+class RenownIncidentListView(ListView):
+    model = RenownIncident
+    ordering = ["name"]
+    template_name = "characters/werewolf/renownincident/list.html"

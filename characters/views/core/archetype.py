@@ -1,6 +1,6 @@
 from characters.models.core import Archetype
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class ArchetypeDetailView(DetailView):
@@ -18,3 +18,9 @@ class ArchetypeUpdateView(UpdateView):
     model = Archetype
     fields = ["name", "description"]
     template_name = "characters/core/archetype/form.html"
+
+
+class ArchetypeListView(ListView):
+    model = Archetype
+    ordering = ["name"]
+    template_name = "characters/core/archetype/list.html"

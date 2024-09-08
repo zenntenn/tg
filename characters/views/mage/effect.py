@@ -1,5 +1,5 @@
 from characters.models.mage import Effect
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class EffectDetailView(DetailView):
@@ -41,3 +41,9 @@ class EffectUpdateView(UpdateView):
         "prime",
     ]
     template_name = "characters/mage/effect/form.html"
+
+
+class EffectListView(ListView):
+    model = Effect
+    ordering = ["name"]
+    template_name = "characters/mage/effect/list.html"

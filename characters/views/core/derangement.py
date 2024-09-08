@@ -1,6 +1,6 @@
 from characters.models.core import Derangement
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class DerangementDetailView(DetailView):
@@ -18,3 +18,9 @@ class DerangementUpdateView(UpdateView):
     model = Derangement
     fields = ["name", "description"]
     template_name = "characters/core/derangement/form.html"
+
+
+class DerangementListView(ListView):
+    model = Derangement
+    ordering = ["name"]
+    template_name = "characters/core/derangement/list.html"

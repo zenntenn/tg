@@ -1,5 +1,5 @@
 from core.models import Language
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class LanguageDetailView(DetailView):
@@ -17,3 +17,9 @@ class LanguageUpdateView(UpdateView):
     model = Language
     fields = "__all__"
     template_name = "core/language/form.html"
+
+
+class LanguageListView(ListView):
+    model = Language
+    ordering = ["name"]
+    template_name = "core/language/list.html"
