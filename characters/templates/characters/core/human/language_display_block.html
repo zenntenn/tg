@@ -1,0 +1,14 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Languages</h2>
+</div>
+<div class="row">
+    {% for lang in object.languages.all %}
+        {% if forloop.counter0|divisibleby:6 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <div class="col-sm-2">{{ lang }}</div>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}

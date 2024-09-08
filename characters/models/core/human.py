@@ -126,6 +126,15 @@ class Human(Character):
     def get_heading(self):
         return "wod_heading"
 
+    def num_languages(self):
+        mf_list = self.merits_and_flaws.all().values_list("name", flat=True)
+        if "Language" not in mf_list:
+            return 0
+        language_rating = self.mf_rating(MeritFlaw.objects.get(name="Language"))
+        if "Natural Linguist" in mf_list:
+            language_rating *= 2
+        return language_rating
+
     def add_willpower(self):
         return add_dot(self, "willpower", 10)
 

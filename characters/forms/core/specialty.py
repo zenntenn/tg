@@ -11,9 +11,7 @@ class SpecialtiesForm(forms.Form):
         super().__init__(*args, **kwargs)
         for field in specialties_needed:
             s = Statistic.objects.get(property_name=field)
-            # Add a CharField (text input) for each integer field in specialty_needed
             self.fields[field] = forms.CharField(
-                required=False,
                 widget=AutocompleteTextInput(
                     suggestions=[
                         x.name for x in Specialty.objects.filter(stat=s.property_name)

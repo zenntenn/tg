@@ -51,6 +51,13 @@
             {% include "characters/mage/mage/mage_focus_block_display.html" %}
         {% endif %}
     {% endblock focus %}
+    {% block languages %}
+        {% if object.creation_status > 8 %}
+            {% include "characters/core/human/language_display_block.html" %}
+        {% elif object.creation_status == 8 %}
+            {% include "characters/core/human/human_language_block_form.html" %}
+        {% endif %}
+    {% endblock languages %}
     {% block appearance %}
         {% if object.creation_status == 6 %}
             {% include "characters/mage/mage/mage_appearance_block_form.html" %}
