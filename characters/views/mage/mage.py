@@ -1089,7 +1089,9 @@ class MageFreebiesView(UpdateView):
             trait = trait.name
         elif form.data["category"] == "Arete":
             if self.object.arete >= 3:
-                form.add_error(None, "Arete Cannot Be Raised Above 3 At Character Creation")
+                form.add_error(
+                    None, "Arete Cannot Be Raised Above 3 At Character Creation"
+                )
                 return super().form_invalid(form)
             trait = "Arete"
             value = getattr(self.object, "arete") + 1

@@ -4,6 +4,7 @@ from .node import NodeCreateView, NodeDetailView, NodeUpdateView
 from .realityzone import (
     RealityZoneCreateView,
     RealityZoneDetailView,
+    RealityZoneListView,
     RealityZoneUpdateView,
 )
 from .realm import RealmCreateView, RealmDetailView, RealmUpdateView

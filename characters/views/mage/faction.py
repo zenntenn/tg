@@ -84,7 +84,7 @@ class MageFactionUpdateView(UpdateView):
     template_name = "characters/mage/faction/form.html"
 
 
-class FactionListView(ListView):
+class MageFactionListView(ListView):
     model = MageFaction
     ordering = ["name"]
     template_name = "characters/mage/faction/list.html"

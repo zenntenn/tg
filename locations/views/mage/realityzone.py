@@ -1,6 +1,6 @@
 from typing import Any
 
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from locations.models.mage.realityzone import RealityZone, ZoneRating
 
 
@@ -29,3 +29,9 @@ class RealityZoneUpdateView(UpdateView):
     model = RealityZone
     fields = ["name", "description", "practices"]
     template_name = "locations/mage/realityzone/form.html"
+
+
+class RealityZoneListView(ListView):
+    model = RealityZone
+    ordering = ["name"]
+    template_name = "locations/mage/realityzone/list.html"

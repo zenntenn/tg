@@ -33,11 +33,17 @@ from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 from game.models import Chronicle, ObjectType
 
-from .archetype import ArchetypeCreateView, ArchetypeDetailView, ArchetypeUpdateView
+from .archetype import (
+    ArchetypeCreateView,
+    ArchetypeDetailView,
+    ArchetypeListView,
+    ArchetypeUpdateView,
+)
 from .character import CharacterCreateView, CharacterDetailView, CharacterUpdateView
 from .derangement import (
     DerangementCreateView,
     DerangementDetailView,
+    DerangementListView,
     DerangementUpdateView,
 )
 from .group import GroupCreateView, GroupDetailView, GroupUpdateView
@@ -49,8 +55,18 @@ from .human import (
     HumanDetailView,
     HumanUpdateView,
 )
-from .meritflaw import MeritFlawCreateView, MeritFlawDetailView, MeritFlawUpdateView
-from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdateView
+from .meritflaw import (
+    MeritFlawCreateView,
+    MeritFlawDetailView,
+    MeritFlawListView,
+    MeritFlawUpdateView,
+)
+from .specialty import (
+    SpecialtyCreateView,
+    SpecialtyDetailView,
+    SpecialtyListView,
+    SpecialtyUpdateView,
+)
 
 
 class GenericCharacterDetailView(DictView):
