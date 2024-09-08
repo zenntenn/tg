@@ -1,5 +1,5 @@
 from characters.models.mage import Resonance
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class ResonanceDetailView(DetailView):
@@ -39,3 +39,9 @@ class ResonanceUpdateView(UpdateView):
         "time",
     ]
     template_name = "characters/mage/resonance/form.html"
+
+
+class ResonanceListView(ListView):
+    model = Resonance
+    ordering = ["name"]
+    template_name = "characters/mage/resonance/list.html"

@@ -23,8 +23,13 @@ from items.models.werewolf.fetish import Fetish
 from items.views import mage, werewolf
 
 from .item import ItemCreateView, ItemDetailView, ItemUpdateView
-from .material import MaterialCreateView, MaterialDetailView, MaterialUpdateView
-from .medium import MediumCreateView, MediumDetailView, MediumUpdateView
+from .material import (
+    MaterialCreateView,
+    MaterialDetailView,
+    MaterialListView,
+    MaterialUpdateView,
+)
+from .medium import MediumCreateView, MediumDetailView, MediumListView, MediumUpdateView
 from .meleeweapon import (
     MeleeWeaponCreateView,
     MeleeWeaponDetailView,
@@ -95,6 +100,14 @@ class ItemIndexView(View):
                 redi = f"items:werewolf:create:{item_type}"
             elif gameline == "mta":
                 redi = f"items:mage:create:{item_type}"
+            return redirect(redi)
+        elif action == "index":
+            if gameline == "wod":
+                redi = f"items:list:{item_type}"
+            elif gameline == "wta":
+                redi = f"items:werewolf:list:{item_type}"
+            elif gameline == "mta":
+                redi = f"items:mage:list:{item_type}"
             return redirect(redi)
         elif action == "random":
             if request.user.is_authenticated:

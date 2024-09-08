@@ -3,7 +3,7 @@ from locations.models.core import City, LocationModel
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.chantry import Chantry
 from locations.models.mage.library import Library
-from locations.models.mage.realityzone import RealityZone
+from locations.models.mage.reality_zone import RealityZone
 from locations.models.mage.realm import HorizonRealm
 from locations.models.mage.sector import Sector
 from locations.models.werewolf.caern import Caern

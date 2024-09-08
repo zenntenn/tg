@@ -15,6 +15,8 @@ class ZoneRating(models.Model):
 
 
 class RealityZone(models.Model):
+    type = "reality_zone"
+    
     name = models.CharField(max_length=100)
     practices = models.ManyToManyField(Practice, through=ZoneRating, blank=True)
     description = models.TextField(default="")
@@ -24,14 +26,14 @@ class RealityZone(models.Model):
         verbose_name_plural = "Reality Zone"
 
     def get_absolute_url(self):
-        return reverse("locations:mage:realityzone", args=[str(self.id)])
+        return reverse("locations:mage:reality_zone", args=[str(self.id)])
 
     def get_update_url(self):
-        return reverse("locations:mage:update:realityzone", args=[str(self.id)])
+        return reverse("locations:mage:update:reality_zone", args=[str(self.id)])
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("locations:mage:create:realityzone")
+        return reverse("locations:mage:create:reality_zone")
 
     def get_heading(self):
         return "mta_heading"

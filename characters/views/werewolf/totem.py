@@ -1,5 +1,5 @@
 from characters.models.werewolf.totem import Totem
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class TotemDetailView(DetailView):
@@ -33,3 +33,9 @@ class TotemUpdateView(UpdateView):
         "ban",
     ]
     template_name = "characters/werewolf/totem/form.html"
+
+
+class TotemListView(ListView):
+    model = Totem
+    ordering = ["name"]
+    template_name = "characters/werewolf/totem/list.html"

@@ -33,11 +33,17 @@ from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView, View
 from game.models import Chronicle, ObjectType
 
-from .archetype import ArchetypeCreateView, ArchetypeDetailView, ArchetypeUpdateView
+from .archetype import (
+    ArchetypeCreateView,
+    ArchetypeDetailView,
+    ArchetypeListView,
+    ArchetypeUpdateView,
+)
 from .character import CharacterCreateView, CharacterDetailView, CharacterUpdateView
 from .derangement import (
     DerangementCreateView,
     DerangementDetailView,
+    DerangementListView,
     DerangementUpdateView,
 )
 from .group import GroupCreateView, GroupDetailView, GroupUpdateView
@@ -49,8 +55,18 @@ from .human import (
     HumanDetailView,
     HumanUpdateView,
 )
-from .meritflaw import MeritFlawCreateView, MeritFlawDetailView, MeritFlawUpdateView
-from .specialty import SpecialtyCreateView, SpecialtyDetailView, SpecialtyUpdateView
+from .meritflaw import (
+    MeritFlawCreateView,
+    MeritFlawDetailView,
+    MeritFlawListView,
+    MeritFlawUpdateView,
+)
+from .specialty import (
+    SpecialtyCreateView,
+    SpecialtyDetailView,
+    SpecialtyListView,
+    SpecialtyUpdateView,
+)
 
 
 class GenericCharacterDetailView(DictView):
@@ -91,7 +107,7 @@ class CharacterIndexView(View):
         "human": Human,
         "statistic": Statistic,
         "specialty": Specialty,
-        "merit_flaw": MeritFlaw,
+        "meritflaw": MeritFlaw,
         "group": Group,
         "derangement": Derangement,
         "character": Character,
@@ -138,6 +154,20 @@ class CharacterIndexView(View):
                 redi = f"characters:wraith:create:{char_type}"
             elif gameline == "ctd":
                 redi = f"characters:changeling:create:{char_type}"
+            return redirect(redi)
+        if action == "index":
+            if gameline == "wod":
+                redi = f"characters:list:{char_type}"
+            elif gameline == "vtm":
+                redi = f"characters:vampire:list:{char_type}"
+            elif gameline == "wta":
+                redi = f"characters:werewolf:list:{char_type}"
+            elif gameline == "mta":
+                redi = f"characters:mage:list:{char_type}"
+            elif gameline == "wto":
+                redi = f"characters:wraith:list:{char_type}"
+            elif gameline == "ctd":
+                redi = f"characters:changeling:list:{char_type}"
             return redirect(redi)
         elif action == "random":
             if request.user.is_authenticated:

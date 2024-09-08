@@ -1,7 +1,7 @@
 from characters.models.mage.rote import Rote
 from django.forms import BaseModelForm
 from django.http import HttpResponse
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class RoteDetailView(DetailView):
@@ -19,3 +19,9 @@ class RoteUpdateView(UpdateView):
     model = Rote
     fields = ["name", "description", "effect", "practice", "attribute", "ability"]
     template_name = "characters/mage/rote/form.html"
+
+
+class RoteListView(ListView):
+    model = Rote
+    ordering = ["name"]
+    template_name = "characters/mage/rote/list.html"

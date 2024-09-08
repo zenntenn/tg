@@ -1,5 +1,5 @@
 from characters.models.werewolf.camp import Camp
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class CampDetailView(DetailView):
@@ -17,3 +17,9 @@ class CampUpdateView(UpdateView):
     model = Camp
     fields = ["name", "description", "tribe", "camp_type"]
     template_name = "characters/werewolf/camp/form.html"
+
+
+class CampListView(ListView):
+    model = Camp
+    ordering = ["name"]
+    template_name = "characters/werewolf/camp/list.html"

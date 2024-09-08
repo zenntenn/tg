@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from items.models.core import Medium
 
 
@@ -17,3 +17,9 @@ class MediumUpdateView(UpdateView):
     model = Medium
     fields = "__all__"
     template_name = "items/core/medium/form.html"
+
+
+class MediumListView(ListView):
+    model = Medium
+    ordering = ["name"]
+    template_name = "items/core/medium/list.html"

@@ -1,5 +1,5 @@
 from characters.models.werewolf.tribe import Tribe
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 
 class TribeDetailView(DetailView):
@@ -23,3 +23,9 @@ class TribeUpdateView(UpdateView):
     model = Tribe
     fields = ["name", "willpower", "description"]
     template_name = "characters/werewolf/tribe/form.html"
+
+
+class TribeListView(ListView):
+    model = Tribe
+    ordering = ["name"]
+    template_name = "characters/werewolf/tribe/list.html"
