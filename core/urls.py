@@ -16,6 +16,11 @@ urlpatterns = [
         name="update_language",
     ),
     path(
+        "language/",
+        views.LanguageListView.as_view(),
+        name="index_language",
+    ),
+    path(
         "newsitem/create/",
         views.NewsItemCreateView.as_view(),
         name="create_newsitem",

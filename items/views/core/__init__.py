@@ -23,8 +23,13 @@ from items.models.werewolf.fetish import Fetish
 from items.views import mage, werewolf
 
 from .item import ItemCreateView, ItemDetailView, ItemUpdateView
-from .material import MaterialCreateView, MaterialDetailView, MaterialUpdateView
-from .medium import MediumCreateView, MediumDetailView, MediumUpdateView
+from .material import (
+    MaterialCreateView,
+    MaterialDetailView,
+    MaterialListView,
+    MaterialUpdateView,
+)
+from .medium import MediumCreateView, MediumDetailView, MediumListView, MediumUpdateView
 from .meleeweapon import (
     MeleeWeaponCreateView,
     MeleeWeaponDetailView,
