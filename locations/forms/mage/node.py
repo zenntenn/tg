@@ -7,7 +7,7 @@ from game.models import ObjectType
 from locations.models.mage import Node
 from locations.models.mage.node import NodeMeritFlawRating, NodeResonanceRating
 
-n = ObjectType.objects.get(name="node")
+n = ObjectType.objects.get_or_create(name="node")[0]
 
 
 class NodeForm(forms.ModelForm):
