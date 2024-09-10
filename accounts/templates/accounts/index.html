@@ -73,6 +73,22 @@
                     </div>
                 </div>
             </form>
+            <h2 class="col-sm">To Approve</h2>
+        </div>
+        {% for char in to_approve %}
+            <div class="row border">
+                <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                <div class="col-sm border">{{ char.owner }}</div>
+                <div class="col-sm border">{{ char.type.title }}</div>
+                <div class="col-sm border">{{ char.get_status_display }}</div>
+                <form action="" method="post" class="col-sm border">
+                    {% csrf_token %}
+                    <input class="btn btn-primary"
+                           type="submit"
+                           name="{{ char.name }}"
+                           value="Approve" />
+                </form>
+            </div>
         {% endfor %}
     </div>
 {% endblock content %}
