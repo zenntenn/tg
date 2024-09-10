@@ -73,8 +73,8 @@
                     </div>
                 </div>
             </form>
-            <h2 class="col-sm">To Approve</h2>
-        </div>
+        {% endfor %}
+        <h2 class="col-sm">To Approve</h2>
         {% for char in to_approve %}
             <div class="row border">
                 <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>

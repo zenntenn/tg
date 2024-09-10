@@ -1,5 +1,5 @@
 from accounts.forms import CustomUSerCreationForm
-from characters.models.core import CharacterModel
+from characters.models.core import Character
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -49,6 +49,12 @@ class ProfileView(View):
                     char.save()
             scene.xp_given = True
             scene.save()
+        else:
+            char = [x for x in context["to_approve"] if x.name in request.POST.keys()][
+                0
+            ]
+            char.status = "App"
+            char.save()
         context = self.get_context(request.user)
         return render(
             request,
@@ -61,10 +67,15 @@ class ProfileView(View):
             x for x in Chronicle.objects.all() if user in x.storytellers.all()
         ]
         return {
-            "characters": CharacterModel.objects.filter(owner=user).order_by("name"),
+            "characters": Character.objects.filter(owner=user).order_by("name"),
             "items": ItemModel.objects.filter(owner=user).order_by("name"),
             "xp_requests": Scene.objects.filter(
                 story__chronicle__in=chronicles_sted, finished=True, xp_given=False
             ),
             "locations": LocationModel.objects.filter(owner=user).order_by("name"),
+            "to_approve": [
+                x
+                for x in Character.objects.filter(status__in=["Un", "Sub"])
+                if x.chronicle in chronicles_sted
+            ],
         }

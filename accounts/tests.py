@@ -65,3 +65,9 @@ class TestProfileView(TestCase):
         self.assertContains(response, "Test Character 5")
         self.assertNotContains(response, "Test Character 6")
         self.assertContains(response, f"/characters/{self.char5.id}/")
+
+    def test_approval_list(self):
+        self.client.login(username="Test Storyteller", password="testpass")
+        response = self.client.get("/accounts/")
+        self.assertContains(response, "Test Character 2")
+        self.assertContains(response, "To Approve")

@@ -570,6 +570,7 @@ class MageBasicsView(CreateView):
         "faction",
         "subfaction",
         "essence",
+        "chronicle",
     ]
     template_name = "characters/mage/mage/magebasics.html"
 
