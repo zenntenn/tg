@@ -140,13 +140,6 @@ class Mage(MtAHuman):
     quintessence = models.IntegerField(default=0)
     paradox = models.IntegerField(default=0)
 
-    library_owned = models.ForeignKey(
-        Library, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    node_owned = models.ForeignKey(
-        Node, on_delete=models.SET_NULL, null=True, blank=True
-    )
-
     quiet = models.IntegerField(default=0)
     quiet_type = models.CharField(
         default="none",

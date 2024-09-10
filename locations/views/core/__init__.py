@@ -50,7 +50,7 @@ class LocationIndexView(View):
         "caern": Caern,
         "chantry": Chantry,
         "sanctum": Sanctum,
-        "reality_zone": RealityZone
+        "reality_zone": RealityZone,
     }
 
     def get(self, request, *args, **kwargs):

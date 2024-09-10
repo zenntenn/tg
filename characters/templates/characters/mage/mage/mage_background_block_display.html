@@ -79,10 +79,10 @@
     <div class="col-sm dots">{{ object.library|dots }}</div>
     <div class="col-sm">Mentor</div>
     <div class="col-sm dots">{{ object.mentor|dots }}</div>
-    {% if object.node_owned is None %}
+    {% if node_owned is None %}
         <div class="col-sm">Node</div>
     {% else %}
-        <a class="col-sm" href={{ object.node_owned.get_absolute_url }}>Node</a>
+        <a class="col-sm" href={{ node_owned.get_absolute_url }}>Node</a>
     {% endif %}
     <div class="col-sm dots">{{ object.node|dots }}</div>
 </div>

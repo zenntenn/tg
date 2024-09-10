@@ -1,0 +1,187 @@
+<div class="row">
+    <h2 class="col-sm mta_heading">Create Node</h2>
+</div>
+<div class="row">
+    <div class="col-sm">Name</div>
+    <div class="col-sm">{{ form.name }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Rank</div>
+    <div class="col-sm">{{ object.node }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Quintessence Form</div>
+    <div class="col-sm">{{ form.quintessence_form }}</div>
+    <div class="col-sm">Tass Form</div>
+    <div class="col-sm">{{ form.tass_form }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Fraction of Quintessence</div>
+    <div class="col-sm">{{ form.ratio }}</div>
+    <div class="col-sm">{{ form.size.label }}</div>
+    <div class="col-sm">{{ form.size }}</div>
+</div>
+<div class="row">
+    <h2 class="col-sm mta_heading">Resonance</h2>
+</div>
+<div id="resonance-formset">
+    <!-- This is the management form for the formset -->
+    {{ resonance_form.management_form }}
+    {% for f in resonance_form %}
+        <div class="row form-row">
+            <div class="col-sm">{{ f.resonance }}</div>
+            <div class="col-sm">{{ f.rating }}</div>
+        </div>
+    {% endfor %}
+</div>
+<!-- Hidden template for new forms -->
+<div id="empty-resonance-form" class="row form-row invisible">
+    <div class="col-sm">{{ resonance_form.empty_form.resonance }}</div>
+    <div class="col-sm">{{ resonance_form.empty_form.rating }}</div>
+</div>
+<button type="button" class="btn btn-primary" id="add-resonance-form">Add Resonance</button>
+<div class="row">
+    <h2 class="col-sm mta_heading">Merits and Flaws</h2>
+</div>
+<div id="mf-formset">
+    <!-- This is the management form for the formset -->
+    {{ mf_form.management_form }}
+    {% for f in mf_form %}
+        <div class="row form-row">
+            <div class="col-sm">{{ f.mf }}</div>
+            <div class="col-sm">{{ f.rating }}</div>
+        </div>
+    {% endfor %}
+</div>
+<!-- Hidden template for new forms -->
+<div id="empty-mf-form" class="row form-row invisible">
+    <div class="col-sm">{{ mf_form.empty_form.mf }}</div>
+    <div class="col-sm">{{ mf_form.empty_form.rating }}</div>
+</div>
+<button type="button" class="btn btn-primary" id="add-mf-form">Add Merit/Flaw</button>
+<div class="row">
+    <div class="col-sm">Description</div>
+    <div class="col-sm">{{ form.description }}</div>
+</div>
+<div class="row">
+    <h2 class="col-sm mta_heading">Node Reality Zone</h2>
+</div>
+<div id="practice-formset">
+    <!-- This is the management form for the formset -->
+    {{ rz_form.management_form }}
+    {% for f in rz_form %}
+        <div class="row form-row">
+            <div class="col-sm">{{ f.practice }}</div>
+            <div class="col-sm">{{ f.rating }}</div>
+        </div>
+    {% endfor %}
+</div>
+<!-- Hidden template for new forms -->
+<div id="empty-form" class="row form-row invisible">
+    <div class="col-sm">{{ rz_form.empty_form.practice }}</div>
+    <div class="col-sm">{{ rz_form.empty_form.rating }}</div>
+</div>
+<button type="button" class="btn btn-primary" id="add-form">Add Practice</button>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let formCount = {{ rz_form.total_form_count }};
+        console.log({{ rz_form.total_form_count }})
+        const emptyFormTemplate = document.getElementById("empty-form").innerHTML;
+        const formsetDiv = document.getElementById("practice-formset");
+
+        document.getElementById("add-form").addEventListener("click", function() {
+            // Replace the placeholder with the current form count
+            let newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
+
+            // Create a new div for the form and add the generated HTML
+            let newDiv = document.createElement("div");
+            newDiv.classList.add("row", "form-row");
+            newDiv.innerHTML = newFormHtml;
+            formsetDiv.appendChild(newDiv);
+
+            // Update the management form to include the new form
+            formCount++;
+            document.getElementById("id_practicerating_set-TOTAL_FORMS").value = formCount;
+        });
+    });
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let formCount = {{ resonance_form.total_form_count }};
+        console.log({{ resonance_form.total_form_count }})
+        const emptyFormTemplate = document.getElementById("empty-resonance-form").innerHTML;
+        const formsetDiv = document.getElementById("resonance-formset");
+
+        document.getElementById("add-resonance-form").addEventListener("click", function() {
+            // Replace the placeholder with the current form count
+            let newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
+
+            // Create a new div for the form and add the generated HTML
+            let newDiv = document.createElement("div");
+            newDiv.classList.add("row", "form-row");
+            newDiv.innerHTML = newFormHtml;
+            formsetDiv.appendChild(newDiv);
+
+            // Update the management form to include the new form
+            formCount++;
+            document.getElementById("id_resonancerating_set-TOTAL_FORMS").value = formCount;
+        });
+    });
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let formCount = {{ mf_form.total_form_count }};
+        console.log({{ mf_form.total_form_count }})
+        const emptyFormTemplate = document.getElementById("empty-mf-form").innerHTML;
+        const formsetDiv = document.getElementById("mf-formset");
+
+        document.getElementById("add-mf-form").addEventListener("click", function() {
+            // Replace the placeholder with the current form count
+            let newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
+
+            // Create a new div for the form and add the generated HTML
+            let newDiv = document.createElement("div");
+            newDiv.classList.add("row", "form-row");
+            newDiv.innerHTML = newFormHtml;
+            formsetDiv.appendChild(newDiv);
+
+            // Update the management form to include the new form
+            formCount++;
+            document.getElementById("id_mfrating_set-TOTAL_FORMS").value = formCount;
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Listen for changes in any dropdowns of the formset
+        $(document).on('change', '[id^=id_nodemeritflawrating_set-][id$=-mf]', function() {
+            const id = this.id;  // get the id of the changed field
+            const match = id.match(/id_nodemeritflawrating_set-(\d+)-mf/);  // extract the integer from the id
+    
+            if (match) {
+                const formIndex = match[1];  // get the extracted integer
+    
+                // Build the ID of the corresponding analogue field
+                const ratingFieldId = `#id_nodemeritflawrating_set-${formIndex}-rating`;
+    
+                const selectedValue = this.value;
+                
+                // Assuming "MeritFlaw" is a category for example purposes
+                    $.ajax({
+                        url: '{% url 'characters:ajax:load_values' %}',  // Update with your actual URL
+                        data: {
+                            'example': selectedValue
+                        },
+                        success: function (data) {
+                            // Update the corresponding rating field with the AJAX response
+                            $(ratingFieldId).html(data);
+                        }
+                    });
+            }
+        });
+    });
+    
+</script>
+<br>

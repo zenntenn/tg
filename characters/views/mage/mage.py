@@ -36,7 +36,14 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from locations.forms.core.sanctum import SanctumForm
+from locations.forms.mage.node import (
+    NodeForm,
+    NodeMeritFlawFormSet,
+    NodeResonancePracticeRatingFormSet,
+    NodeResonanceRatingForm,
+)
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
+from locations.models.mage.node import Node, NodeMeritFlawRating
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.sanctum import Sanctum
 
@@ -173,6 +180,10 @@ class MageDetailView(HumanDetailView):
             context["sanctum_owned"] = Sanctum.objects.filter(
                 owned_by=self.object
             ).last()
+        context["node_owned"] = None
+        if Node.objects.filter(owned_by=self.object).count() > 0:
+            context["node_owned"] = Node.objects.filter(owned_by=self.object).last()
+        print(context["node_owned"])
         return context
 
 
@@ -1229,14 +1240,168 @@ class MageRoteView(CreateView):
         return super().form_invalid(form)
 
 
-class MageNodeView:
-    # Skip if Library == 0
-    # Skip if Familiar == 0
-    # Skip if Wonder == 0
-    # Skip if Enhancement == 0
-    # skip if sanctum == 0
-    # skip if allies == 0
-    pass
+class MageNodeView(FormView):
+    form_class = NodeForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        n = Node(
+            name=form.cleaned_data["name"],
+            description=form.cleaned_data["description"],
+            ratio=form.cleaned_data["ratio"],
+            size=form.cleaned_data["size"],
+            quintessence_form=form.cleaned_data["quintessence_form"],
+            tass_form=form.cleaned_data["tass_form"],
+            gauntlet=3,
+            owned_by=mage,
+        )
+        n.set_rank(mage.node)
+        n.points -= form.cleaned_data["ratio"]
+        n.points -= form.cleaned_data["size"]
+
+        total_resonance = 0
+        total_mfs = 0
+        total_rz = 0
+        resonances = []
+        mfs = []
+        rzs = []
+
+        if form.data["noderesonancerating_set-0-resonance"] != "":
+            res_names = [
+                v
+                for k, v in form.data.items()
+                if k.startswith("noderesonancerating_set-")
+                and k.endswith("-resonance")
+                and "prefix" not in k
+            ]
+            res_ratings = [
+                v
+                for k, v in form.data.items()
+                if k.startswith("noderesonancerating_set-")
+                and k.endswith("-rating")
+                and "prefix" not in k
+            ]
+            resonances = list(zip(res_names, res_ratings))
+            resonances = [x for x in resonances if x[0] != "" and x[1] != ""]
+            resonances = [
+                (Resonance.objects.get_or_create(name=x)[0], int(y))
+                for x, y in resonances
+            ]
+
+            for res, rat in resonances:
+                if rat > 5:
+                    form.add_error(
+                        None,
+                        "Resonance may not be higher than 5",
+                    )
+
+            total_resonance = sum([x[1] for x in resonances])
+
+        if form.data["nodemeritflawrating_set-0-mf"] != "":
+            mf_names = [
+                v
+                for k, v in form.data.items()
+                if k.startswith("nodemeritflawrating_set-")
+                and k.endswith("-mf")
+                and "prefix" not in k
+            ]
+            mf_ratings = [
+                v
+                for k, v in form.data.items()
+                if k.startswith("nodemeritflawrating_set-")
+                and k.endswith("-rating")
+                and "prefix" not in k
+            ]
+            mfs = list(zip(mf_names, mf_ratings))
+
+            mfs = [x for x in mfs if x[0] != "" and x[1] != ""]
+            mfs = [(MeritFlaw.objects.get(id=x), int(y)) for x, y in mfs]
+
+            total_mfs = sum([x[1] for x in mfs])
+
+        if form.data["zonerating_set-0-practice"] != "":
+            rz_names = [
+                v
+                for k, v in form.data.items()
+                if k.startswith("zonerating_set-")
+                and k.endswith("-practice")
+                and "prefix" not in k
+            ]
+            rz_ratings = [
+                v
+                for k, v in form.data.items()
+                if k.startswith("zonerating_set-")
+                and k.endswith("-rating")
+                and "prefix" not in k
+            ]
+            rzs = list(zip(rz_names, rz_ratings))
+
+            rzs = [x for x in rzs if x[0] != "" and x[1] != ""]
+            rzs = [(Practice.objects.get(id=x), int(y)) for x, y in rzs]
+
+            total_rz = sum([x[1] for x in rzs])
+            total_positive = sum([x[1] for x in rzs if x[1] > 0])
+            if total_rz != 0:
+                form.add_error(None, "Ratings must total 0")
+                return super().form_invalid(form)
+            if total_positive != mage.node:
+                form.add_error(None, "Positive Ratings must equal Node rating")
+                return super().form_invalid(form)
+
+        if total_resonance < n.rank:
+            form.add_error(None, "Resonance total must match or exceed rank")
+            return self.form_invalid(form)
+        n.points -= total_resonance - n.rank
+        n.points -= total_mfs
+        if n.points < 0:
+            form.add_error(
+                None,
+                "Node invalid: spend fewer points on merits/flaws, resonance, size, or ratio",
+            )
+            return self.form_invalid(form)
+        n.update_output()
+        n.save()
+
+        for res, rat in resonances:
+            while n.resonance_rating(res) < rat:
+                n.add_resonance(res)
+
+        for mf, rat in mfs:
+            NodeMeritFlawRating.objects.create(node=n, mf=mf, rating=rat)
+
+        rz = RealityZone.objects.create(name="{n.name} Reality Zone")
+        n.reality_zone = rz
+        n.save()
+        for prac, rat in rzs:
+            ZoneRating.objects.create(zone=rz, practice=prac, rating=rat)
+
+        mage.creation_status += 1
+        mage.save()
+        for step in [
+            "library",
+            "familiar",
+            "wonder",
+            "enhancement",
+            "sanctum",
+            "allies",
+        ]:
+            if getattr(mage, step) == 0:
+                mage.creation_status += 1
+            else:
+                mage.save()
+                break
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        context["rz_form"] = RealityZonePracticeRatingFormSet()
+        context["resonance_form"] = NodeResonancePracticeRatingFormSet()
+        context["mf_form"] = NodeMeritFlawFormSet()
+        return context
 
 
 class MageLibraryView:
@@ -1389,7 +1554,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         7: MageFreebiesView,
         8: MageLanguagesView,
         9: MageRoteView,
-        # 10: Node,
+        10: MageNodeView,
         # 11: Library,
         # 12: Familiar,
         # 13: Wonder,
