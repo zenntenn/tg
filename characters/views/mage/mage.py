@@ -1267,13 +1267,6 @@ class MageNodeView(MultipleFormsetsMixin, FormView):
         n.points -= form.cleaned_data["ratio"]
         n.points -= form.cleaned_data["size"]
 
-        total_resonance = 0
-        total_mfs = 0
-        total_rz = 0
-        resonances = []
-        mfs = []
-        rzs = []
-
         resonance_data = self.get_form_data("resonance_form")
         for res in resonance_data:
             res["resonance"] = Resonance.objects.get_or_create(name=res["resonance"])[0]
