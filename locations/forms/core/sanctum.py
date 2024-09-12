@@ -9,7 +9,13 @@ class SanctumForm(forms.Form):
     def save(self, mage, reality_zone=None):
         name = self.cleaned_data.get("name")
         description = self.cleaned_data.get("description")
-        s = Sanctum.objects.create(name=name, description=description, owned_by=mage)
+        s = Sanctum.objects.create(
+            name=name,
+            description=description,
+            owned_by=mage,
+            chronicle=mage.chronicle,
+            owner=mage.owner,
+        )
         if reality_zone is not None:
             s.reality_zone = reality_zone
             s.save()

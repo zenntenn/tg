@@ -35,6 +35,7 @@ from core.models import Language
 from core.views.generic import MultipleFormsetsMixin
 from core.widgets import AutocompleteTextInput
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.forms import BaseModelForm, SelectDateWidget, formset_factory
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
@@ -570,7 +571,7 @@ class MageUpdateView(UpdateView):
     template_name = "characters/mage/mage/form.html"
 
 
-class MageBasicsView(CreateView):
+class MageBasicsView(LoginRequiredMixin, CreateView):
     model = Mage
     fields = [
         "name",
@@ -612,6 +613,7 @@ class MageBasicsView(CreateView):
             form.instance.subfaction = MageFaction.objects.get(
                 pk=form.data["subfaction"]
             )
+        form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
@@ -1274,6 +1276,8 @@ class MageNodeView(MultipleFormsetsMixin, FormView):
             tass_form=form.cleaned_data["tass_form"],
             gauntlet=3,
             owned_by=mage,
+            chronicle=mage.chronicle,
+            owner=mage.owner,
         )
         n.set_rank(mage.node)
         n.points -= form.cleaned_data["ratio"]
