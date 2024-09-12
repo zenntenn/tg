@@ -87,6 +87,13 @@
             {% include "characters/mage/mage/mage_node_block_form.html" %}
         {% endif %}
     {% endblock node %}
+    {% block wonder %}
+        {% if object.creation_status == 13 %}
+            {% include "characters/mage/mage/mage_wonder_block_form.html" %}
+        {% elif object.creation_status > 13 %}
+            {% include "characters/core/human/equipment_block.html" %}
+        {% endif %}
+    {% endblock wonder %}
     {% block sanctum %}
         {% if object.creation_status == 15 %}
             {% include "characters/mage/mage/mage_sanctum_block_form.html" %}

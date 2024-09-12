@@ -1,0 +1,120 @@
+<div class="row">
+    <h2 class="col-sm mta_heading">Create Wonder</h2>
+</div>
+<div class="row">
+    <div class="col-sm">Wonder Type</div>
+    <div class="col-sm">{{ form.wonder_type }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Name</div>
+    <div class="col-sm">{{ form.name }}</div>
+    <div class="col-sm">Arete</div>
+    <div class="col-sm">{{ form.arete }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Description</div>
+    <div class="col-sm">{{ form.description }}</div>
+</div>
+<div class="row">
+    <h3 class="col-sm mta_heading">Resonance</h3>
+</div>
+<div id="resonance_form_container">
+    {{ resonance_form_context.formset.management_form }}
+    {% for f in resonance_form_context.formset %}
+        <div class="row form-row">
+            <div class="col-sm">{{ f.resonance }}</div>
+            <div class="col-sm">{{ f.rating }}</div>
+        </div>
+    {% endfor %}
+</div>
+<!-- Hidden empty form to clone -->
+<div id="resonance_form_empty_form" class="invisible">
+    <div class="row form-row">
+        <div class="col-sm">{{ resonance_form_context.empty_form.resonance }}</div>
+        <div class="col-sm">{{ resonance_form_context.empty_form.rating }}</div>
+    </div>
+</div>
+<button type="button"
+        class="btn btn-primary"
+        id="{{ resonance_form_context.add_button_id }}">Add Resonance</button>
+<div class="row">
+    <h3 class="col-sm mta_heading">Powers</h3>
+</div>
+<div id="effects_form_container">
+    {{ effects_form_context.formset.management_form }}
+    {% for f in effects_form_context.formset %}
+        <div class="row form-row">
+            <div class="col-sm">Name</div>
+            <div class="col-sm">{{ f.name }}</div>
+        </div>
+        <div class="row form-row">
+            <div class="col-sm">Correspondence</div>
+            <div class="col-sm dots">{{ f.correspondence }}</div>
+            <div class="col-sm">Life</div>
+            <div class="col-sm dots">{{ f.life }}</div>
+            <div class="col-sm">Prime</div>
+            <div class="col-sm dots">{{ f.prime }}</div>
+        </div>
+        <div class="row form-row">
+            <div class="col-sm">Entropy</div>
+            <div class="col-sm dots">{{ f.entropy }}</div>
+            <div class="col-sm">Matter</div>
+            <div class="col-sm dots">{{ f.matter }}</div>
+            <div class="col-sm">Spirit</div>
+            <div class="col-sm dots">{{ f.spirit }}</div>
+        </div>
+        <div class="row form-row">
+            <div class="col-sm">Forces</div>
+            <div class="col-sm dots">{{ f.forces }}</div>
+            <div class="col-sm">Mind</div>
+            <div class="col-sm dots">{{ f.mind }}</div>
+            <div class="col-sm">Time</div>
+            <div class="col-sm dots">{{ f.time }}</div>
+        </div>
+        <div class="row form-row">
+            <div class="col-sm">Description</div>
+            <div class="col-sm">{{ f.description }}</div>
+        </div>
+    {% endfor %}
+</div>
+<!-- Hidden empty form to clone -->
+<div id="effects_form_empty_form" class="invisible">
+    <div class="row form-row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ effects_form_context.empty_form.name }}</div>
+    </div>
+    <div class="row form-row">
+        <div class="col-sm">Correspondence</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.correspondence }}</div>
+        <div class="col-sm">Life</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.life }}</div>
+        <div class="col-sm">Prime</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.prime }}</div>
+    </div>
+    <div class="row form-row">
+        <div class="col-sm">Entropy</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.entropy }}</div>
+        <div class="col-sm">Matter</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.matter }}</div>
+        <div class="col-sm">Spirit</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.spirit }}</div>
+    </div>
+    <div class="row form-row">
+        <div class="col-sm">Forces</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.forces }}</div>
+        <div class="col-sm">Mind</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.mind }}</div>
+        <div class="col-sm">Time</div>
+        <div class="col-sm dots">{{ effects_form_context.empty_form.time }}</div>
+    </div>
+    <div class="row form-row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ effects_form_context.empty_form.description }}</div>
+    </div>
+</div>
+<button type="button"
+        class="btn btn-primary"
+        id="{{ effects_form_context.add_button_id }}">Add Power</button>
+{{ effects_form_js|safe }}
+{{ resonance_form_js|safe }}
+<br>

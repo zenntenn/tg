@@ -7,7 +7,6 @@ class SanctumForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea)
 
     def save(self, mage, reality_zone=None):
-        print(self.data)
         name = self.cleaned_data.get("name")
         description = self.cleaned_data.get("description")
         s = Sanctum.objects.create(name=name, description=description, owned_by=mage)
