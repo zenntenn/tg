@@ -1,6 +1,7 @@
 from typing import Any
 
 from characters.forms.core.advancement import AdvancementForm
+from characters.forms.core.ally import AllyForm
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.effect import EffectFormSet
@@ -18,9 +19,11 @@ from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Practice, Tenet
 from characters.models.mage.mage import Mage, PracticeRating, ResRating
+from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
+from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.views.core.human import (
     HumanAttributeView,
     HumanCharacterCreationView,
@@ -1561,8 +1564,33 @@ class MageSanctumView(CreateView):
         return super().form_invalid(form)
 
 
-class MageAlliesView:
-    pass
+class MageAlliesView(FormView):
+    form_class = AllyForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    ally_types = {"human": MtAHuman, "mage": Mage, "spirit": SpiritCharacter}
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        char_class = self.ally_types[form.cleaned_data["ally_type"]]
+        a = char_class.objects.create(
+            name=form.cleaned_data["name"],
+            concept=form.cleaned_data["name"],
+            notes=form.cleaned_data["name"]
+            + f"<br> Rank {mage.allies} Ally for {mage.name}",
+            chronicle=mage.chronicle,
+            npc=True,
+        )
+        mage.allied_characters.add(a)
+        mage.creation_status += 1
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
 
 
 class MageSpecialtiesView(FormView):
@@ -1633,7 +1661,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         13: MageWonderView,
         # 14: Enhancements,
         15: MageSanctumView,
-        # 16: Allies,
+        16: MageAlliesView,
         17: MageSpecialtiesView,
     }
     model_class = Mage
