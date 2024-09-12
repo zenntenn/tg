@@ -3,6 +3,7 @@ from typing import Any
 from characters.forms.core.advancement import AdvancementForm
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import MageAdvancementForm
+from characters.forms.mage.effect import EffectFormSet
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.models.core.ability import Ability
@@ -13,6 +14,7 @@ from characters.models.core.human import Human
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.core.statistic import Statistic
+from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Practice, Tenet
 from characters.models.mage.mage import Mage, PracticeRating, ResRating
@@ -36,6 +38,12 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonRes
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
+from items.forms.mage.wonder import WonderForm, WonderResonancePracticeRatingFormSet
+from items.models.core.item import ItemModel
+from items.models.mage.artifact import Artifact
+from items.models.mage.charm import Charm
+from items.models.mage.talisman import Talisman
+from items.models.mage.wonder import Wonder, WonderResonanceRating
 from locations.forms.core.sanctum import SanctumForm
 from locations.forms.mage.node import (
     NodeForm,
@@ -184,7 +192,7 @@ class MageDetailView(HumanDetailView):
         context["node_owned"] = None
         if Node.objects.filter(owned_by=self.object).count() > 0:
             context["node_owned"] = Node.objects.filter(owned_by=self.object).last()
-        print(context["node_owned"])
+        context["items_owned"] = ItemModel.objects.filter(owned_by=self.object)
         return context
 
 
@@ -1282,7 +1290,6 @@ class MageNodeView(MultipleFormsetsMixin, FormView):
 
         mf_data = self.get_form_data("mf_form")
         for res in mf_data:
-            print(res["mf"])
             res["mf"] = MeritFlaw.objects.get(id=res["mf"])
             res["rating"] = int(res["rating"])
         total_mfs = sum([x["rating"] for x in mf_data])
@@ -1365,12 +1372,128 @@ class MageLibraryView:
 
 class MageFamiliarView:
     # Skip if Wonder == 0
-    pass
-
-
-class MageWonderView:
     # Skip if Enhancement == 0
+    # skip if sanctum == 0
+    # skip if allies == 0
     pass
+
+
+class MageWonderView(MultipleFormsetsMixin, FormView):
+    form_class = WonderForm
+    formsets = {
+        "effects_form": EffectFormSet,
+        "resonance_form": WonderResonancePracticeRatingFormSet,
+    }
+    template_name = "characters/mage/mage/chargen.html"
+
+    wonder_classes = {
+        "charm": Charm,
+        "artifact": Artifact,
+        "talisman": Talisman,
+    }
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        w = self.wonder_classes[form.cleaned_data["wonder_type"]](
+            name=form.cleaned_data["name"],
+            description=form.cleaned_data["description"],
+            arete=form.cleaned_data["arete"],
+            rank=mage.wonder,
+            owned_by=mage,
+            chronicle=mage.chronicle,
+            owner=mage.owner,
+        )
+        points = 3 * w.rank
+
+        resonance_data = self.get_form_data("resonance_form")
+        for res in resonance_data:
+            res["resonance"] = Resonance.objects.get_or_create(name=res["resonance"])[0]
+            res["rating"] = int(res["rating"])
+            if res["rating"] > 5:
+                form.add_error(
+                    None,
+                    "Resonance may not be higher than 5",
+                )
+                return self.form_invalid(form)
+        total_resonance = sum([x["rating"] for x in resonance_data])
+        if total_resonance < w.rank:
+            form.add_error(None, "Resonance must be at least rank")
+            return self.form_invalid(form)
+        if form.cleaned_data["wonder_type"] == "charm":
+            max_cost = w.rank
+        else:
+            max_cost = 2 * w.rank
+
+        effects = []
+        total_effect_cost = 0
+        effects_data = self.get_form_data("effects_form")
+        if form.cleaned_data["wonder_type"] == "charm" and len(effects_data) > 1:
+            form.add_error(None, "Charms can only have one power")
+            return self.form_invalid(form)
+        elif form.cleaned_data["wonder_type"] == "artifact" and len(effects_data) > 1:
+            form.add_error(None, "Artifacts can only have one power")
+            return self.form_invalid(form)
+        elif (
+            form.cleaned_data["wonder_type"] == "talisman"
+            and len(effects_data) > w.rank
+        ):
+            form.add_error(None, "Talismans may up to their rank in effects")
+            return self.form_invalid(form)
+        for effect in effects_data:
+            for sphere in Sphere.objects.all():
+                effect[sphere.property_name] = int(effect[sphere.property_name])
+            e = Effect(**effect)
+            effects.append(e)
+            total_effect_cost += e.cost()
+            if total_effect_cost > max_cost:
+                form.add_error(
+                    None,
+                    "Effects cost more than allowed: rank for Charms, twice rank for Artifacts and Talismans",
+                )
+                return self.form_invalid(form)
+        if (total_resonance - w.rank) + total_effect_cost + (w.arete - w.rank) > points:
+            form.add_error(
+                None,
+                "Extra Resonance, Arete, and Effects must be less than 3 times the rank of the Wonder",
+            )
+            return self.form_invalid(form)
+
+        w.save()
+        for e in effects:
+            e.save()
+            if form.cleaned_data["wonder_type"] in ["charm", "artifact"]:
+                w.power = e
+            else:
+                w.powers.add(e)
+        w.save()
+
+        for resonance in resonance_data:
+            WonderResonanceRating.objects.create(
+                wonder=None,
+                resonance=resonance["resonance"],
+                rating=resonance["rating"],
+            )
+
+        mage.creation_status += 1
+        mage.save()
+        for step in [
+            "enhancement",
+            "sanctum",
+            "allies",
+        ]:
+            if getattr(mage, step) == 0:
+                mage.creation_status += 1
+            else:
+                mage.save()
+                break
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
 
 
 class MageEnhancementView:
@@ -1507,7 +1630,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         10: MageNodeView,
         # 11: Library,
         # 12: Familiar,
-        # 13: Wonder,
+        13: MageWonderView,
         # 14: Enhancements,
         15: MageSanctumView,
         # 16: Allies,
