@@ -1,0 +1,14 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Allies</h2>
+</div>
+<div class="row">
+    {% for c in object.allied_characters.all %}
+        {% if forloop.counter0|divisibleby:6 %}
+        </div>
+        <div class="row">
+        {% endif %}
+        <a class="col-sm-2" href="{{ c.get_absolute_url }}">{{ c }}</a>
+        {% if forloop.last %}</div>{% endif %}
+{% empty %}
+</div>
+{% endfor %}

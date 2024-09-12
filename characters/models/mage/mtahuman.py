@@ -1,3 +1,4 @@
+from characters.models.core.character import Character
 from characters.models.core.human import Human
 from django.db import models
 from django.urls import reverse
@@ -159,6 +160,8 @@ class MtAHuman(Human):
     status_background = models.IntegerField(default=0)
     totem = models.IntegerField(default=0)
     wonder = models.IntegerField(default=0)
+
+    allied_characters = models.ManyToManyField(Character, blank=True)
 
     background_points = 7
 

@@ -99,6 +99,13 @@
             {% include "characters/mage/mage/mage_sanctum_block_form.html" %}
         {% endif %}
     {% endblock sanctum %}
+    {% block ally %}
+        {% if object.creation_status == 16 %}
+            {% include "characters/core/human/ally_block_form.html" %}
+        {% elif object.creation_status > 16 %}
+            {% include "characters/core/human/ally_block_display.html" %}
+        {% endif %}
+    {% endblock ally %}
     {% block specialties_form %}
         {% if object.creation_status == 17 %}
             {% include "characters/mage/mage/mage_specialties_block_form.html" %}
