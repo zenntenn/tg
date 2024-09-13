@@ -15,6 +15,7 @@ class SanctumForm(forms.Form):
             owned_by=mage,
             chronicle=mage.chronicle,
             owner=mage.owner,
+            status="Sub",
         )
         if reality_zone is not None:
             s.reality_zone = reality_zone

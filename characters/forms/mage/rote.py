@@ -71,6 +71,7 @@ class RoteCreationForm(forms.Form):
             prime=prime,
             description=systems,
             name=name,
+            status="Sub",
         )
         if e.is_learnable(mage) and e.cost() <= mage.rote_points:
             e.save()
@@ -81,6 +82,7 @@ class RoteCreationForm(forms.Form):
                 ability=ability,
                 description=description,
                 effect=e,
+                status="Sub",
             )
             mage.rotes.add(r)
             mage.rote_points -= e.cost()
