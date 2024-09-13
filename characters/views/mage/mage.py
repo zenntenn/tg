@@ -1408,10 +1408,12 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
     def form_valid(self, form):
         context = self.get_context_data()
         mage = context["object"]
-        w = self.wonder_classes[form.cleaned_data["wonder_type"]](
-            name=form.cleaned_data["name"],
-            description=form.cleaned_data["description"],
-            arete=form.cleaned_data["arete"],
+        if form.cleaned_data["wonder_type"] == "artifact":
+            del form.cleaned_data["arete"]
+        wonder_type = form.cleaned_data["wonder_type"]
+        del form.cleaned_data["wonder_type"]
+        w = self.wonder_classes[wonder_type](
+            **form.cleaned_data,
             rank=mage.wonder,
             owned_by=mage,
             chronicle=mage.chronicle,
@@ -1434,7 +1436,7 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
         if total_resonance < w.rank:
             form.add_error(None, "Resonance must be at least rank")
             return self.form_invalid(form)
-        if form.cleaned_data["wonder_type"] == "charm":
+        if wonder_type == "charm":
             max_cost = w.rank
         else:
             max_cost = 2 * w.rank
@@ -1442,16 +1444,13 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
         effects = []
         total_effect_cost = 0
         effects_data = self.get_form_data("effects_form")
-        if form.cleaned_data["wonder_type"] == "charm" and len(effects_data) > 1:
+        if wonder_type == "charm" and len(effects_data) > 1:
             form.add_error(None, "Charms can only have one power")
             return self.form_invalid(form)
-        elif form.cleaned_data["wonder_type"] == "artifact" and len(effects_data) > 1:
+        elif wonder_type == "artifact" and len(effects_data) > 1:
             form.add_error(None, "Artifacts can only have one power")
             return self.form_invalid(form)
-        elif (
-            form.cleaned_data["wonder_type"] == "talisman"
-            and len(effects_data) > w.rank
-        ):
+        elif wonder_type == "talisman" and len(effects_data) > w.rank:
             form.add_error(None, "Talismans may up to their rank in effects")
             return self.form_invalid(form)
         for effect in effects_data:
@@ -1466,7 +1465,10 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
                     "Effects cost more than allowed: rank for Charms, twice rank for Artifacts and Talismans",
                 )
                 return self.form_invalid(form)
-        if (total_resonance - w.rank) + total_effect_cost + (w.arete - w.rank) > points:
+        cost = (total_resonance - w.rank) + total_effect_cost
+        if wonder_type != "artifact":
+            cost += w.arete - w.rank
+        if cost > points:
             form.add_error(
                 None,
                 "Extra Resonance, Arete, and Effects must be less than 3 times the rank of the Wonder",
@@ -1476,7 +1478,7 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
         w.save()
         for e in effects:
             e.save()
-            if form.cleaned_data["wonder_type"] in ["charm", "artifact"]:
+            if wonder_type in ["charm", "artifact"]:
                 w.power = e
             else:
                 w.powers.add(e)

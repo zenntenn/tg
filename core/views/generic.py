@@ -132,4 +132,5 @@ class MultipleFormsetsMixin:
                     sample[key] = form.data[f"{formset_prefix}-{i}-{key}"]
             if sample:
                 forms_data.append(sample)
+        forms_data = [x for x in forms_data if "" not in set(x.values())]
         return forms_data
