@@ -1278,6 +1278,7 @@ class MageNodeView(MultipleFormsetsMixin, FormView):
             owned_by=mage,
             chronicle=mage.chronicle,
             owner=mage.owner,
+            status="Sub",
         )
         n.set_rank(mage.node)
         n.points -= form.cleaned_data["ratio"]
@@ -1415,6 +1416,7 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
             owned_by=mage,
             chronicle=mage.chronicle,
             owner=mage.owner,
+            status="Sub",
         )
         points = 3 * w.rank
 
@@ -1590,6 +1592,7 @@ class MageAlliesView(FormView):
             + f"<br> Rank {mage.allies} Ally for {mage.name}",
             chronicle=mage.chronicle,
             npc=True,
+            status="Un",
         )
         mage.allied_characters.add(a)
         mage.creation_status += 1
