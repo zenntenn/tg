@@ -20,6 +20,18 @@ class Profile(models.Model):
         verbose_name = "Profile"
         verbose_name_plural = "Profiles"
 
+    def is_st(self):
+        return (
+            self.vtm_st
+            or self.wta_st
+            or self.mta_st
+            or self.ctd_st
+            or self.wto_st
+            or self.htr_st
+            or self.dtf_st
+            or self.mtr_st
+        )
+
 
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):
