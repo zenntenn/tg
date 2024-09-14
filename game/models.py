@@ -143,7 +143,7 @@ class Story(models.Model):
 
     def add_scene(self, name, location, date_played=None, date_of_scene=None):
         if isinstance(location, str):
-            from core.models import LocationModel
+            from locations.models import LocationModel
 
             location = LocationModel.objects.get(name=location)
         if Scene.objects.filter(name=name, story=self, location=location).exists():

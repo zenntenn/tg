@@ -7,8 +7,6 @@ from game.models import ObjectType
 from locations.models.mage import Node
 from locations.models.mage.node import NodeMeritFlawRating, NodeResonanceRating
 
-n = ObjectType.objects.get_or_create(name="node")[0]
-
 
 class NodeForm(forms.ModelForm):
     class Meta:
@@ -59,9 +57,12 @@ class NodeMeritFlawForm(forms.ModelForm):
         fields = ["mf", "rating"]
 
     rating = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)
-    mf = forms.ModelChoiceField(
-        queryset=MeritFlaw.objects.filter(allowed_types__in=[n])
-    )
+    mf = forms.ModelChoiceField(queryset=MeritFlaw.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        n = ObjectType.objects.get_or_create(name="node")[0]
+        super().__init__(*args, **kwargs)
+        self.fields["mf"].queryset = MeritFlaw.objects.filter(allowed_types__in=[n])
 
 
 NodeMeritFlawFormSet = forms.inlineformset_factory(
