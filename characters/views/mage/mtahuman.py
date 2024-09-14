@@ -1,5 +1,6 @@
 from characters.models.mage.mtahuman import MtAHuman
 from characters.views.core.human import HumanDetailView
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
 
@@ -7,6 +8,13 @@ from django.views.generic import CreateView, UpdateView
 class MtAHumanDetailView(HumanDetailView):
     model = MtAHuman
     template_name = "characters/mage/mtahuman/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
 
 class MtAHumanCreateView(CreateView):
@@ -163,7 +171,7 @@ class MtAHumanCreateView(CreateView):
     template_name = "characters/mage/mtahuman/form.html"
 
 
-class MtAHumanUpdateView(UpdateView):
+class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
     model = MtAHuman
     fields = [
         "name",
@@ -316,6 +324,13 @@ class MtAHumanUpdateView(UpdateView):
     ]
     template_name = "characters/mage/mtahuman/form.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
 
 class MtAHumanAbilityView(UpdateView):
     model = MtAHuman
@@ -354,7 +369,7 @@ class MtAHumanAbilityView(UpdateView):
         "medicine",
         "science",
     ]
-    template_name = "characters/mage/mtahuman/"
+    template_name = "characters/mage/mtahuman/ability_block_form.html"
 
     def form_valid(self, form):
         awareness = form.cleaned_data.get("awareness")

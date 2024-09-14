@@ -14,6 +14,8 @@ from items.models.werewolf.fetish import Fetish
 class Kinfolk(WtAHuman):
     type = "kinfolk"
 
+    gameline = "wta"
+
     breed = models.CharField(
         default="",
         max_length=100,

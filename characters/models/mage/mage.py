@@ -25,6 +25,8 @@ from locations.models.mage.node import Node
 class Mage(MtAHuman):
     type = "mage"
 
+    gameline = "mta"
+
     affiliation = models.ForeignKey(
         MageFaction,
         on_delete=models.SET_NULL,

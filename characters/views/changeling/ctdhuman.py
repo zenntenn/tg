@@ -1,10 +1,18 @@
 from characters.models.changeling.ctdhuman import CtDHuman
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class CtDHumanDetailView(DetailView):
+class CtDHumanDetailView(SpecialUserMixin, DetailView):
     model = CtDHuman
     template_name = "characters/changeling/ctdhuman/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
 
 class CtDHumanCreateView(CreateView):
@@ -79,7 +87,7 @@ class CtDHumanCreateView(CreateView):
     template_name = "characters/changeling/ctdhuman/form.html"
 
 
-class CtDHumanUpdateView(UpdateView):
+class CtDHumanUpdateView(SpecialUserMixin, UpdateView):
     model = CtDHuman
     fields = [
         "name",
@@ -149,3 +157,10 @@ class CtDHumanUpdateView(UpdateView):
         "treasure",
     ]
     template_name = "characters/changeling/ctdhuman/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context

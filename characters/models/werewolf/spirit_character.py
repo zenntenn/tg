@@ -7,6 +7,8 @@ from django.urls import reverse
 class SpiritCharacter(Character):
     type = "spirit_character"
 
+    gameline = "wta"
+
     willpower = models.IntegerField(default=0)
     rage = models.IntegerField(default=0)
     gnosis = models.IntegerField(default=0)

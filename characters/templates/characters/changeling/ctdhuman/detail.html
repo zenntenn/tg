@@ -138,144 +138,82 @@
             Performance
             {% if performance_spec %}({{ performance_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.performance|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.performance|dots }}</div>
         <div class="col-sm">
             Politics
             {% if politics_spec %}({{ politics_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.politics|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.politics|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Streetwise
             {% if streetwise_spec %}({{ streetwise_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.streetwise|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.streetwise|dots }}</div>
         <div class="col-sm">
             Stealth
             {% if stealth_spec %}({{ stealth_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.stealth|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.stealth|dots }}</div>
         <div class="col-sm">
             Science
             {% if science_spec %}({{ science_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.science|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.science|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Subterfuge
             {% if subterfuge_spec %}({{ streetwissubterfuge_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.subterfuge|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.subterfuge|dots }}</div>
         <div class="col-sm">
             Survival
             {% if survival_spec %}({{ survival_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.survival|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.survival|dots }}</div>
         <div class="col-sm">
             Technology
             {% if technology_spec %}({{ technology_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.technology|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.technology|dots }}</div>
     </div>
 {% endblock abilities %}
 {% block backgrounds %}
     <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">
-            Backgrounds
-        </h2>
+        <h2 class="col-sm {{ object.get_heading }}">Backgrounds</h2>
     </div>
     <div class="row">
-        <div class="col-sm">
-            Chimera
-        </div>
-        <div class="col-sm dots">
-            {{ object.chimera|dots }}
-        </div>
-        <div class="col-sm">
-            Contacts
-        </div>
-        <div class="col-sm dots">
-            {{ object.contacts|dots }}
-        </div>
-        <div class="col-sm">
-            Dreamers
-        </div>
-        <div class="col-sm dots">
-            {{ object.dreamers|dots }}
-        </div>
+        <div class="col-sm">Chimera</div>
+        <div class="col-sm dots">{{ object.chimera|dots }}</div>
+        <div class="col-sm">Contacts</div>
+        <div class="col-sm dots">{{ object.contacts|dots }}</div>
+        <div class="col-sm">Dreamers</div>
+        <div class="col-sm dots">{{ object.dreamers|dots }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">
-            Holdings
-        </div>
-        <div class="col-sm dots">
-            {{ object.holdings|dots }}
-        </div>
-        <div class="col-sm">
-            Mentor
-        </div>
-        <div class="col-sm dots">
-            {{ object.mentor|dots }}
-        </div>
-        <div class="col-sm">
-            Remembrance
-        </div>
-        <div class="col-sm dots">
-            {{ object.remembrance|dots }}
-        </div>
+        <div class="col-sm">Holdings</div>
+        <div class="col-sm dots">{{ object.holdings|dots }}</div>
+        <div class="col-sm">Mentor</div>
+        <div class="col-sm dots">{{ object.mentor|dots }}</div>
+        <div class="col-sm">Remembrance</div>
+        <div class="col-sm dots">{{ object.remembrance|dots }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">
-            Resources
-        </div>
-        <div class="col-sm dots">
-            {{ object.resources|dots }}
-        </div>
-        <div class="col-sm">
-            Retinue
-        </div>
-        <div class="col-sm dots">
-            {{ object.retinue|dots }}
-        </div>
-        <div class="col-sm">
-            Title
-        </div>
-        <div class="col-sm dots">
-            {{ object.title|dots }}
-        </div>
+        <div class="col-sm">Resources</div>
+        <div class="col-sm dots">{{ object.resources|dots }}</div>
+        <div class="col-sm">Retinue</div>
+        <div class="col-sm dots">{{ object.retinue|dots }}</div>
+        <div class="col-sm">Title</div>
+        <div class="col-sm dots">{{ object.title|dots }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">
-        </div>
-        <div class="col-sm dots">
-        </div>
-        <div class="col-sm">
-            Treasure
-        </div>
-        <div class="col-sm dots">
-            {{ object.treasure|dots }}
-        </div>
-        <div class="col-sm">
-        </div>
-        <div class="col-sm dots">
-        </div>
+        <div class="col-sm"></div>
+        <div class="col-sm dots"></div>
+        <div class="col-sm">Treasure</div>
+        <div class="col-sm dots">{{ object.treasure|dots }}</div>
+        <div class="col-sm"></div>
+        <div class="col-sm dots"></div>
     </div>
 {% endblock backgrounds %}

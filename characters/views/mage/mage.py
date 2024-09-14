@@ -32,6 +32,7 @@ from characters.views.core.human import (
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
+from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import MultipleFormsetsMixin
 from core.widgets import AutocompleteTextInput
 from django import forms
@@ -197,6 +198,9 @@ class MageDetailView(HumanDetailView):
         if Node.objects.filter(owned_by=self.object).count() > 0:
             context["node_owned"] = Node.objects.filter(owned_by=self.object).last()
         context["items_owned"] = ItemModel.objects.filter(owned_by=self.object)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
@@ -389,7 +393,7 @@ class MageCreateView(CreateView):
         return form
 
 
-class MageUpdateView(UpdateView):
+class MageUpdateView(SpecialUserMixin, UpdateView):
     model = Mage
     fields = [
         "name",
@@ -570,6 +574,13 @@ class MageUpdateView(UpdateView):
     ]
     template_name = "characters/mage/mage/form.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
 
 class MageBasicsView(LoginRequiredMixin, CreateView):
     model = Mage
@@ -621,13 +632,27 @@ class MageAttributeView(HumanAttributeView):
     model = Mage
     template_name = "characters/mage/mage/chargen.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
-class MageAbilityView(MtAHumanAbilityView):
+
+class MageAbilityView(SpecialUserMixin, MtAHumanAbilityView):
     model = Mage
     template_name = "characters/mage/mage/chargen.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
-class MageBackgroundsView(UpdateView):
+
+class MageBackgroundsView(SpecialUserMixin, UpdateView):
     model = Mage
     fields = [
         "allies",
@@ -805,8 +830,15 @@ class MageBackgroundsView(UpdateView):
         self.object.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
-class MageFocusView(UpdateView):
+
+class MageFocusView(SpecialUserMixin, UpdateView):
     model = Mage
     fields = [
         "metaphysical_tenet",
@@ -837,6 +869,9 @@ class MageFocusView(UpdateView):
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -876,7 +911,7 @@ class MageFocusView(UpdateView):
             return self.form_invalid(form)
 
 
-class MageSpheresView(UpdateView):
+class MageSpheresView(SpecialUserMixin, UpdateView):
     model = Mage
     fields = [
         "arete",
@@ -972,8 +1007,15 @@ class MageSpheresView(UpdateView):
             return self.form_valid(form)
         return super().form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
-class MageExtrasView(UpdateView):
+
+class MageExtrasView(SpecialUserMixin, UpdateView):
 
     model = Mage
     fields = [
@@ -1008,6 +1050,9 @@ class MageExtrasView(UpdateView):
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1016,7 +1061,7 @@ class MageExtrasView(UpdateView):
         return super().form_valid(form)
 
 
-class MageFreebiesView(UpdateView):
+class MageFreebiesView(SpecialUserMixin, UpdateView):
     model = Mage
     form_class = MageAdvancementForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1029,6 +1074,9 @@ class MageFreebiesView(UpdateView):
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1170,7 +1218,7 @@ class MageFreebiesView(UpdateView):
         return self.form_valid(form)
 
 
-class MageLanguagesView(FormView):
+class MageLanguagesView(SpecialUserMixin, FormView):
     form_class = HumanLanguageForm
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1201,10 +1249,13 @@ class MageLanguagesView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
 
-class MageRoteView(CreateView):
+class MageRoteView(SpecialUserMixin, CreateView):
     model = Rote
     form_class = RoteCreationForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1213,6 +1264,9 @@ class MageRoteView(CreateView):
         context = super().get_context_data(**kwargs)
         mage_id = self.kwargs.get("pk")
         context["object"] = Mage.objects.get(id=mage_id)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def get_form_kwargs(self):
@@ -1255,7 +1309,7 @@ class MageRoteView(CreateView):
         return super().form_invalid(form)
 
 
-class MageNodeView(MultipleFormsetsMixin, FormView):
+class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     form_class = NodeForm
     template_name = "characters/mage/mage/chargen.html"
     formsets = {
@@ -1366,6 +1420,9 @@ class MageNodeView(MultipleFormsetsMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
 
@@ -1386,7 +1443,7 @@ class MageFamiliarView:
     pass
 
 
-class MageWonderView(MultipleFormsetsMixin, FormView):
+class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     form_class = WonderForm
     formsets = {
         "effects_form": EffectFormSet,
@@ -1403,6 +1460,9 @@ class MageWonderView(MultipleFormsetsMixin, FormView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1513,7 +1573,7 @@ class MageEnhancementView:
     pass
 
 
-class MageSanctumView(CreateView):
+class MageSanctumView(SpecialUserMixin, CreateView):
     model = Sanctum
     form_class = SanctumForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1524,6 +1584,9 @@ class MageSanctumView(CreateView):
         context["object"] = Mage.objects.get(id=mage_id)
         context["rz_form"] = RealityZonePracticeRatingFormSet()
         context["form"].fields["name"].initial = f"{context['object']}'s Sanctum"
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1572,7 +1635,7 @@ class MageSanctumView(CreateView):
         return super().form_invalid(form)
 
 
-class MageAlliesView(FormView):
+class MageAlliesView(SpecialUserMixin, FormView):
     form_class = AllyForm
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1581,6 +1644,9 @@ class MageAlliesView(FormView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1602,13 +1668,16 @@ class MageAlliesView(FormView):
         return HttpResponseRedirect(mage.get_absolute_url())
 
 
-class MageSpecialtiesView(FormView):
+class MageSpecialtiesView(SpecialUserMixin, FormView):
     form_class = SpecialtiesForm
     template_name = "characters/mage/mage/chargen.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def get_form_kwargs(self):

@@ -7,6 +7,8 @@ from django.urls import reverse
 class MtAHuman(Human):
     type = "mta_human"
 
+    gameline = "mta"
+
     primary_abilities = [
         "awareness",
         "art",

@@ -1,9 +1,10 @@
 from characters.models.changeling.changeling import Changeling
 from characters.models.core.meritflaw import MeritFlawRating
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class ChangelingDetailView(DetailView):
+class ChangelingDetailView(SpecialUserMixin, DetailView):
     model = Changeling
     template_name = "characters/changeling/changeling/detail.html"
 
@@ -24,7 +25,9 @@ class ChangelingDetailView(DetailView):
         context["merits_and_flaws"] = MeritFlawRating.objects.order_by(
             "mf__name"
         ).filter(character=self.object)
-
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
@@ -136,7 +139,7 @@ class ChangelingCreateView(CreateView):
     template_name = "characters/changeling/changeling/form.html"
 
 
-class ChangelingUpdateView(UpdateView):
+class ChangelingUpdateView(SpecialUserMixin, UpdateView):
     model = Changeling
     fields = [
         "name",
@@ -242,3 +245,10 @@ class ChangelingUpdateView(UpdateView):
         "fae_mien",
     ]
     template_name = "characters/changeling/changeling/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context

@@ -1,11 +1,19 @@
 from characters.models.wraith.wtohuman import WtOHuman
 from characters.views.core.human import HumanDetailView
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
 class WtOHumanDetailView(HumanDetailView):
     model = WtOHuman
     template_name = "characters/wraith/wtohuman/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
 
 class WtOHumanCreateView(CreateView):
@@ -88,7 +96,7 @@ class WtOHumanCreateView(CreateView):
     template_name = "characters/wraith/wtohuman/form.html"
 
 
-class WtOHumanUpdateView(UpdateView):
+class WtOHumanUpdateView(SpecialUserMixin, UpdateView):
     model = WtOHuman
     fields = [
         "name",
@@ -166,3 +174,10 @@ class WtOHumanUpdateView(UpdateView):
         "status_background",
     ]
     template_name = "characters/wraith/wtohuman/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context

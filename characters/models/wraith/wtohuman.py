@@ -6,6 +6,8 @@ from django.urls import reverse
 class WtOHuman(Human):
     type = "wto_human"
 
+    gameline = "wto"
+
     awareness = models.IntegerField(default=0)
     persuasion = models.IntegerField(default=0)
     larceny = models.IntegerField(default=0)

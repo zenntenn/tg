@@ -6,6 +6,8 @@ from django.urls import reverse
 class WtAHuman(Human):
     type = "wta_human"
 
+    gameline = "wta"
+
     leadership = models.IntegerField(default=0)
     primal_urge = models.IntegerField(default=0)
 

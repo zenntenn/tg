@@ -4,6 +4,7 @@ from characters.models.core.attribute import Attribute
 from characters.models.core.background import Background
 from characters.models.core.meritflaw import MeritFlaw
 from characters.views.core.character import CharacterDetailView
+from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
 from django.shortcuts import redirect, render
 from django.views import View
@@ -13,6 +14,13 @@ from django.views.generic import CreateView, DetailView, UpdateView
 class HumanDetailView(CharacterDetailView):
     model = Human
     template_name = "characters/core/human/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
 
 class HumanCreateView(CreateView):
@@ -54,7 +62,7 @@ class HumanCreateView(CreateView):
     template_name = "characters/core/human/form.html"
 
 
-class HumanUpdateView(UpdateView):
+class HumanUpdateView(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
         "name",
@@ -92,6 +100,13 @@ class HumanUpdateView(UpdateView):
     ]
     template_name = "characters/core/human/form.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
 
 class HumanBasicsView(CreateView):
     model = Human
@@ -104,7 +119,7 @@ class HumanBasicsView(CreateView):
     template_name = "characters/core/human/humanbasics.html"
 
 
-class HumanAttributeView(UpdateView):
+class HumanAttributeView(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
         "strength",
@@ -158,8 +173,15 @@ class HumanAttributeView(UpdateView):
         self.object.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
-class HumanBiographicalInformation(UpdateView):
+
+class HumanBiographicalInformation(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
         "age",
@@ -183,6 +205,13 @@ class HumanBiographicalInformation(UpdateView):
         self.object.creation_status += 1
         self.object.save()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
 
 class HumanCharacterCreationView(DictView):

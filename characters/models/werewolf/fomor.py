@@ -8,6 +8,9 @@ from django.urls import reverse
 
 class Fomor(WtAHuman):
     type = "fomor"
+
+    gameline = "wta"
+
     rage = models.IntegerField(default=0)
     gnosis = models.IntegerField(default=0)
     powers = models.ManyToManyField(FomoriPower, blank=True)

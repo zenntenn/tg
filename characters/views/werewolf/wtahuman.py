@@ -1,11 +1,19 @@
 from characters.models.werewolf.wtahuman import WtAHuman
 from characters.views.core.human import HumanDetailView
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
 class WtAHumanDetailView(HumanDetailView):
     model = WtAHuman
     template_name = "characters/werewolf/wtahuman/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
 
 
 class WtAHumanCreateView(CreateView):
@@ -90,7 +98,7 @@ class WtAHumanCreateView(CreateView):
     template_name = "characters/werewolf/wtahuman/form.html"
 
 
-class WtAHumanUpdateView(UpdateView):
+class WtAHumanUpdateView(SpecialUserMixin, UpdateView):
     model = WtAHuman
     fields = [
         "name",
@@ -170,3 +178,10 @@ class WtAHumanUpdateView(UpdateView):
         "totem",
     ]
     template_name = "characters/werewolf/wtahuman/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
