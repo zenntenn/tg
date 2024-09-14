@@ -25,17 +25,7 @@
         {% endblock contents %}
         <form method="post">
             {% block update %}
-                {% if user.is_authenticated %}
-                    {% if user == object.owner or user.is_superuser %}
-                        <div class="row">
-                            <div class="col-sm">
-                                <a href="{{ object.get_update_url }}"
-                                   class="btn btn-primary"
-                                   role="button">Update</a>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
+
             {% endblock update %}
         </form>
     </div>

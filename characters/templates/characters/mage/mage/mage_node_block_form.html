@@ -40,9 +40,7 @@
         <div class="col-sm">{{ resonance_form_context.empty_form.rating }}</div>
     </div>
 </div>
-<button type="button"
-        class="btn btn-primary"
-        id="{{ resonance_form_context.add_button_id }}">Add Resonance</button>
+<button type="button" id="{{ resonance_form_context.add_button_id }}">Add Resonance</button>
 <div class="row">
     <h2 class="col-sm mta_heading">Merits and Flaws</h2>
 </div>
@@ -62,9 +60,7 @@
         <div class="col-sm">{{ mf_form_context.empty_form.rating }}</div>
     </div>
 </div>
-<button type="button"
-        class="btn btn-primary"
-        id="{{ mf_form_context.add_button_id }}">Add Merit/Flaw</button>
+<button type="button" id="{{ mf_form_context.add_button_id }}">Add Merit/Flaw</button>
 <div class="row">
     <div class="col-sm">Description</div>
     <div class="col-sm">{{ form.description }}</div>
@@ -88,9 +84,7 @@
         <div class="col-sm">{{ rz_form_context.empty_form.rating }}</div>
     </div>
 </div>
-<button type="button"
-        class="btn btn-primary"
-        id="{{ rz_form_context.add_button_id }}">Add Practice</button>
+<button type="button" id="{{ rz_form_context.add_button_id }}">Add Practice</button>
 {{ mf_form_js|safe }}
 {{ resonance_form_js|safe }}
 {{ rz_form_js|safe }}

@@ -39,7 +39,7 @@
     <div class="col-sm">{{ practice_formset.empty_form.practice }}</div>
     <div class="col-sm">{{ practice_formset.empty_form.rating }}</div>
 </div>
-<button type="button" class="btn btn-primary" id="add-form">Add Practice</button>
+<button type="button" id="add-form">Add Practice</button>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         let formCount = {{ practice_formset.total_form_count }};

@@ -3,17 +3,16 @@
     {{ object.name| safe }}
 {% endblock title %}
 {% block content %}
-    <form 
-    {% block formdetails %}
-    action="" method="post"
-    {% endblock formdetails %}
-    >
+    <form {% block formdetails %}
+          action=""
+          method="post"
+          {% endblock formdetails %}>
         {% csrf_token %}
         <div class="centertext container">
             {% block contents %}
             {% endblock contents %}
             {% block buttons %}
-            <input class="btn btn-primary" type="submit" value="Save" />
+                <input type="submit" value="Save" />
             {% endblock buttons %}
         </div>
     </form>

@@ -12,28 +12,28 @@
     {{ form.non_field_errors }}
     <div class="centertext container">
         <div class="row">
-            <div class="col-sm">Name</div>
-            <div class="col-sm">{{ form.name }}</div>
-            <div class="col-sm">Nature</div>
-            <div class="col-sm">{{ form.nature }}</div>
-            <div class="col-sm">Affiliation</div>
-            <div class="col-sm">{{ form.affiliation }}</div>
+            <div class="col-sm-2">Name</div>
+            <div class="col-sm-2">{{ form.name }}</div>
+            <div class="col-sm-2">Nature</div>
+            <div class="col-sm-2">{{ form.nature }}</div>
+            <div class="col-sm-2">Affiliation</div>
+            <div class="col-sm-2">{{ form.affiliation }}</div>
         </div>
         <div class="row">
-            <div class="col-sm">Chronicle</div>
-            <div class="col-sm">{{ form.chronicle }}</div>
-            <div class="col-sm">Demeanor</div>
-            <div class="col-sm">{{ form.demeanor }}</div>
-            <div class="col-sm">Faction</div>
-            <div class="col-sm">{{ form.faction }}</div>
+            <div class="col-sm-2">Chronicle</div>
+            <div class="col-sm-2">{{ form.chronicle }}</div>
+            <div class="col-sm-2">Demeanor</div>
+            <div class="col-sm-2">{{ form.demeanor }}</div>
+            <div class="col-sm-2">Faction</div>
+            <div class="col-sm-2">{{ form.faction }}</div>
         </div>
         <div class="row">
-            <div class="col-sm">Essence</div>
-            <div class="col-sm">{{ form.essence }}</div>
-            <div class="col-sm">Concept</div>
-            <div class="col-sm">{{ form.concept }}</div>
-            <div class="col-sm">Subfaction</div>
-            <div class="col-sm">{{ form.subfaction }}</div>
+            <div class="col-sm-2">Essence</div>
+            <div class="col-sm-2">{{ form.essence }}</div>
+            <div class="col-sm-2">Concept</div>
+            <div class="col-sm-2">{{ form.concept }}</div>
+            <div class="col-sm-2">Subfaction</div>
+            <div class="col-sm-2">{{ form.subfaction }}</div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -71,13 +71,5 @@ $.ajax({                       // initialize an AJAX request
     </script>
 {% endblock contents %}
 {% block buttons %}
-    <input class="btn btn-primary"
-           name="Full Random"
-           type="submit"
-           value="Full Random" />
-    <input class="btn btn-primary"
-           name="Random Basics"
-           type="submit"
-           value="Random Basics" />
-    <input class="btn btn-primary" name="Save" type="submit" value="Save" />
+    <input name="Save" type="submit" value="Save" />
 {% endblock buttons %}

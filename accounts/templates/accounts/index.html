@@ -83,10 +83,7 @@
                 <div class="col-sm border">{{ char.get_status_display }}</div>
                 <form action="" method="post" class="col-sm border">
                     {% csrf_token %}
-                    <input class="btn btn-primary"
-                           type="submit"
-                           name="{{ char.name }}"
-                           value="Approve" />
+                    <input type="submit" name="{{ char.name }}" value="Approve" />
                 </form>
             </div>
         {% endfor %}

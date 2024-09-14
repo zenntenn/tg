@@ -3,19 +3,15 @@ from game.models import ObjectType
 
 
 class LocationCreationForm(forms.Form):
-    loc_type = forms.ChoiceField(
-        choices=[], widget=forms.Select(attrs={"class": "btn btn-primary dropdown"})
-    )
+    loc_type = forms.ChoiceField(choices=[])
     name = forms.CharField(
         max_length=100,
         label="Name",
         required=False,
-        widget=forms.TextInput(attrs={"class": "btn btn-primary"}),
     )
     rank = forms.IntegerField(
         initial=1,
         max_value=5,
-        widget=forms.NumberInput(attrs={"class": "btn btn-primary"}),
     )
 
     def __init__(self, *args, **kwargs):
