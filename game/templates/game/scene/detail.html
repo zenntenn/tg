@@ -32,7 +32,7 @@
             <div class="row">
                 <div class="col-sm">
                     <p>
-                        <b>{{ post.display_name }}</b>:
+                        <b {% if post.character.owner.profile.is_st %}class="st"{% endif %}>{{ post.display_name }}</b>:
                         {% autoescape off %}
                             {{ post.message }}
                         {% endautoescape %}
