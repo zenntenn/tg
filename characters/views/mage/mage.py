@@ -198,7 +198,9 @@ class MageDetailView(SpecialUserMixin, HumanDetailView):
         if Node.objects.filter(owned_by=self.object).count() > 0:
             context["node_owned"] = Node.objects.filter(owned_by=self.object).last()
         context["items_owned"] = ItemModel.objects.filter(owned_by=self.object)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
@@ -574,8 +576,11 @@ class MageUpdateView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class MageBasicsView(LoginRequiredMixin, CreateView):
     model = Mage
@@ -626,20 +631,24 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
 class MageAttributeView(SpecialUserMixin, HumanAttributeView):
     model = Mage
     template_name = "characters/mage/mage/chargen.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
 class MageAbilityView(SpecialUserMixin, MtAHumanAbilityView):
     model = Mage
     template_name = "characters/mage/mage/chargen.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
@@ -823,8 +832,11 @@ class MageBackgroundsView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class MageFocusView(SpecialUserMixin, UpdateView):
     model = Mage
@@ -857,7 +869,9 @@ class MageFocusView(SpecialUserMixin, UpdateView):
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -995,8 +1009,11 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class MageExtrasView(SpecialUserMixin, UpdateView):
 
@@ -1033,7 +1050,9 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1055,7 +1074,9 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1228,7 +1249,9 @@ class MageLanguagesView(SpecialUserMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
 
@@ -1241,7 +1264,9 @@ class MageRoteView(SpecialUserMixin, CreateView):
         context = super().get_context_data(**kwargs)
         mage_id = self.kwargs.get("pk")
         context["object"] = Mage.objects.get(id=mage_id)
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def get_form_kwargs(self):
@@ -1395,7 +1420,9 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
 
@@ -1433,7 +1460,9 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Mage.objects.get(id=self.kwargs["pk"])
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1555,7 +1584,9 @@ class MageSanctumView(SpecialUserMixin, CreateView):
         context["object"] = Mage.objects.get(id=mage_id)
         context["rz_form"] = RealityZonePracticeRatingFormSet()
         context["form"].fields["name"].initial = f"{context['object']}'s Sanctum"
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1613,7 +1644,9 @@ class MageAlliesView(SpecialUserMixin, FormView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Mage.objects.get(id=self.kwargs["pk"])
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -1642,7 +1675,9 @@ class MageSpecialtiesView(SpecialUserMixin, FormView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Mage.objects.get(id=self.kwargs["pk"])
-        context["is_approved_user"] = self.check_if_special_user(context["object"], self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
         return context
 
     def get_form_kwargs(self):

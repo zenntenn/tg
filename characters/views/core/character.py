@@ -1,9 +1,9 @@
 from typing import Any
 
 from characters.models.core import Character
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
-from core.views.approved_user_mixin import SpecialUserMixin
 from game.models import Scene
 
 
@@ -16,7 +16,9 @@ class CharacterDetailView(SpecialUserMixin, DetailView):
         context["scenes"] = Scene.objects.filter(characters=context["object"]).order_by(
             "date_of_scene"
         )
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
@@ -33,5 +35,7 @@ class CharacterUpdateView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context

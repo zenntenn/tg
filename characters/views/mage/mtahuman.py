@@ -1,9 +1,8 @@
 from characters.models.mage.mtahuman import MtAHuman
 from characters.views.core.human import HumanDetailView
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
-
-from core.views.approved_user_mixin import SpecialUserMixin
 
 
 class MtAHumanDetailView(SpecialUserMixin, HumanDetailView):
@@ -12,8 +11,11 @@ class MtAHumanDetailView(SpecialUserMixin, HumanDetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class MtAHumanCreateView(CreateView):
     model = MtAHuman
@@ -324,8 +326,11 @@ class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class MtAHumanAbilityView(UpdateView):
     model = MtAHuman

@@ -1,8 +1,7 @@
 from characters.models.vampire.vtmhuman import VtMHuman
 from characters.views.core.human import HumanDetailView
-from django.views.generic import CreateView, DetailView, UpdateView
-
 from core.views.approved_user_mixin import SpecialUserMixin
+from django.views.generic import CreateView, DetailView, UpdateView
 
 
 class VtMHumanDetailView(SpecialUserMixin, HumanDetailView):
@@ -11,8 +10,11 @@ class VtMHumanDetailView(SpecialUserMixin, HumanDetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class VtMHumanCreateView(CreateView):
     model = VtMHuman
@@ -219,5 +221,7 @@ class VtMHumanUpdateView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context

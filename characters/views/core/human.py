@@ -17,8 +17,11 @@ class HumanDetailView(SpecialUserMixin, CharacterDetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class HumanCreateView(CreateView):
     model = Human
@@ -96,10 +99,12 @@ class HumanUpdateView(SpecialUserMixin, UpdateView):
         "appearance",
     ]
     template_name = "characters/core/human/form.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
 
@@ -170,8 +175,11 @@ class HumanAttributeView(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class HumanBiographicalInformation(SpecialUserMixin, UpdateView):
     model = Human
@@ -200,8 +208,11 @@ class HumanBiographicalInformation(SpecialUserMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
+
 
 class HumanCharacterCreationView(DictView):
     view_mapping = {1: HumanAttributeView, 2: HumanBiographicalInformation}
