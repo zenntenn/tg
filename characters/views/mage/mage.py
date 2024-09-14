@@ -170,7 +170,7 @@ def get_abilities(request):
     return JsonResponse(abilities_list, safe=False)
 
 
-class MageDetailView(SpecialUserMixin, HumanDetailView):
+class MageDetailView(HumanDetailView):
     model = Mage
     template_name = "characters/mage/mage/detail.html"
 
@@ -628,7 +628,7 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MageAttributeView(SpecialUserMixin, HumanAttributeView):
+class MageAttributeView(HumanAttributeView):
     model = Mage
     template_name = "characters/mage/mage/chargen.html"
 

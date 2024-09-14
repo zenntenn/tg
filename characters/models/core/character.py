@@ -7,6 +7,8 @@ from django.urls import reverse
 class CharacterModel(Model):
     npc = models.BooleanField(default=False)
 
+    gameline = "wod"
+
     class Meta:
         verbose_name = "Character Model"
         verbose_name_plural = "Character Models"
@@ -14,6 +16,8 @@ class CharacterModel(Model):
 
 class Character(CharacterModel):
     type = "character"
+
+    gameline = "wod"
 
     concept = models.CharField(max_length=100)
     creation_status = models.IntegerField(default=1)

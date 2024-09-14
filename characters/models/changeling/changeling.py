@@ -13,6 +13,8 @@ from django.urls import reverse
 class Changeling(CtDHuman):
     type = "changeling"
 
+    gameline = "ctd"
+
     court = models.CharField(
         default="",
         max_length=20,

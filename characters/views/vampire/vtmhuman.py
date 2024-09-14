@@ -4,7 +4,7 @@ from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class VtMHumanDetailView(SpecialUserMixin, HumanDetailView):
+class VtMHumanDetailView(HumanDetailView):
     model = VtMHuman
     template_name = "characters/vampire/vtmhuman/detail.html"
 

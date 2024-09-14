@@ -5,6 +5,7 @@ from django.urls import reverse
 
 class VtMHuman(Human):
     type = "vtm_human"
+    gameline = "vtm"
 
     awareness = models.IntegerField(default=0)
     leadership = models.IntegerField(default=0)

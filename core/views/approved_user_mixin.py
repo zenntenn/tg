@@ -4,6 +4,6 @@ class SpecialUserMixin:
             return True
         if user == obj.owner:
             return True
-        if getattr(user.profile, f"{obj.gameline}_st"):
+        if getattr(getattr(user, "profile", None), f"{obj.gameline}_st", None):
             return True
         return False

@@ -1,5 +1,6 @@
 {% extends "core/object.html" %}
 {% block contents %}
+    {% if is_approved_character %}
     {% block statistics %}
         {% block name %}
             <div class="row">
@@ -57,4 +58,7 @@
             </div>
         {% endfor %}
     {% endblock scenes %}
+    {% else %}
+    {% include "characters/core/character/not_owner.html" %}
+    {% endif %}
 {% endblock contents %}

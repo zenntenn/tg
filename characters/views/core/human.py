@@ -11,7 +11,7 @@ from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class HumanDetailView(SpecialUserMixin, CharacterDetailView):
+class HumanDetailView(CharacterDetailView):
     model = Human
     template_name = "characters/core/human/detail.html"
 

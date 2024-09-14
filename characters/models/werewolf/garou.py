@@ -18,6 +18,8 @@ from items.models.werewolf.fetish import Fetish
 class Werewolf(WtAHuman):
     type = "garou"
 
+    gameline = "wta"
+
     rank_names = {
         1: "Cliath",
         2: "Fostern",

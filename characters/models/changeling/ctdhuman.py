@@ -6,6 +6,8 @@ from django.urls import reverse
 class CtDHuman(Human):
     type = "ctd_human"
 
+    gameline = "ctd"
+
     kenning = models.IntegerField(default=0)
     leadership = models.IntegerField(default=0)
 

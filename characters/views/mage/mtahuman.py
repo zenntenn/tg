@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
 
 
-class MtAHumanDetailView(SpecialUserMixin, HumanDetailView):
+class MtAHumanDetailView(HumanDetailView):
     model = MtAHuman
     template_name = "characters/mage/mtahuman/detail.html"
 
@@ -369,7 +369,7 @@ class MtAHumanAbilityView(UpdateView):
         "medicine",
         "science",
     ]
-    template_name = "characters/mage/mtahuman/"
+    template_name = "characters/mage/mtahuman/ability_block_form.html"
 
     def form_valid(self, form):
         awareness = form.cleaned_data.get("awareness")

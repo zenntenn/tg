@@ -18,6 +18,8 @@ from game.models import ObjectType
 class Human(Character):
     type = "human"
 
+    gameline = "wod"
+
     nature = models.ForeignKey(
         Archetype,
         on_delete=models.SET_NULL,

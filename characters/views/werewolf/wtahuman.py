@@ -4,7 +4,7 @@ from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class WtAHumanDetailView(SpecialUserMixin, HumanDetailView):
+class WtAHumanDetailView(HumanDetailView):
     model = WtAHuman
     template_name = "characters/werewolf/wtahuman/detail.html"
 

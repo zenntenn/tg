@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-sm {{ object.get_heading }}">
+        <h1>{{ object.name }}</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">Chronicle</div>
+    <a class="col-sm" href="{{ object.chronicle.get_absolute_url }}">{{ object.chronicle }}</a>
+    <div class="col-sm">Player</div>
+    <div class="col-sm">{{ object.player }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Description</div>
+    <div class="col-sm">{{ object.description }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Public Information</div>
+    <div class="col-sm">{{ object.public_info }}</div>
+</div>

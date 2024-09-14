@@ -83,6 +83,7 @@ class Model(PolymorphicModel):
     display = models.BooleanField(default=True)
     sources = models.ManyToManyField(BookReference, blank=True)
     description = models.TextField(default="")
+    public_info = models.TextField(default="")
     image = models.ImageField(upload_to=filepath, blank=True, null=True)
 
     class Meta:
