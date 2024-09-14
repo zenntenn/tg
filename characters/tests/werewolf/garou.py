@@ -6,6 +6,7 @@ from characters.models.werewolf.renownincident import RenownIncident
 from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.tribe import Tribe
 from characters.tests.utils import werewolf_setup
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from items.models.werewolf.fetish import Fetish
@@ -442,6 +443,9 @@ class TestRandomWerewolf(TestCase):
         self.assertTrue(self.character.has_auspice())
         self.assertTrue(self.character.has_renown())
         self.assertTrue(self.character.has_werewolf_history())
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Werewolf, self.player, character=True), 0.5)
 
 
 class TestWerewolfDetailView(TestCase):

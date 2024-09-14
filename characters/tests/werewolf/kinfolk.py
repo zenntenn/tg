@@ -6,6 +6,7 @@ from characters.models.werewolf.gift import Gift
 from characters.models.werewolf.kinfolk import Kinfolk
 from characters.models.werewolf.tribe import Tribe
 from characters.tests.utils import werewolf_setup
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from items.models.werewolf.fetish import Fetish
@@ -189,6 +190,9 @@ class TestRandomKinfolk(TestCase):
         self.assertTrue(self.kinfolk.has_backgrounds())
         self.assertTrue(self.kinfolk.has_history())
         self.assertTrue(self.kinfolk.has_finishing_touches())
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Kinfolk, self.player, character=True), 0.5)
 
 
 class TestKinfolkDetailView(TestCase):

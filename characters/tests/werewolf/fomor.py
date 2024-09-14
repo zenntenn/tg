@@ -2,6 +2,7 @@ from characters.models.core.archetype import Archetype
 from characters.models.core.specialty import Specialty
 from characters.models.werewolf.fomor import Fomor
 from characters.models.werewolf.fomoripower import FomoriPower
+from core.utils import time_test
 from django.test import TestCase
 
 
@@ -69,6 +70,9 @@ class TestRandomFomor(TestCase):
         self.assertTrue(self.fomor.has_abilities(primary=11, secondary=7, tertiary=3))
         self.assertTrue(self.fomor.has_backgrounds())
         self.assertGreater(self.fomor.powers.count(), 0)
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Fomor, self.player, character=True), 0.5)
 
 
 class TestFomorDetailView(TestCase):

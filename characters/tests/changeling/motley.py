@@ -1,6 +1,7 @@
 from characters.models.changeling.changeling import Changeling
 from characters.models.changeling.motley import Motley
 from characters.tests.utils import changeling_setup
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -36,6 +37,9 @@ class TestMotley(TestCase):
     def test_str(self):
         motley = Motley.objects.create(name="Motley 1")
         self.assertEqual(str(motley), "Motley 1")
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Motley, self.player, character=True), 0.5)
 
 
 class TestMotleyDetailView(TestCase):

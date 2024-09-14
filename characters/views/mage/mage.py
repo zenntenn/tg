@@ -940,9 +940,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["affinity_sphere"].queryset = (
-            self.object.get_affinity_sphere_options()
-        )
+        form.fields[
+            "affinity_sphere"
+        ].queryset = self.object.get_affinity_sphere_options()
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
         )

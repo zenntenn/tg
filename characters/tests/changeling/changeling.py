@@ -3,6 +3,7 @@ from characters.models.changeling.house import House
 from characters.models.changeling.kith import Kith
 from characters.models.changeling.legacy import Legacy
 from characters.tests.utils import changeling_setup
+from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -535,6 +536,9 @@ class TestRandomChangeling(TestCase):
         self.assertTrue(self.character.has_house())
         self.assertTrue(self.character.has_changeling_history())
         self.assertTrue(self.character.has_changeling_appearance())
+
+    def test_creation_time(self):
+        self.assertLessEqual(time_test(Changeling, self.player, character=True), 0.5)
 
 
 class TestChangelingDetailView(TestCase):
