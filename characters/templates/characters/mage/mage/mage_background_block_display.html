@@ -71,10 +71,10 @@
     <div class="col-sm dots">{{ object.legend|dots }}</div>
 </div>
 <div class="row">
-    {% if object.library_owned is None %}
+    {% if library_owned is None %}
         <div class="col-sm">Library</div>
     {% else %}
-        <a class="col-sm" href={{ object.library_owned.get_absolute_url }}>Library</a>
+        <a class="col-sm" href={{ library_owned.get_absolute_url }}>Library</a>
     {% endif %}
     <div class="col-sm dots">{{ object.library|dots }}</div>
     <div class="col-sm">Mentor</div>

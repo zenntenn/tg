@@ -57,6 +57,7 @@ from locations.forms.mage.node import (
     NodeResonanceRatingForm,
 )
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
+from locations.models.mage.library import Library
 from locations.models.mage.node import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.sanctum import Sanctum
@@ -192,6 +193,11 @@ class MageDetailView(HumanDetailView):
         context["sanctum_owned"] = None
         if Sanctum.objects.filter(owned_by=self.object).count() > 0:
             context["sanctum_owned"] = Sanctum.objects.filter(
+                owned_by=self.object
+            ).last()
+        context["library_owned"] = None
+        if Library.objects.filter(owned_by=self.object).count() > 0:
+            context["library_owned"] = Library.objects.filter(
                 owned_by=self.object
             ).last()
         context["node_owned"] = None
@@ -1426,13 +1432,57 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         return context
 
 
-class MageLibraryView:
-    # Skip if Familiar == 0
-    # Skip if Wonder == 0
-    # Skip if Enhancement == 0
-    # skip if sanctum == 0
-    # skip if allies == 0
-    pass
+class MageLibraryView(SpecialUserMixin, CreateView):
+    model = Library
+    fields = ["name", "description", "parent"]
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        l = Library(
+            **form.cleaned_data,
+            owned_by=mage,
+            owner=mage.owner,
+            chronicle=mage.chronicle,
+            faction=mage.faction,
+            rank=mage.library,
+            status="Sub",
+        )
+        l.save()
+        for _ in range(l.rank):
+            l.random_book()
+
+        mage.creation_status += 1
+        mage.save()
+        for step in [
+            "familiar",
+            "wonder",
+            "enhancement",
+            "sanctum",
+            "allies",
+        ]:
+            if getattr(mage, step) == 0:
+                mage.creation_status += 1
+            else:
+                mage.save()
+                break
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
+
+    def get_initial(self):
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        initial = super().get_initial()
+        initial["name"] = f"{obj.name}'s Library"
+        return initial
 
 
 class MageFamiliarView:
@@ -1734,7 +1784,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         8: MageLanguagesView,
         9: MageRoteView,
         10: MageNodeView,
-        # 11: Library,
+        11: MageLibraryView,
         # 12: Familiar,
         13: MageWonderView,
         # 14: Enhancements,
