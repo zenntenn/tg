@@ -26,7 +26,7 @@ class ChangelingDetailView(SpecialUserMixin, DetailView):
         context["merits_and_flaws"] = MeritFlawRating.objects.order_by(
             "mf__name"
         ).filter(character=self.object)
-
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
         return context
 
 
@@ -244,3 +244,9 @@ class ChangelingUpdateView(SpecialUserMixin, UpdateView):
         "fae_mien",
     ]
     template_name = "characters/changeling/changeling/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
+    

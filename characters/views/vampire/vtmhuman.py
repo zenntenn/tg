@@ -9,6 +9,10 @@ class VtMHumanDetailView(SpecialUserMixin, HumanDetailView):
     model = VtMHuman
     template_name = "characters/vampire/vtmhuman/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
 
 class VtMHumanCreateView(CreateView):
     model = VtMHuman
@@ -212,3 +216,8 @@ class VtMHumanUpdateView(SpecialUserMixin, UpdateView):
         "status_background",
     ]
     template_name = "characters/vampire/vtmhuman/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context

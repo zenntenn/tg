@@ -8,6 +8,10 @@ class FomorDetailView(SpecialUserMixin, DetailView):
     model = Fomor
     template_name = "characters/werewolf/fomor/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
 
 class FomorCreateView(CreateView):
     model = Fomor
@@ -177,3 +181,8 @@ class FomorUpdateView(SpecialUserMixin, UpdateView):
         "powers",
     ]
     template_name = "characters/werewolf/fomor/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context

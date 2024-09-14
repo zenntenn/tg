@@ -10,6 +10,10 @@ class MtAHumanDetailView(SpecialUserMixin, HumanDetailView):
     model = MtAHuman
     template_name = "characters/mage/mtahuman/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
 
 class MtAHumanCreateView(CreateView):
     model = MtAHuman
@@ -318,6 +322,10 @@ class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
     ]
     template_name = "characters/mage/mtahuman/form.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
 
 class MtAHumanAbilityView(UpdateView):
     model = MtAHuman

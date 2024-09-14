@@ -33,9 +33,8 @@ class KinfolkDetailView(SpecialUserMixin, DetailView):
             all_gifts[i : i + row_length] for i in range(0, len(all_gifts), row_length)
         ]
         context["gifts"] = all_gifts
-
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
         return context
-
 
 class KinfolkCreateView(CreateView):
     model = Kinfolk
@@ -223,3 +222,8 @@ class KinfolkUpdateView(SpecialUserMixin, UpdateView):
         "temporary_honor",
     ]
     template_name = "characters/werewolf/kinfolk/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context

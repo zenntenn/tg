@@ -8,6 +8,10 @@ class WerewolfDetailView(SpecialUserMixin, DetailView):
     model = Werewolf
     template_name = "characters/werewolf/garou/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
 
 class WerewolfUpdateView(UpdateView):
     model = Werewolf
@@ -209,3 +213,8 @@ class WerewolfCreateView(SpecialUserMixin, CreateView):
         "age_of_first_change",
     ]
     template_name = "characters/werewolf/garou/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context

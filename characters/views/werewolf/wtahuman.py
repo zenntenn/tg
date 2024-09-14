@@ -9,6 +9,10 @@ class WtAHumanDetailView(SpecialUserMixin, HumanDetailView):
     model = WtAHuman
     template_name = "characters/werewolf/wtahuman/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
 
 class WtAHumanCreateView(CreateView):
     model = WtAHuman
@@ -172,3 +176,9 @@ class WtAHumanUpdateView(SpecialUserMixin, UpdateView):
         "totem",
     ]
     template_name = "characters/werewolf/wtahuman/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(self.object, self.request.user)
+        return context
+    
