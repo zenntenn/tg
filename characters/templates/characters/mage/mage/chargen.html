@@ -1,6 +1,7 @@
+
 {% extends "core/form.html" %}
 {% block contents %}
-    {% if is_approved_character %}
+    {% if is_approved_user %}
         {{ form.non_field_errors }}
         {% block name %}
             <div class="row">
@@ -88,6 +89,11 @@
                 {% include "characters/mage/mage/mage_node_block_form.html" %}
             {% endif %}
         {% endblock node %}
+        {% block library %}
+            {% if object.creation_status == 11 %}
+                {% include "characters/mage/mage/mage_library_block_form.html" %}
+            {% endif %}
+        {% endblock library %}
         {% block wonder %}
             {% if object.creation_status == 13 %}
                 {% include "characters/mage/mage/mage_wonder_block_form.html" %}
@@ -113,6 +119,6 @@
             {% endif %}
         {% endblock specialties_form %}
     {% else %}
-        BLAH
+        {% include "characters/core/character/not_owner.html" %}
     {% endif %}
 {% endblock contents %}
