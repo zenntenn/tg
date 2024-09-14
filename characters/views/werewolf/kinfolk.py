@@ -3,8 +3,10 @@ from characters.models.werewolf.kinfolk import Kinfolk
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class KinfolkDetailView(DetailView):
+
+class KinfolkDetailView(SpecialUserMixin, DetailView):
     model = Kinfolk
     template_name = "characters/werewolf/kinfolk/detail.html"
 
@@ -129,7 +131,7 @@ class KinfolkCreateView(CreateView):
     template_name = "characters/werewolf/kinfolk/form.html"
 
 
-class KinfolkUpdateView(UpdateView):
+class KinfolkUpdateView(SpecialUserMixin, UpdateView):
     model = Kinfolk
     fields = [
         "name",

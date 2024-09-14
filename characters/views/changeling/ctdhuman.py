@@ -1,8 +1,10 @@
 from characters.models.changeling.ctdhuman import CtDHuman
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class CtDHumanDetailView(DetailView):
+
+class CtDHumanDetailView(SpecialUserMixin, DetailView):
     model = CtDHuman
     template_name = "characters/changeling/ctdhuman/detail.html"
 
@@ -79,7 +81,7 @@ class CtDHumanCreateView(CreateView):
     template_name = "characters/changeling/ctdhuman/form.html"
 
 
-class CtDHumanUpdateView(UpdateView):
+class CtDHumanUpdateView(SpecialUserMixin, UpdateView):
     model = CtDHuman
     fields = [
         "name",

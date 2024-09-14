@@ -1,8 +1,10 @@
 from characters.models.werewolf.fomor import Fomor
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class FomorDetailView(DetailView):
+
+class FomorDetailView(SpecialUserMixin, DetailView):
     model = Fomor
     template_name = "characters/werewolf/fomor/detail.html"
 
@@ -92,7 +94,7 @@ class FomorCreateView(CreateView):
     template_name = "characters/werewolf/fomor/form.html"
 
 
-class FomorUpdateView(UpdateView):
+class FomorUpdateView(SpecialUserMixin, UpdateView):
     model = Fomor
     fields = [
         "name",

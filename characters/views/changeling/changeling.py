@@ -2,8 +2,10 @@ from characters.models.changeling.changeling import Changeling
 from characters.models.core.meritflaw import MeritFlawRating
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class ChangelingDetailView(DetailView):
+
+class ChangelingDetailView(SpecialUserMixin, DetailView):
     model = Changeling
     template_name = "characters/changeling/changeling/detail.html"
 
@@ -136,7 +138,7 @@ class ChangelingCreateView(CreateView):
     template_name = "characters/changeling/changeling/form.html"
 
 
-class ChangelingUpdateView(UpdateView):
+class ChangelingUpdateView(SpecialUserMixin, UpdateView):
     model = Changeling
     fields = [
         "name",

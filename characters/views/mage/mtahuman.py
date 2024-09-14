@@ -3,8 +3,10 @@ from characters.views.core.human import HumanDetailView
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class MtAHumanDetailView(HumanDetailView):
+
+class MtAHumanDetailView(SpecialUserMixin, HumanDetailView):
     model = MtAHuman
     template_name = "characters/mage/mtahuman/detail.html"
 
@@ -163,7 +165,7 @@ class MtAHumanCreateView(CreateView):
     template_name = "characters/mage/mtahuman/form.html"
 
 
-class MtAHumanUpdateView(UpdateView):
+class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
     model = MtAHuman
     fields = [
         "name",

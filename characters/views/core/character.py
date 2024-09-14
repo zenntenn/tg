@@ -3,10 +3,11 @@ from typing import Any
 from characters.models.core import Character
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
+from core.views.approved_user_mixin import SpecialUserMixin
 from game.models import Scene
 
 
-class CharacterDetailView(DetailView):
+class CharacterDetailView(SpecialUserMixin, DetailView):
     model = Character
     template_name = "characters/core/character/detail.html"
 
@@ -24,7 +25,7 @@ class CharacterCreateView(CreateView):
     template_name = "characters/core/character/form.html"
 
 
-class CharacterUpdateView(UpdateView):
+class CharacterUpdateView(SpecialUserMixin, UpdateView):
     model = Character
     fields = "__all__"
     template_name = "characters/core/character/form.html"

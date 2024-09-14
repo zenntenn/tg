@@ -4,13 +4,14 @@ from characters.models.core.attribute import Attribute
 from characters.models.core.background import Background
 from characters.models.core.meritflaw import MeritFlaw
 from characters.views.core.character import CharacterDetailView
+from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
 
-class HumanDetailView(CharacterDetailView):
+class HumanDetailView(SpecialUserMixin, CharacterDetailView):
     model = Human
     template_name = "characters/core/human/detail.html"
 
@@ -54,7 +55,7 @@ class HumanCreateView(CreateView):
     template_name = "characters/core/human/form.html"
 
 
-class HumanUpdateView(UpdateView):
+class HumanUpdateView(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
         "name",
@@ -104,7 +105,7 @@ class HumanBasicsView(CreateView):
     template_name = "characters/core/human/humanbasics.html"
 
 
-class HumanAttributeView(UpdateView):
+class HumanAttributeView(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
         "strength",
@@ -159,7 +160,7 @@ class HumanAttributeView(UpdateView):
         return super().form_valid(form)
 
 
-class HumanBiographicalInformation(UpdateView):
+class HumanBiographicalInformation(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
         "age",

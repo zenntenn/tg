@@ -2,8 +2,10 @@ from characters.models.vampire.vtmhuman import VtMHuman
 from characters.views.core.human import HumanDetailView
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class VtMHumanDetailView(HumanDetailView):
+
+class VtMHumanDetailView(SpecialUserMixin, HumanDetailView):
     model = VtMHuman
     template_name = "characters/vampire/vtmhuman/detail.html"
 
@@ -110,7 +112,7 @@ class VtMHumanCreateView(CreateView):
     template_name = "characters/vampire/vtmhuman/form.html"
 
 
-class VtMHumanUpdateView(UpdateView):
+class VtMHumanUpdateView(SpecialUserMixin, UpdateView):
     model = VtMHuman
     fields = [
         "name",

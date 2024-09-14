@@ -2,8 +2,10 @@ from characters.models.wraith.wtohuman import WtOHuman
 from characters.views.core.human import HumanDetailView
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class WtOHumanDetailView(HumanDetailView):
+
+class WtOHumanDetailView(SpecialUserMixin, HumanDetailView):
     model = WtOHuman
     template_name = "characters/wraith/wtohuman/detail.html"
 
@@ -88,7 +90,7 @@ class WtOHumanCreateView(CreateView):
     template_name = "characters/wraith/wtohuman/form.html"
 
 
-class WtOHumanUpdateView(UpdateView):
+class WtOHumanUpdateView(SpecialUserMixin, UpdateView):
     model = WtOHuman
     fields = [
         "name",

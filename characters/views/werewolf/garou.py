@@ -1,8 +1,10 @@
 from characters.models.werewolf.garou import Werewolf
 from django.views.generic import CreateView, DetailView, UpdateView
 
+from core.views.approved_user_mixin import SpecialUserMixin
 
-class WerewolfDetailView(DetailView):
+
+class WerewolfDetailView(SpecialUserMixin, DetailView):
     model = Werewolf
     template_name = "characters/werewolf/garou/detail.html"
 
@@ -108,7 +110,7 @@ class WerewolfUpdateView(UpdateView):
     template_name = "characters/werewolf/garou/form.html"
 
 
-class WerewolfCreateView(CreateView):
+class WerewolfCreateView(SpecialUserMixin, CreateView):
     model = Werewolf
     fields = [
         "name",

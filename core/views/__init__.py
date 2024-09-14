@@ -9,3 +9,5 @@ from .language import (
     LanguageUpdateView,
 )
 from .newsitem import NewsItemCreateView, NewsItemDetailView, NewsItemUpdateView
+from .generic import DictView, MultipleFormsetsMixin
+from .approved_user_mixin import SpecialUserMixin
