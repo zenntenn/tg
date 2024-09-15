@@ -239,6 +239,7 @@ class MageAdmin(admin.ModelAdmin):
         "essence",
         "affinity_sphere",
         "chronicle",
+        "status",
     )
     list_filter = ("owner", "arete", "essence", "affinity_sphere", "chronicle")
 
