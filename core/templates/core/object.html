@@ -13,19 +13,18 @@
                 </div>
             {% endfor %}
         {% endblock references %}
-        {% block image %}
-            {% if object.image %}
-                <img src="{{ object.image.url }}"
-                     width="300"
-                     height="{{ image.height }}"
-                     alt="image of {{ object.name }}" />
-            {% endif %}
-        {% endblock image %}
         {% block contents %}
+            {% block image %}
+                {% if object.image %}
+                    <img src="{{ object.image.url }}"
+                         width="300"
+                         height="{{ image.height }}"
+                         alt="image of {{ object.name }}" />
+                {% endif %}
+            {% endblock image %}
         {% endblock contents %}
         <form method="post">
             {% block update %}
-
             {% endblock update %}
         </form>
     </div>

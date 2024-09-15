@@ -1,3 +1,11 @@
+{% block image %}
+    {% if object.image %}
+        <img src="{{ object.image.url }}"
+             width="300"
+             height="{{ image.height }}"
+             alt="image of {{ object.name }}" />
+    {% endif %}
+{% endblock image %}
 <div class="row">
     <div class="col-sm {{ object.get_heading }}">
         <h1>{{ object.name }}</h1>
@@ -7,7 +15,7 @@
     <div class="col-sm">Chronicle</div>
     <a class="col-sm" href="{{ object.chronicle.get_absolute_url }}">{{ object.chronicle }}</a>
     <div class="col-sm">Player</div>
-    <div class="col-sm">{{ object.player }}</div>
+    <div class="col-sm">{{ object.owner }}</div>
 </div>
 <div class="row">
     <div class="col-sm">Description</div>
