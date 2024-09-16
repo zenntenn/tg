@@ -4,6 +4,11 @@
 }
 
 @font-face {
+    font-family: 'MatrixTall';
+    src: url('../static/fonts/MatrixTall.ttf') format("truetype");
+}
+
+@font-face {
     font-family: 'Caslon Antique';
     src: url('../static/fonts/cas_antn.ttf') format("truetype");
 }
@@ -21,6 +26,11 @@
 @font-face {
     font-family: 'Balthazar';
     src: url('../static/fonts/balthazarregular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'Delavan';
+    src: url('../static/fonts/delavan.TTF') format("truetype");
 }
 
 @font-face {
@@ -93,8 +103,4 @@
 
 .invisible {
     display: none;
-}
-
-.st {
-    color: #b8860b;
 }
