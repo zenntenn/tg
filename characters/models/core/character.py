@@ -26,6 +26,13 @@ class Character(CharacterModel):
         verbose_name = "Character"
         verbose_name_plural = "Characters"
 
+    def get_type(self):
+        if "human" in self.type:
+            return "Human"
+        if "spirit_character" == self.type:
+            return "Spirit"
+        return self.type.title()
+
     def get_heading(self):
         return "wod_heading"
 

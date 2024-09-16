@@ -21,7 +21,7 @@
         {% for char in object.pcs.all %}
             <div class="row border">
                 <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                <div class="col-sm border">{{ char.type.title }}</div>
+                <div class="col-sm border">{{ char.get_type }}</div>
             </div>
         {% endfor %}
         <div class="row">
@@ -30,7 +30,7 @@
         {% for char in object.key_npcs.all %}
             <div class="row border">
                 <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                <div class="col-sm border">{{ char.type.title }}</div>
+                <div class="col-sm border">{{ char.get_type }}</div>
             </div>
         {% endfor %}
         <div class="row">

@@ -23,7 +23,7 @@
                     <div class="row border">
                         <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                         <div class="col-sm border">{{ char.owner.username }}</div>
-                        <div class="col-sm border">{{ char.type.title }}</div>
+                        <div class="col-sm border">{{ char.get_type }}</div>
                         <div class="col-sm border">{{ char.get_status_display }}</div>
                     </div>
                 {% endif %}
