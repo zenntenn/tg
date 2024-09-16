@@ -15,4 +15,5 @@ class HouseRulesIndexView(ListView):
         context["chronicles"] = list(Chronicle.objects.all()) + [None]
         context["gameline_code"] = self.kwargs["gameline"]
         context["gameline"] = get_gameline_name(self.kwargs["gameline"])
+        context["gameline_short"] = self.kwargs["gameline"]
         return context

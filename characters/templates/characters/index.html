@@ -8,15 +8,15 @@
         {% for chron in chron_char_dict.keys %}
             <div class="row border">
                 {% if chron == None %}
-                    <h2 class="col-sm border centertext">No Chronicle</h2>
+                    <h2 class="col-sm border centertext {{ gameline_short }}_heading">No Chronicle</h2>
                 {% else %}
-                    <h2 class="col-sm border centertext">
+                    <h2 class="col-sm border centertext {{ gameline_short }}_heading">
                         <a href={{ chron.get_absolute_url }}>{{ chron.name }}</a>
                     </h2>
                 {% endif %}
             </div>
             <div class="row border">
-                <h3 class="col-sm border">Character</h3>
+                <h3 class="col-sm border {{ gameline_short }}_heading">Character</h3>
             </div>
             {% for char in chron_char_dict|field:chron %}
                 {% if char.display %}
@@ -29,7 +29,7 @@
                 {% endif %}
             {% endfor %}
             <div class="row border">
-                <h3 class="col-sm border">Groups</h3>
+                <h3 class="col-sm border {{ gameline_short }}_heading">Groups</h3>
             </div>
             {% for group in chron_group_dict|field:chron %}
                 {% if group.display %}

@@ -108,7 +108,11 @@ class LocationIndexView(View):
         gameline = kwargs["gameline"]
         game_locations = ObjectType.objects.filter(gameline=gameline, type="loc")
         game_location_types = [x.name for x in game_locations]
-        context = {"objects": game_locations, "gameline": get_gameline_name(gameline)}
+        context = {
+            "objects": game_locations,
+            "gameline": get_gameline_name(gameline),
+            "gameline_short": gameline,
+        }
         chron_dict = {}
         for chron in list(Chronicle.objects.all()) + [None]:
             locations = LocationModel.objects.filter(chronicle=chron).order_by("name")

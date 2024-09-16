@@ -193,7 +193,11 @@ class CharacterIndexView(View):
         gameline = kwargs["gameline"]
         game_characters = ObjectType.objects.filter(gameline=gameline, type="char")
         game_character_types = [x.name for x in game_characters]
-        context = {"objects": game_characters, "gameline": get_gameline_name(gameline)}
+        context = {
+            "objects": game_characters,
+            "gameline": get_gameline_name(gameline),
+            "gameline_short": gameline,
+        }
 
         chron_char_dict = {}
         chron_group_dict = {}

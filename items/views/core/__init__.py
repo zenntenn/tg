@@ -134,7 +134,11 @@ class ItemIndexView(View):
         gameline = kwargs["gameline"]
         game_items = ObjectType.objects.filter(gameline=gameline, type="obj")
         game_items_types = [x.name for x in game_items]
-        context = {"objects": game_items, "gameline": get_gameline_name(gameline)}
+        context = {
+            "objects": game_items,
+            "gameline": get_gameline_name(gameline),
+            "gameline_short": gameline,
+        }
 
         chron_dict = {}
         for chron in list(Chronicle.objects.all()) + [None]:
