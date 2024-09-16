@@ -40,6 +40,7 @@
                 <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                 <div class="col-sm border">{{ char.get_type }}</div>
                 <div class="col-sm border">{{ char.owner }}</div>
+                <div class="col-sm border">{{ char.get_status_display }}</div>
             </div>
         {% endfor %}
         <div class="row">
@@ -63,7 +64,7 @@
         {% endfor %}
         {% for story in stories %}
             <div class="row border centertext">
-                <a class="col-sm border" href="">{{ story.name }}</a>
+                <a class="col-sm border" href="{{ story.get_absolute_url }}">{{ story.name }}</a>
                 <div class="col-sm border">{{ story.start_date }}</div>
                 <div class="col-sm border">{{ story.end_date }}</div>
             </div>
