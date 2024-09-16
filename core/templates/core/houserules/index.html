@@ -24,7 +24,7 @@
                         <div class="row border">
                             <div class="col-sm border"">{{ hr.name }}
                             </div>
-                            <div class="col-sm border">{{ hr.display_sources }}</div>
+                            <div class="col-sm border">{{ hr.display_sources|safe }}</div>
                             <div class="col-sm border">{{ hr.description }}</div>
                         </div>
                     {% endif %}
