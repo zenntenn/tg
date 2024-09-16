@@ -222,4 +222,10 @@ class HouseRule(models.Model):
     )
 
     def display_sources(self):
-        return ", ".join(list(self.sources.all()))
+        return ", ".join([str(x) for x in self.sources.all()])
+
+    def add_source(self, book_title, page_number):
+        book = Book.objects.get_or_create(name=book_title)[0]
+        bookref = BookReference.objects.get_or_create(book=book, page=page_number)[0]
+        self.sources.add(bookref)
+        return self
