@@ -16,6 +16,34 @@ class Profile(models.Model):
     dtf_st = models.BooleanField(default=False)
     mtr_st = models.BooleanField(default=False)
 
+    preferred_heading = models.CharField(
+        max_length=30,
+        choices=zip(
+            [
+                "wod_heading",
+                "vtm_heading",
+                "wta_heading",
+                "mta_heading",
+                "ctd_heading",
+                "wto_heading",
+            ],
+            [
+                "World of Darkness",
+                "Vampire: the Masquerade",
+                "Werewolf: the Apocalypse",
+                "Mage: the Ascension",
+                "Changeling: the Dreaming",
+                "Wraith: the Oblivion",
+            ],
+        ),
+        default="wod_heading",
+    )
+    theme = models.CharField(
+        max_length=30,
+        choices=zip(["themes/default.css", "themes/dark.css"], ["Default", "Dark"]),
+        default="themes/default.css",
+    )
+
     class Meta:
         verbose_name = "Profile"
         verbose_name_plural = "Profiles"
@@ -31,6 +59,9 @@ class Profile(models.Model):
             or self.dtf_st
             or self.mtr_st
         )
+
+    def __str__(self):
+        return self.user.username
 
 
 @receiver(post_save, sender=User)

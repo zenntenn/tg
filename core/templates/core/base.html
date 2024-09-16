@@ -21,6 +21,17 @@
                   content="Welcome to the Tellurium Games site! Here you will find various projects related to RPGs including links to community content products, generators, and more." />
             <meta name="keywords"
                   content="world of darkness, rpgs, role-playing games, community content" />
+            {% if user.is_authenticated %}
+            {% with ''|add:user.profile.theme as theme_css %}
+            <link rel="stylesheet"
+            type="text/css"
+            href="{% static theme_css %}" />
+            {% endwith %}
+            {% else %}
+            <link rel="stylesheet"
+                      type="text/css"
+                      href="{% static 'themes/default.css' %}" />
+            {% endif %}
         {% endblock styling %}
         <title>
             {% block title %}

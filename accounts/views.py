@@ -1,4 +1,4 @@
-from accounts.forms import CustomUSerCreationForm
+from accounts.forms import CustomUSerCreationForm, ProfileUpdateForm
 from characters.models.core import Character
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -49,6 +49,16 @@ class ProfileView(View):
                     char.save()
             scene.xp_given = True
             scene.save()
+        elif "preferred_heading" in request.POST.keys():
+            request.user.profile.preferred_heading = request.POST["preferred_heading"]
+            request.user.profile.theme = request.POST["theme"]
+            request.user.profile.save()
+            context = self.get_context(request.user)
+            return render(
+                request,
+                "accounts/index.html",
+                context,
+            )
         else:
             char = [x for x in context["to_approve"] if x.name in request.POST.keys()][
                 0
@@ -75,7 +85,10 @@ class ProfileView(View):
             "locations": LocationModel.objects.filter(owner=user).order_by("name"),
             "to_approve": [
                 x
-                for x in Character.objects.filter(status__in=["Un", "Sub"])
+                for x in Character.objects.filter(status__in=["Un", "Sub"]).order_by(
+                    "name"
+                )
                 if x.chronicle in chronicles_sted
             ],
+            "update_form": ProfileUpdateForm(),
         }
