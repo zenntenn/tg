@@ -76,6 +76,8 @@ class ProfileView(View):
         chronicles_sted = [
             x for x in Chronicle.objects.all() if user in x.storytellers.all()
         ]
+        to_approve = list(Character.objects.filter(status__in=["Un", "Sub"], chronicle__in=chronicles_sted).order_by("name")) + list(LocationModel.objects.filter(status__in=["Un", "Sub"], chronicle__in=chronicles_sted).order_by("name")) + list(ItemModel.objects.filter(status__in=["Un", "Sub"], chronicle__in=chronicles_sted).order_by("name"))
+        to_approve.sort(key=lambda x: x.name)
         return {
             "characters": Character.objects.filter(owner=user).order_by("name"),
             "items": ItemModel.objects.filter(owner=user).order_by("name"),
@@ -83,12 +85,6 @@ class ProfileView(View):
                 story__chronicle__in=chronicles_sted, finished=True, xp_given=False
             ),
             "locations": LocationModel.objects.filter(owner=user).order_by("name"),
-            "to_approve": [
-                x
-                for x in Character.objects.filter(status__in=["Un", "Sub"]).order_by(
-                    "name"
-                )
-                if x.chronicle in chronicles_sted
-            ],
+            "to_approve": to_approve,
             "update_form": ProfileUpdateForm(),
         }
