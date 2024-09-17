@@ -76,25 +76,31 @@
         {% endfor %}
         <h2 class="col-sm {{ user.profile.preferred_heading }}">To Approve</h2>
         {% for char in to_approve %}
-            <div class="row border">
-                <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                <div class="col-sm border">{{ char.owner }}</div>
-                <div class="col-sm border">{{ char.get_type }}</div>
-                <div class="col-sm border">{{ char.get_status_display }}</div>
-                <form action="" method="post" class="col-sm border">
-                    {% csrf_token %}
-                    <input type="submit" name="{{ char.name }}" value="Approve" />
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="row border">
+                    <a class="col-sm-3 border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                    <div class="col-sm-3 border">
+                        {% if char.owner is not None %}{{ char.owner }}{% endif %}
+                    </div>
+                    <div class="col-sm-2 border">{{ char.get_type }}</div>
+                    <div class="col-sm-2 border">{{ char.get_status_display }}</div>
+                    <input class="col-sm-2 border"
+                           type="submit"
+                           name="{{ char.name }}"
+                           value="Approve" />
                 </form>
             </div>
         {% endfor %}
-        <form action="" method="post" class="col-sm border">
+        <h2 class="col-sm {{ user.profile.preferred_heading }}">Customize Profile</h2>
+        <form action="" method="post">
             {% csrf_token %}
-            <div class="row">
-                <div class="col-sm border">Heading Style</div>
-                <div class="col-sm border">{{ update_form.preferred_heading }}</div>
-                <div class="col-sm border">Theme</div>
-                <div class="col-sm border">{{ update_form.theme }}</div>
-                <input class="col-sm border" type="submit" value="ProfileUpdate" />
+            <div class="row border">
+                <div class="col-sm-3 border">Heading Style</div>
+                <div class="col-sm-3 border">{{ update_form.preferred_heading }}</div>
+                <div class="col-sm-2 border">Theme</div>
+                <div class="col-sm-2 border">{{ update_form.theme }}</div>
+                <input class="col-sm-2 border" type="submit" value="ProfileUpdate" />
             </div>
         </form>
     </div>
