@@ -24,11 +24,27 @@ class RealityZoneCreateView(CreateView):
     fields = ["name", "description", "practices"]
     template_name = "locations/mage/reality_zone/form.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
+
 
 class RealityZoneUpdateView(UpdateView):
     model = RealityZone
     fields = ["name", "description", "practices"]
     template_name = "locations/mage/reality_zone/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
 
 
 class RealityZoneListView(ListView):

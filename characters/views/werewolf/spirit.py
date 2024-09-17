@@ -17,13 +17,21 @@ class SpiritDetailView(SpecialUserMixin, DetailView):
 
 class SpiritCreateView(CreateView):
     model = SpiritCharacter
-    fields = ["name", "description", "willpower", "rage", "gnosis", "essence"]
+    fields = ["name", "description", "willpower", "rage", "gnosis", "essence", "owner"]
     template_name = "characters/werewolf/spirit/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
 
 
 class SpiritUpdateView(SpecialUserMixin, UpdateView):
     model = SpiritCharacter
-    fields = ["name", "description", "willpower", "rage", "gnosis", "essence"]
+    fields = ["name", "description", "willpower", "rage", "gnosis", "essence", "owner"]
     template_name = "characters/werewolf/spirit/form.html"
 
     def get_context_data(self, **kwargs):
@@ -32,3 +40,11 @@ class SpiritUpdateView(SpecialUserMixin, UpdateView):
             self.object, self.request.user
         )
         return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form

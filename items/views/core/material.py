@@ -12,11 +12,25 @@ class MaterialCreateView(CreateView):
     fields = "__all__"
     template_name = "items/core/material/form.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update(
+            {"placeholder": "Enter name here", "rows": 1}
+        )
+        return form
+
 
 class MaterialUpdateView(UpdateView):
     model = Material
     fields = "__all__"
     template_name = "items/core/material/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update(
+            {"placeholder": "Enter name here", "rows": 1}
+        )
+        return form
 
 
 class MaterialListView(ListView):

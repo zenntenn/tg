@@ -21,7 +21,7 @@ urls = [
     path(
         "realm/<pk>/",
         views.mage.RealmUpdateView.as_view(),
-        name="realm",
+        name="horizon_realm",
     ),
     path(
         "sanctum/<pk>/",

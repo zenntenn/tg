@@ -1,12 +1,12 @@
 {% extends "items/core/item/form.html" %}
 {% block additional_stats %}
     <div class="row">
-        <div class="col-sm">Damage</div>
-        <div class="col-sm">{{ form.damage }}/{{ form.get_damage_type_display }}</div>
-        <div class="col-sm">Difficulty</div>
-        <div class="col-sm">{{ form.difficulty }}</div>
-        <div class="col-sm">Conceal</div>
-        <div class="col-sm">{{ form.get_conceal_display }}</div>
+        <div class="col-sm-1">Damage</div>
+        <div class="col-sm-4">{{ form.damage }}/{{ form.damage_type }}</div>
+        <div class="col-sm-1">Difficulty</div>
+        <div class="col-sm-2">{{ form.difficulty }}</div>
+        <div class="col-sm-2">Conceal</div>
+        <div class="col-sm-2">{{ form.conceal }}</div>
     </div>
     {% block ranged_details %}
     {% endblock ranged_details %}

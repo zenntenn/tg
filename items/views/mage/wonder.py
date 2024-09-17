@@ -22,8 +22,24 @@ class WonderCreateView(CreateView):
     fields = ["name", "rank", "background_cost", "quintessence_max", "description"]
     template_name = "items/mage/wonder/form.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
+
 
 class WonderUpdateView(UpdateView):
     model = Wonder
     fields = ["name", "rank", "background_cost", "quintessence_max", "description"]
     template_name = "items/mage/wonder/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form

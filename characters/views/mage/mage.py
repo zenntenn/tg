@@ -610,6 +610,10 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
         form.fields["affiliation"].queryset = MageFaction.objects.filter(parent=None)
         form.fields["faction"].queryset = MageFaction.objects.none()
         form.fields["subfaction"].queryset = MageFaction.objects.none()
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["concept"].widget.attrs.update(
+            {"placeholder": "Enter concept here"}
+        )
         return form
 
     def form_invalid(self, form):
@@ -862,6 +866,9 @@ class MageFocusView(SpecialUserMixin, UpdateView):
         form.fields["personal_tenet"].queryset = Tenet.objects.filter(tenet_type="per")
         form.fields["ascension_tenet"].queryset = Tenet.objects.filter(tenet_type="asc")
         form.fields["other_tenets"].queryset = Tenet.objects.filter(tenet_type="oth")
+        form.fields["personal_tenet"].empty_label = "Choose Personal Tenet"
+        form.fields["ascension_tenet"].empty_label = "Choose Ascension Tenet"
+        form.fields["metaphysical_tenet"].empty_label = "Choose Metaphysical Tenet"
         return form
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
@@ -909,12 +916,16 @@ class MageFocusView(SpecialUserMixin, UpdateView):
                         None,
                         "You must have at least 2 dots in associated abilities for each dot of a Practice",
                     )
-                    return super().form_invalid(form)
+                    return self.form_invalid(form)
             self.object.creation_status += 1
             self.object.save()
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        return response
 
 
 class MageSpheresView(SpecialUserMixin, UpdateView):
@@ -943,9 +954,11 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
         form.fields[
             "affinity_sphere"
         ].queryset = self.object.get_affinity_sphere_options()
+        form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
         )
+
         return form
 
     def form_valid(self, form):
@@ -1022,7 +1035,6 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
 
 class MageExtrasView(SpecialUserMixin, UpdateView):
-
     model = Mage
     fields = [
         "date_of_birth",
@@ -1065,6 +1077,11 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
         self.object.creation_status += 1
         self.object.save()
         return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["date_of_birth"].widget = forms.DateInput(attrs={"type": "date"})
+        return form
 
 
 class MageFreebiesView(SpecialUserMixin, UpdateView):
@@ -1431,6 +1448,20 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         )
         return context
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["quintessence_form"].widget.attrs.update(
+            {"placeholder": "Enter quintessence form here"}
+        )
+        form.fields["tass_form"].widget.attrs.update(
+            {"placeholder": "Enter tass form here"}
+        )
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
+
 
 class MageLibraryView(SpecialUserMixin, CreateView):
     model = Library
@@ -1483,6 +1514,14 @@ class MageLibraryView(SpecialUserMixin, CreateView):
         initial = super().get_initial()
         initial["name"] = f"{obj.name}'s Library"
         return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["parent"].empty_label = "Choose a Parent Location"
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
 
 
 class MageFamiliarView:
@@ -1616,6 +1655,14 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         mage.save()
         return HttpResponseRedirect(mage.get_absolute_url())
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
+
 
 class MageEnhancementView:
     # skip if sanctum == 0
@@ -1683,6 +1730,13 @@ class MageSanctumView(SpecialUserMixin, CreateView):
             mage.save()
             return HttpResponseRedirect(mage.get_absolute_url())
         return super().form_invalid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
 
 
 class MageAlliesView(SpecialUserMixin, FormView):

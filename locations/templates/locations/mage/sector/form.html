@@ -1,9 +1,12 @@
 {% extends "locations/core/location/form.html" %}
+{% block gauntlets %}
+{% endblock gauntlets %}
 {% block other %}
     <div class="row">
         <div class="col-sm">Sector Class</div>
         <div class="col-sm">{{ form.sector_class }}</div>
-        <div class="col-sm">Constraints</div>
+    </div>
+    <div class="row">
         <div class="col-sm">{{ form.constraints }}</div>
     </div>
 {% endblock other %}

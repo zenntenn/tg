@@ -11,11 +11,21 @@ class CaernCreateView(CreateView):
     model = Caern
     fields = [
         "name",
+        "parent",
         "description",
         "rank",
         "caern_type",
     ]
     template_name = "locations/werewolf/caern/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        form.fields["parent"].empty_label = "Parent Location"
+        return form
 
 
 class CaernUpdateView(UpdateView):
@@ -27,3 +37,12 @@ class CaernUpdateView(UpdateView):
         "caern_type",
     ]
     template_name = "locations/werewolf/caern/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        form.fields["parent"].empty_label = "Parent Location"
+        return form

@@ -9,7 +9,9 @@ class PracticeRatingForm(forms.ModelForm):
         model = PracticeRating
         fields = ["practice", "rating"]
 
-    practice = forms.ModelChoiceField(queryset=Practice.objects.all())
+    practice = forms.ModelChoiceField(
+        queryset=Practice.objects.all(), empty_label="Choose a Practice"
+    )
     rating = forms.IntegerField(min_value=0, max_value=5, initial=0)
 
 

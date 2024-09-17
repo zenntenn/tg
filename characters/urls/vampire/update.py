@@ -5,6 +5,6 @@ urls = [
     path(
         "vtmhuman/<pk>/",
         views.vampire.VtMHumanUpdateView.as_view(),
-        name="vtmhuman",
+        name="vtm_human",
     ),
 ]

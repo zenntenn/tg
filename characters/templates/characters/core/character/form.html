@@ -1,15 +1,18 @@
 {% extends "core/form.html" %}
 {% block contents %}
     <div class="row">
-        <div class="col-sm">Name</div>
-        <div class="col-sm">{{ form.name }}</div>
+        <h1 class="col-sm">{{ form.name }}</h1>
     </div>
     <div class="row">
         <div class="col-sm">Player</div>
-        <div class="col-sm">{{ form.player }}</div>
+        <div class="col-sm">{{ form.owner }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Concept</div>
         <div class="col-sm">{{ form.concept }}</div>
     </div>
+    {% block statistics %}
+    {% endblock statistics %}
+    {% block flavor %}
+    {% endblock flavor %}
 {% endblock contents %}

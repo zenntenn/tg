@@ -39,6 +39,9 @@ class GrimoireCreateView(CreateView):
     model = Grimoire
     fields = [
         "name",
+        "rank",
+        "background_cost",
+        "quintessence_max",
         "description",
         "abilities",
         "spheres",
@@ -55,6 +58,14 @@ class GrimoireCreateView(CreateView):
         "rotes",
     ]
     template_name = "items/mage/grimoire/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
 
 
 class GrimoireUpdateView(UpdateView):
@@ -77,3 +88,11 @@ class GrimoireUpdateView(UpdateView):
         "rotes",
     ]
     template_name = "items/mage/grimoire/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
