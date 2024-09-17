@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 import os
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -41,7 +42,10 @@ class Profile(models.Model):
     )
     theme = models.CharField(
         max_length=30,
-        choices = zip([f"themes/{x}" for x in os.listdir("static/themes/")], [x.split(".")[0].title() for x in os.listdir("static/themes/")]),
+        choices=zip(
+            [f"themes/{x}" for x in os.listdir("static/themes/")],
+            [x.split(".")[0].title() for x in os.listdir("static/themes/")],
+        ),
         default="themes/default.css",
     )
 
