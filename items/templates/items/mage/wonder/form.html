@@ -9,12 +9,12 @@
             <div class="col-sm">{{ form.rank }}</div>
             <div class="col-sm">Background Cost</div>
             <div class="col-sm">{{ form.background_cost }}</div>
-        </div>
-        <div class="row">
             <div class="col-sm">Maximum Quintessence</div>
             <div class="col-sm">{{ form.quintessence_max }}</div>
         </div>
     {% endblock basics %}
+    {% block creation %}
+    {% endblock creation %}
     {% block resonance %}
         <div class="col-sm mta_heading">
             <h2>Resonance</h2>
@@ -29,7 +29,6 @@
     {% endblock powers %}
     {% block description %}
         <div class="row">
-            <div class="col-sm">Description</div>
             <div class="col-sm">{{ form.description }}</div>
         </div>
     {% endblock description %}

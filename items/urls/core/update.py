@@ -16,17 +16,17 @@ urls = [
     path(
         "meleeweapon/<pk>/",
         views.core.MeleeWeaponUpdateView.as_view(),
-        name="meleeweapon",
+        name="melee_weapon",
     ),
     path(
         "rangedweapon/<pk>/",
         views.core.RangedWeaponUpdateView.as_view(),
-        name="rangedweapon",
+        name="ranged_weapon",
     ),
     path(
         "thrownweapon/<pk>/",
         views.core.ThrownWeaponUpdateView.as_view(),
-        name="thrownweapon",
+        name="thrown_weapon",
     ),
     path(
         "material/<pk>/",

@@ -5,13 +5,6 @@ from items.models.mage.wonder import Wonder, WonderResonanceRating
 
 
 class WonderForm(forms.Form):
-    # powers
-    # quintessence <- 5xArete
-    # rank <- rating on character sheet
-    # background cost <- derived from type and rank
-    # owned_by <- character
-    # owner <- derived from character
-    # chronicle <- derived from character
     WONDER_CHOICES = [
         ("charm", "Charm"),
         ("artifact", "Artifact"),
@@ -34,21 +27,31 @@ class WonderResonanceRatingForm(forms.ModelForm):
         required=False, widget=AutocompleteTextInput(suggestions=[])
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, suggestions=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["resonance"].widget.attrs.update(
-            {
-                "suggestions": [
-                    x.name.title() for x in Resonance.objects.order_by("name")
-                ],
-            }
-        )
+        if suggestions is None:
+            suggestions = [x.name.title() for x in Resonance.objects.order_by("name")]
+        self.fields["resonance"].widget.suggestions = suggestions
+
+
+class BaseWonderResonanceRatingFormSet(forms.BaseInlineFormSet):
+    def __init__(self, *args, suggestions=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.suggestions = suggestions or [
+            x.name.title() for x in Resonance.objects.order_by("name")
+        ]
+
+    def _construct_form(self, i, **kwargs):
+        # Pass suggestions to each form
+        kwargs["suggestions"] = self.suggestions
+        return super()._construct_form(i, **kwargs)
 
 
 WonderResonancePracticeRatingFormSet = forms.inlineformset_factory(
     Wonder,
     WonderResonanceRating,
     form=WonderResonanceRatingForm,
+    formset=BaseWonderResonanceRatingFormSet,
     extra=1,
     can_delete=False,
 )

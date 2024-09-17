@@ -1,26 +1,6 @@
 {% extends "characters/core/character/form.html" %}
 {% block statistics %}
     <div class="row">
-        <div class="col-sm {{ form.get_heading }}">
-            <h1>{{ form.name }}</h1>
-        </div>
-    </div>
-    <div class="row">
-        <h2 class="col-sm {{ form.get_heading }}">Basics</h2>
-    </div>
-    <div class="row">
-        <div class="col-sm">Name</div>
-        <div class="col-sm">{{ form.name }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Player</div>
-        <div class="col-sm">{{ form.player }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Concept</div>
-        <div class="col-sm">{{ form.concept }}</div>
-    </div>
-    <div class="row">
         <div class="col-sm">Willpower</div>
         <div class="col-sm">{{ form.willpower }}</div>
     </div>
@@ -47,7 +27,6 @@
 {% endblock statistics %}
 {% block flavor %}
     <div class="row">
-        <div class="col-sm">Description</div>
         <div class="col-sm">{{ form.description }}</div>
     </div>
 {% endblock flavor %}
