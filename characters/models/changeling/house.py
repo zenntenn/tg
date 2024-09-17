@@ -1,3 +1,4 @@
+from characters.models.changeling.house_faction import HouseFaction
 from core.models import Model
 from django.db import models
 from django.urls import reverse
@@ -14,7 +15,7 @@ class House(Model):
     )
     boon = models.TextField(default="")
     flaw = models.TextField(default="")
-    factions = models.JSONField(default=list)
+    factions = models.ManyToManyField(HouseFaction, blank=True)
 
     class Meta:
         verbose_name = "House"
