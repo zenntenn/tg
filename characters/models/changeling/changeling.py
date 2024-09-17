@@ -106,9 +106,9 @@ class Changeling(CtDHuman):
     antithesis = models.TextField(default="")
 
     true_name = models.TextField(default="")
-    date_ennobled = models.TextField(default="")
+    date_ennobled = models.DateField(default="")
     crysalis = models.TextField(default="")
-    date_of_crysalis = models.TextField(default="")
+    date_of_crysalis = models.DateField(default="")
     fae_mien = models.TextField(default="")
 
     class Meta:
