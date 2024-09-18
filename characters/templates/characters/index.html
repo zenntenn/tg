@@ -42,17 +42,12 @@
             {% endfor %}
         {% endfor %}
     </div>
-    <form id="charForm" method="post" novalidate>
+    <form id="charForm" class="centertext container" method="post" novalidate>
         {% csrf_token %}
         <div class="row">
-            <div class="col-sm"></div>
-            <div class="col-sm">{{ form.char_type }}</div>
-            <div class="col-sm">{{ form.name }}</div>
-            <div class="col-sm">{{ form.rank }}</div>
             <div class="col-sm">
+                {{ form.char_type }}
                 <button type="submit" name="action" value="create">Create</button>
-                <button type="submit" name="action" value="index">Index</button>
-                <button type="submit" name="action" value="random">Random</button>
             </div>
         </div>
     </form>
