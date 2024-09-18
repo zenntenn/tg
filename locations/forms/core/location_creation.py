@@ -19,5 +19,5 @@ class LocationCreationForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["loc_type"].choices = [
             (x.name, x.name.replace("_", " ").title())
-            for x in ObjectType.objects.filter(type="loc", gameline=gameline)
+            for x in ObjectType.objects.filter(type="loc", gameline=gameline) if x.name in []
         ]
