@@ -600,6 +600,7 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
         "subfaction",
         "essence",
         "chronicle",
+        "image",
     ]
     template_name = "characters/mage/mage/magebasics.html"
 
@@ -614,6 +615,7 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
         form.fields["concept"].widget.attrs.update(
             {"placeholder": "Enter concept here"}
         )
+        form.fields["image"].required = False
         return form
 
     def form_invalid(self, form):
@@ -1323,11 +1325,13 @@ class MageRoteView(SpecialUserMixin, CreateView):
                     "sanctum",
                     "allies",
                 ]:
+                    print(step, getattr(mage, step))
                     if getattr(mage, step) == 0:
                         mage.creation_status += 1
                     else:
                         mage.save()
                         break
+                    mage.save()
             return HttpResponseRedirect(mage.get_absolute_url())
         return super().form_invalid(form)
 

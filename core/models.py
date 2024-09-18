@@ -85,6 +85,11 @@ class Model(PolymorphicModel):
     description = models.TextField(default="")
     public_info = models.TextField(default="")
     image = models.ImageField(upload_to=filepath, blank=True, null=True)
+    image_status = models.CharField(
+        max_length=3,
+        choices=zip(["sub", "app"], ["Submitted", "Approved"]),
+        default="sub",
+    )
 
     class Meta:
         abstract = True

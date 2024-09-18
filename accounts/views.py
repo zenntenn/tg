@@ -53,12 +53,14 @@ class ProfileView(View):
             request.user.profile.preferred_heading = request.POST["preferred_heading"]
             request.user.profile.theme = request.POST["theme"]
             request.user.profile.save()
-            context = self.get_context(request.user)
-            return render(
-                request,
-                "accounts/index.html",
-                context,
-            )
+        elif any(x.startswith("image") for x in request.POST.keys()):
+            char = [
+                x
+                for x in context["to_approve_images"]
+                if "image " + x.name in request.POST.keys()
+            ][0]
+            char.image_status = "app"
+            char.save()
         else:
             char = [x for x in context["to_approve"] if x.name in request.POST.keys()][
                 0
@@ -94,6 +96,24 @@ class ProfileView(View):
             )
         )
         to_approve.sort(key=lambda x: x.name)
+        to_approve_images = (
+            list(
+                Character.objects.filter(
+                    chronicle__in=chronicles_sted, image_status="sub"
+                ).exclude(image="")
+            )
+            + list(
+                LocationModel.objects.filter(
+                    chronicle__in=chronicles_sted, image_status="sub"
+                ).exclude(image="")
+            )
+            + list(
+                ItemModel.objects.filter(
+                    chronicle__in=chronicles_sted, image_status="sub"
+                ).exclude(image="")
+            )
+        )
+        to_approve_images.sort(key=lambda x: x.name)
         return {
             "characters": Character.objects.filter(owner=user).order_by("name"),
             "items": ItemModel.objects.filter(owner=user).order_by("name"),
@@ -102,5 +122,6 @@ class ProfileView(View):
             ),
             "locations": LocationModel.objects.filter(owner=user).order_by("name"),
             "to_approve": to_approve,
+            "to_approve_images": to_approve_images,
             "update_form": ProfileUpdateForm(),
         }

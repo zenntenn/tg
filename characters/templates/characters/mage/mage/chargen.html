@@ -1,7 +1,16 @@
-
 {% extends "core/form.html" %}
 {% block contents %}
     {% if is_approved_user %}
+        {% block image %}
+            {% if object.image and object.image_status == "app" %}
+                <img src="{{ object.image.url }}"
+                     width="300"
+                     height="{{ image.height }}"
+                     alt="image of {{ object.name }}" />
+            {% elif object.image %}
+                Image pending approval
+            {% endif %}
+        {% endblock image %}
         {{ form.non_field_errors }}
         {% block name %}
             <div class="row">

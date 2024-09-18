@@ -19,5 +19,6 @@ class ItemCreationForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["item_type"].choices = [
             (x.name, x.name.replace("_", " ").title())
-            for x in ObjectType.objects.filter(type="obj", gameline=gameline) if x.name in []
+            for x in ObjectType.objects.filter(type="obj", gameline=gameline)
+            if x.name in []
         ]

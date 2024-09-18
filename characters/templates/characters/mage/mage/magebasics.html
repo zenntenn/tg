@@ -6,11 +6,15 @@
     data-subfactions-url="{% url 'characters:mage:ajax:load_subfactions' %}"
     action=""
     novalidate
+    enctype="multipart/form-data"
 {% endblock formdetails %}
 {% block contents %}
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="centertext container">
+        <div class="row">
+            <div class="col-sm">{{ form.image }}</div>
+        </div>
         <div class="row">
             <div class="col-sm-2">Name</div>
             <div class="col-sm-2">{{ form.name }}</div>
