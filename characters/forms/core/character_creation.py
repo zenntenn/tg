@@ -10,5 +10,6 @@ class CharacterCreationForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["char_type"].choices = [
             (x.name, x.name.replace("_", " ").title())
-            for x in ObjectType.objects.filter(type="char", gameline=gameline) if x.name in ["mage"]
+            for x in ObjectType.objects.filter(type="char", gameline=gameline)
+            if x.name in ["mage"]
         ]
