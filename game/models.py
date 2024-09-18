@@ -44,12 +44,20 @@ class ObjectType(models.Model):
         )
 
 
+class SettingElement(models.Model):
+    name = models.CharField(max_length=100, default="")
+    description = models.TextField(default="")
+
+    def __str__(self):
+        return self.name
+
+
 class Chronicle(models.Model):
     name = models.CharField(max_length=100, default="")
     storytellers = models.ManyToManyField(User, blank=True)
     theme = models.CharField(max_length=200, default="")
     mood = models.CharField(max_length=200, default="")
-    common_knowledge_elements = models.TextField(default="")
+    common_knowledge_elements = models.ManyToManyField(SettingElement, blank=True)
     year = models.IntegerField(default=2022)
 
     headings = models.CharField(
@@ -90,6 +98,10 @@ class Chronicle(models.Model):
 
     def get_scenes_url(self):
         return reverse("game:chronicle_scenes", kwargs={"pk": self.pk})
+
+    def add_setting_element(self, name, description):
+        se = SettingElement.objects.create(name=name, description=description)
+        self.common_knowledge_elements.add(se)
 
 
 class Story(models.Model):
