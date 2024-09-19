@@ -45,7 +45,14 @@
                 <form method="post" action="">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-sm">{{ post_form.character }} {{ post_form.display_name }}</div>
+                        <div class="col-sm">
+                            {% if num_logged_in_chars == 1 %}
+                                {{ first_char }}
+                            {% else %}
+                                {{ post_form.character }}
+                            {% endif %}
+                            {{ post_form.display_name }}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm">{{ post_form.message }}</div>
@@ -71,6 +78,4 @@
         </div class='col-sm'>
         with &ltnum_dice&gt the number of dice to roll, &ltdiff&gt the difficulty and &ltspecialty&gt True or False depending on if you have a relevant specialty.
     </div>
-</div>
-</div>
 {% endblock content %}

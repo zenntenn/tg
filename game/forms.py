@@ -50,7 +50,7 @@ class PostForm(forms.Form):
         max_length=100,
         required=False,
         widget=forms.Textarea(
-            attrs={"placeholder": "Display Name", "rows": 1, "cols": 25}
+            attrs={"placeholder": "Display Name (Optional)", "rows": 1, "cols": 25}
         ),
     )
     message = forms.CharField(widget=forms.Textarea(attrs={"placeholder": "Message"}))
