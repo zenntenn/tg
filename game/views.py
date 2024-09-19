@@ -77,6 +77,8 @@ class SceneDetailView(View):
             "post_form": PostForm(user=user, scene=scene),
             "add_char_form": a,
             "num_chars": num_chars,
+            "num_logged_in_chars": scene.characters.filter(owner=user).count(),
+            "first_char": scene.characters.filter(owner=user).first(),
         }
 
     def get(self, request, *args, **kwargs):
@@ -91,7 +93,10 @@ class SceneDetailView(View):
             c = CharacterModel.objects.get(pk=request.POST["character_to_add"])
             context["object"].add_character(c)
         elif "message" in request.POST.keys():
-            character = CharacterModel.objects.get(pk=request.POST["character"])
+            if context["num_logged_in_chars"] == 1:
+                character = context["first_char"]
+            else:
+                character = CharacterModel.objects.get(pk=request.POST["character"])
             context["object"].add_post(
                 character, request.POST["display_name"], request.POST["message"]
             )
