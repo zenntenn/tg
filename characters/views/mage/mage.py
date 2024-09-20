@@ -388,6 +388,7 @@ class MageCreateView(CreateView):
         "affiliation",
         "faction",
         "subfaction",
+        "public_info",
     ]
     template_name = "characters/mage/mage/form.html"
 
@@ -577,6 +578,7 @@ class MageUpdateView(SpecialUserMixin, UpdateView):
         "affiliation",
         "faction",
         "subfaction",
+        "public_info",
     ]
     template_name = "characters/mage/mage/form.html"
 
@@ -1061,6 +1063,7 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
         "avatar_description",
         "goals",
         "notes",
+        "public_info",
     ]
     template_name = "characters/mage/mage/chargen.html"
 
