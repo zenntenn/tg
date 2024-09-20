@@ -1,0 +1,53 @@
+{% load dots %}
+{% load get_specialty %}
+<div class="row">
+    <div class="col-sm">
+        {{ object.get_corr_name_display }}
+        {% if object|get_specialty:'correspondence' %}({{ object|get_specialty:'correspondence' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.correspondence|dots }}</div>
+    <div class="col-sm">
+        Life
+        {% if object|get_specialty:'life' %}({{ object|get_specialty:'life' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.life|dots }}</div>
+    <div class="col-sm">
+        {{ object.get_prime_name_display }}
+        {% if object|get_specialty:'prime' %}({{ object|get_specialty:'prime' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.prime|dots }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Entropy
+        {% if object|get_specialty:'entropy' %}({{ object|get_specialty:'entropy' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.entropy|dots }}</div>
+    <div class="col-sm">
+        Matter
+        {% if object|get_specialty:'matter' %}({{ object|get_specialty:'matter' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.matter|dots }}</div>
+    <div class="col-sm">
+        {{ object.get_spirit_name_display }}
+        {% if object|get_specialty:'spirit' %}({{ object|get_specialty:'spirit' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.spirit|dots }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Forces
+        {% if object|get_specialty:'forces' %}({{ object|get_specialty:'forces' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.forces|dots }}</div>
+    <div class="col-sm">
+        Mind
+        {% if object|get_specialty:'mind' %}({{ object|get_specialty:'mind' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.mind|dots }}</div>
+    <div class="col-sm">
+        Time
+        {% if object|get_specialty:'time' %}({{ object|get_specialty:'time' }}){% endif %}
+    </div>
+    <div class="col-sm dots">{{ object.time|dots }}</div>
+</div>
