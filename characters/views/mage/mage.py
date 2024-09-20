@@ -1016,7 +1016,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
         self.object.creation_status += 1
         for i in range(arete - 1):
             self.object.freebies -= 4
-            self.object.freebie_spend_record("Arete", "arete", i + 2)
+            self.object.spent_freebies.append(
+                self.object.freebie_spend_record("Arete", "arete", i + 2)
+            )
         self.object.save()
         return super().form_valid(form)
 
