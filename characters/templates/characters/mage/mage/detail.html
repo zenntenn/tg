@@ -21,7 +21,7 @@
     {% include "characters/core/human/equipment_block.html" %}
 {% endblock equipment %}
 {% block allies %}
-{% include "characters/core/human/ally_block_display.html" %}
+    {% include "characters/core/human/ally_block_display.html" %}
 {% endblock allies %}
 {% block appearance %}
     {% include "characters/mage/mage/mage_appearance_block_display.html" %}
@@ -29,6 +29,11 @@
 {% block history %}
     {% include "characters/mage/mage/mage_history_block_display.html" %}
 {% endblock history %}
+{% block freebies %}
+    {% if object.status == "Sub" %}
+        {% include "characters/mage/mage/mage_freebies_form.html" %}
+    {% endif %}
+{% endblock freebies %}
 {% block advancement %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Experience</h2>
