@@ -246,6 +246,7 @@ def load_examples(request):
 def load_values(request):
     mf = MeritFlaw.objects.get(pk=request.GET.get("example"))
     ratings = [x.value for x in mf.ratings.all()]
+    ratings.sort()
     return render(
         request,
         "characters/core/human/load_values_dropdown_list.html",

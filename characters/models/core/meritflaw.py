@@ -16,6 +16,13 @@ class MeritFlaw(Model):
     class Meta:
         verbose_name = "Merit or Flaw"
         verbose_name_plural = "Merits and Flaws"
+        ordering = ["name"]
+
+    def __str__(self):
+        ratings = [x.value for x in self.ratings.all()]
+        ratings.sort()
+        ratings = ",".join([str(x) for x in ratings])
+        return f"{self.name} ({ratings})"
 
     def get_absolute_url(self):
         return reverse("characters:meritflaw", args=[str(self.id)])
