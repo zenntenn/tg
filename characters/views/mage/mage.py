@@ -167,7 +167,10 @@ def get_abilities(request):
     prac = Practice.objects.get(id=practice_id)
     abilities = prac.abilities.all().order_by("name")
     abilities = [x for x in abilities if getattr(object, x.property_name) > 0]
-    abilities_list = [{"id": ability.id, "name": ability.name} for ability in abilities]
+    abilities_list = [{"id": "", "name": "--------"}]  # Empty option
+    abilities_list += [
+        {"id": ability.id, "name": ability.name} for ability in abilities
+    ]
     return JsonResponse(abilities_list, safe=False)
 
 

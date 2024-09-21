@@ -47,7 +47,7 @@ class RoteCreationForm(forms.Form):
         name = self.cleaned_data.get("name")
         practice = self.cleaned_data.get("practice")
         attribute = self.cleaned_data.get("attribute")
-        ability = self.cleaned_data.get("ability")
+        ability = Ability.objects.get(pk=self.data.get("ability"))
         systems = self.cleaned_data.get("systems")
         description = self.cleaned_data.get("description")
         correspondence = self.cleaned_data.get("correspondence")
