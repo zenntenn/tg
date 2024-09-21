@@ -29,6 +29,22 @@ class MageAdvancementForm(AdvancementForm):
                 ],
             }
         )
+        ADDITIONAL_CATS = [
+            ("Sphere", "Sphere"),
+            ("Rotes", "Rotes"),
+            ("Resonance", "Resonance"),
+            ("Tenet", "Tenet"),
+            ("Practice", "Practice"),
+            ("Arete", "Arete"),
+            ("Quintessence", "Quintessence"),
+        ]
+        if self.instance.freebies < 4:
+            ADDITIONAL_CATS = [x for x in ADDITIONAL_CATS if x[0] != "Arete"]
+        if self.instance.freebies < 7:
+            ADDITIONAL_CATS = [x for x in ADDITIONAL_CATS if x[0] != "Sphere"]
+        if self.instance.freebies < 3:
+            ADDITIONAL_CATS = [x for x in ADDITIONAL_CATS if x[0] != "Resonance"]
+        self.fields["category"].choices += ADDITIONAL_CATS
 
     def save(self, *args, **kwargs):
         return self.instance
