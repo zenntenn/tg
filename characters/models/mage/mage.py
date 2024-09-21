@@ -174,7 +174,7 @@ class Mage(MtAHuman):
     def get_full_creation_url(cls):
         return reverse("characters:mage:create:mage_full")
 
-    def add_ability(self, ability, maximum=4):
+    def add_ability(self, ability, maximum=5):
         return add_dot(self, ability, maximum)
 
     def get_spheres(self):

@@ -17,7 +17,7 @@ from characters.models.core.specialty import Specialty
 from characters.models.core.statistic import Statistic
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Practice, Tenet
+from characters.models.mage.focus import Practice, SpecializedPractice, Tenet
 from characters.models.mage.mage import Mage, PracticeRating, ResRating
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.mage.resonance import Resonance
@@ -43,6 +43,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonRes
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
+from game.models import ObjectType
 from items.forms.mage.wonder import WonderForm, WonderResonancePracticeRatingFormSet
 from items.models.core.item import ItemModel
 from items.models.mage.artifact import Artifact
@@ -106,23 +107,24 @@ class LoadExamplesView(View):
             examples = Attribute.objects.all()
             examples = [x for x in examples if getattr(m, x.property_name, 0) < 5]
         elif category_choice == "Ability":
-            examples = Ability.objects.all()
+            examples = Ability.objects.order_by("name")
             examples = [
                 x
                 for x in examples
                 if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
             ]
         elif category_choice == "Background":
-            examples = Background.objects.all()
+            examples = Background.objects.order_by("name")
             examples = [
                 x
                 for x in examples
                 if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
             ]
         elif category_choice == "MeritFlaw":
-            examples = m.filter_mfs()
-            if m.total_flaws() <= -7:
-                examples = examples.exclude(max_rating__lt=0)
+            mage = ObjectType.objects.get(name="mage")
+            examples = MeritFlaw.objects.filter(allowed_types=mage)
+            if m.total_flaws() <= 0:
+                examples = examples.exclude(max_rating__lt=min(0, -7 - m.total_flaws()))
             examples = examples.exclude(min_rating__gt=m.freebies)
         elif category_choice == "Sphere":
             examples = Sphere.objects.all()
@@ -149,11 +151,17 @@ class LoadExamplesView(View):
             )
             examples = Tenet.objects.exclude(related_tenets_q)
         elif category_choice == "Practice":
-            examples = Practice.objects.all()
+            examples = Practice.objects.exclude(
+                polymorphic_ctype__model="specializedpractice"
+            ).exclude(polymorphic_ctype__model="corruptedpractice")
+            spec = SpecializedPractice.objects.get(faction=m.faction)
+            examples = examples.exclude(
+                id=spec.parent_practice.id
+            ) | Practice.objects.filter(id=spec.id)
             ids = PracticeRating.objects.filter(mage=m, rating=5).values_list(
                 "practice__id", flat=True
             )
-            examples = examples.exclude(pk__in=ids)
+            examples = examples.exclude(pk__in=ids).order_by("name")
         else:
             examples = []
 
