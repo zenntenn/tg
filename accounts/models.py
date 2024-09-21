@@ -42,7 +42,7 @@ class Profile(models.Model):
         max_length=30,
         choices=zip(
             ["themes/default.css", "themes/dark.css"],
-            ["Deault", "Dark"],
+            ["Default", "Dark"],
         ),
         default="themes/default.css",
     )
