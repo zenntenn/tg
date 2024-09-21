@@ -879,10 +879,12 @@ class MageFocusView(SpecialUserMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
             context["practice_formset"] = PracticeRatingFormSet(
-                self.request.POST, instance=self.object
+                self.request.POST, instance=self.object, mage=self.object
             )
         else:
-            context["practice_formset"] = PracticeRatingFormSet(instance=self.object)
+            context["practice_formset"] = PracticeRatingFormSet(
+                instance=self.object, mage=self.object
+            )
         context["resonance"] = ResRating.objects.filter(
             mage=self.object, rating__gte=1
         ).order_by("resonance__name")
@@ -962,8 +964,13 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
         )
-
         return form
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super().get_initial()
+        initial["arete"] = 1
+        initial["resonance"] = ""
+        return initial
 
     def form_valid(self, form):
         arete = form.cleaned_data.get("arete")
@@ -1330,7 +1337,6 @@ class MageRoteView(SpecialUserMixin, CreateView):
                     "sanctum",
                     "allies",
                 ]:
-                    print(step, getattr(mage, step))
                     if getattr(mage, step) == 0:
                         mage.creation_status += 1
                     else:
@@ -1844,6 +1850,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         5: MageFocusView,
         6: MageExtrasView,
         7: MageFreebiesView,
+        # If Arete was bought, need to correct Practices
         8: MageLanguagesView,
         9: MageRoteView,
         10: MageNodeView,
