@@ -1,5 +1,3 @@
-import os
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -43,8 +41,8 @@ class Profile(models.Model):
     theme = models.CharField(
         max_length=30,
         choices=zip(
-            [f"themes/{x}" for x in os.listdir("static/themes/")],
-            [x.split(".")[0].title() for x in os.listdir("static/themes/")],
+            ["themes/default.css", "themes/dark.css"],
+            ["Deault", "Dark"],
         ),
         default="themes/default.css",
     )
