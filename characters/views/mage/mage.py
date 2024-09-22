@@ -63,6 +63,7 @@ from locations.forms.mage.node import (
     NodeResonanceRatingForm,
 )
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
+from locations.models.core.location import LocationModel
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
@@ -1802,6 +1803,11 @@ class MageSanctumView(SpecialUserMixin, CreateView):
         form = super().get_form(form_class)
         form.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
+        )
+        mage_id = self.kwargs.get("pk")
+        mage = Mage.objects.get(id=mage_id)
+        form.fields["parent"].queryset = LocationModel.objects.filter(
+            chronicle=mage.chronicle
         )
         return form
 
