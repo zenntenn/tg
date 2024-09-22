@@ -89,7 +89,6 @@ local_settings.py
 db.sqlite3
 
 .venv/
-tg/secrets.py
 
 */__pycache__/*
 */*/__pycache__/*
