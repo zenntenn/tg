@@ -1,19 +1,23 @@
 from django import forms
+from locations.models.core.location import LocationModel
 from locations.models.mage.sanctum import Sanctum
 
 
 class SanctumForm(forms.Form):
     name = forms.CharField(max_length=100)
+    parent = forms.ModelChoiceField(queryset=LocationModel.objects.none())
     description = forms.CharField(widget=forms.Textarea)
 
     def save(self, mage, reality_zone=None):
-        name = self.cleaned_data.get("name")
-        description = self.cleaned_data.get("description")
+        name = self.cleaned_data.get("name", "")
+        description = self.cleaned_data.get("description", "")
+        parent = self.cleaned_data.get("parent", None)
         s = Sanctum.objects.create(
             name=name,
             description=description,
             owned_by=mage,
             chronicle=mage.chronicle,
+            parent=parent,
             owner=mage.owner,
             status="Sub",
         )
