@@ -299,8 +299,12 @@ class Mage(MtAHuman):
                 .order_by("?")
                 .first()
             )
-        practices = {x: 1 for x in Practice.objects.all()}
-        practices = {k: v for k, v in practices.items() if k.type == "practice"}
+        practices = {
+            x: 1
+            for x in Practice.objects.exclude(
+                polymorphic_ctype__model="specializedpractice"
+            ).exclude(polymorphic_ctype__model="corruptedpractice")
+        }
         if self.affiliation:
             for practice in self.affiliation.practices.all():
                 practices[practice] += 1
