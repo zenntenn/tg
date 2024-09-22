@@ -90,6 +90,8 @@ class Model(PolymorphicModel):
         choices=zip(["sub", "app"], ["Submitted", "Approved"]),
         default="sub",
     )
+    
+    st_nodes = models.TextField(default="")
 
     class Meta:
         abstract = True
