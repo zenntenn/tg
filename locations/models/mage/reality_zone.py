@@ -35,6 +35,12 @@ class RealityZone(models.Model):
     def get_creation_url(cls):
         return reverse("locations:mage:create:reality_zone")
 
+    def get_positive_practices(self):
+        return ZoneRating.objects.filter(zone=self, rating__gt=0)
+
+    def get_negative_practices(self):
+        return ZoneRating.objects.filter(zone=self, rating__lt=0)
+
     def get_heading(self):
         return "mta_heading"
 
