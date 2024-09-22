@@ -95,15 +95,12 @@ db.sqlite3
 */*/*/__pycache__/*
 tg/secrets.py
 .conda
-OLD_VERSION/*
-SOURCES/*
+*.pdf
 pytest.ini
 .vscode/*
 static/*
 */migrations/*
 pyproject.toml
 populate_db/*
-remove_pycache.sh
-setup_db.sh
-selenium_fix.sh
+*.sh
 media/*
