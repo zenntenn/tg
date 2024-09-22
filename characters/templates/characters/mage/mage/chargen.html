@@ -11,7 +11,6 @@
                 Image pending approval
             {% endif %}
         {% endblock image %}
-        {{ form.non_field_errors }}
         {% block name %}
             <div class="row">
                 <div class="col-sm {{ object.get_heading }}">
@@ -129,5 +128,10 @@
         {% endblock specialties_form %}
     {% else %}
         {% include "characters/core/character/not_owner.html" %}
+    {% endif %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+                <p class="alert">{{ error }}</p>
+        {% endfor %}
     {% endif %}
 {% endblock contents %}
