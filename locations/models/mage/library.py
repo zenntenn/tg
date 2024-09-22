@@ -84,7 +84,9 @@ class Library(LocationModel):
         from characters.models.mage.faction import MageFaction
         from items.models.mage.grimoire import Grimoire
 
-        book = Grimoire.objects.create(name="", owner=self.owner)
+        book = Grimoire.objects.create(
+            name="", owner=self.owner, chronicle=self.chronicle
+        )
         rank = random.randint(1, self.rank)
         if (
             random.random() < 0.5
