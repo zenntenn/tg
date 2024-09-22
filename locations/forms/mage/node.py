@@ -18,7 +18,12 @@ class NodeForm(forms.ModelForm):
             "size",
             "quintessence_form",
             "tass_form",
+            "parent",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["parent"].required = False
 
 
 class NodeResonanceRatingForm(forms.ModelForm):
