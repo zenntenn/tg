@@ -129,9 +129,4 @@
     {% else %}
         {% include "characters/core/character/not_owner.html" %}
     {% endif %}
-    {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-                <p class="alert">{{ error }}</p>
-        {% endfor %}
-    {% endif %}
 {% endblock contents %}

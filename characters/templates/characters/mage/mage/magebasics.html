@@ -10,7 +10,6 @@
 {% endblock formdetails %}
 {% block contents %}
     {% csrf_token %}
-    {{ form.non_field_errors }}
     <div class="centertext container">
         <div class="row">
             <div class="col-sm">{{ form.image }}</div>

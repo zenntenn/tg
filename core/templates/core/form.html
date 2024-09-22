@@ -16,4 +16,11 @@
             {% endblock buttons %}
         </div>
     </form>
+    {% block errors %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+                <p class="alert centertext">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endblock errors %}
 {% endblock content %}
