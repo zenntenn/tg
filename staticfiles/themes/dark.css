@@ -76,3 +76,8 @@ footer {
 .st {
     color: #b8860b;
 }
+
+.alert {
+    color: red;
+    font-size: 30px;
+}

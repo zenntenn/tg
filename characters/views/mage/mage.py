@@ -38,7 +38,12 @@ from core.widgets import AutocompleteTextInput
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.forms import BaseModelForm, SelectDateWidget, formset_factory
+from django.forms import (
+    BaseModelForm,
+    SelectDateWidget,
+    ValidationError,
+    formset_factory,
+)
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
@@ -910,6 +915,7 @@ class MageFocusView(SpecialUserMixin, UpdateView):
         if practice_formset.is_valid():
             self.object = form.save()
             ratings = [x.cleaned_data.get("rating") for x in practice_formset]
+            ratings = [x for x in ratings if x is not None]
             practice_total = sum(ratings)
             if practice_total != self.object.arete:
                 form.add_error(None, "Starting Practices must add up to Arete rating")
@@ -975,6 +981,7 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
         )
+        form.fields["affinity_sphere"].required = True
         return form
 
     def get_initial(self) -> dict[str, Any]:
@@ -984,17 +991,19 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
         return initial
 
     def form_valid(self, form):
-        arete = form.cleaned_data.get("arete")
-        correspondence = form.cleaned_data.get("correspondence")
-        time = form.cleaned_data.get("time")
-        spirit = form.cleaned_data.get("spirit")
-        forces = form.cleaned_data.get("forces")
-        matter = form.cleaned_data.get("matter")
-        life = form.cleaned_data.get("life")
-        entropy = form.cleaned_data.get("entropy")
-        mind = form.cleaned_data.get("mind")
-        prime = form.cleaned_data.get("prime")
+        arete = form.cleaned_data.get("arete", 1)
+        correspondence = form.cleaned_data.get("correspondence", 0)
+        time = form.cleaned_data.get("time", 0)
+        spirit = form.cleaned_data.get("spirit", 0)
+        forces = form.cleaned_data.get("forces", 0)
+        matter = form.cleaned_data.get("matter", 0)
+        life = form.cleaned_data.get("life", 0)
+        entropy = form.cleaned_data.get("entropy", 0)
+        mind = form.cleaned_data.get("mind", 0)
+        prime = form.cleaned_data.get("prime", 0)
         affinity_sphere = form.cleaned_data.get("affinity_sphere")
+        if affinity_sphere is None:  # This will catch the 'empty_label' selection
+            raise ValidationError("You must select a valid affinity sphere.")
         corr_name = form.cleaned_data.get("corr_name")
         prime_name = form.cleaned_data.get("prime_name")
         spirit_name = form.cleaned_data.get("spirit_name")
