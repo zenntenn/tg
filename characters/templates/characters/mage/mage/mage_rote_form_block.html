@@ -3,6 +3,13 @@
     <h2 class="col-sm mta_heading">Create Rote</h2>
 </div>
 <div class="row">
+    <div class="col-sm">A rote is an effect along with a Practice, an Associated Ability of the Practice, and an Attribute. Describe how the character performs the rote, what it does, and the game mechanical impact. A rote's cost is the total number of sphere dots.</div>
+</div>
+<div class="row">
+    <h3 class="col-sm {{ object.get_heading }}">Rote Points Remaining</h3>
+    <h3 class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</h3>
+</div>
+<div class="row">
     <div class="col-sm">Name</div>
     <div class="col-sm">{{ form.name }}</div>
 </div>
