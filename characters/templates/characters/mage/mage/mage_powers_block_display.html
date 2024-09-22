@@ -18,6 +18,10 @@
         <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
     </div>
     <div class="row">
+        <div class="col-sm {{ object.get_heading }}">Rote Points Remaining</div>
+        <div class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</div>
+    </div>
+    <div class="row">
         {% for rote in object.rotes.all %}
             {% if forloop.counter0|divisibleby:3 %}
             </div>
