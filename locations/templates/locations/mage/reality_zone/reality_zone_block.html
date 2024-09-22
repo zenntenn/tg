@@ -1,0 +1,21 @@
+{% load dots %}
+{% load reverse %}
+{% if object.reality_zone %}
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Reality Zone</h3>
+    </div>
+    {% for pr in object.reality_zone.get_positive_practices %}
+        <div class="row">
+            <a class="col-sm-5" href="{{ pr.practice.get_absolute_url }}">{{ pr.practice }}</a>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1 dots">{{ pr.rating|dots }}</div>
+        </div>
+    {% endfor %}
+    {% for pr in object.reality_zone.get_negative_practices %}
+        <div class="row">
+            <a class="col-sm-5" href="{{ pr.practice.get_absolute_url }}">{{ pr.practice }}</a>
+            <div class="col-sm-1 dots">{{ pr.rating|dots|reverse }}</div>
+            <div class="col-sm-1"></div>
+        </div>
+    {% endfor %}
+{% endif %}

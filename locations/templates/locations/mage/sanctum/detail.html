@@ -1,10 +1,5 @@
 {% extends "locations/core/location/detail.html" %}
 
 {% block reality_zone %}
-        {% if object.reality_zone %}
-            <div class="row">
-                <div class="col-sm">Reality Zone</div>
-                <a class="col-sm" href="{{ object.reality_zone.get_absolute_url }}">{{ object.reality_zone }}</a>
-            </div>
-        {% endif %}
+    {% include "locations/mage/reality_zone/reality_zone_block.html" %}
 {% endblock reality_zone %}
