@@ -20,15 +20,11 @@ class MageAdvancementForm(AdvancementForm):
         required=False, widget=AutocompleteTextInput(suggestions=[])
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, suggestions=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["resonance"].widget.attrs.update(
-            {
-                "suggestions": [
-                    x.name.title() for x in Resonance.objects.order_by("name")
-                ],
-            }
-        )
+        if suggestions is None:
+            suggestions = [x.name.title() for x in Resonance.objects.order_by("name")]
+        self.fields["resonance"].widget.suggestions = suggestions
         ADDITIONAL_CATS = [
             ("Sphere", "Sphere"),
             ("Rotes", "Rotes"),
