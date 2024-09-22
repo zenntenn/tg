@@ -10,9 +10,4 @@
     <div class="col-sm">Affinity Sphere</div>
     <div class="col-sm">{{ object.affinity_sphere.name }}</div>
 </div>
-<div class="row">
-    <div class="col-sm">Quintessence</div>
-    <div class="col-sm dots">{{ object.quintessence }}</div>
-    <div class="col-sm">Paradox</div>
-    <div class="col-sm dots">{{ object.paradox }}</div>
-</div>
+{% include "characters/mage/mage/qb_wheel.html" %}
