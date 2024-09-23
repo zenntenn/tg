@@ -1234,7 +1234,7 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
         elif form.data["category"] == "Quintessence":
             trait = "Quintessence"
             value = 4
-            self.object.rote_points += 4
+            self.object.quintessence += 4
             self.object.freebies -= cost
         if form.data["category"] != "MeritFlaw":
             self.object.spent_freebies.append(
