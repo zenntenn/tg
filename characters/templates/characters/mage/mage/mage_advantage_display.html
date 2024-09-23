@@ -1,13 +1,19 @@
 {% load dots %}
 <div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Advantages</h2>
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#advantagesSection"
+        aria-expanded="true"
+        aria-controls="advantagesSection">Advantages</h2>
 </div>
-<div class="row">
-    <div class="col-sm">Willpower</div>
-    <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
-    <div class="col-sm">Arete</div>
-    <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
-    <div class="col-sm">Affinity Sphere</div>
-    <div class="col-sm">{{ object.affinity_sphere.name }}</div>
+<div id="advantagesSection" class="collapse show">
+    <div class="row">
+        <div class="col-sm">Willpower</div>
+        <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
+        <div class="col-sm">Arete</div>
+        <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
+        <div class="col-sm">Affinity Sphere</div>
+        <div class="col-sm">{{ object.affinity_sphere.name }}</div>
+    </div>
+    {% include "characters/mage/mage/qb_wheel.html" %}
 </div>
-{% include "characters/mage/mage/qb_wheel.html" %}

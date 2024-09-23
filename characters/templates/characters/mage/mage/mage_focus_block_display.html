@@ -1,47 +1,53 @@
 {% load dots %}
 <div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Focus</h2>
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#focusSection"
+        aria-expanded="true"
+        aria-controls="focusSection">Focus</h2>
 </div>
-<div class="row">
-    <h3 class="col-sm {{ object.get_heading }}">Tenets</h3>
-</div>
-<div class="row">
-    <div class="col-sm">Metaphysical</div>
-    <a class="col-sm"
-       href="{{ object.metaphysical_tenet.get_absolute_url }}">{{ object.metaphysical_tenet }}</a>
-</div>
-<div class="row">
-    <div class="col-sm">Personal</div>
-    <a class="col-sm" href="{{ object.personal_tenet.get_absolute_url }}">{{ object.personal_tenet }}</a>
-</div>
-<div class="row">
-    <div class="col-sm">Ascension</div>
-    <a class="col-sm" href="{{ object.ascension_tenet.get_absolute_url }}">{{ object.ascension_tenet }}</a>
-</div>
-<div class="row">
-    <h4 class="col-sm {{ object.get_heading }}">Other Tenets</h4>
-</div>
-{% for tenet in object.other_tenets.all %}
+<div id="focusSection" class="collapse show">
     <div class="row">
-        <a class="col-sm" href="{{ tenet.get_absolute_url }}">{{ tenet }}</a>
+        <h3 class="col-sm {{ object.get_heading }}">Tenets</h3>
     </div>
-{% endfor %}
-<div class="row">
-    <h3 class="col-sm {{ object.get_heading }}">Practices</h3>
+    <div class="row">
+        <div class="col-sm">Metaphysical</div>
+        <a class="col-sm"
+           href="{{ object.metaphysical_tenet.get_absolute_url }}">{{ object.metaphysical_tenet }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Personal</div>
+        <a class="col-sm" href="{{ object.personal_tenet.get_absolute_url }}">{{ object.personal_tenet }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Ascension</div>
+        <a class="col-sm" href="{{ object.ascension_tenet.get_absolute_url }}">{{ object.ascension_tenet }}</a>
+    </div>
+    <div class="row">
+        <h4 class="col-sm {{ object.get_heading }}">Other Tenets</h4>
+    </div>
+    {% for tenet in object.other_tenets.all %}
+        <div class="row">
+            <a class="col-sm" href="{{ tenet.get_absolute_url }}">{{ tenet }}</a>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Practices</h3>
+    </div>
+    {% for pr in practices %}
+        <div class="row">
+            <a class="col-sm" href="{{ pr.practice.get_absolute_url }}">{{ pr.practice }}</a>
+            <div class="col-sm dots">{{ pr.rating|dots }}</div>
+        </div>
+    {% endfor %}
+    {% if object.quiet != 0 %}
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="col-sm">Quiet</div>
+            <div class="col-sm dots">{{ object.quiet|dots }}</div>
+            <div class="col-sm">Quiet Type</div>
+            <div class="col-sm">{{ object.get_quiet_type_display }}</div>
+            <div class="col-sm"></div>
+        </div>
+    {% endif %}
 </div>
-{% for pr in practices %}
-    <div class="row">
-        <a class="col-sm" href="{{ pr.practice.get_absolute_url }}">{{ pr.practice }}</a>
-        <div class="col-sm dots">{{ pr.rating|dots }}</div>
-    </div>
-{% endfor %}
-{% if object.quiet != 0 %}
-    <div class="row">
-        <div class="col-sm"></div>
-        <div class="col-sm">Quiet</div>
-        <div class="col-sm dots">{{ object.quiet|dots }}</div>
-        <div class="col-sm">Quiet Type</div>
-        <div class="col-sm">{{ object.get_quiet_type_display }}</div>
-        <div class="col-sm"></div>
-    </div>
-{% endif %}

@@ -1,36 +1,54 @@
 {% load dots %}
 {% load get_specialty %}
 <div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Spheres</h2>
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#spheresSection"
+        aria-expanded="true"
+        aria-controls="spheresSection">Spheres</h2>
 </div>
-{% include "characters/mage/spheres/display_with_names_and_specs.html" %}
-<div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Resonance</h2>
+<div id="spheresSection" class="collapse show">
+    {% include "characters/mage/spheres/display_with_names_and_specs.html" %}
 </div>
 <div class="row">
-    {% for res in resonance %}
-        <div class="col-sm">{{ res.resonance }}</div>
-        <div class="col-sm dots">{{ res.rating }}</div>
-    {% endfor %}
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#resSection"
+        aria-expanded="true"
+        aria-controls="resSection">Resonance</h2>
+</div>
+<div id="resSection" class="collapse show">
+    <div class="row">
+        {% for res in resonance %}
+            <div class="col-sm">{{ res.resonance }}</div>
+            <div class="col-sm dots">{{ res.rating }}</div>
+        {% endfor %}
+    </div>
 </div>
 {% block rotes %}
     <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
+        <h2 class="col-sm {{ object.get_heading }} pointer"
+            data-toggle="collapse"
+            data-target="#rotesSection"
+            aria-expanded="true"
+            aria-controls="rotesSection">Rotes</h2>
     </div>
-    <div class="row">
-        <div class="col-sm {{ object.get_heading }}">Rote Points Remaining</div>
-        <div class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</div>
-    </div>
-    <div class="row">
-        {% for rote in object.rotes.all %}
-            {% if forloop.counter0|divisibleby:3 %}
-            </div>
-            <div class="row">
-            {% endif %}
-            <a class="col-sm-2" href="{{ rote.get_absolute_url }}">{{ rote.name }}</a>
-            <div class="col-sm-2 dots">{{ rote.effect.spheres }}</div>
-            {% if forloop.last %}</div>{% endif %}
-    {% empty %}
-    </div>
-{% endfor %}
+    <div id="rotesSection" class="collapse show">
+        <div class="row">
+            <div class="col-sm {{ object.get_heading }}">Rote Points Remaining</div>
+            <div class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</div>
+        </div>
+        <div class="row">
+            {% for rote in object.rotes.all %}
+                {% if forloop.counter0|divisibleby:3 %}
+                </div>
+                <div class="row">
+                {% endif %}
+                <a class="col-sm-2" href="{{ rote.get_absolute_url }}">{{ rote.name }}</a>
+                <div class="col-sm-2 dots">{{ rote.effect.spheres }}</div>
+                {% if forloop.last %}</div>{% endif %}
+        {% empty %}
+        </div>
+    {% endfor %}
+</div>
 {% endblock rotes %}

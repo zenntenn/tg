@@ -1,14 +1,20 @@
 <div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Equipment</h2>
+    <h2 class="col-sm {{ object.get_heading }}  pointer"
+        data-toggle="collapse"
+        data-target="#equipmentSection"
+        aria-expanded="true"
+        aria-controls="equipmentSection">Equipment</h2>
 </div>
-<div class="row">
-    {% for item in items_owned %}
-        {% if forloop.counter0|divisibleby:6 %}
-        </div>
-        <div class="row">
-        {% endif %}
-        <a class="col-sm-2" href="{{ item.get_absolute_url }}">{{ item }}</a>
-        {% if forloop.last %}</div>{% endif %}
-{% empty %}
-</div>
+<div id="equipmentSection" class="collapse show">
+    <div class="row">
+        {% for item in items_owned %}
+            {% if forloop.counter0|divisibleby:6 %}
+            </div>
+            <div class="row">
+            {% endif %}
+            <a class="col-sm-2" href="{{ item.get_absolute_url }}">{{ item }}</a>
+            {% if forloop.last %}</div>{% endif %}
+    {% empty %}
+    </div>
 {% endfor %}
+</div>

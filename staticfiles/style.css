@@ -104,3 +104,7 @@
 .invisible {
     display: none;
 }
+
+.pointer {
+    cursor: pointer;
+}

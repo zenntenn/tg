@@ -1,0 +1,14 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#mfSection"
+        aria-expanded="true"
+        aria-controls="mfSection">Merits and Flaws</h2>
+</div>
+<div id="mfSection" class="collapse show">
+    <div class="row">
+        {% for mf, rating in object.get_mf_and_rating_list %}
+            <a class="col-sm" href="{{ mf.get_absolute_url }}">{{ mf }}: {{ rating }}</a>
+        {% endfor %}
+    </div>
+</div>
