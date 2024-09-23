@@ -924,23 +924,24 @@ class MageFocusView(SpecialUserMixin, UpdateView):
             for practice_form in practice_formset:
                 practice = practice_form.cleaned_data.get("practice")
                 rating = practice_form.cleaned_data.get("rating")
-                ability_total = 0
-                for ability in practice.abilities.all():
-                    ability_total += getattr(self.object, ability.property_name, 0)
-                if (
-                    practice is not None
-                    and rating is not None
-                    and rating <= ability_total / 2
-                ):
-                    pr = PracticeRating.objects.create(
-                        mage=self.object, practice=practice, rating=rating
-                    )
-                else:
-                    form.add_error(
-                        None,
-                        "You must have at least 2 dots in associated abilities for each dot of a Practice",
-                    )
-                    return self.form_invalid(form)
+                if practice is not None:
+                    ability_total = 0
+                    for ability in practice.abilities.all():
+                        ability_total += getattr(self.object, ability.property_name, 0)
+                    if (
+                        practice is not None
+                        and rating is not None
+                        and rating <= ability_total / 2
+                    ):
+                        pr = PracticeRating.objects.create(
+                            mage=self.object, practice=practice, rating=rating
+                        )
+                    else:
+                        form.add_error(
+                            None,
+                            "You must have at least 2 dots in associated abilities for each dot of a Practice",
+                        )
+                        return self.form_invalid(form)
             self.object.creation_status += 1
             self.object.save()
             return HttpResponseRedirect(self.get_success_url())
@@ -975,9 +976,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields[
-            "affinity_sphere"
-        ].queryset = self.object.get_affinity_sphere_options()
+        form.fields["affinity_sphere"].queryset = (
+            self.object.get_affinity_sphere_options()
+        )
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
