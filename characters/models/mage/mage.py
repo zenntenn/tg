@@ -128,9 +128,6 @@ class Mage(MtAHuman):
         max_length=100,
     )
 
-    awakening = models.TextField(default="")
-    seekings = models.TextField(default="")
-    quiets = models.TextField(default="")
     age_of_awakening = models.IntegerField(default=0)
     avatar_description = models.TextField(default="")
 

@@ -241,15 +241,7 @@ class MageCreateView(CreateView):
         "age",
         "apparent_age",
         "date_of_birth",
-        "hair",
-        "eyes",
-        "ethnicity",
-        "nationality",
-        "height",
-        "weight",
-        "sex",
         "merits_and_flaws",
-        "childhood",
         "history",
         "goals",
         "notes",
@@ -431,15 +423,7 @@ class MageUpdateView(SpecialUserMixin, UpdateView):
         "age",
         "apparent_age",
         "date_of_birth",
-        "hair",
-        "eyes",
-        "ethnicity",
-        "nationality",
-        "height",
-        "weight",
-        "sex",
         "merits_and_flaws",
-        "childhood",
         "history",
         "goals",
         "notes",
@@ -1075,20 +1059,9 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
         "date_of_birth",
         "apparent_age",
         "age_of_awakening",
-        "hair",
-        "eyes",
-        "ethnicity",
-        "nationality",
-        "height",
-        "weight",
         "age",
-        "sex",
         "description",
-        "childhood",
         "history",
-        "awakening",
-        "seekings",
-        "quiets",
         "avatar_description",
         "goals",
         "notes",
@@ -1117,6 +1090,32 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["date_of_birth"].widget = forms.DateInput(attrs={"type": "date"})
+        form.fields["description"].widget.attrs.update(
+            {
+                "placeholder": "Describe your character's physical appeareance. Be detailed, this will be visible to other players."
+            }
+        )
+        form.fields["history"].widget.attrs.update(
+            {
+                "placeholder": "Describe character history/backstory. Include information about their childhood, when and how they Awakened, and how they've interacted with mage society since, particularly mentioning important backgrounds."
+            }
+        )
+        form.fields["avatar_description"].widget.attrs.update(
+            {
+                "placeholder": "Describe your Avatar. Both how it appears to you, how you relate to it, and anything it is, in particular, pushing you towards."
+            }
+        )
+        form.fields["goals"].widget.attrs.update(
+            {
+                "placeholder": "Describe your character's long and short term goals, whether personal, professional, or magical."
+            }
+        )
+        form.fields["notes"].widget.attrs.update({"placeholder": "Notes"})
+        form.fields["public_info"].widget.attrs.update(
+            {
+                "placeholder": "This will be displayed to all players who look at your character, include Fame and anything else that would be publicly seen beyond physical description"
+            }
+        )
         return form
 
 

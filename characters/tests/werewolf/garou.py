@@ -249,11 +249,11 @@ class TestWerewolf(TestCase):
             self.character.set_tribe(Tribe.objects.create(name="Red Talons"))
         )
 
-    def test_no_male_black_furies(self):
-        self.character.sex = "Male"
-        self.assertFalse(
-            self.character.set_tribe(Tribe.objects.create(name="Black Furies"))
-        )
+    # def test_no_male_black_furies(self):
+    #     self.character.sex = "Male"
+    #     self.assertFalse(
+    #         self.character.set_tribe(Tribe.objects.create(name="Black Furies"))
+    #     )
 
     def test_silver_fangs_have_pure_breed_three(self):
         self.character.set_tribe(Tribe.objects.create(name="Silver Fangs"))
@@ -502,14 +502,6 @@ class TestWerewolfCreateView(TestCase):
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
-            "hair": "aasf",
-            "eyes": "aasf",
-            "ethnicity": "aasf",
-            "nationality": "aasf",
-            "height": "aasf",
-            "weight": "aasf",
-            "sex": "aasf",
-            "childhood": "aasf",
             "history": "aasf",
             "goals": "aasf",
             "notes": "aasf",
@@ -608,14 +600,6 @@ class TestWerewolfUpdateView(TestCase):
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
-            "hair": "aasf",
-            "eyes": "aasf",
-            "ethnicity": "aasf",
-            "nationality": "aasf",
-            "height": "aasf",
-            "weight": "aasf",
-            "sex": "aasf",
-            "childhood": "aasf",
             "history": "aasf",
             "goals": "aasf",
             "notes": "aasf",

@@ -66,28 +66,12 @@ class TestHuman(TestCase):
         self.assertFalse(self.character.has_finishing_touches())
         self.character.date_of_birth = now()
         self.assertFalse(self.character.has_finishing_touches())
-        self.character.hair = "Black"
-        self.assertFalse(self.character.has_finishing_touches())
-        self.character.eyes = "Brown"
-        self.assertFalse(self.character.has_finishing_touches())
-        self.character.ethnicity = "White"
-        self.assertFalse(self.character.has_finishing_touches())
-        self.character.nationality = "American"
-        self.assertFalse(self.character.has_finishing_touches())
-        self.character.height = "5'11\""
-        self.assertFalse(self.character.has_finishing_touches())
-        self.character.weight = "150 lbs"
-        self.assertFalse(self.character.has_finishing_touches())
-        self.character.sex = "Male"
-        self.assertFalse(self.character.has_finishing_touches())
         self.character.description = "Hardcore Asshole"
         self.assertFalse(self.character.has_finishing_touches())
         self.character.apparent_age = 18
         self.assertTrue(self.character.has_finishing_touches())
 
     def test_has_history(self):
-        self.assertFalse(self.character.has_history())
-        self.character.childhood = "Was a kid, it sucked."
         self.assertFalse(self.character.has_history())
         self.character.history = "Got older."
         self.assertFalse(self.character.has_history())

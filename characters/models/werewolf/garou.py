@@ -190,6 +190,7 @@ class Werewolf(WtAHuman):
     def set_tribe(self, tribe):
         if tribe.name == "Red Talons" and self.breed == "homid":
             return False
+        # TODO: fix this as self.sex is no longer included
         if tribe.name == "Black Furies" and self.sex == "Male":
             return False
         self.tribe = tribe

@@ -80,19 +80,11 @@ class Human(Character):
     age = models.IntegerField(blank=True, null=True)
     apparent_age = models.IntegerField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    hair = models.CharField(blank=True, null=True, max_length=100)
-    eyes = models.CharField(blank=True, null=True, max_length=100)
-    ethnicity = models.CharField(blank=True, null=True, max_length=100)
-    nationality = models.CharField(blank=True, null=True, max_length=100)
-    height = models.CharField(blank=True, null=True, max_length=100)
-    weight = models.CharField(blank=True, null=True, max_length=100)
-    sex = models.CharField(blank=True, null=True, max_length=100)
 
     merits_and_flaws = models.ManyToManyField(
         MeritFlaw, blank=True, through=MeritFlawRating, related_name="flawed"
     )
 
-    childhood = models.TextField(default="", blank=True, null=True)
     history = models.TextField(default="", blank=True, null=True)
     goals = models.TextField(default="", blank=True, null=True)
     notes = models.TextField(default="", blank=True, null=True)
@@ -144,19 +136,12 @@ class Human(Character):
         return (
             self.age is not None
             and self.date_of_birth is not None
-            and self.hair is not None
-            and self.eyes is not None
-            and self.ethnicity is not None
-            and self.nationality is not None
-            and self.height is not None
-            and self.weight is not None
-            and self.sex is not None
             and self.description is not None
             and self.apparent_age is not None
         )
 
     def has_history(self):
-        return self.childhood != "" and self.history != "" and self.goals != ""
+        return self.history != "" and self.goals != ""
 
     def get_wound_penalty(self):
         health_levels = len(self.current_health_levels)
@@ -450,27 +435,24 @@ class Human(Character):
         return triple == [tertiary, secondary, primary]
 
     def random_name(self, ethnicity=None):
-        if ethnicity is not None:
-            self.ethnicity = ethnicity
         if self.ethnicity is None:
-            self.ethnicity = random_ethnicity()
-        if self.sex is None:
-            sex = random.random()
-            if sex < 0.495:
-                self.sex = "Male"
-                gender = "m"
-            elif sex < 0.99:
-                self.sex = "Female"
-                gender = "f"
-            else:
-                self.sex = "Other"
-                gender = "mf"
+            ethnicity = random_ethnicity()
+        sex = random.random()
+        if sex < 0.495:
+            self.sex = "Male"
+            gender = "m"
+        elif sex < 0.99:
+            self.sex = "Female"
+            gender = "f"
+        else:
+            self.sex = "Other"
+            gender = "mf"
         if not self.has_name():
-            name = random_name(gender, self.ethnicity)
+            name = random_name(gender, ethnicity)
             count = 0
             while Character.objects.filter(name=name).exists() and count < 20:
                 self.ethnicity = random_ethnicity()
-                name = random_name(gender, self.ethnicity)
+                name = random_name(gender, ethnicity)
                 count += 1
             if count == 20:
                 name = f"Random Name {random.randint(1, 10000000000)}"
@@ -628,17 +610,11 @@ class Human(Character):
         self.age = random.randint(18, 80)
         birthday = self.random_birthdate(self.age)
         self.date_of_birth = birthday
-        self.hair = "Brown"
-        self.eyes = "Blue"
-        self.nationality = "American"
-        self.height = random_height(self.sex)
-        self.weight = random_weight(self.sex)
         self.description = "Description"
         self.apparent_age = self.age
         self.save()
 
     def random_history(self):
-        self.childhood = "Childhood"
         self.history = "History"
         self.goals = "Goals"
         self.save()
