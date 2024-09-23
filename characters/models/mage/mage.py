@@ -176,11 +176,11 @@ class Mage(MtAHuman):
 
     def add_ability(self, ability, maximum=5):
         return add_dot(self, ability, maximum)
-    
+
     @staticmethod
     def get_paradox_wheel():
         return list(range(20))
-    
+
     def get_inverted_paradox(self):
         return 19 - self.paradox
 

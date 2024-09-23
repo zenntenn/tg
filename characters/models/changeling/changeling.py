@@ -1,6 +1,6 @@
 import random
 from collections import defaultdict
-from django.utils.timezone import now
+
 from characters.models.changeling.ctdhuman import CtDHuman
 from characters.models.changeling.house import House
 from characters.models.changeling.kith import Kith
@@ -8,6 +8,7 @@ from characters.models.changeling.legacy import Legacy
 from core.utils import add_dot, weighted_choice
 from django.db import models
 from django.urls import reverse
+from django.utils.timezone import now
 
 
 class Changeling(CtDHuman):
@@ -106,9 +107,9 @@ class Changeling(CtDHuman):
     antithesis = models.TextField(default="")
 
     true_name = models.TextField(default="")
-    date_ennobled = models.DateField(default=now())
+    date_ennobled = models.DateField(blank=True, null=True)
     crysalis = models.TextField(default="")
-    date_of_crysalis = models.DateField(default=now())
+    date_of_crysalis = models.DateField(blank=True, null=True)
     fae_mien = models.TextField(default="")
 
     class Meta:
@@ -353,9 +354,7 @@ class Changeling(CtDHuman):
         return True
 
     def random_changeling_history(self):
-        return self.set_changeling_history(
-            "True Name", now(), "Crysalis", now()
-        )
+        return self.set_changeling_history("True Name", now(), "Crysalis", now())
 
     def has_changeling_appearance(self):
         return self.fae_mien != ""
