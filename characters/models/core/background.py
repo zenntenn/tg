@@ -18,3 +18,6 @@ class BackgroundRating(models.Model):
     )
     rating = models.IntegerField(default=0)
     note = models.CharField(default="", max_length=100)
+
+    class Meta:
+        ordering = ["bg"]

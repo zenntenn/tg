@@ -21,6 +21,8 @@ class Human(Character):
 
     gameline = "wod"
 
+    allowed_backgrounds = ["contacts", "mentor"]
+
     nature = models.ForeignKey(
         Archetype,
         on_delete=models.SET_NULL,

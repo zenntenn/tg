@@ -2,6 +2,7 @@ from typing import Any
 
 from characters.forms.core.advancement import AdvancementForm
 from characters.forms.core.ally import AllyForm
+from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.effect import EffectFormSet
@@ -10,7 +11,7 @@ from characters.forms.mage.rote import RoteCreationForm
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute import Attribute
-from characters.models.core.background import Background
+from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.human import Human
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
@@ -667,183 +668,36 @@ class MageAbilityView(SpecialUserMixin, MtAHumanAbilityView):
         return context
 
 
-class MageBackgroundsView(SpecialUserMixin, UpdateView):
+class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
     model = Mage
-    fields = [
-        "allies",
-        "alternate_identity",
-        "arcane",
-        "avatar",
-        "backup",
-        "blessing",
-        "certification",
-        "chantry",
-        "contacts",
-        "cult",
-        "demesne",
-        "destiny",
-        "dream",
-        # "enhancement",
-        "fame",
-        # "familiar",
-        "influence",
-        "legend",
-        "library",
-        "node",
-        "past_lives",
-        "patron",
-        "rank",
-        "requisitions",
-        "resources",
-        "retainers",
-        "sanctum",
-        "secret_weapons",
-        "spies",
-        "status_background",
-        "totem",
-        "mentor",
-        "wonder",
-    ]
+    fields = []
     template_name = "characters/mage/mage/chargen.html"
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["requisitions"].required = False
-        form.fields["secret_weapons"].required = False
-        return form
+    formsets = {
+        "bg_form": BackgroundRatingFormSet,
+    }
 
     def form_valid(self, form):
-        allies = form.cleaned_data.get("allies")
-        alternate_identity = form.cleaned_data.get("alternate_identity", 0)
-        arcane = form.cleaned_data.get("arcane", 0)
-        avatar = form.cleaned_data.get("avatar", 0)
-        backup = form.cleaned_data.get("backup", 0)
-        blessing = form.cleaned_data.get("blessing", 0)
-        certification = form.cleaned_data.get("certification", 0)
-        chantry = form.cleaned_data.get("chantry", 0)
-        cult = form.cleaned_data.get("cult", 0)
-        contacts = form.cleaned_data.get("contacts", 0)
-        demesne = form.cleaned_data.get("demesne", 0)
-        destiny = form.cleaned_data.get("destiny", 0)
-        dream = form.cleaned_data.get("dream", 0)
-        enhancement = form.cleaned_data.get("enhancement", 0)
-        fame = form.cleaned_data.get("fame", 0)
-        familiar = form.cleaned_data.get("familiar", 0)
-        influence = form.cleaned_data.get("influence", 0)
-        legend = form.cleaned_data.get("legend", 0)
-        library = form.cleaned_data.get("library", 0)
-        node = form.cleaned_data.get("node", 0)
-        past_lives = form.cleaned_data.get("past_lives", 0)
-        patron = form.cleaned_data.get("patron", 0)
-        rank = form.cleaned_data.get("rank", 0)
-        requisitions = form.cleaned_data.get("requisitions", 0)
-        resources = form.cleaned_data.get("resources", 0)
-        retainers = form.cleaned_data.get("retainers", 0)
-        sanctum = form.cleaned_data.get("sanctum", 0)
-        secret_weapons = form.cleaned_data.get("secret_weapons", 0)
-        spies = form.cleaned_data.get("spies", 0)
-        status_background = form.cleaned_data.get("status_background", 0)
-        totem = form.cleaned_data.get("totem", 0)
-        wonder = form.cleaned_data.get("wonder", 0)
-        mentor = form.cleaned_data.get("mentor", 0)
+        context = self.get_context_data()
+        mage = context["object"]
 
-        if secret_weapons is None:
-            secret_weapons = 0
-        if requisitions is None:
-            requisitions = 0
-
-        for background in [
-            allies,
-            alternate_identity,
-            contacts,
-            arcane,
-            avatar,
-            backup,
-            blessing,
-            certification,
-            chantry,
-            cult,
-            demesne,
-            destiny,
-            dream,
-            enhancement,
-            fame,
-            familiar,
-            influence,
-            legend,
-            library,
-            node,
-            past_lives,
-            patron,
-            rank,
-            requisitions,
-            mentor,
-            resources,
-            retainers,
-            sanctum,
-            secret_weapons,
-            spies,
-            status_background,
-            totem,
-            wonder,
-        ]:
-            if background < 0 or background > 5:
-                form.add_error(None, "Backgrounds must range from 0-5")
-                return self.form_invalid(form)
-
-        bg_points = (
-            sum(
-                [
-                    allies,
-                    alternate_identity,
-                    arcane,
-                    avatar,
-                    backup,
-                    blessing,
-                    certification,
-                    chantry,
-                    cult,
-                    demesne,
-                    destiny,
-                    dream,
-                    enhancement,
-                    fame,
-                    familiar,
-                    contacts,
-                    influence,
-                    legend,
-                    library,
-                    mentor,
-                    node,
-                    past_lives,
-                    patron,
-                    rank,
-                    requisitions,
-                    resources,
-                    retainers,
-                    sanctum,
-                    secret_weapons,
-                    spies,
-                    status_background,
-                    totem,
-                    wonder,
-                ]
-            )
-            + enhancement
-            + sanctum
-            + totem
-        )
-        if bg_points != self.object.background_points:
+        bg_data = self.get_form_data("bg_form")
+        for res in bg_data:
+            res["bg"] = Background.objects.get(id=res["bg"])
+            res["rating"] = int(res["rating"])
+        total_bg = sum([x["rating"] for x in bg_data])
+        if total_bg != self.object.background_points:
             form.add_error(
                 None, f"Backgrounds must total {self.object.background_points} points"
             )
-            return self.form_invalid(form)
+            return super().form_invalid(form)
+        for bg in bg_data:
+            BackgroundRating.objects.create(bg=bg["bg"], rating=bg["rating"], char=mage)
         self.object.creation_status += 1
-        self.object.quintessence = avatar
+        self.object.quintessence = self.object.total_background_rating("avatar")
         self.object.save()
         self.object.willpower = 5
         self.object.save()
-        return super().form_valid(form)
+        return HttpResponseRedirect(mage.get_absolute_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

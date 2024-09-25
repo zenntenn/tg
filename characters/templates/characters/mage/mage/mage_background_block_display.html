@@ -8,136 +8,15 @@
 </div>
 <div id="backgroundsSection" class="collapse show">
     <div class="row">
-        <div class="col-sm">Allies</div>
-        <div class="col-sm dots">{{ object.allies|dots }}</div>
-        <div class="col-sm">Alternate Identity</div>
-        <div class="col-sm dots">{{ object.alternate_identity|dots }}</div>
-        {% if object.affiliation.name == "Technocratic Union" %}
-            <div class="col-sm">Cloaking</div>
-        {% else %}
-            <div class="col-sm">Arcane</div>
-        {% endif %}
-        <div class="col-sm dots">{{ object.arcane|dots }}</div>
-    </div>
-    <div class="row">
-        {% if object.affiliation.name == "Technocratic Union" %}
-            <div class="col-sm">Genius</div>
-        {% else %}
-            <div class="col-sm">Avatar</div>
-        {% endif %}
-        <div class="col-sm dots">{{ object.avatar|dots }}</div>
-        <div class="col-sm">Backup</div>
-        <div class="col-sm dots">{{ object.backup|dots }}</div>
-        <div class="col-sm">Blessing</div>
-        <div class="col-sm dots">{{ object.blessing|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Certification</div>
-        <div class="col-sm dots">{{ object.certification|dots }}</div>
-        {% if object.affiliation.name == "Technocratic Union" %}
-            <div class="col-sm">Construct</div>
-        {% else %}
-            <div class="col-sm">Chantry</div>
-        {% endif %}
-        <div class="col-sm dots">{{ object.chantry|dots }}</div>
-        <div class="col-sm">Contacts</div>
-        <div class="col-sm dots">{{ object.contacts|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Cult</div>
-        <div class="col-sm dots">{{ object.cult|dots }}</div>
-        <div class="col-sm">Demesne</div>
-        <div class="col-sm dots">{{ object.demesne|dots }}</div>
-        <div class="col-sm">Destiny</div>
-        <div class="col-sm dots">{{ object.destiny|dots }}</div>
-    </div>
-    <div class="row">
-        {% if object.affiliation.name == "Technocratic Union" %}
-            <div class="col-sm">Hypercram</div>
-        {% else %}
-            <div class="col-sm">Dream</div>
-        {% endif %}
-        <div class="col-sm dots">{{ object.dream|dots }}</div>
-        <div class="col-sm">Enhancement</div>
-        <div class="col-sm dots">{{ object.enhancement|dots }}</div>
-        <div class="col-sm">Fame</div>
-        <div class="col-sm dots">{{ object.fame|dots }}</div>
-    </div>
-    <div class="row">
-        {% if object.affiliation.name == "Technocratic Union" %}
-            <div class="col-sm">Companion</div>
-        {% else %}
-            <div class="col-sm">Familiar</div>
-        {% endif %}
-        <div class="col-sm dots">{{ object.familiar|dots }}</div>
-        <div class="col-sm">Influence</div>
-        <div class="col-sm dots">{{ object.influence|dots }}</div>
-        <div class="col-sm">Legend</div>
-        <div class="col-sm dots">{{ object.legend|dots }}</div>
-    </div>
-    <div class="row">
-        {% if library_owned is None %}
-            <div class="col-sm">Library</div>
-        {% else %}
-            <a class="col-sm" href={{ library_owned.get_absolute_url }}>Library</a>
-        {% endif %}
-        <div class="col-sm dots">{{ object.library|dots }}</div>
-        <div class="col-sm">Mentor</div>
-        <div class="col-sm dots">{{ object.mentor|dots }}</div>
-        {% if node_owned is None %}
-            <div class="col-sm">Node</div>
-        {% else %}
-            <a class="col-sm" href={{ node_owned.get_absolute_url }}>Node</a>
-        {% endif %}
-        <div class="col-sm dots">{{ object.node|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Past Lives</div>
-        <div class="col-sm dots">{{ object.past_lives|dots }}</div>
-        <div class="col-sm">Patron</div>
-        <div class="col-sm dots">{{ object.patron|dots }}</div>
-        <div class="col-sm">Rank</div>
-        <div class="col-sm dots">{{ object.rank|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Resources</div>
-        <div class="col-sm dots">{{ object.resources|dots }}</div>
-        <div class="col-sm">Retainers</div>
-        <div class="col-sm dots">{{ object.retainers|dots }}</div>
-        {% if sanctum_owned is None %}
-            <div class="col-sm">
-                {% if object.affiliation.name == "Technocratic Union" %}
-                    <div class="col-sm">Laboratory</div>
-                {% else %}
-                    <div class="col-sm">Sanctum</div>
-                {% endif %}
+        {% for bg in object.backgrounds.all %}
+            {% if forloop.counter0|divisibleby:3 %}
             </div>
-        {% else %}
-            <a class="col-sm" href={{ sanctum_owned.get_absolute_url }}>Sanctum</a>
-        {% endif %}
-        <div class="col-sm dots">{{ object.sanctum|dots }}</div>
+            <div class="row">
+            {% endif %}
+            <div class="col-sm-2">{{ bg.bg }} {% if bg.note %}({{ bg.note|safe }}) {% endif %}</div>
+            <div class="col-sm-2 dots">{{ bg.rating|dots }}</div>
+            {% if forloop.last %}</div>{% endif %}
+    {% empty %}
     </div>
-    <div class="row">
-        <div class="col-sm">Spies</div>
-        <div class="col-sm dots">{{ object.spies|dots }}</div>
-        <div class="col-sm">Status</div>
-        <div class="col-sm dots">{{ object.status_background|dots }}</div>
-        <div class="col-sm">Totem</div>
-        <div class="col-sm dots">{{ object.totem|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Wonder</div>
-        <div class="col-sm dots">{{ object.wonder|dots }}</div>
-        {% if object.affiliation.name == 'Technocratic Union' %}
-            <div class="col-sm">Requisitions</div>
-            <div class="col-sm dots">{{ object.requisitions|dots }}</div>
-            <div class="col-sm">Secret Weapons</div>
-            <div class="col-sm dots">{{ object.secret_weapons|dots }}</div>
-        {% else %}
-            <div class="col-sm"></div>
-            <div class="col-sm"></div>
-            <div class="col-sm"></div>
-            <div class="col-sm"></div>
-        {% endif %}
-    </div>
+{% endfor %}
 </div>
