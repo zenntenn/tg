@@ -55,7 +55,7 @@ class MtAHuman(Human):
         "technology",
         "cosmology",
         "enigmas",
-        "esoterica",
+        "finance",
         "law",
         "occult",
         "politics",
@@ -107,7 +107,7 @@ class MtAHuman(Human):
     torture = models.IntegerField(default=0)
     cosmology = models.IntegerField(default=0)
     enigmas = models.IntegerField(default=0)
-    esoterica = models.IntegerField(default=0)
+    finance = models.IntegerField(default=0)
     law = models.IntegerField(default=0)
     occult = models.IntegerField(default=0)
     politics = models.IntegerField(default=0)
@@ -115,7 +115,6 @@ class MtAHuman(Human):
     belief_systems = models.IntegerField(default=0)
     cryptography = models.IntegerField(default=0)
     demolitions = models.IntegerField(default=0)
-    finance = models.IntegerField(default=0)
     lore = models.IntegerField(default=0)
     media = models.IntegerField(default=0)
     pharmacopeia = models.IntegerField(default=0)
@@ -430,7 +429,7 @@ class MtAHuman(Human):
             {
                 "cosmology": self.cosmology,
                 "enigmas": self.enigmas,
-                "esoterica": self.esoterica,
+                "finance": self.finance,
                 "law": self.law,
                 "occult": self.occult,
                 "politics": self.politics,
@@ -438,7 +437,6 @@ class MtAHuman(Human):
                 "belief_systems": self.belief_systems,
                 "cryptography": self.cryptography,
                 "demolitions": self.demolitions,
-                "finance": self.finance,
                 "lore": self.lore,
                 "media": self.media,
                 "pharmacopeia": self.pharmacopeia,
