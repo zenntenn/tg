@@ -49,8 +49,7 @@ class MtAHuman(Human):
         "awareness",
         "art",
         "leadership",
-        "martial_arts",
-        "meditation",
+        "larceny" "meditation",
         "research",
         "survival",
         "technology",
@@ -93,7 +92,7 @@ class MtAHuman(Human):
     lucid_dreaming = models.IntegerField(default=0)
     search = models.IntegerField(default=0)
     seduction = models.IntegerField(default=0)
-    martial_arts = models.IntegerField(default=0)
+    larceny = models.IntegerField(default=0)
     meditation = models.IntegerField(default=0)
     research = models.IntegerField(default=0)
     survival = models.IntegerField(default=0)
@@ -385,7 +384,7 @@ class MtAHuman(Human):
         tmp = super().get_skills()
         tmp.update(
             {
-                "martial_arts": self.martial_arts,
+                "larceny": self.larceny,
                 "meditation": self.meditation,
                 "research": self.research,
                 "survival": self.survival,

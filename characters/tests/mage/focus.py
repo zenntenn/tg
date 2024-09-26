@@ -15,7 +15,7 @@ class TestPractice(TestCase):
     def test_abilities(self):
         practice = Practice.objects.create(name="Practice 1")
         practice.abilities.add(
-            Ability.objects.create(name="Martial Arts", property_name="martial_arts")
+            Ability.objects.create(name="Brawl", property_name="brawl")
         )
         practice.abilities.add(
             Ability.objects.create(name="Awareness", property_name="awareness")

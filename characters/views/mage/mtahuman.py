@@ -56,7 +56,7 @@ class MtAHumanCreateView(CreateView):
         "lucid_dreaming",
         "search",
         "seduction",
-        "martial_arts",
+        "larceny",
         "meditation",
         "research",
         "survival",
@@ -202,7 +202,7 @@ class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
         "lucid_dreaming",
         "search",
         "seduction",
-        "martial_arts",
+        "larceny",
         "meditation",
         "research",
         "survival",
@@ -322,7 +322,7 @@ class MtAHumanAbilityView(UpdateView):
         "awareness",
         "art",
         "leadership",
-        "martial_arts",
+        "larceny",
         "meditation",
         "research",
         "survival",
@@ -359,7 +359,7 @@ class MtAHumanAbilityView(UpdateView):
         awareness = form.cleaned_data.get("awareness")
         art = form.cleaned_data.get("art")
         leadership = form.cleaned_data.get("leadership")
-        martial_arts = form.cleaned_data.get("martial_arts")
+        larceny = form.cleaned_data.get("larceny")
         meditation = form.cleaned_data.get("meditation")
         research = form.cleaned_data.get("research")
         survival = form.cleaned_data.get("survival")
@@ -394,7 +394,7 @@ class MtAHumanAbilityView(UpdateView):
             awareness,
             art,
             leadership,
-            martial_arts,
+            larceny,
             meditation,
             research,
             survival,
@@ -445,7 +445,7 @@ class MtAHumanAbilityView(UpdateView):
             + drive
             + etiquette
             + firearms
-            + martial_arts
+            + larceny
             + meditation
             + melee
             + research
