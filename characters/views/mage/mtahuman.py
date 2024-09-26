@@ -71,7 +71,7 @@ class MtAHumanCreateView(CreateView):
         "torture",
         "cosmology",
         "enigmas",
-        "esoterica",
+        "finance",
         "law",
         "occult",
         "politics",
@@ -79,7 +79,6 @@ class MtAHumanCreateView(CreateView):
         "belief_systems",
         "cryptography",
         "demolitions",
-        "finance",
         "lore",
         "media",
         "pharmacopeia",
@@ -217,7 +216,7 @@ class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
         "torture",
         "cosmology",
         "enigmas",
-        "esoterica",
+        "finance",
         "law",
         "occult",
         "politics",
@@ -225,7 +224,6 @@ class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
         "belief_systems",
         "cryptography",
         "demolitions",
-        "finance",
         "lore",
         "media",
         "pharmacopeia",
@@ -329,7 +327,7 @@ class MtAHumanAbilityView(UpdateView):
         "technology",
         "cosmology",
         "enigmas",
-        "esoterica",
+        "finance",
         "law",
         "occult",
         "politics",
@@ -366,7 +364,7 @@ class MtAHumanAbilityView(UpdateView):
         technology = form.cleaned_data.get("technology")
         cosmology = form.cleaned_data.get("cosmology")
         enigmas = form.cleaned_data.get("enigmas")
-        esoterica = form.cleaned_data.get("esoterica")
+        finance = form.cleaned_data.get("finance")
         law = form.cleaned_data.get("law")
         occult = form.cleaned_data.get("occult")
         politics = form.cleaned_data.get("politics")
@@ -401,7 +399,7 @@ class MtAHumanAbilityView(UpdateView):
             technology,
             cosmology,
             enigmas,
-            esoterica,
+            finance,
             law,
             occult,
             politics,
@@ -456,7 +454,7 @@ class MtAHumanAbilityView(UpdateView):
             + computer
             + cosmology
             + enigmas
-            + esoterica
+            + finance
             + investigation
             + law
             + medicine

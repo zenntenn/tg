@@ -191,9 +191,7 @@ def mage_setup():
         name="Cosmology", property_name="cosmology"
     )[0]
     enigmas = Ability.objects.get_or_create(name="Enigmas", property_name="enigmas")[0]
-    esoterica = Ability.objects.get_or_create(
-        name="Esoterica", property_name="esoterica"
-    )[0]
+    finance = Ability.objects.get_or_create(name="Finance", property_name="finance")[0]
     law = Ability.objects.get_or_create(name="Law", property_name="law")[0]
     occult = Ability.objects.get_or_create(name="Occult", property_name="occult")[0]
     politics = Ability.objects.get_or_create(name="Politics", property_name="politics")[
@@ -211,7 +209,6 @@ def mage_setup():
     demolitions = Ability.objects.get_or_create(
         name="Demolitions", property_name="demolitions"
     )[0]
-    finance = Ability.objects.get_or_create(name="Finance", property_name="finance")[0]
     lore = Ability.objects.get_or_create(name="Lore", property_name="lore")[0]
     media = Ability.objects.get_or_create(name="Media", property_name="media")[0]
     pharmacopeia = Ability.objects.get_or_create(

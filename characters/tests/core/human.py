@@ -671,7 +671,7 @@ class TestHuman(TestCase):
                     "firearms",
                     "melee",
                     "academics",
-                    "esoterica",
+                    "occult",
                     "lore",
                     "politics",
                     "science",
