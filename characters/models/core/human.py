@@ -707,10 +707,12 @@ class Human(Character):
         return costs[trait_type]
 
     def freebie_spend_record(self, trait, trait_type, value, cost=None):
+        if cost is None:
+            cost = self.freebie_cost(trait_type)
         return {
             "trait": trait,
             "value": value,
-            "cost": cost or self.freebie_cost(trait_type),
+            "cost": cost,
         }
 
     def xp_cost(self, trait_type, trait_value):

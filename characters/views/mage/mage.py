@@ -377,7 +377,7 @@ class MageCreateView(CreateView):
         "spirit",
         "mind",
         "entropy",
-        "prime",
+        "me",
         "forces",
         "matter",
         "life",
@@ -1047,10 +1047,12 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             cost *= trait.multiplier
             value = 1
             BackgroundRating.objects.create(
-                bg=trait, rating=1, char=self.object
-            )  # TODO: get Note somehow
+                bg=trait, rating=1, char=self.object, note=form.data["note"]
+            )
             self.object.freebies -= cost
             trait = str(trait)
+            if form.data["note"]:
+                trait += f" ({form.data['note']})"
         elif form.data["category"] == "Existing Background":
             trait = BackgroundRating.objects.get(pk=form.data["example"])
             cost *= trait.bg.multiplier
@@ -1116,7 +1118,7 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             self.object.freebies -= cost
         if form.data["category"] != "MeritFlaw":
             self.object.spent_freebies.append(
-                self.object.freebie_spend_record(trait, trait_type, value)
+                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
             )
         else:
             self.object.spent_freebies.append(
@@ -1475,7 +1477,7 @@ class MageLibraryView(SpecialUserMixin, CreateView):
         self.current_library = BackgroundRating.objects.filter(
             char=obj, bg=Background.objects.get(property_name="library"), url=""
         ).first()
-        form.fields["name"].initial = self.curent_library.note
+        form.fields["name"].initial = self.current_library.note
         form.fields["parent"].empty_label = "Choose a Parent Location"
         form.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
@@ -1700,7 +1702,7 @@ class MageSanctumView(SpecialUserMixin, CreateView):
         if total_rating != 0:
             form.add_error(None, "Ratings must total 0")
             return super().form_invalid(form)
-        if total_positive != mage.sanctum:
+        if total_positive != self.current_sanctum.rating:
             form.add_error(None, "Positive Ratings must equal Sanctum rating")
             return super().form_invalid(form)
         rz = RealityZone.objects.create(name=f"{mage.name}'s Sanctum Reality Zone")
