@@ -692,19 +692,9 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
             )
             return super().form_invalid(form)
         for bg in bg_data:
-            bgr = BackgroundRating.objects.create(
+            BackgroundRating.objects.create(
                 bg=bg["bg"], rating=bg["rating"], char=mage, note=bg["note"]
             )
-            if bg.property_name in [
-                "node",
-                "library",
-                "familiar",
-                "wonder",
-                "enhancements",
-                "sanctum",
-                "allies",
-            ]:
-                bgr.completed = False
         self.object.creation_status += 1
         self.object.quintessence = self.object.total_background_rating("avatar")
         self.object.save()
@@ -987,7 +977,6 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
 
 
 class MageFreebiesView(SpecialUserMixin, UpdateView):
-    # TODO: Make more complex for BGs
     model = Mage
     form_class = MageAdvancementForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1264,7 +1253,6 @@ class MageRoteView(SpecialUserMixin, CreateView):
 
 
 class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
-    # TODO: Handle multiple BGs
     form_class = NodeForm
     template_name = "characters/mage/mage/chargen.html"
     formsets = {
@@ -1276,6 +1264,7 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     def form_valid(self, form):
         context = self.get_context_data()
         mage = context["object"]
+
         n = Node(
             name=form.cleaned_data["name"],
             description=form.cleaned_data["description"],
@@ -1289,7 +1278,7 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
             owner=mage.owner,
             status="Sub",
         )
-        n.set_rank(mage.node)
+        n.set_rank(self.current_node.rating)
         n.points -= form.cleaned_data["ratio"]
         n.points -= form.cleaned_data["size"]
 
@@ -1320,7 +1309,7 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         if total_rz != 0:
             form.add_error(None, "Ratings must total 0")
             return super().form_invalid(form)
-        if total_positive != mage.node:
+        if total_positive != self.current_node.rating:
             form.add_error(None, "Positive Ratings must equal Node rating")
             return super().form_invalid(form)
 
@@ -1338,6 +1327,10 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         n.update_output()
         n.save()
 
+        self.current_node.note = n.name
+        self.current_node.url = n.get_absolute_url()
+        self.current_node.save()
+
         for resonance in resonance_data:
             NodeResonanceRating.objects.create(
                 node=n, resonance=resonance["resonance"], rating=resonance["rating"]
@@ -1354,22 +1347,28 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 zone=rzone, practice=rz["practice"], rating=rz["rating"]
             )
 
-        mage.creation_status += 1
-        mage.save()
-        for step in [
-            "library",
-            "familiar",
-            "wonder",
-            "enhancement",
-            "sanctum",
-            "allies",
-        ]:
-            if getattr(mage, step) == 0:
-                mage.creation_status += 1
-            else:
-                mage.save()
-                break
-        mage.save()
+        if (
+            BackgroundRating.objects.filter(
+                char=mage, bg=Background.objects.get(property_name="node"), url=""
+            ).count()
+            == 0
+        ):
+            mage.creation_status += 1
+            mage.save()
+            for step in [
+                "library",
+                "familiar",
+                "wonder",
+                "enhancement",
+                "sanctum",
+                "allies",
+            ]:
+                if getattr(mage, step) == 0:
+                    mage.creation_status += 1
+                else:
+                    mage.save()
+                    break
+            mage.save()
         return HttpResponseRedirect(mage.get_absolute_url())
 
     def get_context_data(self, **kwargs):
@@ -1384,12 +1383,17 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
-        context["points"] = 3 * context["object"].node
+        context["points"] = 3 * self.current_node.rating
+        context["current_node"] = self.current_node
         return context
 
     def get_form(self, form_class=None):
+        mage = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_node = BackgroundRating.objects.filter(
+            char=mage, bg=Background.objects.get(property_name="node"), url=""
+        ).first()
         form = super().get_form(form_class)
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        form.fields["name"].initial = self.current_node.note
         form.fields["quintessence_form"].widget.attrs.update(
             {"placeholder": "Enter quintessence form here"}
         )
@@ -1403,7 +1407,6 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
 
 
 class MageLibraryView(SpecialUserMixin, CreateView):
-    # TODO: Handle multiple BGs
     model = Library
     fields = ["name", "description", "parent"]
     template_name = "characters/mage/mage/chargen.html"
@@ -1420,6 +1423,7 @@ class MageLibraryView(SpecialUserMixin, CreateView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
+        context["current_library"] = self.current_library
         return context
 
     def form_valid(self, form):
@@ -1431,38 +1435,47 @@ class MageLibraryView(SpecialUserMixin, CreateView):
             owner=mage.owner,
             chronicle=mage.chronicle,
             faction=mage.faction,
-            rank=mage.library,
+            rank=self.current_library.rating,
             status="Sub",
         )
         l.save()
         for _ in range(l.rank):
             l.random_book()
 
-        mage.creation_status += 1
-        mage.save()
-        for step in [
-            "familiar",
-            "wonder",
-            "enhancement",
-            "sanctum",
-            "allies",
-        ]:
-            if getattr(mage, step) == 0:
-                mage.creation_status += 1
-            else:
-                mage.save()
-                break
-        mage.save()
-        return HttpResponseRedirect(mage.get_absolute_url())
+        self.current_library.note = l.name
+        self.current_library.url = l.get_absolute_url()
+        self.current_library.save()
 
-    def get_initial(self):
-        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        initial = super().get_initial()
-        initial["name"] = f"{obj.name}'s Library"
-        return initial
+        if (
+            BackgroundRating.objects.filter(
+                char=mage, bg=Background.objects.get(property_name="library"), url=""
+            ).count()
+            == 0
+        ):
+            mage.creation_status += 1
+            mage.save()
+            for step in [
+                "familiar",
+                "wonder",
+                "enhancement",
+                "sanctum",
+                "allies",
+            ]:
+                if getattr(mage, step) == 0:
+                    mage.creation_status += 1
+                else:
+                    mage.save()
+                    break
+            mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_library = BackgroundRating.objects.filter(
+            char=obj, bg=Background.objects.get(property_name="library"), url=""
+        ).first()
+        form.fields["name"].initial = self.curent_library.note
         form.fields["parent"].empty_label = "Choose a Parent Location"
         form.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
@@ -1480,7 +1493,6 @@ class MageFamiliarView:
 
 
 class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
-    # TODO: Handle multiple BGs
     form_class = WonderForm
     formsets = {
         "effects_form": EffectFormSet,
@@ -1507,6 +1519,7 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
             context["object"], self.request.user
         )
         context["points"] = 3 * context["object"].wonder
+        context["current_wonder"] = self.current_wonder
         return context
 
     def form_valid(self, form):
@@ -1518,7 +1531,7 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         del form.cleaned_data["wonder_type"]
         w = self.wonder_classes[wonder_type](
             **form.cleaned_data,
-            rank=mage.wonder,
+            rank=self.current_wonder.rating,
             owned_by=mage,
             chronicle=mage.chronicle,
             owner=mage.owner,
@@ -1595,24 +1608,38 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 rating=resonance["rating"],
             )
 
-        mage.creation_status += 1
-        mage.save()
-        for step in [
-            "enhancement",
-            "sanctum",
-            "allies",
-        ]:
-            if getattr(mage, step) == 0:
-                mage.creation_status += 1
-            else:
-                mage.save()
-                break
-        mage.save()
+        self.current_wonder.note = w.name
+        self.current_wonder.url = w.get_absolute_url()
+        self.current_wonder.save()
+
+        if (
+            BackgroundRating.objects.filter(
+                char=mage, bg=Background.objects.get(property_name="wonder"), url=""
+            ).count()
+            == 0
+        ):
+            mage.creation_status += 1
+            mage.save()
+            for step in [
+                "enhancement",
+                "sanctum",
+                "allies",
+            ]:
+                if getattr(mage, step) == 0:
+                    mage.creation_status += 1
+                else:
+                    mage.save()
+                    break
+            mage.save()
         return HttpResponseRedirect(mage.get_absolute_url())
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_wonder = BackgroundRating.objects.filter(
+            char=obj, bg=Background.objects.get(property_name="wonder"), url=""
+        ).first()
+        form.fields["name"].initial = self.current_wonder.note
         form.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
         )
@@ -1627,7 +1654,6 @@ class MageEnhancementView:
 
 
 class MageSanctumView(SpecialUserMixin, CreateView):
-    # TODO: Handle multiple BGs
     model = Sanctum
     form_class = SanctumForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1647,6 +1673,7 @@ class MageSanctumView(SpecialUserMixin, CreateView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
+        context["current_sanctum"] = self.current_sanctum
         return context
 
     def form_valid(self, form):
@@ -1679,36 +1706,52 @@ class MageSanctumView(SpecialUserMixin, CreateView):
         rz = RealityZone.objects.create(name=f"{mage.name}'s Sanctum Reality Zone")
         for p, r in pairs:
             ZoneRating.objects.create(zone=rz, practice=p, rating=r)
+
+        s = form.save(mage, reality_zone=rz)
+
+        self.current_sanctum.note = s.name
+        self.current_sanctum.url = s.get_absolute_url()
+        self.current_sanctum.save()
         if form.save(mage, reality_zone=rz):
-            mage.creation_status += 1
-            mage.save()
-            for step in [
-                "allies",
-            ]:
-                if getattr(mage, step) == 0:
-                    mage.creation_status += 1
-                else:
-                    mage.save()
-                    break
-            mage.save()
+            if (
+                BackgroundRating.objects.filter(
+                    char=mage,
+                    bg=Background.objects.get(property_name="sanctum"),
+                    url="",
+                ).count()
+                == 0
+            ):
+                mage.creation_status += 1
+                mage.save()
+                for step in [
+                    "allies",
+                ]:
+                    if getattr(mage, step) == 0:
+                        mage.creation_status += 1
+                    else:
+                        mage.save()
+                        break
+                mage.save()
             return HttpResponseRedirect(mage.get_absolute_url())
         return super().form_invalid(form)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_sanctum = BackgroundRating.objects.filter(
+            char=obj, bg=Background.objects.get(property_name="sanctum"), url=""
+        ).first()
+        form.fields["name"].initial = self.current_sanctum.note
         form.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
         )
-        mage_id = self.kwargs.get("pk")
-        mage = Mage.objects.get(id=mage_id)
         form.fields["parent"].queryset = LocationModel.objects.filter(
-            chronicle=mage.chronicle
+            chronicle=obj.chronicle
         )
         return form
 
 
 class MageAlliesView(SpecialUserMixin, FormView):
-    # TODO: Handle multiple BGs
     form_class = AllyForm
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1726,6 +1769,7 @@ class MageAlliesView(SpecialUserMixin, FormView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
+        context["current_ally"] = self.current_ally
         return context
 
     def form_valid(self, form):
@@ -1736,15 +1780,35 @@ class MageAlliesView(SpecialUserMixin, FormView):
             name=form.cleaned_data["name"],
             concept=form.cleaned_data["name"],
             notes=form.cleaned_data["name"]
-            + f"<br> Rank {mage.allies} Ally for {mage.name}",
+            + f"<br> Rank {self.current_ally.rating} Ally for {mage.name}",
             chronicle=mage.chronicle,
             npc=True,
             status="Un",
         )
         mage.allied_characters.add(a)
-        mage.creation_status += 1
-        mage.save()
+
+        self.current_ally.note = a.name
+        self.current_ally.url = a.get_absolute_url()
+        self.current_ally.save()
+
+        if (
+            BackgroundRating.objects.filter(
+                char=mage, bg=Background.objects.get(property_name="allies"), url=""
+            ).count()
+            == 0
+        ):
+            mage.creation_status += 1
+            mage.save()
         return HttpResponseRedirect(mage.get_absolute_url())
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_ally = BackgroundRating.objects.filter(
+            char=obj, bg=Background.objects.get(property_name="allies"), url=""
+        ).first()
+        form.fields["name"].initial = self.current_ally.note
+        return form
 
 
 class MageSpecialtiesView(SpecialUserMixin, FormView):

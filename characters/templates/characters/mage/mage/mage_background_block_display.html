@@ -13,7 +13,15 @@
             </div>
             <div class="row">
             {% endif %}
-            <div class="col-sm-2">{{ bg.bg }} {% if bg.note %}({{ bg.note|safe }}) {% endif %}</div>
+            <div class="col-sm-2">
+                {% if bg.url %}
+                <a href="{{ bg.url }}">{{ bg.bg }}
+                {% if bg.note %}({{ bg.note|safe }}){% endif %}</a>
+                {% else %}
+                {{ bg.bg }}
+                {% if bg.note %}({{ bg.note|safe }}){% endif %}
+                {% endif %}
+            </div>
             <div class="col-sm-2 dots">{{ bg.rating|dots }}</div>
             {% if forloop.last %}</div>{% endif %}
     {% empty %}
