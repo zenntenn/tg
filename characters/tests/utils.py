@@ -160,9 +160,7 @@ def mage_setup():
     seduction = Ability.objects.get_or_create(
         name="Seduction", property_name="seduction"
     )[0]
-    martial_arts = Ability.objects.get_or_create(
-        name="Martial Arts", property_name="martial_arts"
-    )[0]
+    larceny = Ability.objects.get_or_create(name="Larceny", property_name="larceny")[0]
     meditation = Ability.objects.get_or_create(
         name="Meditation", property_name="meditation"
     )[0]

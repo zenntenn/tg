@@ -669,7 +669,6 @@ class TestHuman(TestCase):
                     "athletics",
                     "crafts",
                     "firearms",
-                    "martial_arts",
                     "melee",
                     "academics",
                     "esoterica",
