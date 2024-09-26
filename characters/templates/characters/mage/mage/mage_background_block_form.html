@@ -13,6 +13,7 @@
         <div class="row form-row">
             <div class="col-sm">{{ f.bg }}</div>
             <div class="col-sm">{{ f.rating }}</div>
+            <div class="col-sm">{{ f.note }}</div>
         </div>
     {% endfor %}
 </div>
@@ -21,6 +22,7 @@
     <div class="row form-row">
         <div class="col-sm">{{ bg_form_context.empty_form.bg }}</div>
         <div class="col-sm">{{ bg_form_context.empty_form.rating }}</div>
+        <div class="col-sm">{{ bg_form_context.empty_form.note }}</div>
     </div>
 </div>
 <button type="button" id="{{ bg_form_context.add_button_id }}">Add Background</button>

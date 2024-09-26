@@ -7,7 +7,8 @@ CATEGORY_CHOICES = [
     ("-----", "-----"),
     ("Attribute", "Attribute"),
     ("Ability", "Ability"),
-    ("Background", "Background"),
+    ("New Background", "New Background"),
+    ("Existing Background", "Existing Background"),
     ("Willpower", "Willpower"),
     ("MeritFlaw", "MeritFlaw"),
 ]
@@ -25,7 +26,8 @@ class AdvancementForm(forms.Form):
             ("-----", "-----"),
             ("Attribute", "Attribute"),
             ("Ability", "Ability"),
-            ("Background", "Background"),
+            ("New Background", "New Background"),
+            ("Existing Background", "Existing Background"),
             ("Willpower", "Willpower"),
             ("MeritFlaw", "MeritFlaw"),
         ]

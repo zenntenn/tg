@@ -5,7 +5,7 @@ from django.db import models
 class Background(Statistic):
     type = "background"
 
-    models.IntegerField(default=1)
+    multiplier = models.IntegerField(default=1)
 
 
 class BackgroundRating(models.Model):
@@ -18,6 +18,10 @@ class BackgroundRating(models.Model):
     )
     rating = models.IntegerField(default=0)
     note = models.CharField(default="", max_length=100)
+    complete = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ["bg"]
+        ordering = ["bg__name"]
+
+    def __str__(self):
+        return f"{self.bg} ({self.note})"

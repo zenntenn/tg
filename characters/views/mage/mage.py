@@ -120,12 +120,13 @@ class LoadExamplesView(View):
                 for x in examples
                 if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
             ]
-        elif category_choice == "Background":
-            examples = Background.objects.order_by("name")
+        elif category_choice == "New Background":
+            examples = Background.objects.filter(
+                property_name__in=m.allowed_backgrounds
+            ).order_by("name")
+        elif category_choice == "Existing Background":
             examples = [
-                x
-                for x in examples
-                if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
+                x for x in BackgroundRating.objects.filter(char=m, rating__lt=5)
             ]
         elif category_choice == "MeritFlaw":
             mage = ObjectType.objects.get(name="mage")
@@ -684,14 +685,26 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
         for res in bg_data:
             res["bg"] = Background.objects.get(id=res["bg"])
             res["rating"] = int(res["rating"])
-        total_bg = sum([x["rating"] for x in bg_data])
+        total_bg = sum([x["rating"] * x["bg"].multiplier for x in bg_data])
         if total_bg != self.object.background_points:
             form.add_error(
                 None, f"Backgrounds must total {self.object.background_points} points"
             )
             return super().form_invalid(form)
         for bg in bg_data:
-            BackgroundRating.objects.create(bg=bg["bg"], rating=bg["rating"], char=mage)
+            bgr = BackgroundRating.objects.create(
+                bg=bg["bg"], rating=bg["rating"], char=mage, note=bg["note"]
+            )
+            if bg.property_name in [
+                "node",
+                "library",
+                "familiar",
+                "wonder",
+                "enhancements",
+                "sanctum",
+                "allies",
+            ]:
+                bgr.completed = False
         self.object.creation_status += 1
         self.object.quintessence = self.object.total_background_rating("avatar")
         self.object.save()
@@ -974,6 +987,7 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
 
 
 class MageFreebiesView(SpecialUserMixin, UpdateView):
+    # TODO: Make more complex for BGs
     model = Mage
     form_class = MageAdvancementForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1002,7 +1016,15 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             return super().form_invalid(form)
         elif (
             form.data["category"]
-            in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
+            in [
+                "Attribute",
+                "Ability",
+                "New Background",
+                "Existing Background",
+                "Sphere",
+                "Tenet",
+                "Practice",
+            ]
             and form.data["example"] == ""
         ):
             form.add_error(None, "Must Choose Trait")
@@ -1011,6 +1033,8 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             form.add_error(None, "Must Choose Resonance")
             return super().form_invalid(form)
         trait_type = form.data["category"].lower()
+        if "background" in trait_type:
+            trait_type = "background"
         cost = self.object.freebie_cost(trait_type)
         if cost == "rating":
             cost = int(form.data["value"])
@@ -1029,12 +1053,23 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             self.object.add_ability(trait.property_name)
             self.object.freebies -= cost
             trait = trait.name
-        elif form.data["category"] == "Background":
+        elif form.data["category"] == "New Background":
             trait = Background.objects.get(pk=form.data["example"])
-            value = getattr(self.object, trait.property_name) + 1
-            self.object.add_background(trait.property_name)
+            cost *= trait.multiplier
+            value = 1
+            BackgroundRating.objects.create(
+                bg=trait, rating=1, char=self.object
+            )  # TODO: get Note somehow
             self.object.freebies -= cost
-            trait = trait.name
+            trait = str(trait)
+        elif form.data["category"] == "Existing Background":
+            trait = BackgroundRating.objects.get(pk=form.data["example"])
+            cost *= trait.bg.multiplier
+            value = trait.rating + 1
+            trait.rating += 1
+            trait.save()
+            self.object.freebies -= cost
+            trait = str(trait)
         elif form.data["category"] == "Willpower":
             trait = "Willpower"
             value = self.object.willpower + 1
@@ -1229,6 +1264,7 @@ class MageRoteView(SpecialUserMixin, CreateView):
 
 
 class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
+    # TODO: Handle multiple BGs
     form_class = NodeForm
     template_name = "characters/mage/mage/chargen.html"
     formsets = {
@@ -1367,6 +1403,7 @@ class MageNodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
 
 
 class MageLibraryView(SpecialUserMixin, CreateView):
+    # TODO: Handle multiple BGs
     model = Library
     fields = ["name", "description", "parent"]
     template_name = "characters/mage/mage/chargen.html"
@@ -1434,6 +1471,7 @@ class MageLibraryView(SpecialUserMixin, CreateView):
 
 
 class MageFamiliarView:
+    # TODO: Handle multiple BGs
     # Skip if Wonder == 0
     # Skip if Enhancement == 0
     # skip if sanctum == 0
@@ -1442,6 +1480,7 @@ class MageFamiliarView:
 
 
 class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
+    # TODO: Handle multiple BGs
     form_class = WonderForm
     formsets = {
         "effects_form": EffectFormSet,
@@ -1581,12 +1620,14 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
 
 
 class MageEnhancementView:
+    # TODO: Handle multiple BGs
     # skip if sanctum == 0
     # skip if allies == 0
     pass
 
 
 class MageSanctumView(SpecialUserMixin, CreateView):
+    # TODO: Handle multiple BGs
     model = Sanctum
     form_class = SanctumForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1667,6 +1708,7 @@ class MageSanctumView(SpecialUserMixin, CreateView):
 
 
 class MageAlliesView(SpecialUserMixin, FormView):
+    # TODO: Handle multiple BGs
     form_class = AllyForm
     template_name = "characters/mage/mage/chargen.html"
 

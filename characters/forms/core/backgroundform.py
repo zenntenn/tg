@@ -7,7 +7,7 @@ from django.forms import BaseInlineFormSet, inlineformset_factory
 class BackgroundRatingForm(forms.ModelForm):
     class Meta:
         model = BackgroundRating
-        fields = ["bg", "rating"]
+        fields = ["bg", "rating", "note"]
 
     bg = forms.ModelChoiceField(
         queryset=Background.objects.all(), empty_label="Choose a Background"
