@@ -7,6 +7,42 @@ from django.urls import reverse
 class MtAHuman(Human):
     type = "mta_human"
 
+    allowed_backgrounds = [
+        "contacts",
+        "mentor",
+        "allies",
+        "alternate_identity",
+        "arcane",
+        "avatar",
+        "backup",
+        "blessing",
+        "certification",
+        "chantry",
+        "cult",
+        "demesne",
+        "destiny",
+        "dream",
+        "enhancement",
+        "fame",
+        "familiar",
+        "influence",
+        "legend",
+        "library",
+        "node",
+        "past_lives",
+        "patron",
+        "rank",
+        "requisitions",
+        "resources",
+        "retainers",
+        "sanctum",
+        "secret_weapons",
+        "spies",
+        "status_background",
+        "totem",
+        "wonder",
+    ]
+
     gameline = "mta"
 
     primary_abilities = [
@@ -131,38 +167,6 @@ class MtAHuman(Human):
     unconventional_warface = models.IntegerField(default=0)
     vice = models.IntegerField(default=0)
 
-    allies = models.IntegerField(default=0)
-    alternate_identity = models.IntegerField(default=0)
-    arcane = models.IntegerField(default=0)
-    avatar = models.IntegerField(default=0)
-    backup = models.IntegerField(default=0)
-    blessing = models.IntegerField(default=0)
-    certification = models.IntegerField(default=0)
-    chantry = models.IntegerField(default=0)
-    cult = models.IntegerField(default=0)
-    demesne = models.IntegerField(default=0)
-    destiny = models.IntegerField(default=0)
-    dream = models.IntegerField(default=0)
-    enhancement = models.IntegerField(default=0)
-    fame = models.IntegerField(default=0)
-    familiar = models.IntegerField(default=0)
-    influence = models.IntegerField(default=0)
-    legend = models.IntegerField(default=0)
-    library = models.IntegerField(default=0)
-    node = models.IntegerField(default=0)
-    past_lives = models.IntegerField(default=0)
-    patron = models.IntegerField(default=0)
-    rank = models.IntegerField(default=0)
-    requisitions = models.IntegerField(default=0)
-    resources = models.IntegerField(default=0)
-    retainers = models.IntegerField(default=0)
-    sanctum = models.IntegerField(default=0)
-    secret_weapons = models.IntegerField(default=0)
-    spies = models.IntegerField(default=0)
-    status_background = models.IntegerField(default=0)
-    totem = models.IntegerField(default=0)
-    wonder = models.IntegerField(default=0)
-
     allied_characters = models.ManyToManyField(Character, blank=True)
 
     background_points = 7
@@ -170,6 +174,126 @@ class MtAHuman(Human):
     class Meta:
         verbose_name = "Human (Mage)"
         verbose_name_plural = "Humans (Mage)"
+
+    @property
+    def destiny(self):
+        return self.total_background_rating("destiny")
+
+    @property
+    def demesne(self):
+        return self.total_background_rating("demesne")
+
+    @property
+    def cult(self):
+        return self.total_background_rating("cult")
+
+    @property
+    def chantry(self):
+        return self.total_background_rating("chantry")
+
+    @property
+    def certification(self):
+        return self.total_background_rating("certification")
+
+    @property
+    def backup(self):
+        return self.total_background_rating("backup")
+
+    @property
+    def blessing(self):
+        return self.total_background_rating("blessing")
+
+    @property
+    def avatar(self):
+        return self.total_background_rating("avatar")
+
+    @property
+    def arcane(self):
+        return self.total_background_rating("arcane")
+
+    @property
+    def alternate_identity(self):
+        return self.total_background_rating("alternate_identity")
+
+    @property
+    def past_lives(self):
+        return self.total_background_rating("past_lives")
+
+    @property
+    def node(self):
+        return self.total_background_rating("node")
+
+    @property
+    def library(self):
+        return self.total_background_rating("library")
+
+    @property
+    def legend(self):
+        return self.total_background_rating("legend")
+
+    @property
+    def influence(self):
+        return self.total_background_rating("influence")
+
+    @property
+    def familiar(self):
+        return self.total_background_rating("familiar")
+
+    @property
+    def enhancement(self):
+        return self.total_background_rating("enhancement")
+
+    @property
+    def fame(self):
+        return self.total_background_rating("fame")
+
+    @property
+    def dream(self):
+        return self.total_background_rating("dream")
+
+    @property
+    def allies(self):
+        return self.total_background_rating("allies")
+
+    @property
+    def wonder(self):
+        return self.total_background_rating("wonder")
+
+    @property
+    def status_background(self):
+        return self.total_background_rating("status_background")
+
+    @property
+    def spies(self):
+        return self.total_background_rating("spies")
+
+    @property
+    def secret_weapons(self):
+        return self.total_background_rating("secret_weapons")
+
+    @property
+    def sanctum(self):
+        return self.total_background_rating("sanctum")
+
+    @property
+    def retainers(self):
+        return self.total_background_rating("retainers")
+
+    @property
+    def resources(self):
+        return self.total_background_rating("resources")
+
+    @property
+    def requisitions(self):
+        return self.total_background_rating("requisitions")
+
+    @property
+    def rank(self):
+        return self.total_background_rating("rank")
+
+    @property
+    def patron(self):
+        return self.total_background_rating("patron")
 
     def get_heading(self):
         return "mta_heading"

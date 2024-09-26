@@ -7,7 +7,8 @@ CATEGORY_CHOICES = [
     ("-----", "-----"),
     ("Attribute", "Attribute"),
     ("Ability", "Ability"),
-    ("Background", "Background"),
+    ("New Background", "New Background"),
+    ("Existing Background", "Existing Background"),
     ("Willpower", "Willpower"),
     ("MeritFlaw", "MeritFlaw"),
 ]
@@ -17,6 +18,7 @@ class AdvancementForm(forms.Form):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
     example = forms.ModelChoiceField(queryset=Attribute.objects.none(), required=False)
     value = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)
+    note = forms.CharField(max_length=300, required=False)
 
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop("instance", None)
@@ -25,7 +27,8 @@ class AdvancementForm(forms.Form):
             ("-----", "-----"),
             ("Attribute", "Attribute"),
             ("Ability", "Ability"),
-            ("Background", "Background"),
+            ("New Background", "New Background"),
+            ("Existing Background", "Existing Background"),
             ("Willpower", "Willpower"),
             ("MeritFlaw", "MeritFlaw"),
         ]

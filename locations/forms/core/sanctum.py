@@ -24,7 +24,7 @@ class SanctumForm(forms.Form):
         if reality_zone is not None:
             s.reality_zone = reality_zone
             s.save()
-        return True
+        return s
 
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop("instance", None)

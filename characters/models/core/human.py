@@ -2,6 +2,7 @@ import random
 from datetime import date, timedelta
 
 from characters.models.core.archetype import Archetype
+from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.character import Character
 from characters.models.core.derangement import Derangement
 from characters.models.core.meritflaw import MeritFlaw, MeritFlawRating
@@ -19,6 +20,8 @@ class Human(Character):
     type = "human"
 
     gameline = "wod"
+
+    allowed_backgrounds = ["contacts", "mentor"]
 
     nature = models.ForeignKey(
         Archetype,
@@ -69,9 +72,6 @@ class Human(Character):
 
     specialties = models.ManyToManyField(Specialty, blank=True)
 
-    contacts = models.IntegerField(default=0)
-    mentor = models.IntegerField(default=0)
-
     languages = models.ManyToManyField(Language, blank=True)
 
     willpower = models.IntegerField(default=3)
@@ -119,6 +119,24 @@ class Human(Character):
 
     def get_heading(self):
         return "wod_heading"
+
+    def total_background_rating(self, bg_name):
+        return sum(
+            [
+                x.rating
+                for x in BackgroundRating.objects.filter(
+                    bg__property_name=bg_name, char=self
+                )
+            ]
+        )
+
+    @property
+    def contacts(self):
+        return self.total_background_rating("contacts")
+
+    @property
+    def mentor(self):
+        return self.total_background_rating("mentor")
 
     def num_languages(self):
         mf_list = self.merits_and_flaws.all().values_list("name", flat=True)
@@ -551,7 +569,28 @@ class Human(Character):
         }
 
     def add_background(self, background, maximum=5):
-        return add_dot(self, background, maximum)
+        if isinstance(background, str):
+            bg = Background.objects.get(property_name=background)
+            ratings = BackgroundRating.objects.filter(char=self, bg=bg)
+            if ratings.filter(rating__lt=5).count() > 0:
+                background = ratings.filter(rating__lt=5).first()
+            else:
+                background = BackgroundRating.objects.create(char=self, bg=bg)
+        elif isinstance(background, Background):
+            ratings = BackgroundRating.objects.filter(char=self, bg=background)
+            if ratings.filter(rating__lt=5).count() > 0:
+                background = ratings.filter(rating__lt=5).first()
+            else:
+                background = BackgroundRating.objects.create(char=self, bg=background)
+        else:
+            raise ValueError(
+                "Must be a background name, Background object, or BackgroundRating object"
+            )
+        if background.rating == 5:
+            return False
+        background.rating += 1
+        background.save()
+        return True
 
     def total_backgrounds(self):
         return sum(self.get_backgrounds().values())
@@ -668,10 +707,12 @@ class Human(Character):
         return costs[trait_type]
 
     def freebie_spend_record(self, trait, trait_type, value, cost=None):
+        if cost is None:
+            cost = self.freebie_cost(trait_type)
         return {
             "trait": trait,
             "value": value,
-            "cost": cost or self.freebie_cost(trait_type),
+            "cost": cost,
         }
 
     def xp_cost(self, trait_type, trait_value):
