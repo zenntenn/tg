@@ -7,6 +7,7 @@ from characters.models.changeling.legacy import Legacy
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute import Attribute
+from characters.models.core.background import Background
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.mage.effect import Effect
@@ -48,6 +49,9 @@ def human_setup():
         0
     ]
     Attribute.objects.get_or_create(name="Appearance", property_name="appearance")[0]
+
+    Background.objects.get_or_create(name="Contacts", property_name="contacts")[0]
+    Background.objects.get_or_create(name="Mentor", property_name="mentor")[0]
 
 
 def vampire_setup():

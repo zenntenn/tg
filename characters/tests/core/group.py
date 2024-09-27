@@ -1,6 +1,7 @@
 from characters.models.core import Group
 from characters.models.core.human import Human
 from characters.models.core.specialty import Specialty
+from characters.tests.utils import human_setup
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -24,6 +25,7 @@ class TestGroupDetailView(TestCase):
 
 class TestRandomGroup(TestCase):
     def setUp(self):
+        human_setup()
         self.group = Group.objects.create()
         for key in list(Human().get_abilities().keys()) + list(
             Human().get_attributes().keys()

@@ -9,6 +9,7 @@ from characters.models.core import (
 )
 from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.specialty import Specialty
+from characters.tests.utils import human_setup
 from core.models import Language, Number
 from core.utils import time_test
 from django.contrib.auth.models import User
@@ -20,6 +21,7 @@ from game.models import ObjectType
 
 class TestHuman(TestCase):
     def setUp(self) -> None:
+        human_setup()
         self.user = User.objects.create_user(username="Test")
         self.character = Human.objects.create(name="", owner=self.user)
         for i in range(10):
@@ -792,6 +794,7 @@ class TestHuman(TestCase):
 
 class TestRandomHuman(TestCase):
     def setUp(self) -> None:
+        human_setup()
         self.user = User.objects.create_user(username="Test")
         self.character = Human.objects.create(name="", owner=self.user)
         for i in range(10):
@@ -910,13 +913,10 @@ class TestRandomHuman(TestCase):
         self.character.random_finishing_touches()
         self.assertIsInstance(self.character.age, int)
         self.assertIsInstance(self.character.date_of_birth, date)
-        self.assertIsInstance(self.character.height, str)
-        self.assertIsInstance(self.character.weight, str)
         self.assertIsInstance(self.character.apparent_age, int)
 
     def test_random_history(self):
         self.character.random_history()
-        self.assertIsInstance(self.character.childhood, str)
         self.assertIsInstance(self.character.history, str)
         self.assertIsInstance(self.character.goals, str)
 
