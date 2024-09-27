@@ -453,18 +453,18 @@ class Human(Character):
         return triple == [tertiary, secondary, primary]
 
     def random_name(self, ethnicity=None):
-        if self.ethnicity is None:
-            ethnicity = random_ethnicity()
+        ethnicity = random_ethnicity()
         sex = random.random()
         if sex < 0.495:
-            self.sex = "Male"
+            sex = "Male"
             gender = "m"
         elif sex < 0.99:
-            self.sex = "Female"
+            sex = "Female"
             gender = "f"
         else:
-            self.sex = "Other"
+            sex = "Other"
             gender = "mf"
+        self.notes += f"\nEthnicity: {ethnicity}, Sex {sex}"
         if not self.has_name():
             name = random_name(gender, ethnicity)
             count = 0
