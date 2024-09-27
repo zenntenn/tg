@@ -7,6 +7,7 @@ from characters.models.core import (
     MeritFlaw,
     MeritFlawRating,
 )
+from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.specialty import Specialty
 from core.models import Language, Number
 from core.utils import time_test
@@ -597,6 +598,8 @@ class TestHuman(TestCase):
     def test_language_merit(self):
         m = MeritFlaw.objects.create(name="Language")
         m.add_ratings([1, 2, 3, 4, 5])
+        self.character.status = "Ran"
+        self.character.save()
         self.assertEqual(self.character.languages.count(), 0)
         for i in range(5):
             self.character.add_mf(m, i + 1)
@@ -604,6 +607,8 @@ class TestHuman(TestCase):
 
     def test_natural_linguist_merit(self):
         self.assertEqual(self.character.languages.count(), 0)
+        self.character.status = "Ran"
+        self.character.save()
         nl = MeritFlaw.objects.create(name="Natural Linguist")
         nl.add_rating(1)
         m = MeritFlaw.objects.create(name="Language")
@@ -612,7 +617,7 @@ class TestHuman(TestCase):
         for i in range(5):
             self.character.add_mf(m, i + 1)
             self.assertEqual(self.character.languages.count(), 2 * (i + 1))
-        lt = Human.objects.create(name="language tester", owner=self.user)
+        lt = Human.objects.create(name="language tester", owner=self.user, status="Ran")
         self.assertEqual(lt.languages.count(), 0)
         lt.add_mf(m, 1)
         self.assertEqual(lt.languages.count(), 1)
@@ -690,8 +695,14 @@ class TestHuman(TestCase):
                 "mentor": 0,
             },
         )
-        self.character.contacts = 3
-        self.character.mentor = 2
+        contacts = Background.objects.get_or_create(
+            name="Contacts", property_name="contacts"
+        )[0]
+        BackgroundRating.objects.create(char=self.character, bg=contacts, rating=3)
+        mentor = Background.objects.get_or_create(
+            name="Mentor", property_name="mentor"
+        )[0]
+        BackgroundRating.objects.create(char=self.character, bg=mentor, rating=2)
         self.assertEqual(
             self.character.get_backgrounds(),
             {
@@ -701,21 +712,34 @@ class TestHuman(TestCase):
         )
 
     def test_add_background(self):
+        Background.objects.create(property_name="contacts")
         total = self.character.total_backgrounds()
         self.assertTrue(self.character.add_background("contacts"))
         self.assertEqual(self.character.total_backgrounds(), total + 1)
 
     def test_filter_backgrounds(self):
         self.assertEqual(len(self.character.filter_backgrounds()), 2)
-        self.character.contacts = 4
-        self.character.mentor = 2
+        contacts = Background.objects.get_or_create(
+            name="Contacts", property_name="contacts"
+        )[0]
+        BackgroundRating.objects.create(char=self.character, bg=contacts, rating=4)
+        mentor = Background.objects.get_or_create(
+            name="Mentor", property_name="mentor"
+        )[0]
+        BackgroundRating.objects.create(char=self.character, bg=mentor, rating=2)
         self.assertEqual(len(self.character.filter_backgrounds(minimum=3)), 1)
         self.assertEqual(len(self.character.filter_backgrounds(maximum=3)), 1)
 
     def test_has_backgrounds(self):
         self.assertFalse(self.character.has_backgrounds())
-        self.character.contacts = 2
-        self.character.mentor = 3
+        contacts = Background.objects.get_or_create(
+            name="Contacts", property_name="contacts"
+        )[0]
+        BackgroundRating.objects.create(char=self.character, bg=contacts, rating=2)
+        mentor = Background.objects.get_or_create(
+            name="Mentor", property_name="mentor"
+        )[0]
+        BackgroundRating.objects.create(char=self.character, bg=mentor, rating=3)
         self.assertTrue(self.character.has_backgrounds())
 
     def test_notes_field(self):
@@ -749,6 +773,8 @@ class TestHuman(TestCase):
         self.assertEqual([0, 5, 5], l)
 
     def test_total_backgrounds(self):
+        Background.objects.get_or_create(name="Contacts", property_name="contacts")[0]
+        Background.objects.get_or_create(name="Mentor", property_name="mentor")[0]
         self.character.add_background("contacts")
         self.character.add_background("mentor")
         self.assertEqual(self.character.total_backgrounds(), 2)
