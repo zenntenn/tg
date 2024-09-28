@@ -48,8 +48,6 @@ class CtDHumanCreateView(CreateView):
         "investigation",
         "medicine",
         "science",
-        "contacts",
-        "mentor",
         "willpower",
         "age",
         "apparent_age",
@@ -67,14 +65,6 @@ class CtDHumanCreateView(CreateView):
         "law",
         "politics",
         "technology",
-        "chimera",
-        "dreamers",
-        "holdings",
-        "remembrance",
-        "resources",
-        "retinue",
-        "title",
-        "treasure",
     ]
     template_name = "characters/changeling/ctdhuman/form.html"
 
@@ -112,8 +102,6 @@ class CtDHumanUpdateView(SpecialUserMixin, UpdateView):
         "investigation",
         "medicine",
         "science",
-        "contacts",
-        "mentor",
         "willpower",
         "age",
         "apparent_age",
@@ -131,14 +119,6 @@ class CtDHumanUpdateView(SpecialUserMixin, UpdateView):
         "law",
         "politics",
         "technology",
-        "chimera",
-        "dreamers",
-        "holdings",
-        "remembrance",
-        "resources",
-        "retinue",
-        "title",
-        "treasure",
     ]
     template_name = "characters/changeling/ctdhuman/form.html"
 

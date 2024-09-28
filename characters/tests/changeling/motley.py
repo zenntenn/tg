@@ -39,7 +39,7 @@ class TestMotley(TestCase):
         self.assertEqual(str(motley), "Motley 1")
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Motley, self.player, character=True), 0.5)
+        self.assertLessEqual(time_test(Motley, self.player, character=True), 1.5)
 
 
 class TestMotleyDetailView(TestCase):

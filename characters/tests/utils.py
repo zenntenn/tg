@@ -624,6 +624,15 @@ def changeling_setup():
     for i in range(5):
         c = Changeling.objects.create(name=f"Character {i}")
 
+    Background.objects.get_or_create(property_name="chimera")[0]
+    Background.objects.get_or_create(property_name="dreamers")[0]
+    Background.objects.get_or_create(property_name="holdings")[0]
+    Background.objects.get_or_create(property_name="remembrance")[0]
+    Background.objects.get_or_create(property_name="resources")[0]
+    Background.objects.get_or_create(property_name="retinue")[0]
+    Background.objects.get_or_create(property_name="title")[0]
+    Background.objects.get_or_create(property_name="treasure")[0]
+
     for i in range(10):
         Kith.objects.create(
             name=f"Kith {i}",
@@ -636,7 +645,6 @@ def changeling_setup():
             court=["seelie", "unseelie"][i % 2],
             boon="",
             flaw="",
-            factions=[],
         )
         Legacy.objects.create(
             name=f"Legacy {i}",

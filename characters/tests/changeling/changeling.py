@@ -51,7 +51,7 @@ class TestChangeling(TestCase):
         self.assertFalse(self.character.eligible_for_house())
         self.character.title = 1
         self.assertTrue(self.character.eligible_for_house())
-        self.character.title = 0
+        self.character.backgrounds.filter(bg__property_name="title").delete()
         self.assertFalse(self.character.eligible_for_house())
         self.character.kith = Kith.objects.create(name="Arcadian Sidhe")
         self.assertTrue(self.character.eligible_for_house())
@@ -62,7 +62,7 @@ class TestChangeling(TestCase):
         self.assertFalse(self.character.has_house())
         self.assertTrue(self.character.set_house(House.objects.get(name="House 0")))
         self.assertTrue(self.character.has_house())
-        self.character.title = 0
+        self.character.backgrounds.filter(bg__property_name="title").delete()
         self.assertFalse(self.character.has_house())
         self.character.house = None
         self.assertTrue(self.character.has_house())
@@ -74,7 +74,7 @@ class TestChangeling(TestCase):
         self.character.court = "seelie"
         self.assertTrue(self.character.set_house(House.objects.get(name="House 0")))
         self.assertTrue(self.character.has_house())
-        self.character.title = 0
+        self.character.backgrounds.filter(bg__property_name="title").delete()
         self.assertFalse(self.character.has_house())
         self.character.kith = Kith.objects.create(name="Arcadian Sidhe")
         self.assertTrue(self.character.set_house(House.objects.get(name="House 0")))
@@ -380,11 +380,7 @@ class TestChangeling(TestCase):
         self.assertFalse(self.character.has_changeling_history())
         self.character.true_name = "Faerie Name"
         self.assertFalse(self.character.has_changeling_history())
-        self.character.date_ennobled = "N/A"
-        self.assertFalse(self.character.has_changeling_history())
         self.character.crysalis = "It Happened"
-        self.assertFalse(self.character.has_changeling_history())
-        self.character.date_of_crysalis = "It Happened"
         self.assertTrue(self.character.has_changeling_history())
 
     def test_has_changeling_appearance(self):
@@ -612,13 +608,6 @@ class TestChangelingCreateView(TestCase):
             "law": 1,
             "politics": 1,
             "technology": 1,
-            "chimera": 1,
-            "dreamers": 1,
-            "holdings": 1,
-            "remembrance": 1,
-            "resources": 1,
-            "retinue": 1,
-            "title": 1,
             "treasure": 1,
             "court": "seelie",
             "seeming": "grump",
@@ -711,8 +700,6 @@ class TestChangelingUpdateView(TestCase):
             "investigation": 1,
             "medicine": 1,
             "science": 1,
-            "contacts": 1,
-            "mentor": 1,
             "willpower": 1,
             "age": 1,
             "apparent_age": 1,
@@ -730,14 +717,6 @@ class TestChangelingUpdateView(TestCase):
             "law": 1,
             "politics": 1,
             "technology": 1,
-            "chimera": 1,
-            "dreamers": 1,
-            "holdings": 1,
-            "remembrance": 1,
-            "resources": 1,
-            "retinue": 1,
-            "title": 1,
-            "treasure": 1,
             "court": "seelie",
             "seeming": "grump",
             "autumn": 0,
