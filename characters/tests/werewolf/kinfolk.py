@@ -18,6 +18,7 @@ class TestKinfolk(TestCase):
         self.gift = Gift.objects.create(name="Test Gift", rank=1)
         self.fetish = Fetish.objects.create(name="Test Fetish", rank=1)
         self.kinfolk = Kinfolk.objects.create(name="Test Kinfolk")
+        werewolf_setup()
 
     def test_has_breed(self):
         self.assertFalse(self.kinfolk.has_breed())
@@ -129,6 +130,7 @@ class TestKinfolk(TestCase):
 class TestRandomKinfolk(TestCase):
     def setUp(self):
         self.kinfolk = Kinfolk.objects.create(name="Test Kinfolk")
+        werewolf_setup()
 
     def test_random_breed(self):
         with patch("random.choice", return_value="homid"):
@@ -192,7 +194,8 @@ class TestRandomKinfolk(TestCase):
         self.assertTrue(self.kinfolk.has_finishing_touches())
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Kinfolk, self.player, character=True), 0.5)
+        player = User.objects.create_user(username="Player")
+        self.assertLessEqual(time_test(Kinfolk, player, character=True), 0.5)
 
 
 class TestKinfolkDetailView(TestCase):
@@ -243,8 +246,6 @@ class TestKinfolkCreateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -263,16 +264,6 @@ class TestKinfolkCreateView(TestCase):
             "occult": 0,
             "rituals": 0,
             "technology": 0,
-            "allies": 0,
-            "ancestors": 0,
-            "fate": 0,
-            "fetish": 0,
-            "kinfolk_rating": 0,
-            "pure_breed": 0,
-            "resources": 0,
-            "rites": 0,
-            "spirit_heritage": 0,
-            "totem": 0,
             "breed": "homid",
             "relation": "cousin",
             "gnosis": 0,
@@ -338,8 +329,6 @@ class TestKinfolkUpdateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -357,16 +346,6 @@ class TestKinfolkUpdateView(TestCase):
             "occult": 0,
             "rituals": 0,
             "technology": 0,
-            "allies": 0,
-            "ancestors": 0,
-            "fate": 0,
-            "fetish": 0,
-            "kinfolk_rating": 0,
-            "pure_breed": 0,
-            "resources": 0,
-            "rites": 0,
-            "spirit_heritage": 0,
-            "totem": 0,
             "breed": "homid",
             "relation": "cousin",
             "gnosis": 0,

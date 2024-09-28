@@ -5,7 +5,7 @@ urls = [
     path(
         "charms/<pk>/",
         views.werewolf.SpiritCharmDetailView.as_view(),
-        name="charm",
+        name="spirit_charm",
     ),
     path(
         "spirits/<pk>/",

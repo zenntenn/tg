@@ -2,16 +2,21 @@ from characters.models.core.archetype import Archetype
 from characters.models.core.specialty import Specialty
 from characters.models.werewolf.fomor import Fomor
 from characters.models.werewolf.fomoripower import FomoriPower
+from characters.tests.utils import werewolf_setup
 from core.utils import time_test
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 
 class TestFomor(TestCase):
     def setUp(self):
+        werewolf_setup()
         self.power1 = FomoriPower.objects.create(name="Power 1")
         self.power2 = FomoriPower.objects.create(name="Power 2")
         self.power3 = FomoriPower.objects.create(name="Power 3")
-        self.fomor = Fomor.objects.create(name="Test Fomor", allies=2, contacts=1)
+        self.fomor = Fomor.objects.create(name="Test Fomor")
+        self.fomor.allies = 2
+        self.fomor.contacts = 1
 
     def test_get_backgrounds(self):
         expected = {
@@ -40,6 +45,7 @@ class TestFomor(TestCase):
 
 class TestRandomFomor(TestCase):
     def setUp(self):
+        werewolf_setup()
         self.power1 = FomoriPower.objects.create(name="Power 1")
         self.power2 = FomoriPower.objects.create(name="Power 2")
         self.power3 = FomoriPower.objects.create(name="Power 3")
@@ -72,7 +78,8 @@ class TestRandomFomor(TestCase):
         self.assertGreater(self.fomor.powers.count(), 0)
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Fomor, self.player, character=True), 0.5)
+        player = User.objects.create_user(username="Player")
+        self.assertLessEqual(time_test(Fomor, player, character=True), 0.5)
 
 
 class TestFomorDetailView(TestCase):
@@ -123,8 +130,6 @@ class TestFomorCreateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -142,16 +147,6 @@ class TestFomorCreateView(TestCase):
             "occult": 0,
             "rituals": 0,
             "technology": 0,
-            "allies": 0,
-            "ancestors": 0,
-            "fate": 0,
-            "fetish": 0,
-            "kinfolk_rating": 0,
-            "pure_breed": 0,
-            "resources": 0,
-            "rites": 0,
-            "spirit_heritage": 0,
-            "totem": 0,
             "rage": 1,
             "gnosis": 1,
         }
@@ -210,8 +205,6 @@ class TestFomorUpdateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -229,16 +222,6 @@ class TestFomorUpdateView(TestCase):
             "occult": 0,
             "rituals": 0,
             "technology": 0,
-            "allies": 0,
-            "ancestors": 0,
-            "fate": 0,
-            "fetish": 0,
-            "kinfolk_rating": 0,
-            "pure_breed": 0,
-            "resources": 0,
-            "rites": 0,
-            "spirit_heritage": 0,
-            "totem": 0,
             "rage": 1,
             "gnosis": 1,
         }

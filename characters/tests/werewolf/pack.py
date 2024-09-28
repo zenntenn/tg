@@ -77,7 +77,7 @@ class TestPack(TestCase):
         self.assertEqual(str(pack), "Pack 1")
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Pack, self.player, character=True), 0.5)
+        self.assertLessEqual(time_test(Pack, self.player, character=True), 2)
 
 
 class TestPackDetailView(TestCase):

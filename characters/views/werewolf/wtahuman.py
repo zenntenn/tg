@@ -53,8 +53,6 @@ class WtAHumanCreateView(CreateView):
         "medicine",
         "science",
         "specialties",
-        "contacts",
-        "mentor",
         "languages",
         "willpower",
         "derangements",
@@ -76,16 +74,6 @@ class WtAHumanCreateView(CreateView):
         "occult",
         "rituals",
         "technology",
-        "allies",
-        "ancestors",
-        "fate",
-        "fetish",
-        "kinfolk_rating",
-        "pure_breed",
-        "resources",
-        "rites",
-        "spirit_heritage",
-        "totem",
     ]
     template_name = "characters/werewolf/wtahuman/form.html"
 
@@ -127,8 +115,6 @@ class WtAHumanUpdateView(SpecialUserMixin, UpdateView):
         "medicine",
         "science",
         "specialties",
-        "contacts",
-        "mentor",
         "languages",
         "willpower",
         "derangements",
@@ -150,16 +136,6 @@ class WtAHumanUpdateView(SpecialUserMixin, UpdateView):
         "occult",
         "rituals",
         "technology",
-        "allies",
-        "ancestors",
-        "fate",
-        "fetish",
-        "kinfolk_rating",
-        "pure_breed",
-        "resources",
-        "rites",
-        "spirit_heritage",
-        "totem",
     ]
     template_name = "characters/werewolf/wtahuman/form.html"
 

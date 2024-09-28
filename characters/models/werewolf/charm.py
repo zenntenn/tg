@@ -11,14 +11,16 @@ class SpiritCharm(Model):
         verbose_name_plural = "Spirit Charms"
 
     def get_absolute_url(self):
-        return reverse("characters:werewolf:charm", kwargs={"pk": self.pk})
+        return reverse("characters:werewolf:spirit_charm", kwargs={"pk": self.pk})
 
     def get_update_url(self):
-        return reverse("characters:werewolf:update:charm", kwargs={"pk": self.pk})
+        return reverse(
+            "characters:werewolf:update:spirit_charm", kwargs={"pk": self.pk}
+        )
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("characters:werewolf:create:charm")
+        return reverse("characters:werewolf:create:spirit_charm")
 
     def get_heading(self):
         return "wta_heading"

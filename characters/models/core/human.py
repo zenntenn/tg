@@ -120,9 +120,12 @@ class Human(Character):
         return self.total_background_rating(bg)
 
     def _set_property(self, prop, value):
-        BackgroundRating.objects.create(
-            char=self, bg=Background.objects.get(property_name=prop), rating=value
-        )
+        if value != 0:
+            BackgroundRating.objects.create(
+                char=self, bg=Background.objects.get(property_name=prop), rating=value
+            )
+        else:
+            BackgroundRating.objects.filter(char=self, bg__property_name=prop).delete()
 
     def get_full_update_url(self):
         return reverse("characters:update:human_full", kwargs={"pk": self.pk})

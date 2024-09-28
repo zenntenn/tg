@@ -77,6 +77,17 @@ def werewolf_setup():
         name="werewolf", type="char", gameline="wta"
     )[0]
 
+    Background.objects.get_or_create(property_name="allies")[0]
+    Background.objects.get_or_create(property_name="ancestors")[0]
+    Background.objects.get_or_create(property_name="fate")[0]
+    Background.objects.get_or_create(property_name="fetish")[0]
+    Background.objects.get_or_create(property_name="kinfolk_rating")[0]
+    Background.objects.get_or_create(property_name="pure_breed")[0]
+    Background.objects.get_or_create(property_name="resources")[0]
+    Background.objects.get_or_create(property_name="rites")[0]
+    Background.objects.get_or_create(property_name="spirit_heritage")[0]
+    Background.objects.get_or_create(property_name="totem")[0]
+
     w = WtAHuman.objects.create(name="")
     for i in range(5):
         w = Werewolf.objects.create(name=f"Character {i}")

@@ -114,7 +114,7 @@ class Kinfolk(WtAHuman):
         if self.tribe.name == "Wendigo":
             if background == "resources" and self.resources == 3:
                 return False
-        return add_dot(self, background, maximum)
+        return super().add_background(background, maximum=maximum)
 
     def choose_random_gift(self, breed=False, tribe=False):
         while True:

@@ -300,8 +300,6 @@ class TestWtAHumanCreateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -320,16 +318,6 @@ class TestWtAHumanCreateView(TestCase):
             "occult": 0,
             "rituals": 0,
             "technology": 0,
-            "allies": 0,
-            "ancestors": 0,
-            "fate": 0,
-            "fetish": 0,
-            "kinfolk_rating": 0,
-            "pure_breed": 0,
-            "resources": 0,
-            "rites": 0,
-            "spirit_heritage": 0,
-            "totem": 0,
         }
         self.url = WtAHuman.get_creation_url()
 
@@ -385,8 +373,6 @@ class TestWtAHumanUpdateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -404,16 +390,6 @@ class TestWtAHumanUpdateView(TestCase):
             "occult": 0,
             "rituals": 0,
             "technology": 0,
-            "allies": 0,
-            "ancestors": 0,
-            "fate": 0,
-            "fetish": 0,
-            "kinfolk_rating": 0,
-            "pure_breed": 0,
-            "resources": 0,
-            "rites": 0,
-            "spirit_heritage": 0,
-            "totem": 0,
         }
         self.url = self.wtahuman.get_update_url()
 
