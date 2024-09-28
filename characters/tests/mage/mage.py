@@ -815,37 +815,6 @@ class TestMageCreateView(TestCase):
             "theology": 0,
             "unconventional_warface": 0,
             "vice": 0,
-            "allies": 0,
-            "alternate_identity": 0,
-            "arcane": 0,
-            "avatar": 0,
-            "backup": 0,
-            "blessing": 0,
-            "certification": 0,
-            "chantry": 0,
-            "cult": 0,
-            "demesne": 0,
-            "destiny": 0,
-            "dream": 0,
-            "enhancement": 0,
-            "fame": 0,
-            "familiar": 0,
-            "influence": 0,
-            "legend": 0,
-            "library": 0,
-            "node": 0,
-            "past_lives": 0,
-            "patron": 0,
-            "rank": 0,
-            "requisitions": 0,
-            "resources": 0,
-            "retainers": 0,
-            "sanctum": 0,
-            "secret_weapons": 0,
-            "spies": 0,
-            "status_background": 0,
-            "totem": 0,
-            "wonder": 0,
             "essence": "Dynamic",
             "correspondence": 0,
             "time": 0,
@@ -880,7 +849,7 @@ class TestMageCreateView(TestCase):
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(Mage.objects.count(), 1)
         self.assertEqual(Mage.objects.first().name, "Test Mage")
 
@@ -991,37 +960,6 @@ class TestMageHumanUpdateView(TestCase):
             "theology": 0,
             "unconventional_warface": 0,
             "vice": 0,
-            "allies": 0,
-            "alternate_identity": 0,
-            "arcane": 0,
-            "avatar": 0,
-            "backup": 0,
-            "blessing": 0,
-            "certification": 0,
-            "chantry": 0,
-            "cult": 0,
-            "demesne": 0,
-            "destiny": 0,
-            "dream": 0,
-            "enhancement": 0,
-            "fame": 0,
-            "familiar": 0,
-            "influence": 0,
-            "legend": 0,
-            "library": 0,
-            "node": 0,
-            "past_lives": 0,
-            "patron": 0,
-            "rank": 0,
-            "requisitions": 0,
-            "resources": 0,
-            "retainers": 0,
-            "sanctum": 0,
-            "secret_weapons": 0,
-            "spies": 0,
-            "status_background": 0,
-            "totem": 0,
-            "wonder": 0,
             "essence": "Dynamic",
             "correspondence": 0,
             "time": 0,
@@ -1056,7 +994,7 @@ class TestMageHumanUpdateView(TestCase):
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.mage.refresh_from_db()
         self.assertEqual(self.mage.name, "Test Mage 2")
 
