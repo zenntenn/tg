@@ -7,7 +7,7 @@ from game.models import ObjectType
 class TestCharacterIndexView(TestCase):
     def setUp(self) -> None:
         self.url = "/characters/index/wod/"
-        ObjectType.objects.create(name="human", type="char", gameline="wod")
+        ObjectType.objects.get_or_create(name="human", type="char", gameline="wod")[0]
         return super().setUp()
 
     def test_index_status_code(self):

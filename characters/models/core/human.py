@@ -103,6 +103,27 @@ class Human(Character):
         verbose_name = "Human"
         verbose_name_plural = "Humans"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for bg in self.allowed_backgrounds:
+            if not hasattr(self.__class__, bg):
+                setattr(self.__class__, bg, self._create_property(bg))
+
+    def _create_property(self, bg):
+        return property(
+            lambda self: self._get_property(bg),
+            lambda self, value: self._set_property(bg, value),
+        )
+
+    def _get_property(self, bg):
+        return self.total_background_rating(bg)
+
+    def _set_property(self, prop, value):
+        BackgroundRating.objects.create(
+            char=self, bg=Background.objects.get(property_name=prop), rating=value
+        )
+
     def get_full_update_url(self):
         return reverse("characters:update:human_full", kwargs={"pk": self.pk})
 
@@ -129,14 +150,6 @@ class Human(Character):
                 )
             ]
         )
-
-    @property
-    def contacts(self):
-        return self.total_background_rating("contacts")
-
-    @property
-    def mentor(self):
-        return self.total_background_rating("mentor")
 
     def num_languages(self):
         mf_list = self.merits_and_flaws.all().values_list("name", flat=True)

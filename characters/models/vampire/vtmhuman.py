@@ -7,6 +7,23 @@ class VtMHuman(Human):
     type = "vtm_human"
     gameline = "vtm"
 
+    allowed_backgrounds = [
+        "contacts",
+        "mentor",
+        "allies",
+        "alternate_identity",
+        "black_hand_membership",
+        "domain",
+        "fame",
+        "generation",
+        "herd",
+        "influence",
+        "resources",
+        "retainers",
+        "rituals",
+        "status_background",
+    ]
+
     awareness = models.IntegerField(default=0)
     leadership = models.IntegerField(default=0)
     animal_ken = models.IntegerField(default=0)
@@ -37,11 +54,11 @@ class VtMHuman(Human):
         verbose_name_plural = "Humans (Vampire)"
 
     def get_update_url(self):
-        return reverse("characters:vampire:update:vtmhuman", kwargs={"pk": self.pk})
+        return reverse("characters:vampire:update:vtm_human", kwargs={"pk": self.pk})
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("characters:vampire:create:vtmhuman")
+        return reverse("characters:vampire:create:vtm_human")
 
     def get_heading(self):
         return "vtm_heading"

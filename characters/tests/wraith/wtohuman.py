@@ -1,4 +1,5 @@
 from characters.models.wraith.wtohuman import WtOHuman
+from characters.tests.utils import wraith_setup
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -9,6 +10,7 @@ class TestWtOHuman(TestCase):
         self.character = WtOHuman.objects.create(
             name="Test WtOHuman", owner=self.player
         )
+        wraith_setup()
 
     def set_abilities(self):
         self.character.alertness = 3
@@ -217,8 +219,6 @@ class TestWtOHumanCreateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -235,15 +235,6 @@ class TestWtOHumanCreateView(TestCase):
             "occult": 0,
             "politics": 0,
             "technology": 0,
-            "allies": 0,
-            "artifact": 0,
-            "eidolon": 0,
-            "haunt": 0,
-            "legacy": 0,
-            "memoriam": 0,
-            "notoriety": 0,
-            "relic": 0,
-            "status_background": 0,
         }
         self.url = WtOHuman.get_creation_url()
 
@@ -299,8 +290,6 @@ class TestWtOHumanUpdateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "willpower": 0,
             "age": 0,
             "apparent_age": 0,
@@ -318,15 +307,6 @@ class TestWtOHumanUpdateView(TestCase):
             "occult": 0,
             "politics": 0,
             "technology": 0,
-            "allies": 0,
-            "artifact": 0,
-            "eidolon": 0,
-            "haunt": 0,
-            "legacy": 0,
-            "memoriam": 0,
-            "notoriety": 0,
-            "relic": 0,
-            "status_background": 0,
         }
         self.url = self.wtohuman.get_update_url()
 

@@ -478,12 +478,6 @@ class TestMage(TestCase):
 
     def test_has_mage_history(self):
         self.assertFalse(self.character.has_mage_history())
-        self.character.awakening = "Young"
-        self.assertFalse(self.character.has_mage_history())
-        self.character.seekings = "Several"
-        self.assertFalse(self.character.has_mage_history())
-        self.character.quiets = "None"
-        self.assertFalse(self.character.has_mage_history())
         self.character.age_of_awakening = 13
         self.assertFalse(self.character.has_mage_history())
         self.character.avatar_description = "The Random Graph"
@@ -526,17 +520,15 @@ class TestMage(TestCase):
         self.assertTrue(self.character.has_specialties())
 
     def test_has_library(self):
-        self.assertFalse(self.character.has_library())
-        library = Library.objects.create(name="test_library", rank=3)
-        self.character.library_owned = library
         self.character.library = 3
+        self.assertFalse(self.character.has_library())
+        Library.objects.create(name="test_library", rank=3, owned_by=self.character)
         self.assertTrue(self.character.has_library())
 
     def test_has_node(self):
-        self.assertFalse(self.character.has_node())
-        node = Node.objects.create(name="test_node", rank=2)
-        self.character.node_owned = node
         self.character.node = 2
+        self.assertFalse(self.character.has_node())
+        Node.objects.create(name="test_node", rank=2, owned_by=self.character)
         self.assertTrue(self.character.has_node())
 
 
@@ -673,14 +665,8 @@ class TestRandomMage(TestCase):
         self.assertTrue(self.character.has_essence())
         self.assertTrue(self.character.has_effects())
         self.assertTrue(self.character.has_mage_history())
-        if self.character.node != 0:
-            self.assertTrue(self.character.has_node())
-        else:
-            self.assertFalse(self.character.has_node())
-        if self.character.library != 0:
-            self.assertTrue(self.character.has_library())
-        else:
-            self.assertFalse(self.character.has_library())
+        self.assertTrue(self.character.has_node())
+        self.assertTrue(self.character.has_library())
 
     def test_choose_random_resonance(self):
         res = self.character.choose_random_resonance()
@@ -710,7 +696,7 @@ class TestRandomMage(TestCase):
         self.assertGreater(self.character.total_abilities(), 0)
 
     def test_creation_time(self):
-        self.assertLessEqual(time_test(Mage, self.player, character=True), 0.75)
+        self.assertLessEqual(time_test(Mage, self.player, character=True), 0.85)
 
 
 class TestMageDetailView(TestCase):

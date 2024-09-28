@@ -121,5 +121,5 @@ class TestSceneDetailView(TestCase):
 
 class TestObjectType(TestCase):
     def test_str(self):
-        x = ObjectType.objects.create(name="Test", type="loc", gameline="mta")
+        x = ObjectType.objects.get_or_create(name="Test", type="loc", gameline="mta")[0]
         self.assertEqual(str(x), "Mage: the Ascension/Location/Test")

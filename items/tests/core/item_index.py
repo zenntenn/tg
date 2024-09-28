@@ -6,7 +6,7 @@ from items.models.core.item import ItemModel
 class TestItemIndexView(TestCase):
     def setUp(self) -> None:
         self.url = "/items/index/wod/"
-        ObjectType.objects.create(name="item", type="obj", gameline="wod")
+        ObjectType.objects.get_or_create(name="item", type="obj", gameline="wod")[0]
         return super().setUp()
 
     def test_index_status_code(self):

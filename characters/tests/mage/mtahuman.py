@@ -2,6 +2,7 @@ import random
 
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
+from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.mage.effect import Effect
@@ -536,10 +537,26 @@ class TestMtAHuman(TestCase):
                 "wonder": 0,
             },
         )
-        self.character.mentor = 3
-        self.character.chantry = 2
-        self.character.fame = 1
-        self.character.dream = 3
+        BackgroundRating.objects.create(
+            char=self.character,
+            bg=Background.objects.get(property_name="mentor"),
+            rating=3,
+        )
+        BackgroundRating.objects.create(
+            char=self.character,
+            bg=Background.objects.get(property_name="chantry"),
+            rating=2,
+        )
+        BackgroundRating.objects.create(
+            char=self.character,
+            bg=Background.objects.get(property_name="fame"),
+            rating=1,
+        )
+        BackgroundRating.objects.create(
+            char=self.character,
+            bg=Background.objects.get(property_name="dream"),
+            rating=3,
+        )
         self.assertEqual(
             self.character.get_backgrounds(),
             {

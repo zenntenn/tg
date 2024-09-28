@@ -57,6 +57,19 @@ def human_setup():
 def vampire_setup():
     human_setup()
 
+    Background.objects.create(property_name="allies")
+    Background.objects.create(property_name="alternate_identity")
+    Background.objects.create(property_name="black_hand_membership")
+    Background.objects.create(property_name="domain")
+    Background.objects.create(property_name="fame")
+    Background.objects.create(property_name="generation")
+    Background.objects.create(property_name="herd")
+    Background.objects.create(property_name="influence")
+    Background.objects.create(property_name="resources")
+    Background.objects.create(property_name="retainers")
+    Background.objects.create(property_name="rituals")
+    Background.objects.create(property_name="status_background")
+
 
 def werewolf_setup():
     human_setup()
@@ -130,6 +143,56 @@ def mage_setup():
     human = ObjectType.objects.get_or_create(name="human", type="char", gameline="wod")[
         0
     ]
+
+    Background.objects.get_or_create(name="Contacts", property_name="contacts")[0]
+    Background.objects.get_or_create(name="Mentor", property_name="mentor")[0]
+    Background.objects.get_or_create(name="Allies", property_name="allies")[0]
+    Background.objects.get_or_create(
+        name="Alternate Identity", property_name="alternate_identity"
+    )[0]
+    Background.objects.get_or_create(name="Arcane", property_name="arcane")[0]
+    Background.objects.get_or_create(name="Avatar", property_name="avatar")[0]
+    Background.objects.get_or_create(name="Backup", property_name="backup")[0]
+    Background.objects.get_or_create(name="Blessing", property_name="blessing")[0]
+    Background.objects.get_or_create(
+        name="Certification", property_name="certification"
+    )[0]
+    Background.objects.get_or_create(name="Chantry", property_name="chantry")[0]
+    Background.objects.get_or_create(name="Cult", property_name="cult")[0]
+    Background.objects.get_or_create(name="Demesne", property_name="demesne")[0]
+    Background.objects.get_or_create(name="Destiny", property_name="destiny")[0]
+    Background.objects.get_or_create(name="Dream", property_name="dream")[0]
+    Background.objects.get_or_create(
+        name="Enhancement", property_name="enhancement", multiplier=2
+    )[0]
+    Background.objects.get_or_create(name="Fame", property_name="fame")[0]
+    Background.objects.get_or_create(name="Familiar", property_name="familiar")[0]
+    Background.objects.get_or_create(name="Influence", property_name="influence")[0]
+    Background.objects.get_or_create(name="Legend", property_name="legend")[0]
+    Background.objects.get_or_create(name="Library", property_name="library")[0]
+    Background.objects.get_or_create(name="Node", property_name="node")[0]
+    Background.objects.get_or_create(name="Past Lives", property_name="past_lives")[0]
+    Background.objects.get_or_create(name="Patron", property_name="patron")[0]
+    Background.objects.get_or_create(name="Rank", property_name="rank")[0]
+    Background.objects.get_or_create(name="Requisitions", property_name="requisitions")[
+        0
+    ]
+    Background.objects.get_or_create(name="Resources", property_name="resources")[0]
+    Background.objects.get_or_create(name="Retainers", property_name="retainers")[0]
+    Background.objects.get_or_create(
+        name="Sanctum", property_name="sanctum", multiplier=2
+    )[0]
+    Background.objects.get_or_create(
+        name="Secret weapons", property_name="secret_weapons"
+    )[0]
+    Background.objects.get_or_create(name="Spies", property_name="spies")[0]
+    Background.objects.get_or_create(name="Status", property_name="status_background")[
+        0
+    ]
+    Background.objects.get_or_create(name="Totem", property_name="totem", multiplier=2)[
+        0
+    ]
+    Background.objects.get_or_create(name="Wonder", property_name="wonder")[0]
 
     mtahuman = ObjectType.objects.get_or_create(
         name="mtahuman", type="char", gameline="mta"
@@ -542,6 +605,15 @@ def mage_setup():
 
 def wraith_setup():
     human_setup()
+    Background.objects.create(property_name="allies")
+    Background.objects.create(property_name="artifact")
+    Background.objects.create(property_name="eidolon")
+    Background.objects.create(property_name="haunt")
+    Background.objects.create(property_name="legacy")
+    Background.objects.create(property_name="memoriam")
+    Background.objects.create(property_name="notoriety")
+    Background.objects.create(property_name="relic")
+    Background.objects.create(property_name="status_background")
 
 
 def changeling_setup():

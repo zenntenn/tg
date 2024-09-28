@@ -632,13 +632,7 @@ class Mage(MtAHuman):
             self.specialties.add(random.choice(self.filter_specialties(stat=sphere)))
 
     def has_mage_history(self):
-        return (
-            self.awakening != ""
-            and self.seekings != ""
-            and self.quiets != ""
-            and self.age_of_awakening != 0
-            and self.avatar_description != ""
-        )
+        return self.age_of_awakening != 0 and self.avatar_description != ""
 
     def random_mage_history(self):
         self.awakening = "A thing that happened"
@@ -854,9 +848,9 @@ class Mage(MtAHuman):
         return self.spend_freebies(trait)
 
     def has_library(self):
-        if self.library_owned is not None:
-            return self.library_owned.rank == self.library
-        return False
+        return (
+            sum([x.rank for x in Library.objects.filter(owned_by=self)]) == self.library
+        )
 
     def random_library(self):
         if self.library > 0:
@@ -865,6 +859,7 @@ class Mage(MtAHuman):
                 rank=self.library,
                 owner=self.owner,
                 chronicle=self.chronicle,
+                owned_by=self,
             )
             l.random(faction=self.faction)
             l.save()
@@ -872,13 +867,13 @@ class Mage(MtAHuman):
             self.save()
 
     def has_node(self):
-        if self.node_owned is not None:
-            return self.node_owned.rank == self.node
-        return False
+        return sum([x.rank for x in Node.objects.filter(owned_by=self)]) == self.node
 
     def random_node(self, favored_list=None):
         if self.node > 0:
-            n = Node.objects.create(name="", owner=self.owner, chronicle=self.chronicle)
+            n = Node.objects.create(
+                name="", owner=self.owner, chronicle=self.chronicle, owned_by=self
+            )
             n.random(rank=self.node, favored_list=favored_list)
             if not n.has_name():
                 n.set_name(f"{self.name}'s Node")

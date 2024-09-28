@@ -6,7 +6,7 @@ from locations.models.core.location import LocationModel
 class TestLocationIndexView(TestCase):
     def setUp(self) -> None:
         self.url = "/locations/index/wod/"
-        ObjectType.objects.create(name="location", type="loc", gameline="wod")
+        ObjectType.objects.get_or_create(name="location", type="loc", gameline="wod")[0]
         return super().setUp()
 
     def test_index_status_code(self):

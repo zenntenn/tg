@@ -8,6 +8,20 @@ class WtOHuman(Human):
 
     gameline = "wto"
 
+    allowed_backgrounds = [
+        "contacts",
+        "mentor",
+        "allies",
+        "artifact",
+        "eidolon",
+        "haunt",
+        "legacy",
+        "memoriam",
+        "notoriety",
+        "relic",
+        "status_background",
+    ]
+
     awareness = models.IntegerField(default=0)
     persuasion = models.IntegerField(default=0)
     larceny = models.IntegerField(default=0)
@@ -18,16 +32,6 @@ class WtOHuman(Human):
     occult = models.IntegerField(default=0)
     politics = models.IntegerField(default=0)
     technology = models.IntegerField(default=0)
-
-    allies = models.IntegerField(default=0)
-    artifact = models.IntegerField(default=0)
-    eidolon = models.IntegerField(default=0)
-    haunt = models.IntegerField(default=0)
-    legacy = models.IntegerField(default=0)
-    memoriam = models.IntegerField(default=0)
-    notoriety = models.IntegerField(default=0)
-    relic = models.IntegerField(default=0)
-    status_background = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Human (Wraith)"

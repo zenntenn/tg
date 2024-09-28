@@ -7,12 +7,16 @@ from game.models import ObjectType
 
 class TestMeritFlaw(TestCase):
     def setUp(self):
-        human = ObjectType.objects.create(name="Human", type="char", gameline="wod")
-        garou = ObjectType.objects.create(name="Garou", type="char", gameline="wta")
-        changeling = ObjectType.objects.create(
+        human = ObjectType.objects.get_or_create(
+            name="Human", type="char", gameline="wod"
+        )[0]
+        garou = ObjectType.objects.get_or_create(
+            name="Garou", type="char", gameline="wta"
+        )[0]
+        changeling = ObjectType.objects.get_or_create(
             name="Changeling", type="char", gameline="ctd"
-        )
-        self.merit_flaw = MeritFlaw.objects.create(name="Test Merit")
+        )[0]
+        self.merit_flaw = MeritFlaw.objects.get_or_create(name="Test Merit")[0]
         self.merit_flaw.add_ratings([1, 2, 3])
         self.merit_flaw.allowed_types.add(human)
         self.merit_flaw.allowed_types.add(garou)

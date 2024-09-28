@@ -53,8 +53,6 @@ class WtOHumanCreateView(CreateView):
         "medicine",
         "science",
         "specialties",
-        "contacts",
-        "mentor",
         "languages",
         "willpower",
         "derangements",
@@ -75,15 +73,6 @@ class WtOHumanCreateView(CreateView):
         "occult",
         "politics",
         "technology",
-        "allies",
-        "artifact",
-        "eidolon",
-        "haunt",
-        "legacy",
-        "memoriam",
-        "notoriety",
-        "relic",
-        "status_background",
     ]
     template_name = "characters/wraith/wtohuman/form.html"
 
@@ -125,8 +114,6 @@ class WtOHumanUpdateView(SpecialUserMixin, UpdateView):
         "medicine",
         "science",
         "specialties",
-        "contacts",
-        "mentor",
         "languages",
         "willpower",
         "derangements",
@@ -147,15 +134,6 @@ class WtOHumanUpdateView(SpecialUserMixin, UpdateView):
         "occult",
         "politics",
         "technology",
-        "allies",
-        "artifact",
-        "eidolon",
-        "haunt",
-        "legacy",
-        "memoriam",
-        "notoriety",
-        "relic",
-        "status_background",
     ]
     template_name = "characters/wraith/wtohuman/form.html"
 

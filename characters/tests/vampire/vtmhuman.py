@@ -1,4 +1,5 @@
 from characters.models.vampire.vtmhuman import VtMHuman
+from characters.tests.utils import vampire_setup
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -9,6 +10,7 @@ class TestVtMHuman(TestCase):
         self.character = VtMHuman.objects.create(
             name="Test VtMHuman", owner=self.player
         )
+        vampire_setup()
 
     def set_abilities(self):
         self.character.alertness = 1
@@ -239,8 +241,6 @@ class TestVtMHumanCreateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "xp": 0,
             "awareness": 0,
             "leadership": 0,
@@ -253,18 +253,6 @@ class TestVtMHumanCreateView(TestCase):
             "occult": 0,
             "politics": 0,
             "technology": 0,
-            "allies": 0,
-            "alternate_identity": 0,
-            "black_hand_membership": 0,
-            "domain": 0,
-            "fame": 0,
-            "generation": 0,
-            "herd": 0,
-            "influence": 0,
-            "resources": 0,
-            "retainers": 0,
-            "rituals": 0,
-            "status_background": 0,
         }
         self.url = VtMHuman.get_creation_url()
 
@@ -325,8 +313,6 @@ class TestVtMHumanUpdateView(TestCase):
             "investigation": 0,
             "medicine": 0,
             "science": 0,
-            "contacts": 0,
-            "mentor": 0,
             "xp": 0,
             "awareness": 0,
             "leadership": 0,
@@ -339,18 +325,6 @@ class TestVtMHumanUpdateView(TestCase):
             "occult": 0,
             "politics": 0,
             "technology": 0,
-            "allies": 0,
-            "alternate_identity": 0,
-            "black_hand_membership": 0,
-            "domain": 0,
-            "fame": 0,
-            "generation": 0,
-            "herd": 0,
-            "influence": 0,
-            "resources": 0,
-            "retainers": 0,
-            "rituals": 0,
-            "status_background": 0,
         }
         self.url = self.vtmhuman.get_update_url()
 

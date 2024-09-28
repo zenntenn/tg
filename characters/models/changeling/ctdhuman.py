@@ -8,6 +8,19 @@ class CtDHuman(Human):
 
     gameline = "ctd"
 
+    allowed_backgrounds = [
+        "contacts",
+        "mentor",
+        "chimera",
+        "dreamers",
+        "holdings",
+        "remembrance",
+        "resources",
+        "retinue",
+        "title",
+        "treasure",
+    ]
+
     kenning = models.IntegerField(default=0)
     leadership = models.IntegerField(default=0)
 
@@ -21,15 +34,6 @@ class CtDHuman(Human):
     law = models.IntegerField(default=0)
     politics = models.IntegerField(default=0)
     technology = models.IntegerField(default=0)
-
-    chimera = models.IntegerField(default=0)
-    dreamers = models.IntegerField(default=0)
-    holdings = models.IntegerField(default=0)
-    remembrance = models.IntegerField(default=0)
-    resources = models.IntegerField(default=0)
-    retinue = models.IntegerField(default=0)
-    title = models.IntegerField(default=0)
-    treasure = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Human (Changeling)"

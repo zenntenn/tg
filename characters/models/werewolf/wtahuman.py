@@ -8,6 +8,21 @@ class WtAHuman(Human):
 
     gameline = "wta"
 
+    allowed_backgrounds = [
+        "contacts",
+        "mentor",
+        "allies",
+        "ancestors",
+        "fate",
+        "fetish",
+        "kinfolk_rating",
+        "pure_breed",
+        "resources",
+        "rites",
+        "spirit_heritage",
+        "totem",
+    ]
+
     leadership = models.IntegerField(default=0)
     primal_urge = models.IntegerField(default=0)
 
@@ -21,17 +36,6 @@ class WtAHuman(Human):
     occult = models.IntegerField(default=0)
     rituals = models.IntegerField(default=0)
     technology = models.IntegerField(default=0)
-
-    allies = models.IntegerField(default=0)
-    ancestors = models.IntegerField(default=0)
-    fate = models.IntegerField(default=0)
-    fetish = models.IntegerField(default=0)
-    kinfolk_rating = models.IntegerField(default=0)
-    pure_breed = models.IntegerField(default=0)
-    resources = models.IntegerField(default=0)
-    rites = models.IntegerField(default=0)
-    spirit_heritage = models.IntegerField(default=0)
-    totem = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Human (Werewolf)"

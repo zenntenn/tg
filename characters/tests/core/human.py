@@ -31,9 +31,9 @@ class TestHuman(TestCase):
             Number.objects.create(value=i)
             Number.objects.create(value=-i)
 
-        human = ObjectType.objects.create(
+        human = ObjectType.objects.get_or_create(
             name=self.character.type, type="char", gameline="wod"
-        )
+        )[0]
 
         for i in range(1, 6):
             mf = MeritFlaw.objects.create(name=f"Merit {i}")
@@ -714,7 +714,6 @@ class TestHuman(TestCase):
         )
 
     def test_add_background(self):
-        Background.objects.create(property_name="contacts")
         total = self.character.total_backgrounds()
         self.assertTrue(self.character.add_background("contacts"))
         self.assertEqual(self.character.total_backgrounds(), total + 1)
