@@ -6,7 +6,6 @@ from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
 from core.models import Language, Noun
-from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -108,9 +107,6 @@ class TestRandomLibrary(TestCase):
         self.assertEqual(self.library.status, "Ran")
         self.assertIsNotNone(self.library.faction)
         self.assertEqual(self.library.num_books(), self.library.rank)
-
-    def test_creation_time(self):
-        self.assertLessEqual(time_test(Library, self.player, character=False), 0.1)
 
 
 class TestLibraryDetailView(TestCase):

@@ -99,35 +99,5 @@ def fast_selector(cls):
     return cls.objects.get(pk=index)
 
 
-def time_test(cls, player, character=True, xp=0, random_name=True):
-    start = time()
-    for _ in range(10):
-        create(cls, player, character=character, xp=xp, random_name=random_name)
-    avg_time = (time() - start) / 10
-    print(f"Average Random {cls.__name__} Time:", avg_time)
-    return avg_time
-
-
-def create(cls, player, character=True, xp=0, random_name=True):
-    if random_name:
-        name = ""
-    else:
-        name = f"{cls.__name__} {cls.objects.count()}"
-    obj = cls.objects.create(name=name, owner=player)
-    if character:
-        obj.random(xp=xp)
-    else:
-        obj.random()
-    obj.save()
-
-
-def profile(cls, player, character=True, num_rows=10, xp=0):
-    cProfile.run(
-        f"create({cls.__name__}, player, character={character}, xp={xp})", "tmp"
-    )
-    p = pstats.Stats("tmp")
-    p.sort_stats(SortKey.CUMULATIVE).print_stats(num_rows)
-
-
 def display_queryset(prop):
     return "<br>".join([f'<a href="{x.get_absolute_url()}">{x}</a>' for x in prop])

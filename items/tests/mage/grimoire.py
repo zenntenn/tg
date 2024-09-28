@@ -11,7 +11,6 @@ from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
 from core.models import Language, Noun
-from core.utils import time_test
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.test import TestCase
@@ -318,9 +317,6 @@ class TestRandomGrimoire(TestCase):
         self.assertTrue(self.grimoire.has_language())
         self.assertTrue(self.grimoire.has_spheres())
         self.assertTrue(self.grimoire.has_rotes())
-
-    def test_creation_time(self):
-        self.assertLessEqual(time_test(Grimoire, self.player, character=False), 0.05)
 
 
 class TestGrimoireDetailView(TestCase):

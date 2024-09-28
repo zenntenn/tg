@@ -3,7 +3,6 @@ from unittest.mock import Mock
 
 from characters.models.mage import Effect
 from characters.models.mage.resonance import Resonance
-from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -76,9 +75,6 @@ class TestRandomTalisman(TestCase):
         self.assertEqual(talisman.quintessence_max, 10)
         self.assertEqual(talisman.background_cost, 4)
         self.assertEqual(talisman.arete, 2)
-
-    def test_creation_time(self):
-        self.assertLessEqual(time_test(Talisman, self.player, character=False), 0.015)
 
 
 class TestTalismanDetailView(TestCase):

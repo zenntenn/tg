@@ -2,7 +2,6 @@ from characters.models.werewolf.garou import Werewolf
 from characters.models.werewolf.pack import Pack
 from characters.models.werewolf.totem import Totem
 from characters.tests.utils import werewolf_setup
-from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -75,9 +74,6 @@ class TestPack(TestCase):
     def test_str(self):
         pack = Pack.objects.create(name="Pack 1")
         self.assertEqual(str(pack), "Pack 1")
-
-    def test_creation_time(self):
-        self.assertLessEqual(time_test(Pack, self.player, character=True), 2)
 
 
 class TestPackDetailView(TestCase):

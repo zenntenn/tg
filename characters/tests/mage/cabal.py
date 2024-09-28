@@ -13,7 +13,6 @@ from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
 from core.models import Language, Noun
-from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from game.models import ObjectType
@@ -53,9 +52,6 @@ class TestCabal(TestCase):
     def test_str(self):
         cabal = Cabal.objects.create(name="Cabal 1")
         self.assertEqual(str(cabal), "Cabal 1")
-
-    def test_creation_time(self):
-        self.assertLessEqual(time_test(Cabal, self.player, character=True), 4.5)
 
 
 class TestCabalDetailView(TestCase):

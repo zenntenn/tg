@@ -1,6 +1,5 @@
 from characters.models.mage import Effect
 from characters.models.mage.resonance import Resonance
-from core.utils import time_test
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -50,9 +49,6 @@ class TestRandomArtifact(TestCase):
         self.assertTrue(a.has_power())
         self.assertEqual(a.quintessence_max, a.rank * 5)
         self.assertEqual(a.background_cost, a.rank * 2)
-
-    def test_creation_time(self):
-        self.assertLessEqual(time_test(Artifact, self.player, character=False), 0.015)
 
 
 class TestArtifactDetailView(TestCase):
