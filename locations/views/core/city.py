@@ -11,7 +11,21 @@ class CityDetailView(DetailView):
 
 class CityCreateView(CreateView):
     model = City
-    fields = "__all__"
+    fields = [
+        "name",
+        "description",
+        "parent",
+        "gauntlet",
+        "shroud",
+        "dimension_barrier",
+        "description",
+        "population",
+        "mood",
+        "theme",
+        "media",
+        "politicians",
+        "characters",
+    ]
     template_name = "locations/core/city/form.html"
 
     def get_form(self, form_class=None):
@@ -34,6 +48,7 @@ class CityUpdateView(UpdateView):
     model = City
     fields = [
         "name",
+        "description",
         "parent",
         "gauntlet",
         "shroud",

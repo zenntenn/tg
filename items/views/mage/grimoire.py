@@ -41,7 +41,6 @@ class GrimoireCreateView(CreateView):
         "name",
         "rank",
         "background_cost",
-        "quintessence_max",
         "description",
         "abilities",
         "spheres",
@@ -72,6 +71,7 @@ class GrimoireUpdateView(UpdateView):
     model = Grimoire
     fields = [
         "name",
+        "rank",
         "description",
         "abilities",
         "spheres",

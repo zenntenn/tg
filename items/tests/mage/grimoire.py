@@ -345,6 +345,8 @@ class TestGrimoireCreateView(TestCase):
             "date_written": 1000,
             "is_primer": False,
             "length": 3,
+            "rank": 2,
+            "background_cost": 4,
         }
         self.url = Grimoire.get_creation_url()
 
@@ -375,6 +377,7 @@ class TestGrimoireUpdateView(TestCase):
             "date_written": 1000,
             "is_primer": False,
             "length": 3,
+            "rank": 2,
         }
         self.url = self.grimoire.get_update_url()
 

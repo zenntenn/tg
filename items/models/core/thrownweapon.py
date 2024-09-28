@@ -10,8 +10,8 @@ class ThrownWeapon(Weapon):
         verbose_name_plural = "Thrown Weapons"
 
     def get_update_url(self):
-        return reverse("items:update:thrownweapon", args=[str(self.id)])
+        return reverse("items:update:thrown_weapon", args=[str(self.id)])
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("items:create:thrownweapon")
+        return reverse("items:create:thrown_weapon")

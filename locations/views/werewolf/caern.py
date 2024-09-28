@@ -33,6 +33,7 @@ class CaernUpdateView(UpdateView):
     fields = [
         "name",
         "description",
+        "parent",
         "rank",
         "caern_type",
     ]

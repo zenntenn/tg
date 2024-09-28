@@ -16,11 +16,11 @@ class HorizonRealm(LocationModel):
         verbose_name_plural = "Horizon Realms"
 
     def get_update_url(self):
-        return reverse("locations:mage:update:realm", args=[str(self.id)])
+        return reverse("locations:mage:update:horizon_realm", args=[str(self.id)])
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("locations:mage:create:realm")
+        return reverse("locations:mage:create:horizon_realm")
 
     def get_heading(self):
         return "mta_heading"
