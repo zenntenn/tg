@@ -2,6 +2,7 @@ from characters.models.core.character import Character
 from characters.models.core.human import Human
 from django.db import models
 from django.urls import reverse
+from items.models.mage.wonder import Wonder
 
 
 class MtAHuman(Human):
@@ -166,6 +167,7 @@ class MtAHuman(Human):
     vice = models.IntegerField(default=0)
 
     allied_characters = models.ManyToManyField(Character, blank=True)
+    enhancement_devices = models.ManyToManyField(Wonder, blank=True)
 
     background_points = 7
 
