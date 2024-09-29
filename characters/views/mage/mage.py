@@ -6,6 +6,7 @@ from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.effect import EffectFormSet
+from characters.forms.mage.enhancements import EnhancementForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.models.core.ability import Ability
@@ -1578,11 +1579,73 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         return form
 
 
-class MageEnhancementView:
-    # TODO: Handle multiple BGs
-    # skip if sanctum == 0
-    # skip if allies == 0
-    pass
+class MageEnhancementView(SpecialUserMixin, FormView):
+    form_class = EnhancementForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        mage = Mage.objects.get(id=self.kwargs["pk"])
+        self.current_enhancement = BackgroundRating.objects.filter(
+            char=mage,
+            bg=Background.objects.get(property_name="enhancement"),
+            complete=False,
+        ).first()
+        kwargs["rank"] = self.current_enhancement.rating
+        return kwargs
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_enhancement = BackgroundRating.objects.filter(
+            char=obj,
+            bg=Background.objects.get(property_name="enhancement"),
+            complete=False,
+        ).first()
+        return form
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["object"] = Mage.objects.get(id=self.kwargs["pk"])
+        context["practices"] = PracticeRating.objects.filter(
+            mage=context["object"], rating__gt=0
+        )
+        context["resonance"] = ResRating.objects.filter(
+            mage=context["object"], rating__gte=1
+        ).order_by("resonance__name")
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        context["current_enhancement"] = self.current_enhancement
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        # Check Data Valid
+        if form.save(mage=mage):
+            if (
+                BackgroundRating.objects.filter(
+                    char=mage,
+                    bg=Background.objects.get(property_name="enhancement"),
+                    complete=False,
+                ).count()
+                == 0
+            ):
+                mage.creation_status += 1
+                mage.save()
+                for step in [
+                    "sanctum",
+                    "allies",
+                ]:
+                    if getattr(mage, step) == 0:
+                        mage.creation_status += 1
+                    else:
+                        mage.save()
+                        break
+                mage.save()
+            return HttpResponseRedirect(mage.get_absolute_url())
+        return super().form_invalid(form)
 
 
 class MageSanctumView(SpecialUserMixin, CreateView):
@@ -1819,7 +1882,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         11: MageLibraryView,
         # 12: Familiar,
         13: MageWonderView,
-        # 14: Enhancements,
+        14: MageEnhancementView,
         15: MageSanctumView,
         16: MageAlliesView,
         17: MageSpecialtiesView,

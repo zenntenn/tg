@@ -109,6 +109,11 @@
                 {% include "characters/core/human/equipment_block.html" %}
             {% endif %}
         {% endblock wonder %}
+        {% block enhancements %}
+            {% if object.creation_status == 14 %}
+                {% include "characters/mage/mage/mage_enhancements_form.html" %}
+            {% endif %}
+        {% endblock enhancements %}
         {% block sanctum %}
             {% if object.creation_status == 15 %}
                 {% include "characters/mage/mage/mage_sanctum_block_form.html" %}
