@@ -59,6 +59,16 @@ urls = [
         name="mtahuman",
     ),
     path(
+        "companion/<pk>/",
+        views.mage.CompanionUpdateView.as_view(),
+        name="companion",
+    ),
+    path(
+        "familiar/<pk>/",
+        views.mage.FamiliarUpdateView.as_view(),
+        name="familiar",
+    ),
+    path(
         "mage/full/<pk>/",
         views.mage.MageUpdateView.as_view(),
         name="mage_full",
