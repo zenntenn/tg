@@ -195,7 +195,7 @@ class CompanionBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateVi
         context = self.get_context_data()
         companion = context["object"]
 
-        bg_data = self.get_form_data("bg_form")
+        bg_data = self.get_form_data("bg_form", blankable=["note"])
         for res in bg_data:
             res["bg"] = Background.objects.get(id=res["bg"])
             res["rating"] = int(res["rating"])

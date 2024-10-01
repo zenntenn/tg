@@ -110,11 +110,13 @@ class MultipleFormsetsMixin:
 
         return super().form_valid(form)
 
-    def get_form_data(self, formset_prefix):
+    def get_form_data(self, formset_prefix, blankable=None):
         """
         Return a list of dictionaries containing the input data for all forms in the formset
         identified by the given prefix. The method works with POST data.
         """
+        if blankable is None:
+            blankable = []
         formset_class = self.formsets.get(formset_prefix)
 
         if not formset_class:
@@ -132,5 +134,9 @@ class MultipleFormsetsMixin:
                     sample[key] = form.data[f"{formset_prefix}-{i}-{key}"]
             if sample:
                 forms_data.append(sample)
-        forms_data = [x for x in forms_data if "" not in set(x.values())]
+        forms_data = [
+            x
+            for x in forms_data
+            if "" not in set([v for k, v in x.items() if k not in blankable])
+        ]
         return forms_data
