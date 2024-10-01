@@ -34,6 +34,7 @@ from characters.models.mage import (
     SpecializedPractice,
     Tenet,
 )
+from characters.models.mage.companion import Companion
 from characters.models.vampire import VtMHuman
 from characters.models.werewolf import (
     BattleScar,
@@ -351,3 +352,7 @@ admin.site.register(CtDHuman)
 admin.site.register(House)
 admin.site.register(Kith)
 admin.site.register(Motley)
+
+@admin.register(Companion)
+class CompanionAdmin(admin.ModelAdmin):
+    list_display = ("name", "companion_type")
