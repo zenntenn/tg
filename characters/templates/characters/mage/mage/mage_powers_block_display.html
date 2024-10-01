@@ -19,7 +19,7 @@
 </div>
 <div id="resSection" class="collapse show">
     <div class="row">
-        {% for res in resonance %}
+        {% for res in object.get_resonance %}
             <div class="col-sm">{{ res.resonance }}</div>
             <div class="col-sm dots">{{ res.rating }}</div>
         {% endfor %}

@@ -34,7 +34,7 @@
     <div class="row">
         <h3 class="col-sm {{ object.get_heading }}">Practices</h3>
     </div>
-    {% for pr in practices %}
+    {% for pr in object.get_practices %}
         <div class="row">
             <a class="col-sm" href="{{ pr.practice.get_absolute_url }}">{{ pr.practice }}</a>
             <div class="col-sm dots">{{ pr.rating|dots }}</div>

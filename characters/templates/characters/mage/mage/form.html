@@ -390,19 +390,11 @@
             <div class="col-sm">{{ form.legend }}</div>
         </div>
         <div class="row">
-            {% if form.library_owned is None %}
-                <div class="col-sm">Library</div>
-            {% else %}
-                <a class="col-sm" href={{ form.library_owned.get_absolute_url }}>Library</a>
-            {% endif %}
+            <div class="col-sm">Library</div>
             <div class="col-sm">{{ form.library }}</div>
             <div class="col-sm">Mentor</div>
             <div class="col-sm">{{ form.mentor }}</div>
-            {% if form.node_owned is None %}
-                <div class="col-sm">Node</div>
-            {% else %}
-                <a class="col-sm" href={{ form.node_owned.get_absolute_url }}>Node</a>
-            {% endif %}
+            <div class="col-sm">Node</div>
             <div class="col-sm">{{ form.node }}</div>
         </div>
         <div class="row">
