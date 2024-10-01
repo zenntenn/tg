@@ -14,7 +14,6 @@ class MtAHuman(Human):
         "allies",
         "alternate_identity",
         "arcane",
-        "avatar",
         "backup",
         "blessing",
         "certification",

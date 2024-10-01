@@ -59,6 +59,11 @@ urls = [
         name="mtahuman",
     ),
     path(
+        "companion/",
+        views.mage.CompanionBasicsView.as_view(),
+        name="companion",
+    ),
+    path(
         "mage/",
         views.mage.MageBasicsView.as_view(),
         name="mage",

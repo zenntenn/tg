@@ -1,4 +1,5 @@
 from .cabal import CabalCreateView, CabalDetailView, CabalUpdateView
+from .companion import CompanionBasicsView, CopanionCharacterCreationView
 from .effect import EffectCreateView, EffectDetailView, EffectListView, EffectUpdateView
 from .faction import (
     MageFactionCreateView,

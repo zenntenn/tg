@@ -1,0 +1,89 @@
+{% extends "core/form.html" %}
+{% block formdetails %}
+    method="post"
+    id="mageForm"
+    data-factions-url="{% url 'characters:mage:ajax:load_factions' %}"
+    data-subfactions-url="{% url 'characters:mage:ajax:load_subfactions' %}"
+    action=""
+    novalidate
+    enctype="multipart/form-data"
+{% endblock formdetails %}
+{% block contents %}
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-sm">Decide identity and motivation; choose concept, Affiliation, Essence, and Archetypes.</div>
+    </div>
+    <div class="centertext container">
+        <div class="row">
+            <div class="col-sm">{{ form.image }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">Name</div>
+            <div class="col-sm-2">{{ form.name }}</div>
+            <div class="col-sm-2">Nature</div>
+            <div class="col-sm-2">{{ form.nature }}</div>
+            <div class="col-sm-2">Affiliation</div>
+            <div class="col-sm-2">{{ form.affiliation }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">Chronicle</div>
+            <div class="col-sm-2">{{ form.chronicle }}</div>
+            <div class="col-sm-2">Demeanor</div>
+            <div class="col-sm-2">{{ form.demeanor }}</div>
+            <div class="col-sm-2">Faction</div>
+            <div class="col-sm-2">{{ form.faction }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">Companion Type</div>
+            <div class="col-sm-2">{{ form.companion_type }}</div>
+            <div class="col-sm-2">Concept</div>
+            <div class="col-sm-2">{{ form.concept }}</div>
+            <div class="col-sm-2">Subfaction</div>
+            <div class="col-sm-2">{{ form.subfaction }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2">Companion Of</div>
+            <div class="col-sm-2">{{ form.companion_of }}</div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+ $("#id_affiliation").change(function () {
+    var url = $("#mageForm").attr("data-factions-url");  // get the url of the `load_character_type` view
+    var affiliationId = $(this).val();  // get the selected gameline ID from the HTML input                  
+    $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-character-type/)
+        data: {
+        'affiliation': affiliationId       // add the gameline id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_character_type` view function
+        $("#id_faction").html(data);  // replace the contents of the character_type input with the data that came from the server
+        $("#id_subfaction").html('<option value="">---------</option>');
+        }
+    });
+    });
+        
+// this one is for fetching subfaction data
+$("#id_faction").change(function () { //django-model-form created this id
+var url = $("#mageForm").attr("data-subfactions-url");  // get the url of the `load_subfactions` view
+var factionId = $(this).val();  // get the selected affiliation ID from the HTML input
+        
+$.ajax({                       // initialize an AJAX request
+    url: '{% url 'characters:mage:ajax:load_subfactions' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-factions/) person_form.html template has this url var
+    data: {
+    'faction': factionId       // add the affiliation id to the GET parameters
+    },
+    success: function (data) {   // `data` is the return of the `load_factions` view function
+    $("#id_subfaction").html(data);  // replace the contents of the faction input with the data that came from the server
+    }
+});
+});
+    </script>
+{% endblock contents %}
+{% block buttons %}
+    <input name="Save" type="submit" value="Save" />
+{% endblock buttons %}

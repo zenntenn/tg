@@ -1,0 +1,25 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#historySection"
+        aria-expanded="true"
+        aria-controls="historySection">History</h2>
+</div>
+<div id="historySection" class="collapse show">
+    <div class="row">
+        <div class="col-sm">History</div>
+        <div class="col-sm">{{ object.history }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Goals</div>
+        <div class="col-sm">{{ object.goals }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Notes</div>
+        <div class="col-sm">{{ object.notes }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Public Information</div>
+        <div class="col-sm">{{ object.public_info }}</div>
+    </div>
+</div>

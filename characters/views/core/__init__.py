@@ -84,6 +84,7 @@ class GenericCharacterDetailView(DictView):
         "fomor": werewolf.FomorDetailView,
         "changeling": changeling.ChangelingDetailView,
         "ctd_human": changeling.CtDHumanDetailView,
+        "companion": mage.CopanionCharacterCreationView,
     }
     model_class = Character
     key_property = "type"
