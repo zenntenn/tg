@@ -1,0 +1,14 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#advantageSection"
+        aria-expanded="true"
+        aria-controls="advantageSection">Special Advantages</h2>
+</div>
+<div id="advantageSection" class="collapse show">
+    <div class="row">
+        {% for advantage, rating in object.get_advantage_and_rating_list %}
+            <a class="col-sm" href="{{ advantage.get_absolute_url }}">{{ advantage }}: {{ rating }}</a>
+        {% endfor %}
+    </div>
+</div>

@@ -291,6 +291,17 @@ class MtAHumanAbilityView(UpdateView):
     ]
     template_name = "characters/mage/mtahuman/ability_block_form.html"
 
+    primary = 13
+    secondary = 9
+    tertiary = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["primary"] = self.primary
+        context["secondary"] = self.secondary
+        context["tertiary"] = self.tertiary
+        return context
+
     def form_valid(self, form):
         awareness = form.cleaned_data.get("awareness")
         art = form.cleaned_data.get("art")
@@ -401,8 +412,11 @@ class MtAHumanAbilityView(UpdateView):
             + science,
         ]
         triple.sort()
-        if triple != [5, 9, 13]:
-            form.add_error(None, "Abilities must be distributed 13/9/5")
+        if triple != [self.tertiary, self.secondary, self.primary]:
+            form.add_error(
+                None,
+                f"Abilities must be distributed {self.primary}/{self.secondary}/{self.tertiary}",
+            )
             return self.form_invalid(form)
         self.object.creation_status += 1
         self.object.save()

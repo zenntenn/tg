@@ -1,0 +1,22 @@
+{% load dots %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#advantagesSection"
+        aria-expanded="true"
+        aria-controls="advantagesSection">Advantages</h2>
+</div>
+<div id="advantagesSection" class="collapse show">
+    <div class="row">
+        <div class="col-sm">Willpower</div>
+        <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
+        {% if object.essence > 0 %}
+            <div class="col-sm">Essence</div>
+            <div class="col-sm">{{ object.essence }}</div>
+        {% endif %}
+        {% if object.rage > 0 %}
+            <div class="col-sm">Rage</div>
+            <div class="col-sm">{{ object.rage }}</div>
+        {% endif %}
+    </div>
+</div>

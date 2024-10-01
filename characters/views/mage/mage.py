@@ -7,6 +7,7 @@ from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.effect import EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
+from characters.forms.mage.familiar import FamiliarForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.models.core.ability import Ability
@@ -17,6 +18,7 @@ from characters.models.core.human import Human
 from characters.models.core.meritflaw import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.core.statistic import Statistic
+from characters.models.mage.companion import Companion
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Practice, SpecializedPractice, Tenet
@@ -1416,13 +1418,101 @@ class MageLibraryView(SpecialUserMixin, CreateView):
         return form
 
 
-class MageFamiliarView:
-    # TODO: Handle multiple BGs
-    # Skip if Wonder == 0
-    # Skip if Enhancement == 0
-    # skip if sanctum == 0
-    # skip if allies == 0
-    pass
+class MageFamiliarView(SpecialUserMixin, FormView):
+    form_class = FamiliarForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        return context
+
+    def form_invalid(self, form):
+        errors = form.errors
+        if "faction" in errors:
+            del errors["faction"]
+        if "subfaction" in errors:
+            del errors["subfaction"]
+
+        if not errors:
+            return self.form_valid(form)
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+
+        if form.data["faction"]:
+            faction = MageFaction.objects.get(pk=form.data["faction"])
+        else:
+            faction = None
+        if form.data["subfaction"]:
+            subfaction = MageFaction.objects.get(pk=form.data["subfaction"])
+        else:
+            subfaction = None
+
+        c = Companion(
+            name=form.cleaned_data["name"],
+            nature=form.cleaned_data["nature"],
+            demeanor=form.cleaned_data["demeanor"],
+            affiliation=form.cleaned_data["affiliation"],
+            faction=faction,
+            subfaction=subfaction,
+            companion_type="familiar",
+            concept=form.cleaned_data["concept"],
+            chronicle=mage.chronicle,
+            owner=mage.owner,
+            npc=True,
+            companion_of=mage,
+        )
+        x = BackgroundRating.objects.filter(
+            char=mage,
+            bg=Background.objects.get(property_name="familiar"),
+            url="",
+        ).first()
+        c.freebies = 10 * x.rating
+        c.save()
+        x.url = c.get_absolute_url()
+        x.save()
+        if (
+            BackgroundRating.objects.filter(
+                char=mage,
+                bg=Background.objects.get(property_name="familiar"),
+                url="",
+            ).count()
+            == 0
+        ):
+            mage.creation_status += 1
+            mage.save()
+            for step in [
+                "wonder",
+                "enhancement",
+                "sanctum",
+                "allies",
+            ]:
+                if getattr(mage, step) == 0:
+                    mage.creation_status += 1
+                else:
+                    mage.save()
+                    break
+            mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["name"].initial = (
+            BackgroundRating.objects.filter(
+                char=get_object_or_404(Human, pk=self.kwargs.get("pk")),
+                bg=Background.objects.get(property_name="familiar"),
+                url="",
+            )
+            .first()
+            .note
+        )
+        return form
 
 
 class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
@@ -1880,7 +1970,7 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         9: MageRoteView,
         10: MageNodeView,
         11: MageLibraryView,
-        # 12: Familiar,
+        12: MageFamiliarView,
         13: MageWonderView,
         14: MageEnhancementView,
         15: MageSanctumView,

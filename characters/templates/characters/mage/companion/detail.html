@@ -1,0 +1,31 @@
+{% extends "characters/mage/mtahuman/detail.html" %}
+{% load dots %}
+{% load get_specialty %}
+{% load resonance %}
+{% block basics %}
+    {% include "characters/mage/mage/mage_basics_block_display.html" %}
+{% endblock basics %}
+{% block advantages %}
+    {% include "characters/mage/companion/companion_advantage_display.html" %}
+{% endblock advantages %}
+{% block backgrounds %}
+    {% include "characters/mage/mage/mage_background_block_display.html" %}
+{% endblock backgrounds %}
+{% block powers %}
+    {% include "characters/mage/companion/advantages_display_block.html" %}
+    {% include "characters/mage/companion/charms_display_block.html" %}
+{% endblock powers %}
+{% block appearance %}
+    {% include "characters/mage/companion/companion_appearance_block_display.html" %}
+{% endblock appearance %}
+{% block history %}
+    {% include "characters/mage/companion/companion_history_block_display.html" %}
+{% endblock history %}
+{% block freebies %}
+    {% if object.status == "Sub" %}
+        {% include "characters/mage/companion/companion_freebies_form.html" %}
+    {% endif %}
+{% endblock freebies %}
+{% block advancement %}
+    {% include "characters/mage/companion/companion_xp_form.html" %}
+{% endblock advancement %}

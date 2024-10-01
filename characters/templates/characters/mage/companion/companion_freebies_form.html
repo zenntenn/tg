@@ -1,0 +1,166 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Freebie Spend</h2>
+</div>
+{% if object.freebies > 0 %}
+    <div class="row">
+        <div class="col-sm">Spend Freebie points. The costs are as follows:</div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">
+            <b>Trait</b>
+        </div>
+        <div class="col-sm-3 border">
+            <b>Cost</b>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Attribute</div>
+        <div class="col-sm-3 border">5</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Ability</div>
+        <div class="col-sm-3 border">2</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Background</div>
+        <div class="col-sm-3 border">1</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Willpower</div>
+        <div class="col-sm-3 border">2</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Merits/Flaws</div>
+        <div class="col-sm-3 border">Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    {% if object.companion_type == "familiar" %}
+        <div class="row centertext">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3 border">Essence</div>
+            <div class="col-sm-3 border">1</div>
+            <div class="col-sm-3"></div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3 border">Charms</div>
+            <div class="col-sm-3 border">Essence Cost or 5</div>
+            <div class="col-sm-3"></div>
+        </div>
+    {% endif %}
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Advantage</div>
+        <div class="col-sm-3 border">Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Freebies Remaining</h3>
+        <h3 class="col-sm {{ object.get_heading }}">{{ object.freebies }}</h3>
+    </div>
+{% endif %}
+<div class="row">
+    <div class="col-sm">{{ form.category }}</div>
+    <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
+    <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
+    <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
+</div>
+{% for item in object.spent_freebies %}
+    <div class="row">
+        <div class="col-sm">{{ item.trait }} {{ item.value }}</div>
+        <div class="col-sm">{{ item.cost }} freebies</div>
+    </div>
+{% endfor %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelectMenu = document.getElementById("id_category");
+        const exampleSelectMenu = document.getElementById("id_example")
+        const exampleElement = document.getElementById("example_wrap");
+        const valueElement = document.getElementById("value_wrap");
+        const noteElement = document.getElementById("note_wrap");
+    
+        categorySelectMenu.addEventListener("change", function() {
+            const selectedValue = this.value;
+            
+            // Update the class of the element
+            if(["Willpower", "-----",].includes(this.value)){
+                exampleElement.classList.add("invisible");
+                valueElement.classList.add("invisible");
+                noteElement.classList.add("invisible");
+            } else {
+                exampleElement.classList.remove("invisible");
+                valueElement.classList.add("invisible");
+                noteElement.classList.add("invisible");
+            }
+            if(this.value == "MeritFlaw"){
+                valueElement.classList.remove("invisible");
+                noteElement.classList.add("invisible");
+            }
+            if(this.value == "New Background"){
+                exampleElement.classList.remove("invisible");;
+                noteElement.classList.remove("invisible");
+                valueElement.classList.add("invisible");
+            }
+            if(this.value == "Advantage"){
+                valueElement.classList.remove("invisible");
+                noteElement.classList.add("invisible");
+            }
+            
+            // Make the AJAX call
+            $.ajax({                       // initialize an AJAX request
+                url: '{% url 'characters:mage:ajax:load_companion_examples' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-character-type/)
+                data: {
+                'category': this.value,       // add the gameline id to the GET parameters
+                'object': {{object.id}}
+                },
+                success: function (data) {   // `data` is the return of the `load_character_type` view function
+                $("#id_example").html(data);  // replace the contents of the character_type input with the data that came from the server
+                $("#id_value").html('<option value="">---</option>');
+                }
+            });
+        });
+
+        exampleSelectMenu.addEventListener("change", function() {
+            const selectedValue = this.value;
+            if(categorySelectMenu.value == "MeritFlaw"){
+                $.ajax({
+                    url: '{% url 'characters:ajax:load_values' %}',
+                    data: {
+                        'example': this.value
+                    },
+                    success: function (data) {
+                        $("#id_value").html(data);
+                    }
+                });
+            }
+        });
+
+        exampleSelectMenu.addEventListener("change", function() {
+            const selectedValue = this.value;
+            if(categorySelectMenu.value == "Advantage"){
+                $.ajax({
+                    url: '{% url 'characters:mage:ajax:load_advantage_values' %}',
+                    data: {
+                        'example': this.value
+                    },
+                    success: function (data) {
+                        $("#id_value").html(data);
+                    }
+                });
+            }
+        });
+
+    });
+    
+</script>

@@ -717,6 +717,8 @@ class Human(Character):
             "willpower": 1,
             "meritflaw": "rating",
         }
+        if trait_type not in costs.keys():
+            return 10000
         return costs[trait_type]
 
     def freebie_spend_record(self, trait, trait_type, value, cost=None):

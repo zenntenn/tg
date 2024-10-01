@@ -1,0 +1,13 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Experience</h2>
+</div>
+<div class="row">
+    <div class="col-sm">XP Remaining</div>
+    <div class="col-sm">{{ object.xp }}</div>
+</div>
+{% for item in object.spent_xp %}
+    <div class="row">
+        <div class="col-sm">{{ item.trait }} {{ item.value }}</div>
+        <div class="col-sm">{{ item.cost }} freebies</div>
+    </div>
+{% endfor %}

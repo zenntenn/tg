@@ -24,6 +24,8 @@ class BackgroundRatingForm(forms.ModelForm):
         else:
             self.fields["bg"].queryset = Background.objects.all().order_by("name")
 
+        self.fields["note"].required = False
+
 
 class BaseBackgroundRatingFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):

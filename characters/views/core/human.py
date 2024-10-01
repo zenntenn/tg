@@ -118,6 +118,10 @@ class HumanAttributeView(SpecialUserMixin, UpdateView):
     ]
     template_name = "characters/core/human/attributes.html"
 
+    primary = 7
+    secondary = 5
+    tertiary = 3
+
     def form_valid(self, form):
         strength = form.cleaned_data.get("strength")
         dexterity = form.cleaned_data.get("dexterity")
@@ -150,8 +154,11 @@ class HumanAttributeView(SpecialUserMixin, UpdateView):
             charisma + manipulation + appearance,
         ]
         triple.sort()
-        if triple != [3 + 3, 3 + 5, 3 + 7]:
-            form.add_error(None, "Attributes must be distributed 7/5/3")
+        if triple != [3 + self.tertiary, 3 + self.secondary, 3 + self.primary]:
+            form.add_error(
+                None,
+                f"Attributes must be distributed {self.primary}/{self.secondary}/{self.tertiary}",
+            )
             return self.form_invalid(form)
         self.object.creation_status += 1
         self.object.save()
@@ -162,6 +169,9 @@ class HumanAttributeView(SpecialUserMixin, UpdateView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
+        context["primary"] = self.primary
+        context["secondary"] = self.secondary
+        context["tertiary"] = self.tertiary
         return context
 
 

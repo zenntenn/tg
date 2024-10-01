@@ -60,13 +60,8 @@ urls = [
     ),
     path(
         "companion/",
-        views.mage.CompanionCreateView.as_view(),
+        views.mage.CompanionBasicsView.as_view(),
         name="companion",
-    ),
-    path(
-        "familiar/",
-        views.mage.FamiliarCreateView.as_view(),
-        name="familiar",
     ),
     path(
         "mage/",

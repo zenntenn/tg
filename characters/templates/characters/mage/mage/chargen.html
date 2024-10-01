@@ -83,7 +83,7 @@
             {% endif %}
         {% endblock history %}
         {% block freebies %}
-            {% if object.creation_status >= 7 %}
+            {% if object.creation_status == 7 %}
                 {% include "characters/mage/mage/mage_freebies_form.html" %}
             {% endif %}
         {% endblock freebies %}
@@ -102,6 +102,11 @@
                 {% include "characters/mage/mage/mage_library_block_form.html" %}
             {% endif %}
         {% endblock library %}
+        {% block familiar %}
+            {% if object.creation_status == 12 %}
+                {% include "characters/mage/mage/familiar_form.html" %}
+            {% endif %}
+        {% endblock familiar %}
         {% block wonder %}
             {% if object.creation_status == 13 %}
                 {% include "characters/mage/mage/mage_wonder_block_form.html" %}

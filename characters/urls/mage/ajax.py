@@ -1,7 +1,7 @@
 from characters import views
 from django.urls import path
 
-app_name = "mage:create"
+app_name = "mage:ajax"
 urls = [
     path(
         "load_faction_details/",
@@ -22,6 +22,16 @@ urls = [
         "load_examples/",
         views.mage.mage.LoadExamplesView.as_view(),
         name="load_examples",
+    ),
+    path(
+        "load_companion_examples/",
+        views.mage.companion.LoadExamplesView.as_view(),
+        name="load_companion_examples",
+    ),
+    path(
+        "load_advantage_values/",
+        views.mage.companion.load_companion_values,
+        name="load_advantage_values",
     ),
     path(
         "get_abilities/",
