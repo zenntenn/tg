@@ -1018,12 +1018,14 @@ class Mage(MtAHuman):
 
     def total_practices(self):
         return sum([self.practice_rating(x) for x in Practice.objects.all()])
-    
+
     def get_practices(self):
         return PracticeRating.objects.filter(mage=self, rating__gt=0)
-    
+
     def get_resonance(self):
-        return ResRating.objects.filter(mage=self, rating__gte=1).order_by("resonance__name")
+        return ResRating.objects.filter(mage=self, rating__gte=1).order_by(
+            "resonance__name"
+        )
 
 
 class ResRating(models.Model):

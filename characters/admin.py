@@ -353,6 +353,7 @@ admin.site.register(House)
 admin.site.register(Kith)
 admin.site.register(Motley)
 
+
 @admin.register(Companion)
 class CompanionAdmin(admin.ModelAdmin):
     list_display = ("name", "companion_type")
