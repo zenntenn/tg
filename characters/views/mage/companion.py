@@ -286,6 +286,9 @@ class CompanionExtrasView(SpecialUserMixin, UpdateView):
                     paradox_nullification.name, "advantage", 2, cost=2
                 )
             )
+
+            self.object.add_charm(SpiritCharm.objects.get(name="Airt Sense"))
+
             self.object.freebies -= 1
 
         self.object.save()
