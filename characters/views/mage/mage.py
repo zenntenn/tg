@@ -161,7 +161,7 @@ class LoadExamplesView(View):
                 | other_tenets_q
             )
             examples = Tenet.objects.exclude(related_tenets_q)
-        elif category_choice == "Practice":
+        elif category_choice in ["Practice", "Arete"]:
             examples = Practice.objects.exclude(
                 polymorphic_ctype__model="specializedpractice"
             ).exclude(polymorphic_ctype__model="corruptedpractice")
@@ -1003,8 +1003,10 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
                     None, "Arete Cannot Be Raised Above 3 At Character Creation"
                 )
                 return super().form_invalid(form)
-            trait = "Arete"
+            prac = Practice.objects.get(pk=form.data["example"])
+            trait = f"Arete ({prac.name})"
             value = getattr(self.object, "arete") + 1
+            self.object.add_practice(prac)
             self.object.add_arete()
             self.object.freebies -= cost
         elif form.data["category"] == "Quintessence":
