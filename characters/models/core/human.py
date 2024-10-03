@@ -2,6 +2,7 @@ import random
 from datetime import date, timedelta
 
 from characters.models.core.archetype import Archetype
+from characters.models.core.attribute_block import AttributeBlock
 from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.character import Character
 from characters.models.core.derangement import Derangement
@@ -16,7 +17,7 @@ from django.urls import reverse
 from game.models import ObjectType
 
 
-class Human(Character):
+class Human(AttributeBlock, Character):
     type = "human"
 
     gameline = "wod"
@@ -37,16 +38,6 @@ class Human(Character):
         null=True,
         related_name="demeanor_of",
     )
-
-    strength = models.IntegerField(default=1)
-    dexterity = models.IntegerField(default=1)
-    stamina = models.IntegerField(default=1)
-    perception = models.IntegerField(default=1)
-    intelligence = models.IntegerField(default=1)
-    wits = models.IntegerField(default=1)
-    charisma = models.IntegerField(default=1)
-    manipulation = models.IntegerField(default=1)
-    appearance = models.IntegerField(default=1)
 
     alertness = models.IntegerField(default=0)
     athletics = models.IntegerField(default=0)
@@ -305,86 +296,6 @@ class Human(Character):
         return Specialty.objects.filter(stat=stat).exclude(
             pk__in=self.specialties.all()
         )
-
-    def add_attribute(self, attribute, maximum=5):
-        return add_dot(self, attribute, maximum)
-
-    def get_attributes(self):
-        tmp = {}
-        tmp.update(self.get_physical_attributes())
-        tmp.update(self.get_mental_attributes())
-        tmp.update(self.get_social_attributes())
-        return tmp
-
-    def get_physical_attributes(self):
-        return {
-            "strength": self.strength,
-            "dexterity": self.dexterity,
-            "stamina": self.stamina,
-        }
-
-    def get_social_attributes(self):
-        return {
-            "charisma": self.charisma,
-            "manipulation": self.manipulation,
-            "appearance": self.appearance,
-        }
-
-    def get_mental_attributes(self):
-        return {
-            "perception": self.perception,
-            "intelligence": self.intelligence,
-            "wits": self.wits,
-        }
-
-    def total_physical_attributes(self):
-        return sum(self.get_physical_attributes().values())
-
-    def total_social_attributes(self):
-        return sum(self.get_social_attributes().values())
-
-    def total_mental_attributes(self):
-        return sum(self.get_mental_attributes().values())
-
-    def total_attributes(self):
-        return sum(self.get_attributes().values())
-
-    def random_attributes(self, primary=7, secondary=5, tertiary=3):
-        attribute_types = [primary, secondary, tertiary]
-        random.shuffle(attribute_types)
-        while self.total_physical_attributes() < attribute_types[0] + 3:
-            attribute_choice = weighted_choice(
-                self.get_physical_attributes(), floor=3, ceiling=3
-            )
-            add_dot(self, attribute_choice, 5)
-        while self.total_social_attributes() < attribute_types[1] + 3:
-            attribute_choice = weighted_choice(
-                self.get_social_attributes(), floor=3, ceiling=3
-            )
-            add_dot(self, attribute_choice, 5)
-        while self.total_mental_attributes() < attribute_types[2] + 3:
-            attribute_choice = weighted_choice(
-                self.get_mental_attributes(), floor=3, ceiling=3
-            )
-            add_dot(self, attribute_choice, 5)
-
-    def has_attributes(self, primary=7, secondary=5, tertiary=3):
-        triple = [
-            self.total_physical_attributes(),
-            self.total_mental_attributes(),
-            self.total_social_attributes(),
-        ]
-        triple.sort()
-        return triple == [3 + tertiary, 3 + secondary, 3 + primary]
-
-    def filter_attributes(self, minimum=0, maximum=5):
-        return {
-            k: v for k, v in self.get_attributes().items() if minimum <= v <= maximum
-        }
-
-    def random_attribute(self):
-        choice = weighted_choice(self.filter_attributes(maximum=4))
-        self.add_attribute(choice, 5)
 
     def add_ability(self, ability, maximum=4):
         return add_dot(self, ability, maximum)

@@ -12,9 +12,9 @@
     {% endblock basics %}
     {% block attributes %}
         {% if object.status == 1 %}
-            {% include "characters/core/human/attribute_block_form.html" %}
+            {% include "characters/core/attribute_block/form.html" %}
         {% elif object.status > 1 %}
-            {% include "characters/core/human/attribute_block_display.html" %}
+            {% include "characters/core/attribute_block/detail.html" %}
         {% endif %}
     {% endblock attributes %}
 {% endblock contents %}
