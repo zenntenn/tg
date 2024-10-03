@@ -102,5 +102,6 @@ static/*
 */migrations/*
 pyproject.toml
 populate_db/*
-*.sh
 media/*
+remove_pycache.sh
+selenium_fix.sh
