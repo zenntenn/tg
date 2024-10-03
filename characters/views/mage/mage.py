@@ -528,6 +528,10 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
             {"placeholder": "Enter concept here"}
         )
         form.fields["image"].required = False
+        if not self.request.user.profile.mta_st:
+            form.fields["affiliation"].queryset = form.fields[
+                "affiliation"
+            ].queryset.exclude(name__in=["Nephandi", "Marauders"])
         return form
 
     def form_invalid(self, form):
