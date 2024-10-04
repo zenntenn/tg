@@ -21,6 +21,7 @@ class Rote(Model):
     class Meta:
         verbose_name = "Rote"
         verbose_name_plural = "Rotes"
+        ordering = ["practice", "name"]
 
     def get_absolute_url(self):
         return reverse("characters:mage:rote", kwargs={"pk": self.pk})

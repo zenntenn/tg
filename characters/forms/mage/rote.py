@@ -22,20 +22,20 @@ class RoteCreationForm(forms.Form):
     )
 
     name = forms.CharField(max_length=100, required=False)
-    practice = forms.ModelChoiceField(queryset=Practice.objects.none())
-    attribute = forms.ModelChoiceField(queryset=Attribute.objects.all())
-    ability = forms.ModelChoiceField(queryset=Ability.objects.none())
+    practice = forms.ModelChoiceField(queryset=Practice.objects.none(), required=False)
+    attribute = forms.ModelChoiceField(queryset=Attribute.objects.all(), required=False)
+    ability = forms.ModelChoiceField(queryset=Ability.objects.none(), required=False)
     systems = forms.CharField(widget=forms.Textarea(), required=False)
     description = forms.CharField(widget=forms.Textarea(), required=False)
-    correspondence = forms.IntegerField(min_value=0, initial=0)
-    time = forms.IntegerField(min_value=0, initial=0)
-    spirit = forms.IntegerField(min_value=0, initial=0)
-    matter = forms.IntegerField(min_value=0, initial=0)
-    life = forms.IntegerField(min_value=0, initial=0)
-    forces = forms.IntegerField(min_value=0, initial=0)
-    entropy = forms.IntegerField(min_value=0, initial=0)
-    mind = forms.IntegerField(min_value=0, initial=0)
-    prime = forms.IntegerField(min_value=0, initial=0)
+    correspondence = forms.IntegerField(min_value=0, initial=0, required=False)
+    time = forms.IntegerField(min_value=0, initial=0, required=False)
+    spirit = forms.IntegerField(min_value=0, initial=0, required=False)
+    matter = forms.IntegerField(min_value=0, initial=0, required=False)
+    life = forms.IntegerField(min_value=0, initial=0, required=False)
+    forces = forms.IntegerField(min_value=0, initial=0, required=False)
+    entropy = forms.IntegerField(min_value=0, initial=0, required=False)
+    mind = forms.IntegerField(min_value=0, initial=0, required=False)
+    prime = forms.IntegerField(min_value=0, initial=0, required=False)
 
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop("instance", None)
@@ -142,6 +142,7 @@ class RoteCreationForm(forms.Form):
         else:
             # Select Rote
             r = self.cleaned_data["rote_options"]
+            e = r.effect
         mage.rotes.add(r)
         mage.rote_points -= e.cost()
         mage.save()
