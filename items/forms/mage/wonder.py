@@ -11,10 +11,24 @@ class WonderForm(forms.Form):
         ("talisman", "Talisman"),
     ]
 
-    wonder_type = forms.ChoiceField(choices=WONDER_CHOICES, label="Wonder Type")
-    name = forms.CharField(max_length=100, label="Name")
-    description = forms.CharField(widget=forms.Textarea, label="Description")
-    arete = forms.IntegerField(label="Arete")
+    select_or_create_wonder = forms.BooleanField(required=False)
+    wonder_options = forms.ModelChoiceField(
+        queryset=Wonder.objects.all(), required=False
+    )
+    wonder_type = forms.ChoiceField(
+        choices=WONDER_CHOICES, label="Wonder Type", required=False
+    )
+    name = forms.CharField(max_length=100, label="Name", required=False)
+    description = forms.CharField(
+        widget=forms.Textarea, label="Description", required=False
+    )
+    arete = forms.IntegerField(label="Arete", required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop("instance", None)
+        self.rank = kwargs.pop("rank", 0)
+        super().__init__(*args, **kwargs)
+        self.fields["wonder_options"].queryset = Wonder.objects.filter(rank=self.rank)
 
 
 class WonderResonanceRatingForm(forms.ModelForm):

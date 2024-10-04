@@ -1357,7 +1357,9 @@ class MageLibraryView(SpecialUserMixin, CreateView):
         self.current_library = BackgroundRating.objects.filter(
             char=obj, bg=Background.objects.get(property_name="library"), url=""
         ).first()
-        form.fields["name"].initial = self.current_library.note
+        form.fields["name"].initial = (
+            self.current_library.note or f"{obj.name}'s Library"
+        )
         form.fields["parent"].empty_label = "Choose a Parent Location"
         form.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
@@ -1423,6 +1425,7 @@ class MageFamiliarView(SpecialUserMixin, FormView):
         c.freebies = 10 * x.rating
         c.save()
         x.url = c.get_absolute_url()
+        x.note = c.name
         x.save()
         if (
             BackgroundRating.objects.filter(
@@ -1489,88 +1492,95 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     def form_valid(self, form):
         context = self.get_context_data()
         mage = context["object"]
-        if form.cleaned_data["wonder_type"] == "artifact":
-            del form.cleaned_data["arete"]
-        wonder_type = form.cleaned_data["wonder_type"]
-        del form.cleaned_data["wonder_type"]
-        w = self.wonder_classes[wonder_type](
-            **form.cleaned_data,
-            rank=self.current_wonder.rating,
-            owned_by=mage,
-            chronicle=mage.chronicle,
-            owner=mage.owner,
-            status="Sub",
-        )
-        points = 3 * w.rank
-
-        resonance_data = self.get_form_data("resonance_form")
-        for res in resonance_data:
-            res["resonance"] = Resonance.objects.get_or_create(name=res["resonance"])[0]
-            res["rating"] = int(res["rating"])
-            if res["rating"] > 5:
-                form.add_error(
-                    None,
-                    "Resonance may not be higher than 5",
-                )
-                return self.form_invalid(form)
-        total_resonance = sum([x["rating"] for x in resonance_data])
-        if total_resonance < w.rank:
-            form.add_error(None, "Resonance must be at least rank")
-            return self.form_invalid(form)
-        if wonder_type == "charm":
-            max_cost = w.rank
-        else:
-            max_cost = 2 * w.rank
-
-        effects = []
-        total_effect_cost = 0
-        effects_data = self.get_form_data("effects_form")
-        if wonder_type == "charm" and len(effects_data) > 1:
-            form.add_error(None, "Charms can only have one power")
-            return self.form_invalid(form)
-        elif wonder_type == "artifact" and len(effects_data) > 1:
-            form.add_error(None, "Artifacts can only have one power")
-            return self.form_invalid(form)
-        elif wonder_type == "talisman" and len(effects_data) > w.rank:
-            form.add_error(None, "Talismans may up to their rank in effects")
-            return self.form_invalid(form)
-        for effect in effects_data:
-            for sphere in Sphere.objects.all():
-                effect[sphere.property_name] = int(effect[sphere.property_name])
-            e = Effect(**effect)
-            effects.append(e)
-            total_effect_cost += e.cost()
-            if total_effect_cost > max_cost:
-                form.add_error(
-                    None,
-                    "Effects cost more than allowed: rank for Charms, twice rank for Artifacts and Talismans",
-                )
-                return self.form_invalid(form)
-        cost = (total_resonance - w.rank) + total_effect_cost
-        if wonder_type != "artifact":
-            cost += w.arete - w.rank
-        if cost > points:
-            form.add_error(
-                None,
-                "Extra Resonance, Arete, and Effects must be less than 3 times the rank of the Wonder",
+        if form.cleaned_data["select_or_create_wonder"]:
+            del form.cleaned_data["select_or_create_wonder"]
+            del form.cleaned_data["wonder_options"]
+            if form.cleaned_data["wonder_type"] == "artifact":
+                del form.cleaned_data["arete"]
+            wonder_type = form.cleaned_data["wonder_type"]
+            del form.cleaned_data["wonder_type"]
+            w = self.wonder_classes[wonder_type](
+                **form.cleaned_data,
+                rank=self.current_wonder.rating,
+                owned_by=mage,
+                chronicle=mage.chronicle,
+                owner=mage.owner,
+                status="Sub",
             )
-            return self.form_invalid(form)
+            points = 3 * w.rank
 
-        w.save()
-        for e in effects:
-            e.save()
-            if wonder_type in ["charm", "artifact"]:
-                w.power = e
+            resonance_data = self.get_form_data("resonance_form")
+            for res in resonance_data:
+                res["resonance"] = Resonance.objects.get_or_create(
+                    name=res["resonance"]
+                )[0]
+                res["rating"] = int(res["rating"])
+                if res["rating"] > 5:
+                    form.add_error(
+                        None,
+                        "Resonance may not be higher than 5",
+                    )
+                    return self.form_invalid(form)
+            total_resonance = sum([x["rating"] for x in resonance_data])
+            if total_resonance < w.rank:
+                form.add_error(None, "Resonance must be at least rank")
+                return self.form_invalid(form)
+            if wonder_type == "charm":
+                max_cost = w.rank
             else:
-                w.powers.add(e)
-        w.save()
+                max_cost = 2 * w.rank
 
-        for resonance in resonance_data:
-            WonderResonanceRating.objects.create(
-                wonder=None,
-                resonance=resonance["resonance"],
-                rating=resonance["rating"],
-            )
+            effects = []
+            total_effect_cost = 0
+            effects_data = self.get_form_data("effects_form")
+            if wonder_type == "charm" and len(effects_data) > 1:
+                form.add_error(None, "Charms can only have one power")
+                return self.form_invalid(form)
+            elif wonder_type == "artifact" and len(effects_data) > 1:
+                form.add_error(None, "Artifacts can only have one power")
+                return self.form_invalid(form)
+            elif wonder_type == "talisman" and len(effects_data) > w.rank:
+                form.add_error(None, "Talismans may up to their rank in effects")
+                return self.form_invalid(form)
+            for effect in effects_data:
+                for sphere in Sphere.objects.all():
+                    effect[sphere.property_name] = int(effect[sphere.property_name])
+                e = Effect(**effect)
+                effects.append(e)
+                total_effect_cost += e.cost()
+                if total_effect_cost > max_cost:
+                    form.add_error(
+                        None,
+                        "Effects cost more than allowed: rank for Charms, twice rank for Artifacts and Talismans",
+                    )
+                    return self.form_invalid(form)
+            cost = (total_resonance - w.rank) + total_effect_cost
+            if wonder_type != "artifact":
+                cost += w.arete - w.rank
+            if cost > points:
+                form.add_error(
+                    None,
+                    "Extra Resonance, Arete, and Effects must be less than 3 times the rank of the Wonder",
+                )
+                return self.form_invalid(form)
+
+            w.save()
+            for e in effects:
+                e.save()
+                if wonder_type in ["charm", "artifact"]:
+                    w.power = e
+                else:
+                    w.powers.add(e)
+            w.save()
+
+            for resonance in resonance_data:
+                WonderResonanceRating.objects.create(
+                    wonder=None,
+                    resonance=resonance["resonance"],
+                    rating=resonance["rating"],
+                )
+        else:
+            w = form.cleaned_data["wonder_options"]
 
         self.current_wonder.note = w.name
         self.current_wonder.url = w.get_absolute_url()
@@ -1608,6 +1618,17 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
             {"placeholder": "Enter description here"}
         )
         return form
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        mage_id = self.kwargs.get("pk")
+        mage = Mage.objects.get(pk=mage_id)
+        kwargs["instance"] = mage
+        bgr = BackgroundRating.objects.filter(
+            char=mage, bg=Background.objects.get(property_name="wonder"), url=""
+        ).first()
+        kwargs["rank"] = bgr.rating
+        return kwargs
 
 
 class MageEnhancementView(SpecialUserMixin, FormView):
