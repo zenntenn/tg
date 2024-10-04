@@ -1581,6 +1581,8 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 )
         else:
             w = form.cleaned_data["wonder_options"]
+            w.owned_by = mage
+            w.save()
 
         self.current_wonder.note = w.name
         self.current_wonder.url = w.get_absolute_url()

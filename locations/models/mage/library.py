@@ -85,7 +85,7 @@ class Library(LocationModel):
         from items.models.mage.grimoire import Grimoire
 
         book = Grimoire.objects.create(
-            name="", owner=self.owner, chronicle=self.chronicle
+            name="", owner=self.owner, chronicle=self.chronicle, owned_by=self.owned_by
         )
         rank = random.randint(1, self.rank)
         if (

@@ -18,6 +18,7 @@ from core.utils import add_dot, weighted_choice
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
+from items.models.core.item import ItemModel
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
 
@@ -198,6 +199,9 @@ class Mage(MtAHuman):
 
     def get_full_update_url(self):
         return reverse("characters:mage:update:mage_full", kwargs={"pk": self.pk})
+
+    def get_items_owned(self):
+        return ItemModel.objects.filter(owned_by=self)
 
     @classmethod
     def get_creation_url(cls):

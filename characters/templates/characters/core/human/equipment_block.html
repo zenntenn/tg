@@ -7,7 +7,7 @@
 </div>
 <div id="equipmentSection" class="collapse show">
     <div class="row">
-        {% for item in items_owned %}
+        {% for item in object.get_items_owned %}
             {% if forloop.counter0|divisibleby:6 %}
             </div>
             <div class="row">
