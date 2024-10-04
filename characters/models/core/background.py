@@ -7,6 +7,9 @@ class Background(Statistic):
 
     multiplier = models.IntegerField(default=1)
 
+    class Meta:
+        ordering = ["name"]
+
 
 class BackgroundRating(models.Model):
     bg = models.ForeignKey(Background, on_delete=models.SET_NULL, null=True)
