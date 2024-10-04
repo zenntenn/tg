@@ -21,6 +21,7 @@ class Effect(Model):
     class Meta:
         verbose_name = "Effect"
         verbose_name_plural = "Effects"
+        ordering = ["max_sphere", "rote_cost", "name"]
 
     def __str__(self):
         dots = {
