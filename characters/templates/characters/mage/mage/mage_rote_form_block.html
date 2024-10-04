@@ -3,32 +3,54 @@
     <h2 class="col-sm mta_heading">Create Rote</h2>
 </div>
 <div class="row">
-    <div class="col-sm">A rote is an effect along with a Practice, an Associated Ability of the Practice, and an Attribute. Describe how the character performs the rote, what it does, and the game mechanical impact. A rote's cost is the total number of sphere dots.</div>
+    <div class="col-sm">
+        A rote is an effect along with a Practice, an Associated Ability of the Practice, and an Attribute. Describe how the character performs the rote, what it does, and the game mechanical impact. A rote's cost is the total number of sphere dots.
+    </div>
 </div>
 <div class="row">
-    <h3 class="col-sm {{ object.get_heading }}">Rote Points Remaining</h3>
-    <h3 class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</h3>
+    <div class="col-sm">Create New Rote: {{ form.select_or_create_rote }}</div>
 </div>
-<div class="row">
-    <div class="col-sm">Name</div>
-    <div class="col-sm">{{ form.name }}</div>
+<div id="rote selection">
+    <div class="row">
+        <div class="col-sm">{{ form.rote_options }}</div>
+    </div>
 </div>
-<div class="row">
-    <div class="col-sm">Practice</div>
-    <div class="col-sm">{{ form.practice }}</div>
-</div>
-<div class="row">
-    <div class="col-sm">Dicepool</div>
-    <div class="col-sm">{{ form.attribute }} + {{ form.ability }}</div>
-</div>
-{% include "characters/mage/spheres/form.html" %}
-<div class="row">
-    <div class="col-sm">Description</div>
-    <div class="col-sm">{{ form.description }}</div>
-</div>
-<div class="row">
-    <div class="col-sm">Systems</div>
-    <div class="col-sm">{{ form.systems }}</div>
+<div id="rote creation" class="invisible">
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Rote Points Remaining</h3>
+        <h3 class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</h3>
+    </div>
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Practice</div>
+        <div class="col-sm">{{ form.practice }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Dicepool</div>
+        <div class="col-sm">{{ form.attribute }} + {{ form.ability }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Create New Effect: {{ form.select_or_create_effect }}</div>
+    </div>
+    <div id="effect selection">
+        <div class="row">
+            <div class="col-sm">{{ form.effect_options }}</div>
+        </div>
+    </div>
+    <div id="effect creation" class="invisible">
+        {% include "characters/mage/spheres/form.html" %}
+        <div class="row">
+            <div class="col-sm">Systems</div>
+            <div class="col-sm">{{ form.systems }}</div>
+        </div>
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -54,4 +76,38 @@
             });
         });
     });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with data-toggle="toggle"
+        const rote_creation_toggle = document.getElementById('id_select_or_create_rote');
+        const effect_creation_toggle = document.getElementById('id_select_or_create_effect');
+        const rote_creation = document.getElementById('rote creation');
+        const rote_selection = document.getElementById('rote selection');
+        const effect_creation = document.getElementById('effect creation');
+        const effect_selection = document.getElementById('effect selection');
+        
+        // Attach event listener to each toggle
+        rote_creation_toggle.addEventListener('change', function() {
+            if ($(this).prop('checked')) {
+                rote_selection.classList.add("invisible");
+                rote_creation.classList.remove("invisible");
+            } else {
+                rote_creation.classList.add("invisible")
+                rote_selection.classList.remove("invisible")
+            }
+        });
+
+        effect_creation_toggle.addEventListener('change', function() {
+            if ($(this).prop('checked')) {
+                effect_selection.classList.add("invisible");
+                effect_creation.classList.remove("invisible");
+            } else {
+                effect_selection.classList.add("invisible")
+                effect_creation.classList.remove("invisible")
+            }
+        });
+    });
+
+    
 </script>
