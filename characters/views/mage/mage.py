@@ -1882,7 +1882,6 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         5: MageFocusView,
         6: MageExtrasView,
         7: MageFreebiesView,
-        # If Arete was bought, need to correct Practices
         8: MageLanguagesView,
         9: MageRoteView,
         10: MageNodeView,
