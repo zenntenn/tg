@@ -1071,10 +1071,10 @@ class MageLanguagesView(SpecialUserMixin, FormView):
         # Get the human instance from the pased `pk`
         human_pk = self.kwargs.get("pk")
         human = get_object_or_404(Human, pk=human_pk)
-
-        num_languages = form.cleaned_data.get("num_languages", 1)
+        num_languages = human.num_languages()
+        human.languages.add(Language.objects.get(name="English"))
         for i in range(num_languages):
-            language_name = form.cleaned_data.get(f"language_{i}")
+            language_name = form.cleaned_data.get(f"language_{i+1}")
             if language_name:
                 language, created = Language.objects.get_or_create(name=language_name)
                 human.languages.add(language)
