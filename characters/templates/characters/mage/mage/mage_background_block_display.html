@@ -9,22 +9,35 @@
 <div id="backgroundsSection" class="collapse show">
     <div class="row">
         {% for bg in object.backgrounds.all %}
-            {% if forloop.counter0|divisibleby:3 %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <!-- Center the content inside the card -->
+                    <div class="card-body text-center">
+                        <!-- Flex container to align bg.bg and bg.rating|dots horizontally -->
+                        <div class="d-inline-flex align-items-center">
+                            <div>{{ bg.bg }}</div>
+                            <div class="dots ml-2">{{ bg.rating|dots }}</div>
+                        </div>
+                        <!-- Ensure bg.note is on a new line with some top margin -->
+                        <div class="mt-2">
+                            {% if bg.note %}
+                                {% if bg.url %}
+                                    <!-- Display bg.note as a link if bg.url exists -->
+                                    <a href="{{ bg.url }}">{{ bg.note }}</a>
+                                {% else %}
+                                    <!-- Display bg.note as plain text -->
+                                    <div>{{ bg.note }}</div>
+                                {% endif %}
+                            {% else %}
+                                <!-- Insert an empty div to maintain spacing -->
+                                <div class="hidden">&nbsp;</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-            {% endif %}
-            <div class="col-sm-2">
-                {% if bg.url %}
-                <a href="{{ bg.url }}">{{ bg.bg }}
-                {% if bg.note %}({{ bg.note|safe }}){% endif %}</a>
-                {% else %}
-                {{ bg.bg }}
-                {% if bg.note %}({{ bg.note|safe }}){% endif %}
-                {% endif %}
-            </div>
-            <div class="col-sm-2 dots">{{ bg.rating|dots }}</div>
-            {% if forloop.last %}</div>{% endif %}
-    {% empty %}
+        {% empty %}
+            <div class="col">No backgrounds available.</div>
+        {% endfor %}
     </div>
-{% endfor %}
 </div>
