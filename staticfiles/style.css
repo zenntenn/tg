@@ -114,3 +114,70 @@
 .pointer {
     cursor: pointer;
 }
+
+.health-box {
+    width: 24px;
+    height: 24px;
+    border: 2px solid currentColor;
+    display: inline-block;
+    position: relative;
+    margin: 2px;
+}
+
+.bashing::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: -13px;
+    width: 28px;
+    height: 28px;
+    border-top: 2px solid currentColor;
+    transform: rotate(45deg);
+}
+
+.lethal::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 28px;
+    height: 28px;
+    border-top: 2px solid currentColor;
+    transform: rotate(-45deg);
+}
+
+.lethal::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: -13px;
+    width: 28px;
+    height: 28px;
+    border-top: 2px solid currentColor;
+    transform: rotate(45deg);
+}
+
+.aggravated {
+    background-image:
+        /* Horizontal Line */
+        linear-gradient(0deg,
+            transparent 35%,
+            currentColor 54%,
+            currentColor 54%,
+            transparent 35%),
+        /* Diagonal Line from Top Left to Bottom Right */
+        linear-gradient(45deg,
+            transparent 45%,
+            currentColor 46%,
+            currentColor 54%,
+            transparent 55%),
+        /* Diagonal Line from Top Right to Bottom Left */
+        linear-gradient(-45deg,
+            transparent 45%,
+            currentColor 46%,
+            currentColor 54%,
+            transparent 55%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
