@@ -94,6 +94,40 @@ class Human(AttributeBlock, Character):
         verbose_name = "Human"
         verbose_name_plural = "Humans"
 
+    def get_health_levels(self):
+        damage = list(self.current_health_levels)
+        health_levels = damage + ["-"] * (self.max_health_levels - len(damage))
+        return health_levels
+
+    def get_health_level_names(self):
+        defaults = [
+            "Bruised",
+            "Hurt",
+            "Injured",
+            "Wounded",
+            "Mauled",
+            "Crippled",
+            "Incapacitated",
+        ]
+        difference = self.max_health_levels - len(defaults)
+        if difference != 0:
+            return ["Bruised"] * difference + defaults
+        return defaults
+
+    def get_wound_penalty_list(self):
+        defaults = ["-0", "-1", "-1", "-2", "-2", "-5"]
+        difference = self.max_health_levels - len(defaults)
+        if difference != 0:
+            return ["-0"] * difference + defaults
+        return defaults
+
+    def get_health_table(self):
+        return zip(
+            self.get_health_level_names(),
+            self.get_wound_penalty_list(),
+            self.get_health_levels(),
+        )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

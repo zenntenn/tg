@@ -1,0 +1,20 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Health</h2>
+</div>
+{% for nm, pen, hl in object.get_health_table %}
+    <div class="row">
+        <div class="col-sm">{{ nm }}</div>
+        <div class="col-sm">{{ pen }}</div>
+        <div class="col-sm">
+            {% if hl == "-" %}
+                <div class="health-box"></div>
+            {% elif hl == "B" %}
+                <div class="health-box bashing"></div>
+            {% elif hl == "L" %}
+                <div class="health-box lethal"></div>
+            {% elif hl == "A" %}
+                <div class="health-box aggravated"></div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
