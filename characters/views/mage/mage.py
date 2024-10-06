@@ -969,15 +969,40 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             trait = Background.objects.get(pk=form.data["example"])
             cost *= trait.multiplier
             value = 1
-            BackgroundRating.objects.create(
-                bg=trait, rating=1, char=self.object, note=form.data["note"]
-            )
+            if form.data["pooled"] == "on":
+                pbgr = PooledBackgroundRating.objects.get_or_create(
+                    bg=trait, group=self.object.get_group(), note=form.data["note"]
+                )[0]
+                pbgr.rating += 1
+                pbgr.save()
+                BackgroundRating.objects.create(
+                    bg=trait,
+                    rating=1,
+                    char=self.object,
+                    note=form.data["note"],
+                    complete=True,
+                    pooled=True,
+                )
+            else:
+                BackgroundRating.objects.create(
+                    bg=trait,
+                    rating=1,
+                    char=self.object,
+                    note=form.data["note"],
+                    pooled=False,
+                )
             self.object.freebies -= cost
             trait = str(trait)
             if form.data["note"]:
                 trait += f" ({form.data['note']})"
         elif form.data["category"] == "Existing Background":
             trait = BackgroundRating.objects.get(pk=form.data["example"])
+            if trait.pooled:
+                pbgr = PooledBackgroundRating.objects.get(
+                    bg=trait.bg, group=self.object.get_group(), note=trait.note
+                )
+                pbgr.rating += 1
+                pbgr.save()
             cost *= trait.bg.multiplier
             value = trait.rating + 1
             trait.rating += 1
