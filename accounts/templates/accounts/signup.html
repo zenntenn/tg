@@ -3,10 +3,53 @@
     Sign Up
 {% endblock title %}
 {% block content %}
-    <h2>Sign up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" id="signup_button">Sign up</button>
-    </form>
+    <div class="container">
+        <div class="row">
+            <h2 class="col-sm wod_heading centertext">Sign Up</h2>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row centertext">
+                <div class="col-sm">Username</div>
+                <div class="col-sm">{{ form.username }}</div>
+                <div class="col-sm">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
+            </div>
+            <div class="row centertext">
+                <div class="col-sm">Email</div>
+                <div class="col-sm">{{ form.email }}</div>
+                <div class="col-sm">Should not be the same as username</div>
+            </div>
+            <div class="row centertext">
+                <div class="col-sm">Password</div>
+                <div class="col-sm">{{ form.password1 }}</div>
+                <div class="col-sm">
+                    <ul>
+                        Your password can't be too similar to your other personal information.
+                    </ul>
+                    <ul>
+                        Your password must contain at least 8 characters.
+                    </ul>
+                    <ul>
+                        Your password can't be a commonly used password.
+                    </ul>
+                    <ul>
+                        Your password can't be entirely numeric.
+                    </ul>
+                </div>
+            </div>
+            <div class="row centertext">
+                <div class="col-sm">Confirm Password</div>
+                <div class="col-sm">{{ form.password2 }}</div>
+                <div class="col-sm"></div>
+            </div>
+            <div class="row centertext">
+                <button type="submit" id="signup_button" class="col-sm">Sign up</button>
+            </div>
+        </form>
+        {% block errors %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}<p class="alert centertext">{{ error }}</p>{% endfor %}
+            {% endif %}
+        {% endblock errors %}
+    </div>
 {% endblock content %}

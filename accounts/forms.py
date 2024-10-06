@@ -11,6 +11,12 @@ class CustomUSerCreationForm(UserCreationForm):
         model = User
         fields = ("username", "email", "password1", "password2")
 
+    def is_valid(self):
+        if self.data["username"] == self.data["email"]:
+            self.add_error(None, "Username and Email must be distinct")
+            return False
+        return super().is_valid()
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
