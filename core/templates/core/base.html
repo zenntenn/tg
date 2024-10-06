@@ -22,7 +22,7 @@
             <meta name="keywords"
                   content="world of darkness, rpgs, role-playing games, community content" />
             {% if user.is_authenticated %}
-                {% with ''|add:user.profile.theme as theme_css %}
+                {% with ""|add:user.profile.theme as theme_css %}
                     <link rel="stylesheet" type="text/css" href="{% static theme_css %}" />
                 {% endwith %}
             {% else %}
@@ -39,11 +39,17 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarsExample05"
+                    aria-controls="navbarsExample05"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             {% comment %} <a class="navbar-brand" href="{% url 'home' %}">Tellurium Games</a>
-             {% endcomment %}
+            {% endcomment %}
             <div class="collapse navbar-collapse" id="navbarsExample05">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
@@ -194,11 +200,12 @@
         {% block content %}
         {% endblock content %}
         {% block footer %}
+            {% load sanitize_text %}
             {% if messages %}{% endif %}
             <u1 class="messages">
             {% for message in messages %}
                 <li class="{{ message.tags }}">
-                    {{ message|safe }}<a href="#" class="close">x</a>
+                    {{ message|sanitize_html }}<a href="#" class="close">x</a>
                 </li>
             {% endfor %}
             </u1>

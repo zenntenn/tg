@@ -1,6 +1,7 @@
 {% extends "core/object.html" %}
 {% block contents %}
     {% load dots %}
+    {% load sanitize_text %}
     <div class="row">
         <div class="col-sm">Name</div>
         <div class="col-sm">{{ object.name }}</div>
@@ -15,19 +16,19 @@
     </div>
     <div class="row">
         <div class="col-sm">Paradigms</div>
-        <div class="col-sm">{{ paradigms|safe }}</div>
+        <div class="col-sm">{{ paradigms|sanitize_html }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Practices</div>
-        <div class="col-sm">{{ practices|safe }}</div>
+        <div class="col-sm">{{ practices|sanitize_html }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Media</div>
-        <div class="col-sm">{{ media|safe }}</div>
+        <div class="col-sm">{{ media|sanitize_html }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Materials</div>
-        <div class="col-sm">{{ materials|safe }}</div>
+        <div class="col-sm">{{ materials|sanitize_html }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Founded</div>
@@ -41,17 +42,17 @@
         </div>
     </div>
     {% if object.ended < 5000 %}
-    <div class="row">
-        <div class="col-sm">Ended</div>
-        <div class="col-sm">
-            {{ year }}
-            {% if object.ended > 0 %}
-                AD
-            {% else %}
-                BC
-            {% endif %}
+        <div class="row">
+            <div class="col-sm">Ended</div>
+            <div class="col-sm">
+                {{ year }}
+                {% if object.ended > 0 %}
+                    AD
+                {% else %}
+                    BC
+                {% endif %}
+            </div>
         </div>
-    </div>
     {% endif %}
     <div class="row">
         <div class="col-sm">Parent Faction</div>
@@ -63,7 +64,7 @@
     </div>
     <div class="row">
         <div class="col-sm">Subfactions</div>
-        <div class="col-sm">{{ subfactions|safe }}</div>
+        <div class="col-sm">{{ subfactions|sanitize_html }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Description</div>

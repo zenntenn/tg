@@ -3,6 +3,7 @@
     {{ gameline }} House Rules
 {% endblock title %}
 {% block content %}
+    {% load sanitize_text %}
     {% load field %}
     <div class="centertext container">
         {% for chron in chronicles %}
@@ -24,7 +25,7 @@
                         <div class="row border">
                             <div class="col-sm border"">{{ hr.name }}
                             </div>
-                            <div class="col-sm border">{{ hr.display_sources|safe }}</div>
+                            <div class="col-sm border">{{ hr.display_sources|sanitize_html }}</div>
                             <div class="col-sm border">{{ hr.description }}</div>
                         </div>
                     {% endif %}
