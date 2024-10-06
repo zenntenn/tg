@@ -13,6 +13,7 @@
             <div class="col-sm">{{ f.bg }}</div>
             <div class="col-sm">{{ f.rating }}</div>
             <div class="col-sm">{{ f.note }}</div>
+            {% if object.is_group_member %}<div class="col-sm">Pooled? {{ f.pooled }}</div>{% endif %}
         </div>
     {% endfor %}
 </div>
@@ -22,6 +23,7 @@
         <div class="col-sm">{{ bg_form_context.empty_form.bg }}</div>
         <div class="col-sm">{{ bg_form_context.empty_form.rating }}</div>
         <div class="col-sm">{{ bg_form_context.empty_form.note }}</div>
+        <div class="col-sm">{{ bg_form_context.empty_form.pooled }}</div>
     </div>
 </div>
 <button type="button" id="{{ bg_form_context.add_button_id }}">Add Background</button>
