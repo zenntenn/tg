@@ -68,11 +68,23 @@ class RoteCreationForm(forms.Form):
         )
         effect_filter_dict["rote_cost__lte"] = getattr(self.instance, "rote_points")
 
-        rote_filter_dict["practice__in"] = self.instance.practices.all()
+        rote_filter_dict["practice__in"] = list(self.instance.practices.all()) + [
+            getattr(x, "parent_practice", None)
+            for x in self.instance.practices.all()
+            if getattr(x, "parent_practice", None) is not None
+        ]
 
         pracdict = {
             x.practice: x.rating for x in self.instance.practicerating_set.all()
         }
+        pracdict.update(
+            {
+                getattr(x.practice, "parent_practice", None): x.rating
+                for x in self.instance.practicerating_set.all()
+                if getattr(x.practice, "parent_practice", None) is not None
+            }
+        )
+
         practice_filter = Q()
         for practice, rating in pracdict.items():
             sphere_filter = {}
