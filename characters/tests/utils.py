@@ -259,9 +259,6 @@ def mage_setup():
     energy_weapons = Ability.objects.get_or_create(
         name="Energy Weapons", property_name="energy_weapons"
     )[0]
-    hypertech = Ability.objects.get_or_create(
-        name="Hypertech", property_name="hypertech"
-    )[0]
     jetpack = Ability.objects.get_or_create(name="Jetpack", property_name="jetpack")[0]
     riding = Ability.objects.get_or_create(name="Riding", property_name="riding")[0]
     torture = Ability.objects.get_or_create(name="Torture", property_name="torture")[0]

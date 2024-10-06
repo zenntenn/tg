@@ -101,7 +101,6 @@ class MtAHuman(Human):
     archery = models.IntegerField(default=0)
     biotech = models.IntegerField(default=0)
     energy_weapons = models.IntegerField(default=0)
-    hypertech = models.IntegerField(default=0)
     jetpack = models.IntegerField(default=0)
     riding = models.IntegerField(default=0)
     torture = models.IntegerField(default=0)
@@ -273,7 +272,6 @@ class MtAHuman(Human):
                 "archery": self.archery,
                 "biotech": self.biotech,
                 "energy_weapons": self.energy_weapons,
-                "hypertech": self.hypertech,
                 "jetpack": self.jetpack,
                 "riding": self.riding,
                 "torture": self.torture,
