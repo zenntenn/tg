@@ -537,7 +537,8 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
                 "affiliation"
             ].queryset.exclude(name__in=["Nephandi", "Marauders"])
         form.fields["cabal"] = forms.ModelChoiceField(
-            queryset=Cabal.objects.all(), required=False
+            queryset=Cabal.objects.filter(permitted_users=self.request.user),
+            required=False,
         )
         return form
 
