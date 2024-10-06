@@ -1,5 +1,6 @@
 {% extends "core/object.html" %}
 {% block contents %}
+    {% load sanitize_text %}
     {% load dots %}
     <div class="row">
         <div class="col-sm">Name</div>
@@ -15,6 +16,6 @@
     </div>
     <div class="row">
         <div class="col-sm">Description</div>
-        <div class="col-sm">{{ object.description|safe }}</div>
+        <div class="col-sm">{{ object.description|sanitize_html }}</div>
     </div>
 {% endblock contents %}

@@ -3,6 +3,7 @@
     {{ object.name }}
 {% endblock title %}
 {% block content %}
+    {% load sanitize_text %}
     <div class="container">
         <div class="row">
             <h2 class="col-sm {{ object.headings }} centertext">{{ object.name }}</h2>
@@ -54,7 +55,7 @@
         </div>
         {% for name, loc in names_dict.items %}
             <div class="row border">
-                <a class="col-sm border lefttext" href="{{ loc.get_absolute_url }}">{{ name|safe }}</a>
+                <a class="col-sm border lefttext" href="{{ loc.get_absolute_url }}">{{ name|sanitize_html }}</a>
                 <div class="col-sm border centertext">{{ loc.owner.username }}</div>
                 <div class="col-sm border centertext">{{ loc.type.title }}</div>
             </div>

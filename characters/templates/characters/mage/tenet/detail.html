@@ -1,6 +1,7 @@
 {% extends "core/object.html" %}
 {% block contents %}
     {% load dots %}
+    {% load sanitize_text %}
     <div class="row">
         <h1 class="col-sm {{ object.get_heading }}">{{ object.name }}</h1>
     </div>
@@ -12,13 +13,13 @@
         <h2 class="col-sm {{ object.get_heading }}">Associated Practices</h2>
     </div>
     <div class="row">
-        <div class="col-sm">{{ associated_practices|safe }}</div>
+        <div class="col-sm">{{ associated_practices|sanitize_html }}</div>
     </div>
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Limited Practices</h2>
     </div>
     <div class="row">
-        <div class="col-sm">{{ limited_practices|safe }}</div>
+        <div class="col-sm">{{ limited_practices|sanitize_html }}</div>
     </div>
     <div class="row">
         <h3 class="col-sm {{ object.get_heading }}">Description</h3>
@@ -27,4 +28,3 @@
         <div class="col-sm">{{ object.description }}</div>
     </div>
 {% endblock contents %}
-    
