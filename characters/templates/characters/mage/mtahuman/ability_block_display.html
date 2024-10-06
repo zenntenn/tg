@@ -200,4 +200,48 @@
         </div>
         <div class="col-sm dots">{{ object.science|dots }}</div>
     </div>
+    {% if object.get_secondaries_for_display %}
+        <div class="row">
+            <h3 class="col-sm {{ object.get_heading }}">Secondary Talents</h3>
+            <h3 class="col-sm {{ object.get_heading }}">Secondary Skills</h3>
+            <h3 class="col-sm {{ object.get_heading }}">Secondary Knowledges</h3>
+        </div>
+        {% for tal, ski, kno in object.get_secondaries_for_display %}
+            <div class="row">
+                <div class="col-sm">
+                    {{ tal|first }}
+                    {% with talname=tal|last %}
+                        {% if object|get_specialty:talname %}({{ object|get_specialty:talname }}){% endif %}
+                    {% endwith %}
+                </div>
+                {% if tal|slice:"1:"|first != 0 %}
+                    <div class="col-sm dots">{{ tal|slice:"1:"|first|dots }}</div>
+                {% else %}
+                    <div class="col-sm dots"></div>
+                {% endif %}
+                <div class="col-sm">
+                    {{ ski|first }}
+                    {% with skiname=ski|last %}
+                        {% if object|get_specialty:skiname %}({{ object|get_specialty:skiname }}){% endif %}
+                    {% endwith %}
+                </div>
+                {% if ski|slice:"1:"|first != 0 %}
+                    <div class="col-sm dots">{{ ski|slice:"1:"|first|dots }}</div>
+                {% else %}
+                    <div class="col-sm dots"></div>
+                {% endif %}
+                <div class="col-sm">
+                    {{ kno|first }}
+                    {% with knoname=kno|last %}
+                        {% if object|get_specialty:knoname %}({{ object|get_specialty:knoname }}){% endif %}
+                    {% endwith %}
+                </div>
+                {% if kno|slice:"1:"|first != 0 %}
+                    <div class="col-sm dots">{{ kno|slice:"1:"|first|dots }}</div>
+                {% else %}
+                    <div class="col-sm dots"></div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
 </div>
