@@ -2,79 +2,83 @@
     <h2 class="col-sm {{ object.get_heading }}">Freebie Spend</h2>
 </div>
 {% if object.freebies > 0 %}
-<div class="row">
-    <div class="col-sm">Spend Freebie points. The costs are as follows:</div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border"><b>Trait</b></div>
-    <div class="col-sm-3 border"><b>Cost</b></div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Attribute</div>
-    <div class="col-sm-3 border">5</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Ability</div>
-    <div class="col-sm-3 border">2</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Background</div>
-    <div class="col-sm-3 border">1</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Willpower</div>
-    <div class="col-sm-3 border">1</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Merits/Flaws</div>
-    <div class="col-sm-3 border">Rating</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Sphere</div>
-    <div class="col-sm-3 border">7</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Arete (Maximum 3)</div>
-    <div class="col-sm-3 border">4</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Four Quintessence</div>
-    <div class="col-sm-3 border">1</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Four Rote Points</div>
-    <div class="col-sm-3 border">1</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row centertext">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3 border">Resonance</div>
-    <div class="col-sm-3 border">3</div>
-    <div class="col-sm-3"></div>
-</div>
-<div class="row">
-    <h3 class="col-sm {{ object.get_heading }}">Freebies Remaining</h3>
-    <h3 class="col-sm {{ object.get_heading }}">{{ object.freebies }}</h3>
-</div>
+    <div class="row">
+        <div class="col-sm">Spend Freebie points. The costs are as follows:</div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">
+            <b>Trait</b>
+        </div>
+        <div class="col-sm-3 border">
+            <b>Cost</b>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Attribute</div>
+        <div class="col-sm-3 border">5</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Ability</div>
+        <div class="col-sm-3 border">2</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Background</div>
+        <div class="col-sm-3 border">1</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Willpower</div>
+        <div class="col-sm-3 border">1</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Merits/Flaws</div>
+        <div class="col-sm-3 border">Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Sphere</div>
+        <div class="col-sm-3 border">7</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Arete (Maximum 3)</div>
+        <div class="col-sm-3 border">4</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Four Quintessence</div>
+        <div class="col-sm-3 border">1</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Four Rote Points</div>
+        <div class="col-sm-3 border">1</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Resonance</div>
+        <div class="col-sm-3 border">3</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Freebies Remaining</h3>
+        <h3 class="col-sm {{ object.get_heading }}">{{ object.freebies }}</h3>
+    </div>
 {% endif %}
 <div class="row">
     <div class="col-sm">{{ form.category }}</div>
@@ -82,12 +86,13 @@
     <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
     <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
     <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
+    {% if object.is_group_member %}<div class="col-sm invisible" id="pooled_wrap">Pooled? {{ f.pooled }}</div>{% endif %}
 </div>
 {% for item in object.spent_freebies %}
-<div class="row">
-    <div class="col-sm">{{ item.trait }} {{ item.value }}</div>
-    <div class="col-sm">{{ item.cost }} freebies</div>
-</div>
+    <div class="row">
+        <div class="col-sm">{{ item.trait }} {{ item.value }}</div>
+        <div class="col-sm">{{ item.cost }} freebies</div>
+    </div>
 {% endfor %}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -107,34 +112,40 @@
                 valueElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
                 resElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
             } else {
                 exampleElement.classList.remove("invisible");
                 valueElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
                 resElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
             }
             if(this.value == "MeritFlaw"){
                 valueElement.classList.remove("invisible");
                 resElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
             }
             if(this.value == "Resonance"){
                 resElement.classList.remove("invisible");
                 exampleElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
                 valueElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
             }
             if(this.value == "New Background"){
-                resElement.classList.add("invisible")
-                exampleElement.classList.remove("invisible");;
+                resElement.classList.add("invisible");
+                exampleElement.classList.remove("invisible");
                 noteElement.classList.remove("invisible");
                 valueElement.classList.add("invisible");
+                pooled_wrap.classList.remove("invisible");
             }
             if(this.value == "Arete"){
                 resElement.classList.add("invisible")
                 exampleElement.classList.remove("invisible");;
                 noteElement.classList.add("invisible");
                 valueElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
             }
             
             // Make the AJAX call

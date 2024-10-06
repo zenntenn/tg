@@ -13,6 +13,7 @@ class BackgroundRatingForm(forms.ModelForm):
         queryset=Background.objects.all(), empty_label="Choose a Background"
     )
     rating = forms.IntegerField(min_value=0, max_value=5, initial=0)
+    pooled = forms.BooleanField()
 
     def __init__(self, *args, **kwargs):
         char = kwargs.pop("char", None)

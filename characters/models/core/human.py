@@ -94,6 +94,18 @@ class Human(AttributeBlock, Character):
         verbose_name = "Human"
         verbose_name_plural = "Humans"
 
+    def is_group_member(self):
+        from characters.models.core.group import Group
+
+        return Group.objects.filter(members=self).count() > 0
+
+    def get_group(self):
+        from characters.models.core.group import Group
+
+        if self.is_group_member():
+            return Group.objects.get(members=self)
+        return False
+
     def get_health_levels(self):
         damage = list(self.current_health_levels)
         health_levels = damage + ["-"] * (self.max_health_levels - len(damage))

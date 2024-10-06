@@ -19,6 +19,7 @@ class AdvancementForm(forms.Form):
     example = forms.ModelChoiceField(queryset=Attribute.objects.none(), required=False)
     value = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)
     note = forms.CharField(max_length=300, required=False)
+    pooled = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop("instance", None)
