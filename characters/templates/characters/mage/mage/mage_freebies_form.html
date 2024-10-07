@@ -86,7 +86,7 @@
     <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
     <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
     <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
-    {% if object.is_group_member %}<div class="col-sm invisible" id="pooled_wrap">Pooled? {{ f.pooled }}</div>{% endif %}
+    <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
 </div>
 {% for item in object.spent_freebies %}
     <div class="row">
@@ -102,6 +102,7 @@
         const valueElement = document.getElementById("value_wrap");
         const resElement = document.getElementById("resonance_wrap");
         const noteElement = document.getElementById("note_wrap");
+        const pooled_wrap = document.getElementById("pooled_wrap");
     
         categorySelectMenu.addEventListener("change", function() {
             const selectedValue = this.value;
@@ -138,7 +139,9 @@
                 exampleElement.classList.remove("invisible");
                 noteElement.classList.remove("invisible");
                 valueElement.classList.add("invisible");
-                pooled_wrap.classList.remove("invisible");
+                if({{object.is_group_member}}){
+                    pooled_wrap.classList.remove("invisible");
+                }
             }
             if(this.value == "Arete"){
                 resElement.classList.add("invisible")
