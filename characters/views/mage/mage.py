@@ -1590,11 +1590,11 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
             w = self.wonder_classes[wonder_type](
                 **form.cleaned_data,
                 rank=self.current_wonder.rating,
-                owned_by=mage,
                 chronicle=mage.chronicle,
                 owner=mage.owner,
                 status="Sub",
             )
+            w.owned_by.add(mage)
             points = 3 * w.rank
 
             resonance_data = self.get_form_data("resonance_form")
@@ -1669,7 +1669,7 @@ class MageWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 )
         else:
             w = form.cleaned_data["wonder_options"]
-            w.owned_by = mage
+            w.owned_by.add(mage)
             w.save()
 
         self.current_wonder.note = w.name
