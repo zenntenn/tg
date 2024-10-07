@@ -8,12 +8,8 @@ from locations.models.core import LocationModel
 class ItemModel(Model):
     type = "item"
 
-    owned_by = models.ForeignKey(
-        CharacterModel, blank=True, null=True, on_delete=models.SET_NULL
-    )
-    located_at = models.ForeignKey(
-        LocationModel, blank=True, null=True, on_delete=models.SET_NULL
-    )
+    owned_by = models.ManyToManyField(CharacterModel, blank=True)
+    located_at = models.ManyToManyField(LocationModel, blank=True)
 
     class Meta:
         verbose_name = "Item"
