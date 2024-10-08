@@ -808,21 +808,18 @@ class Mage(MtAHuman):
             "resonance": self.random_freebies_resonance,
         }
 
-    def freebie_cost(self, trait):
-        cost = super().freebie_cost(trait)
-        if cost != 10000:
-            return cost
-        costs = defaultdict(
-            lambda: 10000,
+    def freebie_costs(self):
+        costs = super().freebie_costs()
+        costs.update(
             {
                 "sphere": 7,
                 "arete": 4,
                 "quintessence": 1,
                 "rote points": 1,
                 "resonance": 3,
-            },
+            }
         )
-        return costs[trait]
+        return costs
 
     def spend_freebies(self, trait):
         output = super().spend_freebies(trait)

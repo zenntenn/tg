@@ -29,6 +29,11 @@ urls = [
         name="load_companion_examples",
     ),
     path(
+        "load_sorcerer_examples/",
+        views.mage.sorcerer.LoadExamplesView.as_view(),
+        name="load_sorcerer_examples",
+    ),
+    path(
         "load_advantage_values/",
         views.mage.companion.load_companion_values,
         name="load_advantage_values",
@@ -37,5 +42,16 @@ urls = [
         "get_abilities/",
         views.mage.mage.get_abilities,
         name="get_abilities",
+    ),
+    path(
+        "get_practice_abilities/",
+        views.mage.sorcerer.get_abilities,
+        name="get_practice_abilities",
+    ),
+    path(
+        "load_attributes/", views.mage.sorcerer.load_attributes, name="load_attributes"
+    ),
+    path(
+        "load_affinities/", views.mage.sorcerer.load_affinities, name="load_affinities"
     ),
 ]

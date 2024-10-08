@@ -1,0 +1,45 @@
+{% load dots %}
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#numinaSection"
+        aria-expanded="true"
+        aria-controls="numinaSection">Numina</h2>
+</div>
+<div id="numinaSection" class="collapse show">
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Paths</h3>
+    </div>
+    {% for pr in object.pathrating_set.all %}
+        <div class="row">
+            <a class="col-sm" href="{{ pr.path.get_absolute_url }}">{{ pr.path }}</a>
+            <div class="col-sm dots">{{ pr.rating|dots }}</div>
+            <a class="col-sm" href={{ pr.practice.get_absolute_url }}>{{ pr.practice }}</a>
+            <div class="col-sm">{{ pr.ability }}</div>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <h3 class="col-sm {{ object.get_heading }}">Rituals</h3>
+    </div>
+    <div class="row">
+        {% for ritual in object.rituals.all %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <!-- Center the content inside the card -->
+                    <div class="card-body text-center">
+                        <!-- Flex container to align ritual.ritual and ritual.rating|dots horizontally -->
+                        <div class="mt-2">
+                            <a href={{ ritual.get_absolute_url }}>{{ ritual }}</a>
+                        </div>
+                        <div class="d-inline-flex align-items-center">
+                            <div class="dots ml-2">{{ ritual.path }}</div>
+                            <div class="dots ml-2">{{ ritual.level|dots }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">No Rituals available.</div>
+        {% endfor %}
+    </div>
+</div>

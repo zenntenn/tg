@@ -85,6 +85,7 @@ class GenericCharacterDetailView(DictView):
         "changeling": changeling.ChangelingDetailView,
         "ctd_human": changeling.CtDHumanDetailView,
         "companion": mage.CopanionCharacterCreationView,
+        "sorcerer": mage.SorcererCharacterCreationView,
     }
     model_class = Character
     key_property = "type"

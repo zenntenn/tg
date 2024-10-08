@@ -49,6 +49,11 @@ urls = [
         name="mage_faction",
     ),
     path(
+        "sorcerer_fellowship/<pk>/",
+        views.mage.SorcererFellowshipUpdateView.as_view(),
+        name="sorcerer_fellowship",
+    ),
+    path(
         "rotes/<pk>/",
         views.mage.RoteUpdateView.as_view(),
         name="rote",

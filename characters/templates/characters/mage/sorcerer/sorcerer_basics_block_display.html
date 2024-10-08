@@ -1,0 +1,33 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#basicsSection"
+        aria-expanded="true"
+        aria-controls="basicsSection">Basics</h2>
+</div>
+<div id="basicsSection" class="collapse show">
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+        <div class="col-sm">Nature</div>
+        <a class="col-sm" href="{{ object.nature.get_absolute_url }}">{{ object.nature }}</a>
+        <div class="col-sm">Fellowship</div>
+        <a class="col-sm" href="{{ object.fellowship.get_absolute_url }}">{{ object.fellowship }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Player</div>
+        <div class="col-sm">{{ object.owner }}</div>
+        <div class="col-sm">Demeanor</div>
+        <a class="col-sm" href="{{ object.demeanor.get_absolute_url }}">{{ object.demeanor }}</a>
+        <div class="col-sm">Casting Attribute</div>
+        <div class="col-sm">{{ object.casting_attribute }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Sorcerer Type</div>
+        <div class="col-sm">{{ object.get_sorcerer_type_display }}</div>
+        <div class="col-sm">Concept</div>
+        <div class="col-sm">{{ object.concept }}</div>
+        <div class="col-sm">Affinity Path</div>
+        <a class="col-sm" href="{{ object.affinity_path.get_absolute_url }}">{{ object.affinity_path }}</a>
+    </div>
+</div>

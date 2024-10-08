@@ -187,7 +187,7 @@ class LoadExamplesView(View):
 
 def get_abilities(request):
     object_id = request.GET.get("object")
-    object = Mage.objects.get(id=object_id)
+    object = Human.objects.get(id=object_id)
     practice_id = request.GET.get("practice_id")
     prac = Practice.objects.get(id=practice_id)
     abilities = prac.abilities.all().order_by("name")

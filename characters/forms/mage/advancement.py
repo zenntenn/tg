@@ -30,6 +30,21 @@ class CompanionAdvancementForm(AdvancementForm):
         return self.instance
 
 
+class SorcererAdvancementForm(AdvancementForm):
+    def __init__(self, *args, suggestions=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if suggestions is None:
+            suggestions = [x.name.title() for x in Resonance.objects.order_by("name")]
+        ADDITIONAL_CATS = [("Existing Path", "Existing Path"), ("New Path", "New Path")]
+        if self.instance.sorcerer_type == "hedge_mage":
+            ADDITIONAL_CATS.append(("Create Ritual", "Create Ritual"))
+            ADDITIONAL_CATS.append(("Select Ritual", "Select Ritual"))
+        self.fields["category"].choices += ADDITIONAL_CATS
+
+    def save(self, *args, **kwargs):
+        return self.instance
+
+
 class MageAdvancementForm(AdvancementForm):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
     resonance = forms.CharField(
