@@ -1,0 +1,70 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Paths</h2>
+</div>
+<div class="row">
+    <div class="col-sm">Select 5 levels of Numina Paths</div>
+</div>
+<div id="numina_form_container">
+    {{ numina_form_context.formset.management_form }}
+    {% for f in numina_form_context.formset %}
+        <div class="row form-row">
+            <div class="col-sm">{{ f.path }}</div>
+            <div class="col-sm">{{ f.rating }}</div>
+            <div class="col-sm">{{ f.practice }}</div>
+            <div class="col-sm">{{ f.ability }}</div>
+        </div>
+    {% endfor %}
+</div>
+<!-- Hidden empty form to clone -->
+<div id="numina_form_empty_form" class="invisible">
+    <div class="row form-row">
+        <div class="col-sm">{{ numina_form_context.empty_form.path }}</div>
+        <div class="col-sm">{{ numina_form_context.empty_form.rating }}</div>
+        <div class="col-sm">{{ numina_form_context.empty_form.practice }}</div>
+        <div class="col-sm">{{ numina_form_context.empty_form.ability }}</div>
+    </div>
+</div>
+<button type="button" id="{{ numina_form_context.add_button_id }}">Add Path</button>
+{{ numina_form_js|safe }}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let formCount = 1;
+
+        const button = document.getElementById("add_numina_form_form")
+
+        addPracticeAbilityListener(0);
+
+        button.addEventListener("click", function() {
+            addPracticeAbilityListener(formCount);
+            formCount += 1;
+        });
+
+        function addPracticeAbilityListener(index) {
+            const pathSelectMenu = document.getElementById(`id_numina_form-${index}-practice`);
+
+            if (pathSelectMenu) {
+                pathSelectMenu.addEventListener("change", function() {
+                    $.ajax({
+                        url: '{% url 'characters:mage:ajax:get_practice_abilities' %}',
+                        data: {
+                            'practice_id': this.value,
+                            'object': {{ object.id }} // add the object id to the GET parameters
+                        },
+                        success: function(data) {
+                            var $abilitySelect = $(`#id_numina_form-${index}-ability`);
+                            $abilitySelect.empty(); // Clear the existing options
+                            $.each(data, function(index, item) {
+                                $abilitySelect.append($('<option>', {
+                                    value: item.id,
+                                    text: item.name
+                                }));
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+
+    });
+</script>

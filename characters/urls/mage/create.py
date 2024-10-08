@@ -44,6 +44,11 @@ urls = [
         name="tenet",
     ),
     path(
+        "sorcerer_fellowship/",
+        views.mage.SorcererFellowshipCreateView.as_view(),
+        name="sorcerer_fellowship",
+    ),
+    path(
         "mage_faction/",
         views.mage.MageFactionCreateView.as_view(),
         name="mage_faction",
@@ -62,6 +67,11 @@ urls = [
         "companion/",
         views.mage.CompanionBasicsView.as_view(),
         name="companion",
+    ),
+    path(
+        "sorcerer/",
+        views.mage.SorcererBasicsView.as_view(),
+        name="sorcerer",
     ),
     path(
         "mage/",

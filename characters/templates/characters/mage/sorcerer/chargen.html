@@ -19,7 +19,7 @@
             </div>
         {% endblock name %}
         {% block basics %}
-            {% include "characters/mage/companion/companion_basics_block_display.html" %}
+            {% include "characters/mage/sorcerer/sorcerer_basics_block_display.html" %}
         {% endblock basics %}
         {% block attributes %}
             {% if object.creation_status == 1 %}
@@ -28,7 +28,7 @@
                 {% include "characters/core/attribute_block/detail.html" %}
             {% endif %}
         {% endblock attributes %}
-        {% block abilities %}
+        {% block abilities %}w
             {% if object.creation_status == 2 %}
                 {% include "characters/mage/mtahuman/ability_block_form.html" %}
             {% elif object.creation_status > 2 %}
@@ -43,48 +43,53 @@
             {% endif %}
         {% endblock backgrounds %}
         {% block mfs %}
-            {% if object.creation_status >= 5 %}
+            {% if object.creation_status >= 7 %}
                 {% include "characters/core/human/mf_display_block.html" %}
             {% endif %}
         {% endblock mfs %}
         {% block advantages %}
-            {% if object.creation_status >= 5 %}
-                {% include "characters/mage/companion/advantages_display_block.html" %}
+            {% if object.creation_status >= 4 %}
+                {% include "characters/mage/sorcerer/sorcerer_advantage_display.html" %}
             {% endif %}
         {% endblock advantages %}
-        {% block charms %}
-            {% if object.creation_status >= 5 %}
-                {% include "characters/mage/companion/charms_display_block.html" %}
+        {% block paths %}
+            {% if object.creation_status == 4 %}
+                {% include "characters/mage/sorcerer/sorcerer_path_block_form.html" %}
+            {% elif object.creation_status > 4 %}
+                {% include "characters/mage/sorcerer/sorcerer_numina_block_display.html" %}
             {% endif %}
-        {% endblock charms %}
+            {% if object.creation_status == 5 %}
+                {% include "characters/mage/sorcerer/sorcerer_ritual_block_form.html" %}
+            {% endif %}
+        {% endblock paths %}
         {% block languages %}
-            {% if object.creation_status > 6 %}
+            {% if object.creation_status > 8 %}
                 {% include "characters/core/human/language_display_block.html" %}
-            {% elif object.creation_status == 6 %}
+            {% elif object.creation_status == 8 %}
                 {% include "characters/core/human/human_language_block_form.html" %}
             {% endif %}
         {% endblock languages %}
         {% block appearance %}
-            {% if object.creation_status == 4 %}
-                {% include "characters/mage/companion/companion_appearance_block_form.html" %}
-            {% elif object.creation_status > 4 %}
-                {% include "characters/mage/companion/companion_appearance_block_display.html" %}
+            {% if object.creation_status == 6 %}
+                {% include "characters/mage/sorcerer/sorcerer_appearance_block_form.html" %}
+            {% elif object.creation_status > 6 %}
+                {% include "characters/mage/sorcerer/sorcerer_appearance_block_display.html" %}
             {% endif %}
         {% endblock appearance %}
         {% block history %}
-            {% if object.creation_status == 4 %}
-                {% include "characters/mage/companion/companion_history_block_form.html" %}
-            {% elif object.creation_status > 4 %}
-                {% include "characters/mage/companion/companion_history_block_display.html" %}
+            {% if object.creation_status == 6 %}
+                {% include "characters/mage/sorcerer/sorcerer_history_block_form.html" %}
+            {% elif object.creation_status > 6 %}
+                {% include "characters/mage/sorcerer/sorcerer_history_block_display.html" %}
             {% endif %}
         {% endblock history %}
         {% block freebies %}
-            {% if object.creation_status >= 5 %}
-                {% include "characters/mage/companion/companion_freebies_form.html" %}
+            {% if object.creation_status >= 7 %}
+                {% include "characters/mage/sorcerer/sorcerer_freebies_form.html" %}
             {% endif %}
         {% endblock freebies %}
         {% block specialties_form %}
-            {% if object.creation_status == 7 %}
+            {% if object.creation_status == 9 %}
                 {% include "characters/mage/mage/mage_specialties_block_form.html" %}
             {% endif %}
         {% endblock specialties_form %}

@@ -17,6 +17,7 @@ class BackgroundRatingForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         char = kwargs.pop("char", None)
+
         super().__init__(*args, **kwargs)
         if char:
             q = Background.objects.all().order_by("name")

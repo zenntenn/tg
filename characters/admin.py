@@ -35,6 +35,7 @@ from characters.models.mage import (
     Tenet,
 )
 from characters.models.mage.companion import Companion
+from characters.models.mage.sorcerer import LinearMagicPath, LinearMagicRitual, Sorcerer
 from characters.models.vampire import VtMHuman
 from characters.models.werewolf import (
     BattleScar,
@@ -357,3 +358,16 @@ admin.site.register(Motley)
 @admin.register(Companion)
 class CompanionAdmin(admin.ModelAdmin):
     list_display = ("name", "companion_type")
+
+
+@admin.register(Sorcerer)
+class SorcererAdmin(admin.ModelAdmin):
+    list_display = ("name", "sorcerer_type")
+
+
+admin.site.register(LinearMagicPath)
+
+
+@admin.register(LinearMagicRitual)
+class LinearMagicRitualAdmin(admin.ModelAdmin):
+    list_display = ("name", "path", "level")

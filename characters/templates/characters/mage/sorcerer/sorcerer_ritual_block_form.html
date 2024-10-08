@@ -1,0 +1,48 @@
+<div class="row">
+    <h2 class="col-sm {{ object.get_heading }}">Choose Rituals</h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Select a Ritual for each Path dot. You must have a ritual of each lower level before taking one of a given level. That is, a level 3 ritual requires you have a level 1 and a level 2 ritual of that Path.
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">Create New Ritual: {{ form.select_or_create }}</div>
+</div>
+<div id="ritual selection">
+    <div class="row">
+        <div class="col-sm">{{ form.select_ritual }}</div>
+    </div>
+</div>
+<div id="ritual creation" class="invisible">
+    <div class="row">
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.path }}</div>
+        <div class="col-sm">{{ form.level }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with data-toggle="toggle"
+        const creation_toggle = document.getElementById("id_select_or_create");
+        const ritual_creation = document.getElementById('ritual creation');
+        const ritual_selection = document.getElementById('ritual selection');
+        
+        // Attach event listener to each toggle
+        creation_toggle.addEventListener('change', function() {
+            if ($(this).prop('checked')) {
+                ritual_selection.classList.add("invisible");
+                ritual_creation.classList.remove("invisible");
+            } else {
+                ritual_selection.classList.remove("invisible")
+                ritual_creation.classList.add("invisible")
+            }
+        });
+    });    
+</script>

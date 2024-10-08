@@ -1,0 +1,21 @@
+{% extends "core/object.html" %}
+{% block contents %}
+    {% load dots %}
+    {% load sanitize_text %}
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ object.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Favored Attributes</div>
+        <div class="col-sm">{{ object.favored_attributes }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Favored Paths</div>
+        <div class="col-sm">{{ object.favored_paths }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Description</div>
+        <div class="col-sm">{{ object.description }}</div>
+    </div>
+{% endblock contents %}

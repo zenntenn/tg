@@ -666,14 +666,17 @@ class Human(AttributeBlock, Character):
         self.random_finishing_touches()
         self.random_history()
 
-    def freebie_cost(self, trait_type):
-        costs = {
+    def freebie_costs(self):
+        return {
             "attribute": 5,
             "ability": 2,
             "background": 1,
             "willpower": 1,
             "meritflaw": "rating",
         }
+
+    def freebie_cost(self, trait_type):
+        costs = self.freebie_costs()
         if trait_type not in costs.keys():
             return 10000
         return costs[trait_type]

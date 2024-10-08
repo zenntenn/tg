@@ -1,11 +1,11 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block title %}
+    {% load sanitize_text %}
     {{ object.name|sanitize_html }}
 {% endblock title %}
 {% block content %}
     {% csrf_token %}
-    {% load sanitize_text %}
     <div class="centertext container">
         {% block references %}
             {% for reference in object.sources.all %}

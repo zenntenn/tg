@@ -7,6 +7,12 @@ from .faction import (
     MageFactionListView,
     MageFactionUpdateView,
 )
+from .fellowship import (
+    SorcererFellowshipCreateView,
+    SorcererFellowshipDetailView,
+    SorcererFellowshipListView,
+    SorcererFellowshipUpdateView,
+)
 from .focus import (
     CorruptedPracticeCreateView,
     CorruptedPracticeDetailView,
@@ -55,3 +61,8 @@ from .resonance import (
     ResonanceUpdateView,
 )
 from .rote import RoteCreateView, RoteDetailView, RoteListView, RoteUpdateView
+from .sorcerer import (
+    SorcererBasicsView,
+    SorcererCharacterCreationView,
+    SorcererDetailView,
+)

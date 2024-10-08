@@ -38,5 +38,10 @@ urls = [
         views.mage.MageFactionListView.as_view(),
         name="mage_faction",
     ),
+    path(
+        "sorcerer_fellowships/",
+        views.mage.SorcererFellowshipListView.as_view(),
+        name="sorcerer_fellowship",
+    ),
     path("rotes/", views.mage.RoteListView.as_view(), name="rote"),
 ]

@@ -101,23 +101,20 @@ class Companion(MtAHuman):
 
     class Meta:
         verbose_name = "Companion"
-        verbose_name_plural = "Companion"
+        verbose_name_plural = "Companions"
 
     def get_heading(self):
         return "mta_heading"
 
-    def freebie_cost(self, trait):
-        cost = super().freebie_cost(trait)
-        if cost != 10000:
-            return cost
-        costs = defaultdict(
-            lambda: 10000,
+    def freebie_costs(self):
+        costs = super().freebie_costs()
+        costs.update(
             {
                 "advantage": "rating",
                 "charms": 1,
-            },
+            }
         )
-        return costs[trait]
+        return costs
 
     def add_advantage(self, advantage, rating):
         if rating in advantage.get_ratings():
