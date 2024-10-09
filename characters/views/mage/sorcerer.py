@@ -254,9 +254,10 @@ class SorcererBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateVie
             return super().form_invalid(form)
 
         for bg in bg_data:
-            BackgroundRating.objects.create(
-                bg=bg["bg"], rating=bg["rating"], char=companion, note=bg["note"]
-            )
+            if bg["rating"] != 0:
+                BackgroundRating.objects.create(
+                    bg=bg["bg"], rating=bg["rating"], char=companion, note=bg["note"]
+                )
         self.object.creation_status += 1
         self.object.willpower = 5
         self.object.save()
