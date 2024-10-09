@@ -615,24 +615,25 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
             )
             return super().form_invalid(form)
         for bg in bg_data:
-            if bg["pooled"] and mage.is_group_member():
-                BackgroundRating.objects.create(
-                    bg=bg["bg"],
-                    rating=bg["rating"],
-                    char=mage,
-                    note=bg["note"],
-                    pooled=bg["pooled"],
-                    complete=True,
-                )
-                pbgr = PooledBackgroundRating.objects.get_or_create(
-                    bg=bg["bg"], note=bg["note"], group=mage.get_group()
-                )[0]
-                pbgr.rating += bg["rating"]
-                pbgr.save()
-            else:
-                BackgroundRating.objects.create(
-                    bg=bg["bg"], rating=bg["rating"], char=mage, note=bg["note"]
-                )
+            if bg["rating"] != 0:
+                if bg["pooled"] and mage.is_group_member():
+                    BackgroundRating.objects.create(
+                        bg=bg["bg"],
+                        rating=bg["rating"],
+                        char=mage,
+                        note=bg["note"],
+                        pooled=bg["pooled"],
+                        complete=True,
+                    )
+                    pbgr = PooledBackgroundRating.objects.get_or_create(
+                        bg=bg["bg"], note=bg["note"], group=mage.get_group()
+                    )[0]
+                    pbgr.rating += bg["rating"]
+                    pbgr.save()
+                else:
+                    BackgroundRating.objects.create(
+                        bg=bg["bg"], rating=bg["rating"], char=mage, note=bg["note"]
+                    )
 
         self.object.creation_status += 1
         self.object.quintessence = self.object.total_background_rating("avatar")
