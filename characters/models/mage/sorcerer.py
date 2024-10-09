@@ -52,6 +52,7 @@ class Sorcerer(MtAHuman):
         "allies",
         "alternate_identity",
         "arcane",
+        "artifact",
         "backup",
         "blessing",
         "certification",
