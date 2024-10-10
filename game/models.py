@@ -1,3 +1,4 @@
+import re
 from core.utils import dice
 from django.contrib.auth.models import User
 from django.db import models
@@ -230,16 +231,38 @@ class Scene(models.Model):
         post = Post.objects.create(
             character=character, message=message, display_name=display, scene=self
         )
-        if message.startswith("/roll"):
-            tmp = message.split("/roll")[1]
-            parts = [x.strip() for x in tmp.split("difficulty")]
-            num_dice = int(parts[0])
-            if " " in parts[1]:
-                difficulty = int(parts[1].split(" ")[0])
-                specialty = True
-            else:
-                difficulty = int(parts[1])
-                specialty = False
+        if message.startswith("/rolls"):
+            pattern = r"^/rolls\s+(?P<num_rolls>\d+)\s+rolls\s+@\s+(?P<num_dice>\d+)\s+difficulty\s+(?P<difficulty>\d+)\s+(?P<specialty>\S+)$"
+            message = message.strip()
+            # Perform the regex matching (case-insensitive for specialty if needed)
+            match = re.match(pattern, message, re.IGNORECASE)
+
+            if not match:
+                raise ValueError("Command does not match the expected format.")
+
+            try:
+                num_rolls = int(match.group("num_rolls"))
+                num_dice = int(match.group("num_dice"))
+                difficulty = int(match.group("difficulty"))
+                specialty_input = match.group("specialty")
+            except (ValueError, AttributeError) as e:
+                raise ValueError("Error parsing numerical values.") from e
+
+            specialty_lower = specialty_input.lower()
+            specialty = True if specialty_lower == "true" else False
+            post.rolls(num_rolls, num_dice, difficulty, specialty)
+        elif message.startswith("/roll"):
+            pattern = r"^/roll\s+(\d+)\s+difficulty\s+(\d+)\s+(\S+)$"
+
+            match = re.match(pattern, message, re.IGNORECASE)
+
+            if not match:
+                raise ValueError("Command does not match the expected format.")
+
+            num_dice = int(match.group(1))
+            difficulty = int(match.group(2))
+            specialty_str = match.group(3).lower()
+            specialty = True if specialty_str == "true" else False
             post.roll(num_dice, difficulty=difficulty, specialty=specialty)
         return post
 
@@ -268,4 +291,29 @@ class Post(models.Model):
         )
         roll = ", ".join(map(str, roll))
         self.message = f"{roll}: <b>{success_count}</b>"
+        self.save()
+
+    def rolls(self, num_rolls, num_dice, difficulty, specialty):
+        roll_list = []
+        successes = []
+        difficulties = []
+        for _ in range(num_rolls):
+            difficulties.append(difficulty)
+            roll, success_count = dice(
+                num_dice, difficulty=difficulty, specialty=specialty
+            )
+            roll = ", ".join(map(str, roll))
+            roll_list.append(roll)
+            successes.append(success_count)
+            if success_count == 0:
+                difficulty += 1
+            if success_count < 0:
+                break
+        message = "Rolls:<br>"
+        join_list = []
+        for roll, suxx, diff in zip(roll_list, successes, difficulties):
+            join_list.append(f"{roll}: <b>{suxx}</b>")
+            if suxx == 0:
+                join_list[-1] = join_list[-1] + f": difficulty increased to {diff + 1}"
+        self.message = message + "<br>".join(join_list)
         self.save()

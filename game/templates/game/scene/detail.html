@@ -69,8 +69,56 @@
             {% endif %}
         {% endif %}
         <div class="row">
-            <div class="col-sm">Syntax for rolling dice is "/roll &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt"</div>
-        </div class='col-sm'>
-        with &ltnum_dice&gt the number of dice to roll, &ltdiff&gt the difficulty and &ltspecialty&gt True or False depending on if you have a relevant specialty.
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-inline-flex align-items-center">
+                            <div>
+                                <b>Roll</b>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="dots ml-2">/roll &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt</div>
+                        </div>
+                        <div class="mt-2">Example: /roll 5 difficulty 6 specialty True</div>
+                        <ul class="mt-2">
+                            &ltnum_dice&gt the number of dice to roll
+                        </ul>
+                        <ul class="mt-2">
+                            &ltdiff&gt the difficulty
+                        </ul>
+                        <ul class="mt-2">
+                            >&ltspecialty&gt True or False depending on if you have a relevant specialty
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-inline-flex align-items-center">
+                        <div>
+                            <b>Multiple Rolls</b>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="dots ml-2">/rolls &ltnum_rolls&gt @ &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt</div>
+                    </div>
+                    <div class="mt-2">Example: /rolls 5 rolls @ 5 difficulty 6 True</div>
+                    <div class="mt-2">Warning: This will roll until botch and increase difficulty on failures</div>
+                    <ul class="mt-2">
+                        &ltnum_rolls&gt the number of times to roll
+                    </ul>
+                    <ul class="mt-2">
+                        &ltnum_dice&gt the number of dice to roll
+                    </ul>
+                    <ul class="mt-2">
+                        &ltdiff&gt the difficulty
+                    </ul>
+                    <ul class="mt-2">
+                        &ltspecialty&gt True or False depending on if you have a relevant specialty
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
