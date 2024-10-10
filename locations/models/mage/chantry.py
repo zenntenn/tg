@@ -406,6 +406,7 @@ class Chantry(LocationModel):
                     add_dot(self, choice, maximum=100)
         self.create_nodes()
         self.create_library()
+        self.save()
 
     def get_traits(self):
         return {
