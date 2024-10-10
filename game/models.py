@@ -1,4 +1,5 @@
 import re
+
 from core.utils import dice
 from django.contrib.auth.models import User
 from django.db import models
