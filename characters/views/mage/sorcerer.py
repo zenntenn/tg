@@ -176,8 +176,6 @@ class LoadExamplesView(View):
             examples = examples.filter(
                 id__in=[x.id for x in examples if 5 > m.path_rating(x) > 0]
             )
-        elif category_choice == "Create Ritual":
-            examples = []
         elif category_choice == "Select Ritual":
             rituals = Q()
 
