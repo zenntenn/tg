@@ -167,13 +167,13 @@ class LoadExamplesView(View):
             if m.sorcerer_type == "hedge_mage":
                 examples = LinearMagicPath.objects.filter(numina_type="hedge_magic")
             else:
-                examples = LinearMagicPath.objects.filter(numiina_type="psychic")
+                examples = LinearMagicPath.objects.filter(numina_type="psychic")
             examples = examples.exclude(id__in=[x.id for x in m.paths.all()])
         elif category_choice == "Existing Path":
             if m.sorcerer_type == "hedge_mage":
                 examples = LinearMagicPath.objects.filter(numina_type="hedge_magic")
             else:
-                examples = LinearMagicPath.objects.filter(numiina_type="psychic")
+                examples = LinearMagicPath.objects.filter(numina_type="psychic")
             examples = examples.filter(
                 id__in=[x.id for x in examples if 5 > m.path_rating(x) > 0]
             )
