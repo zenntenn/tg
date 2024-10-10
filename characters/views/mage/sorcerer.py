@@ -177,12 +177,25 @@ class LoadExamplesView(View):
                 id__in=[x.id for x in examples if 5 > m.path_rating(x) > 0]
             )
         elif category_choice == "Create Ritual":
-            pass
+            examples = []
         elif category_choice == "Select Ritual":
             rituals = Q()
 
             for path in m.pathrating_set.all():
-                rituals |= Q(**{"path": path.path, "level__lte": path.rating})
+                ritual_levels = list(
+                    m.rituals.filter(path=path.path).values_list("level", flat=True)
+                )
+                if ritual_levels:
+                    maximum_level_ritual = max(ritual_levels)
+                else:
+                    maximum_level_ritual = 0
+
+                rituals |= Q(
+                    **{
+                        "path": path.path,
+                        "level__lte": min([path.rating, maximum_level_ritual + 1]),
+                    }
+                )
 
             examples = LinearMagicRitual.objects.filter(rituals).exclude(
                 id__in=[x.id for x in m.rituals.all()]
@@ -554,11 +567,15 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
         trait_type = form.data["category"].lower()
         if "background" in trait_type:
             trait_type = "background"
+        if "path" in trait_type:
+            trait_type = "path"
+        if "ritual" in trait_type:
+            trait_type = "ritual"
         cost = self.object.freebie_cost(trait_type)
         if cost == "rating":
             cost = int(form.data["value"])
         if cost > self.object.freebies:
-            form.add_error(None, "Not Enough Freebies!")
+            form.add_error(None, f"Not Enough Freebies! {trait_type} costs {cost}")
             return super().form_invalid(form)
         if form.data["category"] == "Attribute":
             trait = Attribute.objects.get(pk=form.data["example"])
@@ -602,13 +619,13 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
             self.object.add_mf(trait, value)
             self.object.freebies -= cost
             trait = trait.name
-        elif form.data["category"] == "Path":
+        elif "Path" in form.data["category"]:
             trait = LinearMagicPath.objects.get(pk=form.data["example"])
             value = cost
             self.object.add_path(trait, None, None)
             self.object.freebies -= cost
             trait = trait.name
-        elif form.data["category"] == "Ritual":
+        elif "Ritual" in form.data["category"]:
             trait = LinearMagicRitual.objects.get(pk=form.data["example"])
             value = cost
             self.object.add_ritual(trait)
