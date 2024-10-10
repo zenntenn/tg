@@ -12,6 +12,7 @@ class CharacterModel(Model):
     class Meta:
         verbose_name = "Character Model"
         verbose_name_plural = "Character Models"
+        ordering = ["name"]
 
 
 class Character(CharacterModel):

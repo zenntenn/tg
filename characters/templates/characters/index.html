@@ -11,32 +11,45 @@
                     <h2 class="col-sm border centertext {{ gameline_short }}_heading">No Chronicle</h2>
                 {% else %}
                     <h2 class="col-sm border centertext {{ gameline_short }}_heading">
-                        <a href={{ chron.get_absolute_url }}>{{ chron.name }}</a>
+                        <a href="{{ chron.get_absolute_url }}">{{ chron.name }}</a>
                     </h2>
                 {% endif %}
             </div>
-            <div class="row border">
-                <h3 class="col-sm border {{ gameline_short }}_heading">Characters</h3>
-            </div>
+            {% for group in chron_group_dict|field:chron %}
+                {% if group.display %}
+                    <h3 class="row {{ gameline_short }}_heading border">
+                        <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
+                        <div class="col-sm border pointer"
+                             data-toggle="collapse"
+                             data-target="#group-{{ group.id }}Section"
+                             aria-expanded="true"
+                             aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
+                        <div class="col-sm border">{{ group.type.title }}</div>
+                    </h3>
+                    <div id="group-{{ group.id }}Section" class="collapse show">
+                        {% for char in group.members.all %}
+                            <div class="row border">
+                                <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                                <div class="col-sm border">{{ char.owner.username }}</div>
+                                <div class="col-sm border">{{ char.get_type }}</div>
+                                <div class="col-sm border">{{ char.get_status_display }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <h3 class="row {{ gameline_short }}_heading border">
+                <div class="col-sm border">Solo Characters</div>
+                <div class="col-sm border"></div>
+                <div class="col-sm border"></div>
+            </h3>
             {% for char in chron_char_dict|field:chron %}
-                {% if char.display %}
+                {% if char.display and char.group_set.count == 0 %}
                     <div class="row border">
                         <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                         <div class="col-sm border">{{ char.owner.username }}</div>
                         <div class="col-sm border">{{ char.get_type }}</div>
                         <div class="col-sm border">{{ char.get_status_display }}</div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            <div class="row border">
-                <h3 class="col-sm border {{ gameline_short }}_heading">Groups</h3>
-            </div>
-            {% for group in chron_group_dict|field:chron %}
-                {% if group.display %}
-                    <div class="row border">
-                        <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
-                        <div class="col-sm border">{{ group.owner.username }}</div>
-                        <div class="col-sm border">{{ group.type.title }}</div>
                     </div>
                 {% endif %}
             {% endfor %}
