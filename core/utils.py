@@ -87,7 +87,7 @@ def get_gameline_name(s):
         return "Mage: the Ascension"
     elif s == "wto":
         return "Wraith: the Oblivion"
-    elif s == "cta":
+    elif s == "ctd":
         return "Changeling: the Dreaming"
 
 
