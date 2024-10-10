@@ -7,6 +7,7 @@ from characters.forms.mage.numina import (
     NuminaPathForm,
     NuminaPathRatingFormSet,
     NuminaRitualForm,
+    PsychicPathRatingFormSet,
 )
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
@@ -258,7 +259,10 @@ class SorcererBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateVie
                 BackgroundRating.objects.create(
                     bg=bg["bg"], rating=bg["rating"], char=companion, note=bg["note"]
                 )
-        self.object.creation_status += 1
+        if context["object"].sorcerer_type == "hedge_mage":
+            self.object.creation_status += 2
+        else:
+            self.object.creation_status += 1
         self.object.willpower = 5
         self.object.save()
         return HttpResponseRedirect(companion.get_absolute_url())
@@ -281,6 +285,49 @@ def get_abilities(request):
         {"id": ability.id, "name": ability.name} for ability in abilities
     ]
     return JsonResponse(abilities_list, safe=False)
+
+
+class SorcererPsychicView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
+    model = Sorcerer
+    fields = []
+    template_name = "characters/mage/sorcerer/chargen.html"
+    formsets = {
+        "numina_form": PsychicPathRatingFormSet,
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+    def form_valid(self, form):
+        self.object.willpower = 5
+        context = self.get_context_data()
+        sorcerer = context["object"]
+        numina_data = self.get_form_data("numina_form")
+        for numina in numina_data:
+            numina["path"] = LinearMagicPath.objects.get(id=numina["path"])
+            numina["rating"] = int(numina["rating"])
+            if numina["rating"] > sorcerer.willpower // 2:
+                pass
+        total_numina = sum(x["rating"] for x in numina_data)
+        if total_numina != 5:
+            form.add_error(None, "Must choose exactly five levels of Numina")
+            return self.form_invalid(form)
+        for numina in numina_data:
+            PathRating.objects.create(
+                character=sorcerer,
+                path=numina["path"],
+                rating=numina["rating"],
+                practice=None,
+                ability=None,
+            )
+        self.object.creation_status += 3
+        self.object.freebies = 21
+        self.object.save()
+        return super().form_valid(form)
 
 
 class SorcererPathView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
@@ -691,12 +738,13 @@ class SorcererCharacterCreationView(HumanCharacterCreationView):
         1: SorcererAttributeView,
         2: SorcererAbilityView,
         3: SorcererBackgroundsView,
-        4: SorcererPathView,
-        5: SorcererRitualView,
-        6: SorcererExtrasView,
-        7: SorcererFreebiesView,
-        8: SorcererLanguagesView,
-        9: SorcererSpecialtiesView,
+        4: SorcererPsychicView,
+        5: SorcererPathView,
+        6: SorcererRitualView,
+        7: SorcererExtrasView,
+        8: SorcererFreebiesView,
+        9: SorcererLanguagesView,
+        10: SorcererSpecialtiesView,
     }
 
     model_class = Sorcerer
