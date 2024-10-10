@@ -15,7 +15,8 @@ class NuminaPathForm(forms.ModelForm):
         fields = ["path", "rating", "practice", "ability"]
 
     path = forms.ModelChoiceField(
-        queryset=LinearMagicPath.objects.all(), empty_label="Choose a Path"
+        queryset=LinearMagicPath.objects.filter(numina_type="hedge_magic"),
+        empty_label="Choose a Path",
     )
     rating = forms.IntegerField(min_value=0, max_value=5, initial=0)
 
@@ -31,7 +32,9 @@ class BaseNuminaPathRatingFormSet(forms.BaseInlineFormSet):
         super().__init__(*args, **kwargs)
 
         for form in self.forms:
-            form.fields["path"].queryset = LinearMagicPath.objects.all()
+            form.fields["path"].queryset = LinearMagicPath.objects.filter(
+                numina_type="hedge_magic"
+            )
 
 
 NuminaPathRatingFormSet = forms.inlineformset_factory(
@@ -41,6 +44,44 @@ NuminaPathRatingFormSet = forms.inlineformset_factory(
     extra=1,
     can_delete=False,
     formset=BaseNuminaPathRatingFormSet,
+)
+
+
+class PsychicPathForm(forms.ModelForm):
+    class Meta:
+        model = PathRating
+        fields = ["path", "rating", "practice", "ability"]
+
+    path = forms.ModelChoiceField(
+        queryset=LinearMagicPath.objects.filter(numina_type="psychic"),
+        empty_label="Choose a Path",
+    )
+    rating = forms.IntegerField(min_value=0, max_value=5, initial=0)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["practice"].queryset = Practice.objects.exclude(
+            polymorphic_ctype__model="specializedpractice"
+        ).exclude(polymorphic_ctype__model="corruptedpractice")
+
+
+class BasePsychicPathRatingFormSet(forms.BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for form in self.forms:
+            form.fields["path"].queryset = LinearMagicPath.objects.filter(
+                numina_type="psychic"
+            )
+
+
+PsychicPathRatingFormSet = forms.inlineformset_factory(
+    Sorcerer,
+    PathRating,
+    form=PsychicPathForm,
+    extra=1,
+    can_delete=False,
+    formset=BasePsychicPathRatingFormSet,
 )
 
 
