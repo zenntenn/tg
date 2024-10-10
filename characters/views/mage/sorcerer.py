@@ -1,5 +1,3 @@
-from typing import Any
-
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import SorcererAdvancementForm
@@ -38,6 +36,7 @@ from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import MultipleFormsetsMixin
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
@@ -180,8 +179,14 @@ class LoadExamplesView(View):
         elif category_choice == "Create Ritual":
             pass
         elif category_choice == "Select Ritual":
-            examples = LinearMagicRitual.objects.all()
-            examples = examples.filter(practice__in=m.practices.all())
+            rituals = Q()
+
+            for path in m.pathrating_set.all():
+                rituals |= Q(**{"path": path.path, "level__lte": path.rating})
+
+            examples = LinearMagicRitual.objects.filter(rituals).exclude(
+                id__in=[x.id for x in m.rituals.all()]
+            )
         else:
             examples = []
 
