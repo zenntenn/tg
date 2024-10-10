@@ -1,5 +1,5 @@
-from items.models.core.item import ItemModel
 from django.db import models
+from items.models.core.item import ItemModel
 
 
 class SorcererArtifact(ItemModel):

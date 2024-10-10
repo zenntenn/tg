@@ -255,6 +255,19 @@ class SorcererBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateVie
         "bg_form": BackgroundRatingFormSet,
     }
 
+    def get_formset_context(self, formset_class, formset_prefix):
+        context, js_code = super().get_formset_context(formset_class, formset_prefix)
+        formset = context["formset"]
+        empty_form = context["empty_form"]
+        for form in formset:
+            form.fields["bg"].queryset = Background.objects.filter(
+                property_name__in=self.object.allowed_backgrounds
+            )
+        empty_form.fields["bg"].queryset = Background.objects.filter(
+            property_name__in=self.object.allowed_backgrounds
+        )
+        return context, js_code
+
     def form_valid(self, form):
         context = self.get_context_data()
         companion = context["object"]
