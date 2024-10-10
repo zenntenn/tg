@@ -62,97 +62,85 @@
         <div class="col-sm">Backup</div>
         <div class="col-sm">{{ object.backup }}</div>
         <div class="col-sm">Cult</div>
-        <div class="col-sm">
-            {{ object.cult }}
-        </div>
+        <div class="col-sm">{{ object.cult }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">
-            Elders
-        </div>
-        <div class="col-sm">
-            {{ object.elders }}
-        </div>
-        <div class="col-sm">
-            Retainers
-        </div>
-        <div class="col-sm">
-            {{ object.retainers }}
-        </div>
-        <div class="col-sm">
-            Spies
-        </div>
-        <div class="col-sm">
-            {{ object.spies }}
-        </div>
+        <div class="col-sm">Elders</div>
+        <div class="col-sm">{{ object.elders }}</div>
+        <div class="col-sm">Retainers</div>
+        <div class="col-sm">{{ object.retainers }}</div>
+        <div class="col-sm">Spies</div>
+        <div class="col-sm">{{ object.spies }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">
-            Arcane
-        </div>
-        <div class="col-sm">
-            {{ object.arcane }}
-        </div>
-        <div class="col-sm">
-            Enhancement
-        </div>
-        <div class="col-sm">
-            {{ object.enhancement }}
-        </div>
-        <div class="col-sm">
-            Integrated Effects
-        </div>
-        <div class="col-sm">
-            {{ object.integrated_effects }}
-        </div>
+        <div class="col-sm">Arcane</div>
+        <div class="col-sm">{{ object.arcane }}</div>
+        <div class="col-sm">Enhancement</div>
+        <div class="col-sm">{{ object.enhancement }}</div>
+        <div class="col-sm">Integrated Effects</div>
+        <div class="col-sm">{{ object.integrated_effects }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">
-            Resources
-        </div>
-        <div class="col-sm">
-            {{ object.resources }}
-        </div>
-        <div class="col-sm">
-            Requisitions
-        </div>
-        <div class="col-sm">
-            {{ object.requisitions }}
-        </div>
+        <div class="col-sm">Resources</div>
+        <div class="col-sm">{{ object.resources }}</div>
+        <div class="col-sm">Requisitions</div>
+        <div class="col-sm">{{ object.requisitions }}</div>
     </div>
-    <h2 class="col-sm {{ object.get_heading }}">
-        Cabals
+    <h3 class="row {{ object.get_heading }}">
+        <div class="col-sm">Points Remaining</div>
+        <div class="col-sm">{{ object.points }}</div>
+    </h3>
+    <h2 class="row {{ object.get_heading }}">
+        <div class="col-sm">Cabals</div>
     </h2>
     {% for cabal in object.cabals.all %}
         <div class="row">
-            <a class="col-sm" href={{ cabal.get_absolute_url }}>
-                <h3 class="{{ object.get_heading }}">
-                    {{ cabal.name }}
+            <div class="col-sm">
+                <h3 class="{{ object.get_heading }} pointer"
+                    data-toggle="collapse"
+                    data-target="#cabal-{{ cabal.id }}Section"
+                    aria-expanded="true"
+                    aria-controls="cabal-{{ cabal.id }}Section">
+                    <a href="{{ cabal.get_absolute_url }}">{{ cabal.name }}</a>
                 </h3>
-            </a>
+            </div>
         </div>
-        {% for member in cabal.members.all %}
-            <div class="row">
-                <div class="col-sm">
-                    <a class="col-sm" href={{ member.get_absolute_url }}>{{ member.name }}</a>
+        <div id="cabal-{{ cabal.id }}Section" class="collapse show">
+            {% for member in cabal.members.all %}
+                <div class="row">
+                    <div class="col-sm">
+                        <a class="col-sm" href={{ member.get_absolute_url }}>{{ member.name }}</a>
+                    </div>
                 </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#nodesSection"
+        aria-expanded="true"
+        aria-controls="nodesSection">Nodes</h2>
+    <div id="nodesSection" class="collapse show">
+        {% for node in object.nodes.all %}
+            <div class="row">
+                <a class="col-sm" href={{ node.get_absolute_url }}>{{ node.name }}</a>
             </div>
         {% endfor %}
-    {% endfor %}
-    <h2 class="col-sm {{ object.get_heading }}">
-        Nodes
-    </h2>
-    {% for node in object.nodes.all %}
-        <div class="row">
-            <a class="col-sm" href={{ node.get_absolute_url }}>{{ node.name }}</a>
+    </div>
+    <h2 class="row {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#librarySection"
+        aria-expanded="true"
+        aria-controls="librarySection">
+        <div class="col-sm">
+            <a href="{{ object.chantry_library.get_absolute_url }}">Library</a>
         </div>
-    {% endfor %}
-    <h2 class="col-sm {{ object.get_heading }}">
-        <a href={{ object.chantry_library.get_absolute_url }}>Library</a>
     </h2>
-    {% for book in object.chantry_library.books.all %}
-        <div class="row">
-            <a class="col-sm" href={{ book.get_absolute_url }}>{{ book.name }}</a>
-        </div>
-    {% endfor %}
+    <div id="librarySection" class="collapse show">
+        {% for book in object.chantry_library.books.all %}
+            <div class="row">
+                <a class="col-sm" href="{{ book.get_absolute_url }}">{{ book.name }}</a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock other %}
