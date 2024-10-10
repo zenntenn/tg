@@ -14,7 +14,7 @@ class SorcererFellowship(Model):
     class Meta:
         verbose_name = "Sorcerer Fellowship"
         verbose_name_plural = "Sorcerer Fellowships"
-        ordering = ['name']
+        ordering = ["name"]
 
     def get_absolute_url(self):
         return reverse("characters:mage:sorcerer_fellowship", args=[str(self.id)])
