@@ -172,6 +172,7 @@ class MtAHuman(Human):
     class Meta:
         verbose_name = "Human (Mage)"
         verbose_name_plural = "Humans (Mage)"
+        ordering = ["name"]
 
     def get_heading(self):
         return "mta_heading"

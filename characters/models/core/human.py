@@ -93,6 +93,7 @@ class Human(AttributeBlock, Character):
     class Meta:
         verbose_name = "Human"
         verbose_name_plural = "Humans"
+        ordering = ["name"]
 
     def is_group_member(self):
         from characters.models.core.group import Group

@@ -193,6 +193,7 @@ class Mage(MtAHuman):
     class Meta:
         verbose_name = "Mage"
         verbose_name_plural = "Mages"
+        ordering = ["name"]
 
     def get_update_url(self):
         return reverse("characters:mage:update:mage", kwargs={"pk": self.pk})
