@@ -1,4 +1,6 @@
 from characters.forms.core.advancement import CATEGORY_CHOICES, AdvancementForm
+from characters.models.core.ability import Ability
+from characters.models.mage.focus import Practice
 from characters.models.mage.resonance import Resonance
 from core.widgets import AutocompleteTextInput
 from django import forms
@@ -31,6 +33,14 @@ class CompanionAdvancementForm(AdvancementForm):
 
 
 class SorcererAdvancementForm(AdvancementForm):
+    practice = forms.ModelChoiceField(
+        queryset=Practice.objects.exclude(
+            polymorphic_ctype__model="specializedpractice"
+        ).exclude(polymorphic_ctype__model="corruptedpractice"),
+        required=False,
+    )
+    ability = forms.ModelChoiceField(queryset=Ability.objects.all(), required=False)
+
     def __init__(self, *args, suggestions=None, **kwargs):
         super().__init__(*args, **kwargs)
         if suggestions is None:
@@ -40,6 +50,7 @@ class SorcererAdvancementForm(AdvancementForm):
             ADDITIONAL_CATS.append(("Create Ritual", "Create Ritual"))
             ADDITIONAL_CATS.append(("Select Ritual", "Select Ritual"))
         self.fields["category"].choices += ADDITIONAL_CATS
+        self.fields["ability"].queryset = Ability.objects.none()
 
     def save(self, *args, **kwargs):
         return self.instance
