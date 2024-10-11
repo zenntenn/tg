@@ -67,6 +67,8 @@
     <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
     <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
     <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
+    <div class="col-sm invisible" id="practice_wrap">{{ form.practice }}</div>
+    <div class="col-sm invisible" id="ability_wrap">{{ form.ability }}</div>
 </div>
 {% for item in object.spent_freebies %}
     <div class="row">
@@ -81,6 +83,8 @@
         const exampleElement = document.getElementById("example_wrap");
         const valueElement = document.getElementById("value_wrap");
         const noteElement = document.getElementById("note_wrap");
+        const practiceElement = document.getElementById("practice_wrap");
+        const abilityElement = document.getElementById("ability_wrap");
     
         categorySelectMenu.addEventListener("change", function() {
             const selectedValue = this.value;
@@ -107,6 +111,16 @@
             if(this.value == "Advantage"){
                 valueElement.classList.remove("invisible");
                 noteElement.classList.add("invisible");
+            }
+            if(this.value == "New Path"){
+                exampleElement.classList.remove("invisible")
+                practiceElement.classList.remove("invisible")
+                abilityElement.classList.remove("invisible")
+                valueElement.classList.add("invisible")
+                noteElement.classList.add("invisible")
+            } else {
+                practiceElement.classList.add("invisible")
+                abilityElement.classList.add("invisible")
             }
             
             // Make the AJAX call
@@ -140,4 +154,29 @@
 
     });
     
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const pathSelectMenu = document.getElementById("id_practice");
+        
+        pathSelectMenu.addEventListener("change", function() {
+            $.ajax({
+                url: '{% url 'characters:mage:ajax:get_practice_abilities' %}',
+                data: {
+                    'practice_id': this.value,
+                    'object': {{ object.id }} // add the object id to the GET parameters
+                    },
+                    success: function(data) {
+                        var $abilitySelect = $(`#id_ability`);
+                        $abilitySelect.empty(); // Clear the existing options
+                        $.each(data, function(index, item) {
+                            $abilitySelect.append($('<option>', {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        });
+                    }
+                });
+            });
+        });
 </script>

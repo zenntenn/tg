@@ -632,10 +632,22 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
             trait = trait.name
         elif "Path" in form.data["category"]:
             trait = LinearMagicPath.objects.get(pk=form.data["example"])
-            value = cost
-            self.object.add_path(trait, None, None)
+            value = self.object.path_rating(trait) + 1
+            prac = form.data.get("practice", None)
+            if prac != "":
+                prac = Practice.objects.get(pk=prac)
+            else:
+                prac = None
+            ability = form.data.get("ability", None)
+            if ability != "":
+                ability = Ability.objects.get(pk=ability)
+            else:
+                ability = None
+            self.object.add_path(trait, prac, ability)
             self.object.freebies -= cost
             trait = trait.name
+            if prac is not None:
+                trait += f"({prac.name}, {ability.name})"
         elif "Ritual" in form.data["category"]:
             trait = LinearMagicRitual.objects.get(pk=form.data["example"])
             value = cost

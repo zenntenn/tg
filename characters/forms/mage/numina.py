@@ -112,8 +112,24 @@ class NuminaRitualForm(forms.ModelForm):
         rituals = Q()
 
         for path in self.sorcerer.pathrating_set.all():
-            rituals |= Q(**{"path": path.path, "level__lte": path.rating})
+            ritual_levels = list(
+                self.sorcerer.rituals.filter(path=path.path).values_list(
+                    "level", flat=True
+                )
+            )
+            if ritual_levels:
+                maximum_level_ritual = max(ritual_levels)
+            else:
+                maximum_level_ritual = 0
 
-        self.fields["select_ritual"].queryset = LinearMagicRitual.objects.filter(
-            rituals
-        ).exclude(id__in=[x.id for x in self.sorcerer.rituals.all()])
+            rituals |= Q(
+                **{
+                    "path": path.path,
+                    "level__lte": min([path.rating, maximum_level_ritual + 1]),
+                }
+            )
+        examples = LinearMagicRitual.objects.filter(rituals).exclude(
+            id__in=[x.id for x in self.sorcerer.rituals.all()]
+        )
+
+        self.fields["select_ritual"].queryset = examples
