@@ -17,32 +17,36 @@
                 {% if object|get_specialty:pr.path.property_name %}({{ object|get_specialty:pr.path.property_name }}){% endif %}
             </a>
             <div class="col-sm dots">{{ pr.rating|dots }}</div>
-            <a class="col-sm" href={{ pr.practice.get_absolute_url }}>{{ pr.practice }}</a>
-            <div class="col-sm">{{ pr.ability }}</div>
+            {% if object.sorcerer_type == "hedge_mage" %}
+                <a class="col-sm" href={{ pr.practice.get_absolute_url }}>{{ pr.practice }}</a>
+                <div class="col-sm">{{ pr.ability }}</div>
+            {% endif %}
         </div>
     {% endfor %}
-    <div class="row">
-        <h3 class="col-sm {{ object.get_heading }}">Rituals</h3>
-    </div>
-    <div class="row">
-        {% for ritual in object.rituals.all %}
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="card mb-3">
-                    <!-- Center the content inside the card -->
-                    <div class="card-body text-center">
-                        <!-- Flex container to align ritual.ritual and ritual.rating|dots horizontally -->
-                        <div class="mt-2">
-                            <a href={{ ritual.get_absolute_url }}>{{ ritual }}</a>
-                        </div>
-                        <div class="d-inline-flex align-items-center">
-                            <div class="dots ml-2">{{ ritual.path }}</div>
-                            <div class="dots ml-2">{{ ritual.level|dots }}</div>
+    {% if object.sorcerer_type == "hedge_mage" %}
+        <div class="row">
+            <h3 class="col-sm {{ object.get_heading }}">Rituals</h3>
+        </div>
+        <div class="row">
+            {% for ritual in object.rituals.all %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <!-- Center the content inside the card -->
+                        <div class="card-body text-center">
+                            <!-- Flex container to align ritual.ritual and ritual.rating|dots horizontally -->
+                            <div class="mt-2">
+                                <a href={{ ritual.get_absolute_url }}>{{ ritual }}</a>
+                            </div>
+                            <div class="d-inline-flex align-items-center">
+                                <div class="dots ml-2">{{ ritual.path }}</div>
+                                <div class="dots ml-2">{{ ritual.level|dots }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col">No Rituals available.</div>
-        {% endfor %}
-    </div>
+            {% empty %}
+                <div class="col">No Rituals available.</div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>

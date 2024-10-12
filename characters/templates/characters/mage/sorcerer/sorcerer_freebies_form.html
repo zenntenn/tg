@@ -71,16 +71,16 @@
     <div class="col-sm invisible" id="ability_wrap">{{ form.ability }}</div>
 </div>
 <div id="id_create_ritual_form" class="invisible">
-        <div class="row">
-            <div class="col-sm">{{ ritual_form.name }}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">{{ ritual_form.path }}</div>
-            <div class="col-sm">{{ ritual_form.level }}</div>
-        </div>
-        <div class="row">
-            <div class="col-sm">{{ ritual_form.description }}</div>
-        </div>
+    <div class="row">
+        <div class="col-sm">{{ ritual_form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ ritual_form.path }}</div>
+        <div class="col-sm">{{ ritual_form.level }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ ritual_form.description }}</div>
+    </div>
 </div>
 {% for item in object.spent_freebies %}
     <div class="row">
@@ -128,8 +128,10 @@
             }
             if(this.value == "New Path"){
                 exampleElement.classList.remove("invisible")
-                practiceElement.classList.remove("invisible")
-                abilityElement.classList.remove("invisible")
+                if("{{object.sorcerer_type}}" == "hedge_mage"){
+                    practiceElement.classList.remove("invisible")
+                    abilityElement.classList.remove("invisible")    
+                }
                 valueElement.classList.add("invisible")
                 noteElement.classList.add("invisible")
             } else {
