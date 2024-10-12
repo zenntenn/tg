@@ -550,6 +550,7 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
+        context["ritual_form"] = NuminaRitualForm(pk=self.object.id)
         return context
 
     def form_valid(self, form):
@@ -648,7 +649,19 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
             trait = trait.name
             if prac is not None:
                 trait += f"({prac.name}, {ability.name})"
-        elif "Ritual" in form.data["category"]:
+        elif form.data["category"] == "Create Ritual":
+            name = form.data["name"]
+            path = LinearMagicPath.objects.get(pk=int(form.data["path"]))
+            level = int(form.data["level"])
+            description = form.data["description"]
+            trait = LinearMagicRitual.objects.create(
+                name=name, path=path, level=level, description=description
+            )
+            value = cost
+            self.object.add_ritual(trait)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Select Ritual":
             trait = LinearMagicRitual.objects.get(pk=form.data["example"])
             value = cost
             self.object.add_ritual(trait)
