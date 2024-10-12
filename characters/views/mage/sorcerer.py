@@ -777,6 +777,9 @@ class SorcererSpecialtiesView(SpecialUserMixin, FormView):
                 "science",
             ]
         ]
+        stats.extend(
+            [x for x in LinearMagicPath.objects.all() if companion.path_rating(x) >= 4]
+        )
         kwargs["specialties_needed"] = [x.property_name for x in stats]
         return kwargs
 

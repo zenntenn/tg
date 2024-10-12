@@ -28,6 +28,10 @@ class LinearMagicPath(Model):
         verbose_name_plural = "Linear Magic Paths"
         ordering = ["name"]
 
+    @property
+    def property_name(self):
+        return self.name.replace(" ", "_").replace(",", "_").replace("__", "_").lower()
+
 
 class LinearMagicRitual(Model):
     type = "linear_magic_path"
