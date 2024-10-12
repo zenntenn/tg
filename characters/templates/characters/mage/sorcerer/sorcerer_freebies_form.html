@@ -70,6 +70,18 @@
     <div class="col-sm invisible" id="practice_wrap">{{ form.practice }}</div>
     <div class="col-sm invisible" id="ability_wrap">{{ form.ability }}</div>
 </div>
+<div id="id_create_ritual_form" class="invisible">
+        <div class="row">
+            <div class="col-sm">{{ ritual_form.name }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">{{ ritual_form.path }}</div>
+            <div class="col-sm">{{ ritual_form.level }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">{{ ritual_form.description }}</div>
+        </div>
+</div>
 {% for item in object.spent_freebies %}
     <div class="row">
         <div class="col-sm">{{ item.trait }} {{ item.value }}</div>
@@ -85,6 +97,8 @@
         const noteElement = document.getElementById("note_wrap");
         const practiceElement = document.getElementById("practice_wrap");
         const abilityElement = document.getElementById("ability_wrap");
+        const createritualformElement = document.getElementById("id_create_ritual_form");
+        
     
         categorySelectMenu.addEventListener("change", function() {
             const selectedValue = this.value;
@@ -121,6 +135,16 @@
             } else {
                 practiceElement.classList.add("invisible")
                 abilityElement.classList.add("invisible")
+            }
+            if(this.value == "Create Ritual"){
+                exampleElement.classList.add("invisible")
+                valueElement.classList.add("invisible")
+                noteElement.classList.add("invisible")
+                practiceElement.classList.add("invisible")
+                abilityElement.classList.add("invisible")
+                createritualformElement.classList.remove("invisible")
+            } else {
+                createritualformElement.classList.add("invisible")
             }
             
             // Make the AJAX call
