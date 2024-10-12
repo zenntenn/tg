@@ -1,4 +1,5 @@
 {% load dots %}
+{% load get_specialty %}
 <div class="row">
     <h2 class="col-sm {{ object.get_heading }} pointer"
         data-toggle="collapse"
@@ -12,7 +13,9 @@
     </div>
     {% for pr in object.pathrating_set.all %}
         <div class="row">
-            <a class="col-sm" href="{{ pr.path.get_absolute_url }}">{{ pr.path }}</a>
+            <a class="col-sm" href="{{ pr.path.get_absolute_url }}">{{ pr.path }}
+                {% if object|get_specialty:pr.path.property_name %}({{ object|get_specialty:pr.path.property_name }}){% endif %}
+            </a>
             <div class="col-sm dots">{{ pr.rating|dots }}</div>
             <a class="col-sm" href={{ pr.practice.get_absolute_url }}>{{ pr.practice }}</a>
             <div class="col-sm">{{ pr.ability }}</div>
