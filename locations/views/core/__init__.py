@@ -115,18 +115,9 @@ class LocationIndexView(View):
         }
         chron_dict = {}
         for chron in list(Chronicle.objects.all()) + [None]:
-            locations = LocationModel.objects.filter(chronicle=chron).order_by("name")
-            locations = [x for x in locations if x.type in game_location_types]
-            L1 = []
-            L2 = []
-            for x in LocationModel.objects.filter(
-                parent=None, id__in=[x.id for x in locations], chronicle=chron
-            ).order_by("name"):
-                L1.extend([level_name(y) for y in tree_sort(x)])
-                L2.extend(tree_sort(x))
-            if len(L1) != 0:
-                names_dict = dict(zip(L1, L2))
-                chron_dict[chron] = names_dict.items()
+            chron_dict[chron] = LocationModel.objects.filter(
+                chronicle=chron, parent=None
+            ).order_by("name")
         context["form"] = LocationCreationForm(gameline=gameline)
         context["chrondict"] = chron_dict
         return context
