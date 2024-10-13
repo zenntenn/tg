@@ -6,6 +6,7 @@ from characters.models.mage.mtahuman import MtAHuman
 from characters.models.werewolf.charm import SpiritCharm
 from core.models import Model, Number
 from django.db import models
+from django.urls import reverse
 
 
 class Advantage(Model):
@@ -19,6 +20,9 @@ class Advantage(Model):
         verbose_name = "Special Advantage"
         verbose_name_plural = "Special Advantage"
         ordering = ["name"]
+
+    def get_absolute_url(self):
+        return reverse("characters:mage:advantage", kwargs={"pk": self.pk})
 
     def update_max_rating(self):
         if self.ratings.all().count() == 0:

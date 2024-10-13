@@ -1,0 +1,8 @@
+{% extends "items/core/item/detail.html" %}
+{% load dots %}
+{% block additional_stats %}
+    <div class="row">
+        <div class="col-sm">Rank</div>
+        <div class="col-sm">{{ object.rank }}</div>
+    </div>
+{% endblock additional_stats %}

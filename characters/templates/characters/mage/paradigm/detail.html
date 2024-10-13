@@ -9,22 +9,33 @@
         <h2 class="col-sm {{ object.get_heading }}">Tenets</h2>
     </div>
     <div class="row">
-        <div class="col-sm">{{ tenets|sanitize_html }}</div>
+        {% for tenet in object.tenets.all %}
+            <a class="col-sm-12 col-md-6 col-lg-4"
+               href="{{ tenet.get_absolute_url }}">{{ tenet }}</a>
+        {% endfor %}
     </div>
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Associated Practices</h2>
     </div>
     <div class="row">
-        <div class="col-sm">{{ associated_practices|sanitize_html }}</div>
+        {% for practice in object.get_associated_practices %}
+            <a class="col-sm-12 col-md-6 col-lg-4"
+               href="{{ practice.get_absolute_url }}">{{ practice }}</a>
+        {% endfor %}
     </div>
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Limited Practices</h2>
     </div>
     <div class="row">
-        <div class="col-sm">{{ limited_practices|sanitize_html }}</div>
+        {% for practice in object.get_limited_practices %}
+            <a class="col-sm-12 col-md-6 col-lg-4"
+               href="{{ practice.get_absolute_url }}">{{ practice }}</a>
+        {% endfor %}
     </div>
     <div class="row">
         <h3 class="col-sm {{ object.get_heading }}">Description</h3>
+    </div>
+    <div class="row">
         <div class="col-sm">{{ object.description }}</div>
     </div>
 {% endblock contents %}

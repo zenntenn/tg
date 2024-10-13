@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block title %}
-    {{ object.name|sanitize_html }}
+    {{ object.name }}
 {% endblock title %}
 {% block content %}
     {% csrf_token %}

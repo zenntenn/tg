@@ -1,5 +1,5 @@
 from django.contrib import admin
-from game.models import Chronicle, Post, Scene, SettingElement, Story
+from game.models import Chronicle, ObjectType, Post, Scene, SettingElement, Story
 
 admin.site.register(Chronicle)
 
@@ -21,3 +21,4 @@ class SceneAdmin(admin.ModelAdmin):
 
 admin.site.register(Post)
 admin.site.register(SettingElement)
+admin.site.register(ObjectType)

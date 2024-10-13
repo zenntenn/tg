@@ -1,3 +1,4 @@
+from .advantage import AdvantageDetailView
 from .cabal import CabalCreateView, CabalDetailView, CabalUpdateView
 from .companion import CompanionBasicsView, CopanionCharacterCreationView
 from .effect import EffectCreateView, EffectDetailView, EffectListView, EffectUpdateView
@@ -38,6 +39,7 @@ from .focus import (
     TenetListView,
     TenetUpdateView,
 )
+from .hedge_magic import PathDetailView, RitualDetailView
 from .mage import (
     MageBasicsView,
     MageCharacterCreationView,

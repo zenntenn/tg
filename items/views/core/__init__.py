@@ -61,6 +61,7 @@ class GenericItemDetailView(DictView):
         "talisman": mage.TalismanDetailView,
         "grimoire": mage.GrimoireDetailView,
         "fetish": werewolf.FetishDetailView,
+        "sorcerer_artifact": mage.SorcererArtifactDetailView,
     }
     model_class = ItemModel
     key_property = "type"

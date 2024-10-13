@@ -11,6 +11,7 @@ from items.models.core import (
 from items.models.mage import Charm, Wonder, WonderResonanceRating
 from items.models.mage.artifact import Artifact
 from items.models.mage.grimoire import Grimoire
+from items.models.mage.sorcerer_artifact import SorcererArtifact
 from items.models.mage.talisman import Talisman
 from items.models.werewolf.fetish import Fetish
 
@@ -59,3 +60,6 @@ class GrimoireAdmin(admin.ModelAdmin):
 @admin.register(Fetish)
 class FetishAdmin(admin.ModelAdmin):
     list_display = ("name",)
+
+
+admin.site.register(SorcererArtifact)

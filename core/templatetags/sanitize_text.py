@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.filter
 def sanitize_html(value):
-    allowed_tags = ["b", "i", "em", "strong", "p", "br"]
+    allowed_tags = ["b", "i", "em", "strong", "p", "br", "strike"]
     allowed_attributes = {}
 
     cleaned_text = bleach.clean(

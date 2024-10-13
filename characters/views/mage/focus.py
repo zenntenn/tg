@@ -41,17 +41,6 @@ class ParadigmDetailView(DetailView):
     model = Paradigm
     template_name = "characters/mage/paradigm/detail.html"
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["tenets"] = display_queryset(self.object.tenets.all())
-        context["associated_practices"] = display_queryset(
-            self.object.get_associated_practices()
-        )
-        context["limited_practices"] = display_queryset(
-            self.object.get_limited_practices()
-        )
-        return context
-
 
 class ParadigmCreateView(CreateView):
     model = Paradigm
@@ -77,7 +66,6 @@ class PracticeDetailView(DetailView):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["rotes"] = Rote.objects.filter(practice=self.object)
         context["specializations"] = SpecializedPractice.objects.filter(
             parent_practice=self.object
         )

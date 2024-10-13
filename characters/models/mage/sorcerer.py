@@ -8,6 +8,7 @@ from characters.models.mage.focus import Practice
 from characters.models.mage.mtahuman import MtAHuman
 from core.models import Model
 from django.db import models
+from django.urls import reverse
 
 
 class LinearMagicPath(Model):
@@ -28,6 +29,9 @@ class LinearMagicPath(Model):
         verbose_name_plural = "Linear Magic Paths"
         ordering = ["name"]
 
+    def get_absolute_url(self):
+        return reverse("characters:mage:path", kwargs={"pk": self.pk})
+
     @property
     def property_name(self):
         return self.name.replace(" ", "_").replace(",", "_").replace("__", "_").lower()
@@ -46,6 +50,9 @@ class LinearMagicRitual(Model):
         verbose_name = "Linear Magic Ritual"
         verbose_name_plural = "Linear Magic Rituals"
         ordering = ["path", "level", "name"]
+
+    def get_absolute_url(self):
+        return reverse("characters:mage:ritual", kwargs={"pk": self.pk})
 
 
 class Sorcerer(MtAHuman):

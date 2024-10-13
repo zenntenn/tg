@@ -19,7 +19,7 @@
 {% endblock other %}
 {% block post_description %}
     <div class="row">
-        <h2 class="col-sm">Characters</h2>
+        <h2 class="col-sm {{ object.get_heading }}">Characters</h2>
     </div>
     {% for character in object.characters.all %}
         <div class="row">

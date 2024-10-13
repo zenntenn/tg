@@ -336,43 +336,7 @@ class MtAHuman(Human):
         return tmp
 
     def get_backgrounds(self):
-        tmp = super().get_backgrounds()
-        tmp.update(
-            {
-                "allies": self.allies,
-                "alternate_identity": self.alternate_identity,
-                "arcane": self.arcane,
-                "avatar": self.avatar,
-                "backup": self.backup,
-                "blessing": self.blessing,
-                "certification": self.certification,
-                "chantry": self.chantry,
-                "cult": self.cult,
-                "demesne": self.demesne,
-                "destiny": self.destiny,
-                "dream": self.dream,
-                "enhancement": self.enhancement,
-                "fame": self.fame,
-                "familiar": self.familiar,
-                "influence": self.influence,
-                "legend": self.legend,
-                "library": self.library,
-                "node": self.node,
-                "past_lives": self.past_lives,
-                "patron": self.patron,
-                "rank": self.rank,
-                "requisitions": self.requisitions,
-                "resources": self.resources,
-                "retainers": self.retainers,
-                "sanctum": self.sanctum,
-                "secret_weapons": self.secret_weapons,
-                "spies": self.spies,
-                "status_background": self.status_background,
-                "totem": self.totem,
-                "wonder": self.wonder,
-            }
-        )
-        return tmp
+        return {x: getattr(self, x) for x in self.allowed_backgrounds}
 
     def get_update_url(self):
         return reverse("characters:mage:update:mtahuman", kwargs={"pk": self.pk})

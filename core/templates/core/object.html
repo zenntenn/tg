@@ -10,7 +10,7 @@
         {% block references %}
             {% for reference in object.sources.all %}
                 <div class="row">
-                    <a class="col-sm" href="{{ reference.book.get_absolute_url }}">{{ reference|sanitize_html }}</a>
+                    <a class="col-sm" href="{{ reference.book.get_absolute_url }}"><i>{{ reference.book }}</i> p. {{ reference.page }}</a>
                 </div>
             {% endfor %}
         {% endblock references %}

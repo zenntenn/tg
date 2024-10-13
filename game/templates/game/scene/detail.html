@@ -21,7 +21,7 @@
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <h4 class="col-sm {{ object.story.chronicle.headings }}">{{ object.location.description }}</h4>
+                    <h4 class="col-sm {{ object.story.chronicle.headings }}">{{ object.location.description|sanitize_html }}</h4>
                 </div>
             </div>
         </div>

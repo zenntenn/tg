@@ -68,16 +68,20 @@
     <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
 </div>
 <div class="row">
-    {% for abb in rotes %}
-        {% if forloop.counter0|divisibleby:3 %}
+    {% for rote in object.rote_set.all %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <a href="{{ rote.get_absolute_url }}">{{ rote.name }}</a>
+                    <div class="dots">{{ rote.effect.spheres }}</div>
+                    <a href="{{ rote.practice.get_absolute_url }}">{{ rote.practice }}</a>
+                </div>
+            </div>
         </div>
-        <div class="row">
-        {% endif %}
-        <a class="col-sm-4" href="{{ abb.get_absolute_url }}">{{ abb }}</a>
-        {% if forloop.last %}</div>{% endif %}
-{% empty %}
+    {% empty %}
+        <div class="col">No rotes available.</div>
+    {% endfor %}
 </div>
-{% endfor %}
 <div class="row">
     <h2 class="col-sm {{ object.get_heading }}">Specializations</h2>
 </div>

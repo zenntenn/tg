@@ -5,10 +5,12 @@ from locations.models.mage.chantry import Chantry
 from locations.models.mage.library import Library
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.realm import HorizonRealm
+from locations.models.mage.sanctum import Sanctum
 from locations.models.mage.sector import Sector
 from locations.models.werewolf.caern import Caern
 
 admin.site.register(LocationModel)
+admin.site.register(Sanctum)
 
 
 @admin.register(City)
@@ -32,7 +34,7 @@ class LibraryAdmin(admin.ModelAdmin):
 
 @admin.register(Sector)
 class SectorAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("name", "sector_class")
 
 
 admin.site.register(HorizonRealm)

@@ -38,6 +38,7 @@ class Practice(Model):
     class Meta:
         verbose_name = "Practice"
         verbose_name_plural = "Practices"
+        ordering = ["name"]
 
     def get_absolute_url(self):
         return reverse("characters:mage:practice", args=[str(self.id)])

@@ -6,6 +6,7 @@ from characters.models.changeling import (
     Legacy,
     Motley,
 )
+from characters.models.changeling.house_faction import HouseFaction
 from characters.models.core import (
     Archetype,
     Character,
@@ -17,6 +18,14 @@ from characters.models.core import (
     MeritFlawRating,
     Specialty,
 )
+from characters.models.core.ability import Ability
+from characters.models.core.attribute import Attribute
+from characters.models.core.background import (
+    Background,
+    BackgroundRating,
+    PooledBackgroundRating,
+)
+from characters.models.core.statistic import Statistic
 from characters.models.mage import (
     Cabal,
     CorruptedPractice,
@@ -34,8 +43,15 @@ from characters.models.mage import (
     SpecializedPractice,
     Tenet,
 )
-from characters.models.mage.companion import Companion
-from characters.models.mage.sorcerer import LinearMagicPath, LinearMagicRitual, Sorcerer
+from characters.models.mage.companion import Advantage, AdvantageRating, Companion
+from characters.models.mage.fellowship import SorcererFellowship
+from characters.models.mage.sorcerer import (
+    LinearMagicPath,
+    LinearMagicRitual,
+    PathRating,
+    Sorcerer,
+)
+from characters.models.mage.sphere import Sphere
 from characters.models.vampire import VtMHuman
 from characters.models.werewolf import (
     BattleScar,
@@ -256,10 +272,19 @@ class CabalAdmin(admin.ModelAdmin):
     list_display = ("name", "leader")
 
 
+admin.site.register(HouseFaction)
+
 admin.site.register(VtMHuman)
 admin.site.register(WtOHuman)
 admin.site.register(PracticeRating)
 
+admin.site.register(Statistic)
+admin.site.register(Ability)
+admin.site.register(Attribute)
+
+admin.site.register(Background)
+admin.site.register(BackgroundRating)
+admin.site.register(PooledBackgroundRating)
 
 admin.site.register(WtAHuman)
 
@@ -371,3 +396,10 @@ admin.site.register(LinearMagicPath)
 @admin.register(LinearMagicRitual)
 class LinearMagicRitualAdmin(admin.ModelAdmin):
     list_display = ("name", "path", "level")
+
+
+admin.site.register(PathRating)
+admin.site.register(Sphere)
+admin.site.register(SorcererFellowship)
+admin.site.register(Advantage)
+admin.site.register(AdvantageRating)
