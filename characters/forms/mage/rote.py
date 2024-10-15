@@ -40,7 +40,21 @@ class RoteCreationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop("instance", None)
         super().__init__(*args, **kwargs)
-        self.fields["practice"].queryset = self.instance.practices.all()
+
+        practice_choices = self.instance.practices.exclude(
+            polymorphic_ctype__model="specializedpractice"
+        ).exclude(polymorphic_ctype__model="corruptedpractice")
+
+        special_practices = self.instance.practices.filter(
+            polymorphic_ctype__model="specializedpractice"
+        ) | self.instance.practices.filter(polymorphic_ctype__model="corruptedpractice")
+        special_practices = Practice.objects.filter(
+            id__in=[x.parent_practice.id for x in special_practices]
+        )
+
+        self.fields["practice"].queryset = (
+            practice_choices | special_practices
+        ).order_by("name")
         self.fields["correspondence"].widget.attrs["max"] = getattr(
             self.instance, "correspondence"
         )
