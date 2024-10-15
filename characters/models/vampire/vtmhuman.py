@@ -97,23 +97,3 @@ class VtMHuman(Human):
             }
         )
         return knowledges
-
-    def get_backgrounds(self):
-        backgrounds = super().get_backgrounds()
-        backgrounds.update(
-            {
-                "allies": self.allies,
-                "alternate_identity": self.alternate_identity,
-                "black_hand_membership": self.black_hand_membership,
-                "domain": self.domain,
-                "fame": self.fame,
-                "generation": self.generation,
-                "herd": self.herd,
-                "influence": self.influence,
-                "resources": self.resources,
-                "retainers": self.retainers,
-                "rituals": self.rituals,
-                "status_background": self.status_background,
-            }
-        )
-        return backgrounds

@@ -16,6 +16,8 @@ class Kinfolk(WtAHuman):
 
     gameline = "wta"
 
+    allowed_backgrounds = ["allies", "contacts", "mentor", "pure_breed", "resources"]
+
     breed = models.CharField(
         default="",
         max_length=100,
@@ -80,15 +82,6 @@ class Kinfolk(WtAHuman):
         while self.tribe is None:
             value = self.set_tribe(Tribe.objects.order_by("?").first())
         return value
-
-    def get_backgrounds(self):
-        return {
-            "allies": self.allies,
-            "contacts": self.contacts,
-            "mentor": self.mentor,
-            "pure_breed": self.pure_breed,
-            "resources": self.resources,
-        }
 
     def add_background(self, background, maximum=5):
         if self.tribe.name == "Bone Gnawers":

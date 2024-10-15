@@ -51,24 +51,6 @@ class WtAHuman(Human):
     def get_heading(self):
         return "wta_heading"
 
-    def get_backgrounds(self):
-        tmp = super().get_backgrounds()
-        tmp.update(
-            {
-                "allies": self.allies,
-                "ancestors": self.ancestors,
-                "fate": self.fate,
-                "fetish": self.fetish,
-                "kinfolk_rating": self.kinfolk_rating,
-                "pure_breed": self.pure_breed,
-                "resources": self.resources,
-                "rites": self.rites,
-                "spirit_heritage": self.spirit_heritage,
-                "totem": self.totem,
-            }
-        )
-        return tmp
-
     def get_talents(self):
         tmp = super().get_talents()
         tmp.update(

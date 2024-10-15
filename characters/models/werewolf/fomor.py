@@ -15,6 +15,8 @@ class Fomor(WtAHuman):
     gnosis = models.IntegerField(default=0)
     powers = models.ManyToManyField(FomoriPower, blank=True)
 
+    allowed_backgrounds = ["allies", "contacts", "resources"]
+
     background_points = 3
 
     class Meta:
@@ -27,13 +29,6 @@ class Fomor(WtAHuman):
 
     def get_update_url(self):
         return reverse("characters:werewolf:update:fomor", kwargs={"pk": self.pk})
-
-    def get_backgrounds(self):
-        return {
-            "allies": self.allies,
-            "contacts": self.contacts,
-            "resources": self.resources,
-        }
 
     def add_power(self, power):
         self.powers.add(power)

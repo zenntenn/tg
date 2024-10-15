@@ -83,19 +83,3 @@ class CtDHuman(Human):
             }
         )
         return d
-
-    def get_backgrounds(self):
-        d = super().get_backgrounds()
-        d.update(
-            {
-                "chimera": self.chimera,
-                "dreamers": self.dreamers,
-                "holdings": self.holdings,
-                "remembrance": self.remembrance,
-                "resources": self.resources,
-                "retinue": self.retinue,
-                "title": self.title,
-                "treasure": self.treasure,
-            }
-        )
-        return d

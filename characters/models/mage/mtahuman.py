@@ -335,9 +335,6 @@ class MtAHuman(Human):
         )
         return tmp
 
-    def get_backgrounds(self):
-        return {x: getattr(self, x) for x in self.allowed_backgrounds}
-
     def get_update_url(self):
         return reverse("characters:mage:update:mtahuman", kwargs={"pk": self.pk})
 

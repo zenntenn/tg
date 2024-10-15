@@ -80,20 +80,3 @@ class WtOHuman(Human):
             }
         )
         return knowledges
-
-    def get_backgrounds(self):
-        backgrounds = super().get_backgrounds()
-        backgrounds.update(
-            {
-                "allies": self.allies,
-                "artifact": self.artifact,
-                "eidolon": self.eidolon,
-                "haunt": self.haunt,
-                "legacy": self.legacy,
-                "memoriam": self.memoriam,
-                "notoriety": self.notoriety,
-                "relic": self.relic,
-                "status_background": self.status_background,
-            }
-        )
-        return backgrounds

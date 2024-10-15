@@ -283,7 +283,13 @@ admin.site.register(Ability)
 admin.site.register(Attribute)
 
 admin.site.register(Background)
-admin.site.register(BackgroundRating)
+
+
+@admin.register(BackgroundRating)
+class BackgroundRatingAdmin(admin.ModelAdmin):
+    list_display = ("char", "bg", "rating", "note")
+
+
 admin.site.register(PooledBackgroundRating)
 
 admin.site.register(WtAHuman)
