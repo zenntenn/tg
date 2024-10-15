@@ -68,7 +68,7 @@
     <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
 </div>
 <div class="row">
-    {% for rote in object.rote_set.all %}
+    {% for rote in object.get_rotes %}
         <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card mb-3">
                 <div class="card-body">

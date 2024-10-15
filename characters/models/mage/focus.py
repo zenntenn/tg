@@ -62,6 +62,11 @@ class Practice(Model):
             self.add_ability(ab)
         return True
 
+    def get_rotes(self):
+        from characters.models.mage.rote import Rote
+
+        return Rote.objects.filter(practice=self)
+
 
 class SpecializedPractice(Practice):
     type = "specialized_practice"
@@ -90,6 +95,9 @@ class SpecializedPractice(Practice):
     @classmethod
     def get_creation_url(cls):
         return reverse("characters:mage:create:specialized_practice")
+
+    def get_rotes(self):
+        return self.parent_practice.get_rotes()
 
 
 class CorruptedPractice(Practice):
