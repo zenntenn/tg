@@ -61,6 +61,11 @@
                 {% include "characters/mage/mage/mage_focus_block_display.html" %}
             {% endif %}
         {% endblock focus %}
+        {% block mfs %}
+            {% if object.creation_status >= 7 %}
+                {% include "characters/core/human/mf_display_block.html" %}
+            {% endif %}
+        {% endblock mfs %}
         {% block languages %}
             {% if object.creation_status > 8 %}
                 {% include "characters/core/human/language_display_block.html" %}
