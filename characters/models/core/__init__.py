@@ -1,8 +1,10 @@
+from .ability import Ability
 from .archetype import Archetype
-from .background import Background, BackgroundRating, PooledBackgroundRating
+from .attribute_block import Attribute, AttributeBlock
+from .background_block import Background, BackgroundRating, PooledBackgroundRating
 from .character import Character, CharacterModel
 from .derangement import Derangement
 from .group import Group
 from .human import Human
-from .meritflaw import MeritFlaw, MeritFlawRating
+from .merit_flaw_block import MeritFlaw, MeritFlawRating
 from .specialty import Specialty

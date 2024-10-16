@@ -1,7 +1,12 @@
 import random
 
+from characters.models.core.statistic import Statistic
 from core.utils import add_dot, weighted_choice
 from django.db import models
+
+
+class Attribute(Statistic):
+    type = "attribute"
 
 
 class AttributeBlock(models.Model):

@@ -1,7 +1,7 @@
 from typing import Any, Mapping
 
 from characters.models.core.ability import Ability
-from characters.models.core.attribute import Attribute
+from characters.models.core.attribute_block import Attribute
 from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Practice
 from characters.models.mage.rote import Rote

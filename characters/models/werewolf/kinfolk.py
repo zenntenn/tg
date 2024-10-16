@@ -1,7 +1,7 @@
 import random
 from collections import defaultdict
 
-from characters.models.core.meritflaw import MeritFlaw, MeritFlawRating
+from characters.models.core.merit_flaw_block import MeritFlaw, MeritFlawRating
 from characters.models.werewolf.gift import Gift
 from characters.models.werewolf.tribe import Tribe
 from characters.models.werewolf.wtahuman import WtAHuman

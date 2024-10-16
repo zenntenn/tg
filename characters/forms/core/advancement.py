@@ -1,5 +1,5 @@
-from characters.models.core.attribute import Attribute
-from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.attribute_block import Attribute
+from characters.models.core.merit_flaw_block import MeritFlaw
 from core.models import Number
 from django import forms
 

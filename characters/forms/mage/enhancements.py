@@ -1,6 +1,6 @@
-from characters.models.core.attribute import Attribute
-from characters.models.core.background import Background
-from characters.models.core.meritflaw import MeritFlaw, MeritFlawRating
+from characters.models.core.attribute_block import Attribute
+from characters.models.core.background_block import Background
+from characters.models.core.merit_flaw_block import MeritFlaw, MeritFlawRating
 from characters.models.mage.effect import Effect
 from characters.models.mage.resonance import Resonance
 from core.widgets import AutocompleteTextInput

@@ -1,4 +1,4 @@
-from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.mage.resonance import Resonance
 from core.models import Number
 from core.widgets import AutocompleteTextInput

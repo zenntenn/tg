@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from characters.models.core.ability import Ability
-from characters.models.core.attribute import Attribute
+from characters.models.core.attribute_block import Attribute
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.fellowship import SorcererFellowship
 from characters.models.mage.focus import Practice

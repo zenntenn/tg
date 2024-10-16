@@ -1,4 +1,4 @@
-from characters.models.core.background import Background, BackgroundRating
+from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
 from django import forms
 from django.forms import BaseInlineFormSet, inlineformset_factory

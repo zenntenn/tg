@@ -1,5 +1,5 @@
 from characters.models.changeling.changeling import Changeling
-from characters.models.core.meritflaw import MeritFlawRating
+from characters.models.core.merit_flaw_block import MeritFlawRating
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.views.generic import CreateView, DetailView, UpdateView
 

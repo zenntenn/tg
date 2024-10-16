@@ -9,10 +9,10 @@ from characters.forms.mage.numina import (
 )
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
-from characters.models.core.attribute import Attribute
-from characters.models.core.background import Background, BackgroundRating
+from characters.models.core.attribute_block import Attribute
+from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
-from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.mage.companion import Advantage
 from characters.models.mage.faction import MageFaction

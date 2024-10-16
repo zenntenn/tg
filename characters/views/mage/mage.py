@@ -1,4 +1,3 @@
-from email.headerregistry import Group
 from typing import Any
 
 from characters.forms.core.advancement import AdvancementForm
@@ -13,14 +12,14 @@ from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.models.core.ability import Ability
 from characters.models.core.archetype import Archetype
-from characters.models.core.attribute import Attribute
-from characters.models.core.background import (
+from characters.models.core.attribute_block import Attribute
+from characters.models.core.background_block import (
     Background,
     BackgroundRating,
     PooledBackgroundRating,
 )
 from characters.models.core.human import Human
-from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.core.statistic import Statistic
 from characters.models.mage.cabal import Cabal

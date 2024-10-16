@@ -19,8 +19,8 @@ from characters.models.core import (
     Specialty,
 )
 from characters.models.core.ability import Ability
-from characters.models.core.attribute import Attribute
-from characters.models.core.background import (
+from characters.models.core.attribute_block import Attribute
+from characters.models.core.background_block import (
     Background,
     BackgroundRating,
     PooledBackgroundRating,

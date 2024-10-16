@@ -1,5 +1,4 @@
-from characters.models.core.ability import Ability
-from characters.models.core.attribute import Attribute
+from characters.models.core import Ability, Attribute
 from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Practice
 from core.models import Model
