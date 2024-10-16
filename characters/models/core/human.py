@@ -3,23 +3,20 @@ from datetime import date, timedelta
 
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import AttributeBlock
-from characters.models.core.background import Background, BackgroundRating
 from characters.models.core.background_block import BackgroundBlock
 from characters.models.core.character import Character
 from characters.models.core.derangement import Derangement
 from characters.models.core.health_block import HealthBlock
-from characters.models.core.meritflaw import MeritFlaw, MeritFlawRating
+from characters.models.core.merit_flaw_block import MeritFlawBlock
 from characters.models.core.specialty import Specialty
 from characters.utils import random_ethnicity, random_height, random_name, random_weight
 from core.models import Language
 from core.utils import add_dot, weighted_choice
 from django.db import models
-from django.db.models import F, Q
 from django.urls import reverse
-from game.models import ObjectType
 
 
-class Human(HealthBlock, BackgroundBlock, AttributeBlock, Character):
+class Human(MeritFlawBlock, HealthBlock, BackgroundBlock, AttributeBlock, Character):
     type = "human"
 
     gameline = "wod"
@@ -74,10 +71,6 @@ class Human(HealthBlock, BackgroundBlock, AttributeBlock, Character):
     apparent_age = models.IntegerField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
 
-    merits_and_flaws = models.ManyToManyField(
-        MeritFlaw, blank=True, through=MeritFlawRating, related_name="flawed"
-    )
-
     history = models.TextField(default="", blank=True, null=True)
     goals = models.TextField(default="", blank=True, null=True)
     notes = models.TextField(default="", blank=True, null=True)
@@ -123,15 +116,6 @@ class Human(HealthBlock, BackgroundBlock, AttributeBlock, Character):
     def get_heading(self):
         return "wod_heading"
 
-    def num_languages(self):
-        mf_list = self.merits_and_flaws.all().values_list("name", flat=True)
-        if "Language" not in mf_list:
-            return 0
-        language_rating = self.mf_rating(MeritFlaw.objects.get(name="Language"))
-        if "Natural Linguist" in mf_list:
-            language_rating *= 2
-        return language_rating
-
     def add_willpower(self):
         return add_dot(self, "willpower", 10)
 
@@ -153,65 +137,6 @@ class Human(HealthBlock, BackgroundBlock, AttributeBlock, Character):
         self.nature = nature
         self.demeanor = demeanor
         return True
-
-    def get_mf_and_rating_list(self):
-        return [(x.name, self.mf_rating(x)) for x in self.merits_and_flaws.all()]
-
-    def add_mf(self, mf, rating):
-        if rating in mf.get_ratings():
-            mfr, _ = MeritFlawRating.objects.get_or_create(character=self, mf=mf)
-            mfr.rating = rating
-            mfr.save()
-            if mf.name in ["Language", "Natural Linguist"] and self.status == "Ran":
-                num_languages = self.mf_rating(MeritFlaw.objects.get(name="Language"))
-                if self.merits_and_flaws.filter(name="Natural Linguist").exists():
-                    num_languages *= 2
-                while self.languages.count() < num_languages:
-                    self.add_random_language()
-            if mf.name == "Deranged" and self.status == "Ran":
-                self.random_derangement()
-            return True
-        return False
-
-    def filter_mfs(self):
-        character_type = self.type
-        if character_type in ["fomor"]:
-            character_type = "human"
-
-        new_mfs = MeritFlaw.objects.exclude(pk__in=self.merits_and_flaws.all())
-
-        non_max_mf = MeritFlawRating.objects.filter(character=self).exclude(
-            Q(rating=F("mf__max_rating"))
-        )
-
-        had_mfs = MeritFlaw.objects.filter(pk__in=non_max_mf)
-        mf = new_mfs | had_mfs
-        if self.has_max_flaws():
-            mf = mf.filter(max_rating__gt=0)
-        character_type_object = ObjectType.objects.get(name=character_type)
-        return mf.filter(allowed_types=character_type_object)
-
-    def mf_rating(self, mf):
-        if mf not in self.merits_and_flaws.all():
-            return 0
-        return MeritFlawRating.objects.get(character=self, mf=mf).rating
-
-    def has_max_flaws(self):
-        return self.total_flaws() <= -7
-
-    def total_flaws(self):
-        return sum(
-            x.rating
-            for x in MeritFlawRating.objects.filter(character=self)
-            if x.rating < 0
-        )
-
-    def total_merits(self):
-        return sum(
-            x.rating
-            for x in MeritFlawRating.objects.filter(character=self)
-            if x.rating > 0
-        )
 
     def add_derangement(self, derangement):
         if derangement in self.derangements.all():
