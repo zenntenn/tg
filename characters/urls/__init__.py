@@ -16,6 +16,6 @@ urlpatterns = [
     path("create/", include((create.urls, "characters_create"), namespace="create")),
     path("update/", include((update.urls, "characters_update"), namespace="update")),
     path("list/", include((index.urls, "characters_list"), namespace="list")),
-    path("index/<gameline>/", views.core.CharacterIndexView.as_view(), name="index"),
+    path("index/", views.core.CharacterIndexView.as_view(), name="index"),
     path("", include(detail.urls)),
 ]

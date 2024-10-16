@@ -135,14 +135,15 @@ class CharacterIndexView(View):
     }
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context(kwargs)
+        context = self.get_context(request)
         return render(request, "characters/index.html", context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(kwargs)
+        context = self.get_context(request)
         action = request.POST.get("action")
         char_type = request.POST["char_type"]
-        gameline = kwargs["gameline"]
+        obj = ObjectType.objects.get(name=char_type)
+        gameline = obj.gameline
         if action == "create":
             if gameline == "wod":
                 redi = f"characters:create:{char_type}"
@@ -191,14 +192,11 @@ class CharacterIndexView(View):
             return redirect(char.get_absolute_url())
         return render(request, "characters/index.html", context)
 
-    def get_context(self, kwargs):
-        gameline = kwargs["gameline"]
-        game_characters = ObjectType.objects.filter(gameline=gameline, type="char")
+    def get_context(self, request):
+        game_characters = ObjectType.objects.filter(type="char")
         game_character_types = [x.name for x in game_characters]
         context = {
             "objects": game_characters,
-            "gameline": get_gameline_name(gameline),
-            "gameline_short": gameline,
         }
 
         chron_char_dict = {}
@@ -220,5 +218,10 @@ class CharacterIndexView(View):
 
         context["chron_char_dict"] = chron_char_dict
         context["chron_group_dict"] = chron_group_dict
-        context["form"] = CharacterCreationForm(gameline=gameline)
+        context["form"] = CharacterCreationForm()
+        if request.user.is_authenticated:
+            context["header"] = request.user.profile.preferred_heading
+        else:
+            context["header"] = "wod_heading"
+
         return context

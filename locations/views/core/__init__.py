@@ -54,14 +54,15 @@ class LocationIndexView(View):
     }
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context(kwargs)
+        context = self.get_context(request)
         return render(request, "locations/index.html", context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(kwargs)
+        context = self.get_context(request)
         action = request.POST.get("action")
         loc_type = request.POST["loc_type"]
-        gameline = kwargs["gameline"]
+        obj = ObjectType.objects.get(name=loc_type)
+        gameline = obj.gameline
         if action == "create":
             if gameline == "wod":
                 redi = f"locations:create:{loc_type}"
@@ -104,20 +105,22 @@ class LocationIndexView(View):
             return redirect(loc.get_absolute_url())
         return render(request, "locations/index.html", context)
 
-    def get_context(self, kwargs):
-        gameline = kwargs["gameline"]
-        game_locations = ObjectType.objects.filter(gameline=gameline, type="loc")
+    def get_context(self, request):
+        game_locations = ObjectType.objects.filter(type="loc")
         game_location_types = [x.name for x in game_locations]
         context = {
             "objects": game_locations,
-            "gameline": get_gameline_name(gameline),
-            "gameline_short": gameline,
         }
         chron_dict = {}
         for chron in list(Chronicle.objects.all()) + [None]:
             chron_dict[chron] = LocationModel.objects.filter(
                 chronicle=chron, parent=None
             ).order_by("name")
-        context["form"] = LocationCreationForm(gameline=gameline)
+        context["form"] = LocationCreationForm()
         context["chrondict"] = chron_dict
+        if request.user.is_authenticated:
+            context["header"] = request.user.profile.preferred_heading
+        else:
+            context["header"] = "wod_heading"
+
         return context
