@@ -92,107 +92,14 @@
                             {% endfor %}
                         </div>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="navbarDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">World of Darkness</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item"
-                               href="{% url 'characters:index' gameline='wod' %}">Characters</a>
-                            <a class="dropdown-item"
-                               href="{% url 'locations:index' gameline='wod' %}">Locations</a>
-                            <a class="dropdown-item" href="{% url 'items:index' gameline='wod' %}">Items</a>
-                            <a class="dropdown-item" href="{% url 'houserules' gameline='wod' %}">House Rules</a>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'characters:index' %}" role="button">Characters</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="navbarDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">Vampire</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item"
-                               href="{% url 'characters:index' gameline='vtm' %}">Characters</a>
-                            <a class="dropdown-item"
-                               href="{% url 'locations:index' gameline='vtm' %}">Locations</a>
-                            <a class="dropdown-item" href="{% url 'items:index' gameline='vtm' %}">Items</a>
-                            <a class="dropdown-item" href="{% url 'houserules' gameline='vtm' %}">House Rules</a>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'locations:index' %}" role="button">Locations</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="navbarDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">Werewolf</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item"
-                               href="{% url 'characters:index' gameline='wta' %}">Characters</a>
-                            <a class="dropdown-item"
-                               href="{% url 'locations:index' gameline='wta' %}">Locations</a>
-                            <a class="dropdown-item" href="{% url 'items:index' gameline='wta' %}">Items</a>
-                            <a class="dropdown-item" href="{% url 'houserules' gameline='wta' %}">House Rules</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="navbarDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">Mage</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item"
-                               href="{% url 'characters:index' gameline='mta' %}">Characters</a>
-                            <a class="dropdown-item"
-                               href="{% url 'locations:index' gameline='mta' %}">Locations</a>
-                            <a class="dropdown-item" href="{% url 'items:index' gameline='mta' %}">Items</a>
-                            <a class="dropdown-item" href="{% url 'houserules' gameline='mta' %}">House Rules</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="navbarDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">Wraith</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item"
-                               href="{% url 'characters:index' gameline='wto' %}">Characters</a>
-                            <a class="dropdown-item"
-                               href="{% url 'locations:index' gameline='wto' %}">Locations</a>
-                            <a class="dropdown-item" href="{% url 'items:index' gameline='wto' %}">Items</a>
-                            <a class="dropdown-item" href="{% url 'houserules' gameline='wto' %}">House Rules</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="navbarDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false">Changeling</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item"
-                               href="{% url 'characters:index' gameline='ctd' %}">Characters</a>
-                            <a class="dropdown-item"
-                               href="{% url 'locations:index' gameline='ctd' %}">Locations</a>
-                            <a class="dropdown-item" href="{% url 'items:index' gameline='ctd' %}">Items</a>
-                            <a class="dropdown-item" href="{% url 'houserules' gameline='ctd' %}">House Rules</a>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'items:index' %}" role="button">Items</a>
                     </li>
                 </ul>
             </div>

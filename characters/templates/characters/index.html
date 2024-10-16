@@ -8,16 +8,16 @@
         {% for chron in chron_char_dict.keys %}
             <div class="row border">
                 {% if chron == None %}
-                    <h2 class="col-sm border centertext {{ gameline_short }}_heading">No Chronicle</h2>
+                    <h2 class="col-sm border centertext {{ header }}">No Chronicle</h2>
                 {% else %}
-                    <h2 class="col-sm border centertext {{ gameline_short }}_heading">
+                    <h2 class="col-sm border centertext {{ header }}">
                         <a href="{{ chron.get_absolute_url }}">{{ chron.name }}</a>
                     </h2>
                 {% endif %}
             </div>
             {% for group in chron_group_dict|field:chron %}
                 {% if group.display %}
-                    <h3 class="row {{ gameline_short }}_heading border">
+                    <h3 class="row {{ header }} border">
                         <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
                         <div class="col-sm border pointer"
                              data-toggle="collapse"
@@ -38,7 +38,7 @@
                     </div>
                 {% endif %}
             {% endfor %}
-            <h3 class="row {{ gameline_short }}_heading border">
+            <h3 class="row {{ header }} border">
                 <div class="col-sm border">Solo Characters</div>
                 <div class="col-sm border"></div>
                 <div class="col-sm border"></div>

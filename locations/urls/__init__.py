@@ -10,6 +10,6 @@ urlpatterns = [
     path("create/", include((create.urls, "locations_create"), namespace="create")),
     path("update/", include((update.urls, "locations_update"), namespace="update")),
     path("list/", include((index.urls, "locations_list"), namespace="list")),
-    path("index/<gameline>/", views.core.LocationIndexView.as_view(), name="index"),
+    path("index/", views.core.LocationIndexView.as_view(), name="index"),
     path("", include(detail.urls)),
 ]
