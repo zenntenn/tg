@@ -37,9 +37,9 @@
         {% endblock abilities %}
         {% block backgrounds %}
             {% if object.creation_status == 3 %}
-                {% include "characters/mage/mage/mage_background_block_form.html" %}
+                {% include "characters/core/background_block/form.html" %}
             {% elif object.creation_status > 3 %}
-                {% include "characters/mage/mage/mage_background_block_display.html" %}
+                {% include "characters/core/background_block/detail.html" %}
             {% endif %}
         {% endblock backgrounds %}
         {% block advantages %}
