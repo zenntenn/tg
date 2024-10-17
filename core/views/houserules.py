@@ -9,7 +9,7 @@ from game.models import Chronicle
 class HouseRulesIndexView(ListView):
     model = HouseRule
     template_name = "core/houserules/index.html"
-    
+
     def get_context_data(self) -> dict[str, Any]:
         context = super().get_context_data()
         context["chronicles"] = list(Chronicle.objects.all()) + [None]
