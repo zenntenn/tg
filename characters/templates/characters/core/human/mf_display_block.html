@@ -8,7 +8,17 @@
 <div id="mfSection" class="collapse show">
     <div class="row">
         {% for mf, rating in object.get_mf_and_rating_list %}
-            <a class="col-sm" href="{{ mf.get_absolute_url }}">{{ mf }}: {{ rating }}</a>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div class="d-inline-flex align-items-center">
+                            <a href="{{ mf.get_absolute_url }}">{{ mf }}: {{ rating }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">No backgrounds available.</div>
         {% endfor %}
     </div>
 </div>
