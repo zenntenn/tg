@@ -30,7 +30,8 @@
                         {% for char in group.members.all %}
                             <div class="row border">
                                 <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                                <div class="col-sm border">{{ char.owner.username }}</div>
+                                <a class="col-sm border"
+                                   href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
                                 <div class="col-sm border">{{ char.get_type }}</div>
                                 <div class="col-sm border">{{ char.get_status_display }}</div>
                             </div>
@@ -47,7 +48,8 @@
                 {% if char.display and char.group_set.count == 0 %}
                     <div class="row border">
                         <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                        <div class="col-sm border">{{ char.owner.username }}</div>
+                        <a class="col-sm border"
+                           href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
                         <div class="col-sm border">{{ char.get_type }}</div>
                         <div class="col-sm border">{{ char.get_status_display }}</div>
                     </div>

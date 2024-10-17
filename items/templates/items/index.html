@@ -22,7 +22,8 @@
                 {% if item.display %}
                     <div class="row border">
                         <a class="col-sm border" href="{{ item.get_absolute_url }}">{{ item.name }}</a>
-                        <div class="col-sm border">{{ item.owner.username }}</div>
+                        <a class="col-sm border"
+                           href="{{ item.owner.profile.get_absolute_url }}">{{ item.owner.username }}</a>
                         <div class="col-sm border">{{ item.type.title }}</div>
                     </div>
                 {% endif %}

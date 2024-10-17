@@ -1,7 +1,12 @@
+from characters.models.core.character import Character
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
+from game.models import Scene
+from items.models.core.item import ItemModel
+from locations.models.core.location import LocationModel
 
 
 class Profile(models.Model):
@@ -63,8 +68,72 @@ class Profile(models.Model):
             or self.mtr_st
         )
 
+    def my_characters(self):
+        return Character.objects.filter(owner=self.user)
+
+    def my_locations(self):
+        return LocationModel.objects.filter(owner=self.user)
+
+    def my_items(self):
+        return ItemModel.objects.filter(owner=self.user)
+
+    def xp_requests(self):
+        return Scene.objects.filter(
+            story__chronicle__in=self.user.chronicle_set.all(),
+            finished=True,
+            xp_given=False,
+        )
+
+    def objects_to_approve(self):
+        to_approve = (
+            list(
+                Character.objects.filter(
+                    status__in=["Un", "Sub"],
+                    chronicle__in=self.user.chronicle_set.all(),
+                ).order_by("name")
+            )
+            + list(
+                LocationModel.objects.filter(
+                    status__in=["Un", "Sub"],
+                    chronicle__in=self.user.chronicle_set.all(),
+                ).order_by("name")
+            )
+            + list(
+                ItemModel.objects.filter(
+                    status__in=["Un", "Sub"],
+                    chronicle__in=self.user.chronicle_set.all(),
+                ).order_by("name")
+            )
+        )
+        to_approve.sort(key=lambda x: x.name)
+        return to_approve
+
+    def image_to_approve(self):
+        to_approve_images = (
+            list(
+                Character.objects.filter(
+                    chronicle__in=self.user.chronicle_set.all(), image_status="sub"
+                ).exclude(image="")
+            )
+            + list(
+                LocationModel.objects.filter(
+                    chronicle__in=self.user.chronicle_set.all(), image_status="sub"
+                ).exclude(image="")
+            )
+            + list(
+                ItemModel.objects.filter(
+                    chronicle__in=self.user.chronicle_set.all(), image_status="sub"
+                ).exclude(image="")
+            )
+        )
+        to_approve_images.sort(key=lambda x: x.name)
+        return to_approve_images
+
     def __str__(self):
         return self.user.username
+
+    def get_absolute_url(self):
+        return reverse("profile", kwargs={"pk": self.pk})
 
 
 @receiver(post_save, sender=User)
