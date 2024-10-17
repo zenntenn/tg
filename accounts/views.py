@@ -14,7 +14,7 @@ class SignUp(CreateView):
     """View for the Sign Up Page"""
 
     form_class = CustomUSerCreationForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("home")
     template_name = "accounts/signup.html"
 
 
