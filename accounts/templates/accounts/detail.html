@@ -1,0 +1,304 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ object.user.username }}
+{% endblock title %}
+{% block content %}
+    <div class="centertext container">
+        <div class="row">
+            <h1 class="col-sm {{ object.preferred_heading }}">{{ object.user.username }}</h1>
+        </div>
+        <div class="row">
+            <h2 class="col-sm {{ object.preferred_heading }}">Chronicles STed</h2>
+        </div>
+        <div class="row">
+            {% for chronicle in object.user.chronicle_set.all %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div class="{{ chronicle.headings }}">
+                                <a href="{{ chronicle.get_absolute_url }}">{{ chronicle.name }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <h2 class="col-sm {{ object.preferred_heading }}">Gamelines STed</h2>
+        </div>
+        <div class="row">
+            {% if object.head_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Head Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.vtm_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Vampire Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.wta_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Werewolf Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.mta_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Mage Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.ctd_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Changeling Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.wto_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Wraith Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.htr_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Hunter Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.dtf_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Demon Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if object.mtr_st %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <div>Mummy Storyteller</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% block my_characters %}
+            <div class="row">
+                <h2 class="col-sm {{ object.preferred_heading }}">Characters</h2>
+            </div>
+            <div class="row">
+                {% for char in object.my_characters %}
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <div>
+                                    <a href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                                </div>
+                                <div>
+                                    <div>{{ char.get_status_display }}</div>
+                                </div>
+                                <div>
+                                    <div>{{ char.get_full_gameline }}</div>
+                                </div>
+                                <div>
+                                    <div>{{ char.get_type }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col">No Characters.</div>
+                {% endfor %}
+            </div>
+        {% endblock my_characters %}
+        {% block my_locations %}
+            <div class="row">
+                <h2 class="col-sm {{ object.preferred_heading }}">Locations</h2>
+            </div>
+            <div class="row">
+                {% for loc in object.my_locations %}
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <div>
+                                    <a href="{{ loc.get_absolute_url }}">{{ loc.name }}</a>
+                                </div>
+                                <div>
+                                    <div>{{ loc.get_status_display }}</div>
+                                </div>
+                                <div>
+                                    <div>{{ loc.get_full_gameline }}</div>
+                                </div>
+                                <div>
+                                    <div>{{ loc.type.title }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col">No Locations.</div>
+                {% endfor %}
+            </div>
+        {% endblock my_locations %}
+        {% block my_items %}
+            <div class="row">
+                <h2 class="col-sm {{ object.preferred_heading }}">Items</h2>
+            </div>
+            <div class="row">
+                {% for item in object.my_items %}
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <div>
+                                    <a href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                                </div>
+                                <div>
+                                    <div>{{ item.get_status_display }}</div>
+                                </div>
+                                <div>
+                                    <div>{{ item.get_full_gameline }}</div>
+                                </div>
+                                <div>
+                                    <div>{{ item.type.title }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col">No Items.</div>
+                {% endfor %}
+            </div>
+        {% endblock my_items %}
+        {% if object.is_st %}
+            {% if user == object.user %}
+                <div class="row">
+                    <h2 class="col-sm {{ user.profile.preferred_heading }}">XP Requests</h2>
+                </div>
+                {% for scene in object.xp_requests %}
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="row">
+                            <h3 class="col-sm {{ user.profile.preferred_heading }}">{{ scene.name }}</h3>
+                        </div>
+                        {% for character in scene.characters.all %}
+                            {% if character.name != "Storyteller" %}
+                                <div class="row">
+                                    <div class="col-sm"></div>
+                                    <div class="col-sm"></div>
+                                    <a class="col-sm" href="{{ character.get_absolute_url }}">{{ character.name }}</a>
+                                    <div class="col-sm">
+                                        <label>
+                                            <input type="number"
+                                                   value="{{ character.name }}"
+                                                   name="{{ character.name }}" />
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="row">
+                            <div class="col-sm"></div>
+                            <div class="col-sm"></div>
+                            <div class="col-sm"></div>
+                            <div class="col-sm">
+                                <input type="submit"
+                                       value="XP for {{ scene.name }}"
+                                       name="XP for {{ scene.name }}" />
+                            </div>
+                        </div>
+                    </form>
+                {% endfor %}
+                <div class="row">
+                    <h2 class="col-sm {{ object.preferred_heading }}">To Approve</h2>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for obj in object.objects_to_approve %}
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div>
+                                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                                        </div>
+                                        <div>
+                                            {% if char.owner is not None %}
+                                                <a href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner }}</a>
+                                            {% else %}
+                                                <div>No Owner</div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div>{{ obj.get_status_display }}</div>
+                                        </div>
+                                        <div>
+                                            {% if obj.get_type %}
+                                                <div>{{ obj.get_type }}</div>
+                                            {% else %}
+                                                <div>{{ obj.type.title }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <input type="submit" name="{{ obj.name }}" value="Approve" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col">No Characters.</div>
+                        {% endfor %}
+                    </div>
+                </form>
+                <h2 class="col-sm {{ user.profile.preferred_heading }}">Images To Approve</h2>
+                {% for char in object.image_to_approve %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="row border">
+                            <a class="col-sm-3 border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                            <div class="col-sm-3 border">
+                                {% if char.owner is not None %}{{ char.owner }}{% endif %}
+                            </div>
+                            <div class="cols-sm-3 border">
+                                <img src="{{ char.image.url }}"
+                                     width="300"
+                                     height="{{ image.height }}"
+                                     alt="image of {{ char.name }}" />
+                            </div>
+                            <input class="col-sm-2 border"
+                                   type="submit"
+                                   name="image {{ char.name }}"
+                                   value="Approve Image" />
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock content %}

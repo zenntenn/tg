@@ -145,6 +145,21 @@ class Model(PolymorphicModel):
             return "World of Darkness"
         return str(self.__class__).split(" ")[-1].split(".")[2].title()
 
+    def get_full_gameline(self):
+        short = self.get_gameline()
+        if short == "World of Darkness":
+            return short
+        elif short == "Vampire":
+            return "Vampire: the Masquerade"
+        elif short == "Werewolf":
+            return "Werewolf: the Apocalypse"
+        elif short == "Mage":
+            return "Mage: the Ascension"
+        elif short == "Changeling":
+            return "Changeling: the Dreaming"
+        elif short == "Wraith":
+            return "Wraith: the Oblivion"
+
 
 class NewsItem(models.Model):
     title = models.CharField(default="", max_length=100)
