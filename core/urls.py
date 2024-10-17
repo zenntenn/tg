@@ -32,7 +32,7 @@ urlpatterns = [
         name="update_newsitem",
     ),
     path(
-        "houserules/index/<gameline>/",
+        "houserules/index/",
         views.HouseRulesIndexView.as_view(),
         name="houserules",
     ),

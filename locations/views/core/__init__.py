@@ -54,11 +54,11 @@ class LocationIndexView(View):
     }
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context(request)
+        context = self.get_context()
         return render(request, "locations/index.html", context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(request)
+        context = self.get_context()
         action = request.POST.get("action")
         loc_type = request.POST["loc_type"]
         obj = ObjectType.objects.get(name=loc_type)
@@ -105,7 +105,7 @@ class LocationIndexView(View):
             return redirect(loc.get_absolute_url())
         return render(request, "locations/index.html", context)
 
-    def get_context(self, request):
+    def get_context(self):
         game_locations = ObjectType.objects.filter(type="loc")
         game_location_types = [x.name for x in game_locations]
         context = {
@@ -118,8 +118,8 @@ class LocationIndexView(View):
             ).order_by("name")
         context["form"] = LocationCreationForm()
         context["chrondict"] = chron_dict
-        if request.user.is_authenticated:
-            context["header"] = request.user.profile.preferred_heading
+        if self.request.user.is_authenticated:
+            context["header"] = self.request.user.profile.preferred_heading
         else:
             context["header"] = "wod_heading"
 

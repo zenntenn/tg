@@ -86,11 +86,11 @@ class ItemIndexView(View):
     }
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context(request)
+        context = self.get_context()
         return render(request, "items/index.html", context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(request)
+        context = self.get_context()
         action = request.POST.get("action")
         item_type = request.POST["item_type"]
         obj = ObjectType.objects.get(name=item_type)
@@ -132,7 +132,7 @@ class ItemIndexView(View):
             return redirect(item.get_absolute_url())
         return render(request, "items/index.html", context)
 
-    def get_context(self, request):
+    def get_context(self):
         game_items = ObjectType.objects.filter(type="obj")
         game_items_types = [x.name for x in game_items]
         context = {
@@ -151,8 +151,8 @@ class ItemIndexView(View):
 
         context["chron_dict"] = chron_dict
         context["form"] = ItemCreationForm()
-        if request.user.is_authenticated:
-            context["header"] = request.user.profile.preferred_heading
+        if self.request.user.is_authenticated:
+            context["header"] = self.request.user.profile.preferred_heading
         else:
             context["header"] = "wod_heading"
 

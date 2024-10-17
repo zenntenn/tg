@@ -135,11 +135,11 @@ class CharacterIndexView(View):
     }
 
     def get(self, request, *args, **kwargs):
-        context = self.get_context(request)
+        context = self.get_context()
         return render(request, "characters/index.html", context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(request)
+        context = self.get_context()
         action = request.POST.get("action")
         char_type = request.POST["char_type"]
         obj = ObjectType.objects.get(name=char_type)
@@ -192,7 +192,7 @@ class CharacterIndexView(View):
             return redirect(char.get_absolute_url())
         return render(request, "characters/index.html", context)
 
-    def get_context(self, request):
+    def get_context(self):
         game_characters = ObjectType.objects.filter(type="char")
         game_character_types = [x.name for x in game_characters]
         context = {
@@ -219,8 +219,8 @@ class CharacterIndexView(View):
         context["chron_char_dict"] = chron_char_dict
         context["chron_group_dict"] = chron_group_dict
         context["form"] = CharacterCreationForm()
-        if request.user.is_authenticated:
-            context["header"] = request.user.profile.preferred_heading
+        if self.request.user.is_authenticated:
+            context["header"] = self.request.user.profile.preferred_heading
         else:
             context["header"] = "wod_heading"
 
