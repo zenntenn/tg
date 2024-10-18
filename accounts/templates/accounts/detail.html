@@ -3,6 +3,7 @@
     {{ object.user.username }}
 {% endblock title %}
 {% block content %}
+    {% load field %}
     <div class="centertext container">
         <div class="row">
             <h1 class="col-sm {{ object.preferred_heading }}">{{ object.user.username }}</h1>
@@ -11,103 +12,22 @@
             <h2 class="col-sm {{ object.preferred_heading }}">Chronicles STed</h2>
         </div>
         <div class="row">
-            {% for chronicle in object.user.chronicle_set.all %}
+            {% for chronicle in object.st_relations %}
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="card mb-3">
                         <div class="card-body text-center">
-                            <div class="{{ chronicle.headings }}">
+                            <div>
                                 <a href="{{ chronicle.get_absolute_url }}">{{ chronicle.name }}</a>
                             </div>
+                            {% for str in object.st_relations|field:chronicle %}
+                                <div class="text-center">
+                                    <div>{{ str.gameline }}</div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
             {% endfor %}
-        </div>
-        <div class="row">
-            <h2 class="col-sm {{ object.preferred_heading }}">Gamelines STed</h2>
-        </div>
-        <div class="row">
-            {% if object.head_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Head Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.vtm_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Vampire Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.wta_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Werewolf Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.mta_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Mage Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.ctd_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Changeling Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.wto_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Wraith Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.htr_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Hunter Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.dtf_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Demon Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if object.mtr_st %}
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-body text-center">
-                            <div>Mummy Storyteller</div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
         </div>
         {% block my_characters %}
             <div class="row">

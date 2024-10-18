@@ -4,22 +4,13 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-from game.models import Scene
+from game.models import Chronicle, Scene, STRelationship
 from items.models.core.item import ItemModel
 from locations.models.core.location import LocationModel
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    head_st = models.BooleanField(default=False)
-    vtm_st = models.BooleanField(default=False)
-    wta_st = models.BooleanField(default=False)
-    mta_st = models.BooleanField(default=False)
-    ctd_st = models.BooleanField(default=False)
-    wto_st = models.BooleanField(default=False)
-    htr_st = models.BooleanField(default=False)
-    dtf_st = models.BooleanField(default=False)
-    mtr_st = models.BooleanField(default=False)
 
     preferred_heading = models.CharField(
         max_length=30,
@@ -57,16 +48,16 @@ class Profile(models.Model):
         verbose_name_plural = "Profiles"
 
     def is_st(self):
-        return (
-            self.vtm_st
-            or self.wta_st
-            or self.mta_st
-            or self.ctd_st
-            or self.wto_st
-            or self.htr_st
-            or self.dtf_st
-            or self.mtr_st
-        )
+        num_st = STRelationship.objects.filter(user=self.user).count()
+        return num_st > 0
+
+    def st_relations(self):
+        str = STRelationship.objects.filter(user=self.user)
+        d = {}
+        for chron in Chronicle.objects.all():
+            if str.filter(chronicle=chron).count() > 0:
+                d[chron] = str.filter(chronicle=chron)
+        return d
 
     def my_characters(self):
         return Character.objects.filter(owner=self.user)

@@ -1,7 +1,7 @@
 from characters.models.core import Human
 from django.contrib.auth.models import User
 from django.test import TestCase
-from game.models import Chronicle
+from game.models import Chronicle, Gameline, STRelationship
 
 
 class TestSignUpView(TestCase):
@@ -26,8 +26,10 @@ class TestProfileView(TestCase):
             "Test Storyteller", "test@st.com", "testpass"
         )
 
-        self.storyteller.profile.mta_st = True
-        self.storyteller.profile.save()
+        mta = Gameline.objects.create(name="Mage: the Ascension")
+        STRelationship.objects.create(
+            user=self.storyteller, gameline=mta, chronicle=None
+        )
 
         chronicle = Chronicle.objects.create(name="Test Chronicle")
         chronicle.storytellers.add(self.storyteller)

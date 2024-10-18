@@ -51,7 +51,6 @@ class ProfileView(DetailView):
             char.image_status = "app"
             char.save()
         else:
-            print(request.POST.keys())
             char = [
                 x
                 for x in self.object.objects_to_approve()
