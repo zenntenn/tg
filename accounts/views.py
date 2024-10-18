@@ -4,7 +4,7 @@ from characters.models.core import Character
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 from game.models import Chronicle, Scene
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
@@ -50,6 +50,8 @@ class ProfileView(DetailView):
             ][0]
             char.image_status = "app"
             char.save()
+        elif "Edit Preferences" in request.POST.keys():
+            return redirect("profile_update", pk=self.object.pk)
         else:
             char = [
                 x
@@ -63,3 +65,9 @@ class ProfileView(DetailView):
             "accounts/detail.html",
             self.get_context_data(),
         )
+
+
+class ProfileUpdateView(UpdateView):
+    model = Profile
+    fields = ["preferred_heading", "theme"]
+    template_name = "accounts/form.html"
