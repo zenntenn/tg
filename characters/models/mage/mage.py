@@ -643,6 +643,9 @@ class Mage(MtAHuman):
 
     def filter_effects(self, max_cost=100):
         effects = Effect.objects.filter(rote_cost__lte=max_cost)
+        effects = effects.exclude(
+            id__in=self.rotes.all().values_list("effect", flat=True)
+        )
 
         spheres = self.get_spheres()
         spheres = {k + "__lte": v for k, v in spheres.items()}
