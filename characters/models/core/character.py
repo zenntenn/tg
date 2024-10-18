@@ -23,6 +23,8 @@ class Character(CharacterModel):
     concept = models.CharField(max_length=100)
     creation_status = models.IntegerField(default=1)
 
+    notes = models.TextField(default="", blank=True, null=True)
+
     class Meta:
         verbose_name = "Character"
         verbose_name_plural = "Characters"

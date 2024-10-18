@@ -73,7 +73,6 @@ class Human(MeritFlawBlock, HealthBlock, BackgroundBlock, AttributeBlock, Charac
 
     history = models.TextField(default="", blank=True, null=True)
     goals = models.TextField(default="", blank=True, null=True)
-    notes = models.TextField(default="", blank=True, null=True)
 
     xp = models.IntegerField(default=0)
     spent_xp = models.JSONField(default=list)
