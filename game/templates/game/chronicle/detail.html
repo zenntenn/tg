@@ -11,7 +11,15 @@
         </div>
         <div class="row centertext">
             <div class="col-sm">Storytellers</div>
-            <div class="col-sm">{{ object.storyteller_list }}</div>
+            <div class="col-sm">
+                {% for st in object.storytellers.distinct %}
+                    {% if not forloop.last %}
+                        <a href="{{ st.profile.get_absolute_url }}">{{ st }}</a>,
+                    {% else %}
+                        <a href="{{ st.profile.get_absolute_url }}">{{ st }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
         <div class="row centertext">
             <div class="col-sm">Theme</div>

@@ -54,9 +54,16 @@ class SettingElement(models.Model):
         return self.name
 
 
+class Gameline(models.Model):
+    name = models.CharField(max_length=100, default="")
+
+    def __str__(self):
+        return self.name
+
+
 class Chronicle(models.Model):
     name = models.CharField(max_length=100, default="")
-    storytellers = models.ManyToManyField(User, blank=True)
+    storytellers = models.ManyToManyField(User, blank=True, through="STRelationship")
     theme = models.CharField(max_length=200, default="")
     mood = models.CharField(max_length=200, default="")
     common_knowledge_elements = models.ManyToManyField(SettingElement, blank=True)
@@ -104,6 +111,15 @@ class Chronicle(models.Model):
     def add_setting_element(self, name, description):
         se = SettingElement.objects.get_or_create(name=name, description=description)[0]
         self.common_knowledge_elements.add(se)
+
+
+class STRelationship(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    chronicle = models.ForeignKey(Chronicle, on_delete=models.SET_NULL, null=True)
+    gameline = models.ForeignKey(Gameline, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        ordering = ["gameline__id"]
 
 
 class Story(models.Model):
