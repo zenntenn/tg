@@ -16,6 +16,15 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
 )
+from characters.views.mage.background_views import (
+    MtAAlliesView,
+    MtAEnhancementView,
+    MtAFamiliarView,
+    MtALibraryView,
+    MtANodeView,
+    MtASanctumView,
+    MtAWonderView,
+)
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
@@ -561,6 +570,43 @@ class CompanionSpecialtiesView(SpecialUserMixin, FormView):
         return HttpResponseRedirect(companion.get_absolute_url())
 
 
+class CompanionAlliesView(MtAAlliesView):
+    template_name = "characters/mage/companion/chargen.html"
+
+
+class CompanionEnhancementView(MtAEnhancementView):
+    template_name = "characters/mage/companion/chargen.html"
+
+
+class CompanionLibraryView(MtALibraryView):
+    potential_skip = [
+        "wonder",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    template_name = "characters/mage/companion/chargen.html"
+
+
+class CompanionNodeView(MtANodeView):
+    potential_skip = [
+        "library",
+        "wonder",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    template_name = "characters/mage/companion/chargen.html"
+
+
+class CompanionSanctumView(MtASanctumView):
+    template_name = "characters/mage/companion/chargen.html"
+
+
+class CompanionWonderView(MtAWonderView):
+    template_name = "characters/mage/companion/chargen.html"
+
+
 class CopanionCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: CompanionAttributeView,
@@ -569,7 +615,13 @@ class CopanionCharacterCreationView(HumanCharacterCreationView):
         4: CompanionExtrasView,
         5: CompanionFreebiesView,
         6: CompanionLanguagesView,
-        7: CompanionSpecialtiesView,
+        7: CompanionNodeView,
+        8: CompanionLibraryView,
+        9: CompanionWonderView,
+        10: CompanionEnhancementView,
+        11: CompanionSanctumView,
+        12: CompanionAlliesView,
+        13: CompanionSpecialtiesView,
     }
 
     model_class = Companion

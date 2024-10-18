@@ -228,15 +228,25 @@ class MtALibraryView(SpecialUserMixin, CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         obj = context["object"]
-        l = Library(
-            **form.cleaned_data,
-            owned_by=obj,
-            owner=obj.owner,
-            chronicle=obj.chronicle,
-            faction=obj.faction,
-            rank=self.current_library.rating,
-            status="Sub",
-        )
+        if hasattr(obj, "faction"):
+            l = Library(
+                **form.cleaned_data,
+                owned_by=obj,
+                owner=obj.owner,
+                chronicle=obj.chronicle,
+                faction=obj.faction,
+                rank=self.current_library.rating,
+                status="Sub",
+            )
+        else:
+            l = Library(
+                **form.cleaned_data,
+                owned_by=obj,
+                owner=obj.owner,
+                chronicle=obj.chronicle,
+                rank=self.current_library.rating,
+                status="Sub",
+            )
         l.save()
         for _ in range(l.rank):
             l.random_book()

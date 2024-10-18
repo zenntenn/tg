@@ -10,7 +10,11 @@ class SpecialtiesForm(forms.Form):
         character = kwargs.pop("object")
         super().__init__(*args, **kwargs)
         for field in specialties_needed:
-            s = Statistic.objects.get(property_name=field)
+            s = (
+                Statistic.objects.filter(property_name=field)
+                .exclude(polymorphic_ctype__model="background")
+                .first()
+            )
             self.fields[field] = forms.CharField(
                 widget=AutocompleteTextInput(
                     suggestions=[
