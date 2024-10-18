@@ -530,6 +530,8 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
             w.owned_by.add(obj)
             w.save()
 
+        w.display = True
+        w.save()
         self.current_wonder.note = w.name
         self.current_wonder.url = w.get_absolute_url()
         self.current_wonder.complete = True
