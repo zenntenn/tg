@@ -18,42 +18,21 @@
     <div class="col-sm">Description</div>
     <div class="col-sm">{{ form.description }}</div>
 </div>
-<div id="practice-formset">
-    <!-- This is the management form for the formset -->
-    {{ rz_form.management_form }}
-    {% for f in rz_form %}
+<div id="rz_form_container">
+    {{ rz_form_context.formset.management_form }}
+    {% for f in rz_form_context.formset %}
         <div class="row form-row">
             <div class="col-sm">{{ f.practice }}</div>
             <div class="col-sm">{{ f.rating }}</div>
         </div>
     {% endfor %}
 </div>
-<!-- Hidden template for new forms -->
-<div id="empty-form" class="row form-row invisible">
-    <div class="col-sm">{{ rz_form.empty_form.practice }}</div>
-    <div class="col-sm">{{ rz_form.empty_form.rating }}</div>
+<!-- Hidden empty form to clone -->
+<div id="rz_form_empty_form" class="invisible">
+    <div class="row form-row">
+        <div class="col-sm">{{ rz_form_context.empty_form.practice }}</div>
+        <div class="col-sm">{{ rz_form_context.empty_form.rating }}</div>
+    </div>
 </div>
-<button type="button" id="add-form">Add Practice</button>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let formCount = {{ rz_form.total_form_count }};
-        console.log({{ rz_form.total_form_count }})
-        const emptyFormTemplate = document.getElementById("empty-form").innerHTML;
-        const formsetDiv = document.getElementById("practice-formset");
-
-        document.getElementById("add-form").addEventListener("click", function() {
-            // Replace the placeholder with the current form count
-            let newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
-
-            // Create a new div for the form and add the generated HTML
-            let newDiv = document.createElement("div");
-            newDiv.classList.add("row", "form-row");
-            newDiv.innerHTML = newFormHtml;
-            formsetDiv.appendChild(newDiv);
-
-            // Update the management form to include the new form
-            formCount++;
-            document.getElementById("id_practicerating_set-TOTAL_FORMS").value = formCount;
-        });
-    });
-</script>
+<button type="button" id="{{ rz_form_context.add_button_id }}">Add Practice</button>
+{{ rz_form_js|safe }}

@@ -91,8 +91,47 @@
                 {% include "characters/mage/sorcerer/sorcerer_freebies_form.html" %}
             {% endif %}
         {% endblock freebies %}
-        {% block specialties_form %}
+        {% block node %}
             {% if object.creation_status == 10 %}
+                {% include "characters/mage/mage/mage_node_block_form.html" %}
+            {% endif %}
+        {% endblock node %}
+        {% block library %}
+            {% if object.creation_status == 11 %}
+                {% include "characters/mage/mage/mage_library_block_form.html" %}
+            {% endif %}
+        {% endblock library %}
+        {% block familiar %}
+            {% if object.creation_status == 12 %}
+                {% include "characters/mage/mage/familiar_form.html" %}
+            {% endif %}
+        {% endblock familiar %}
+        {% block wonder %}
+            {% if object.creation_status == 13 %}
+                {% include "characters/mage/mage/mage_wonder_block_form.html" %}
+            {% elif object.creation_status > 13 %}
+                {% include "characters/core/human/equipment_block.html" %}
+            {% endif %}
+        {% endblock wonder %}
+        {% block enhancements %}
+            {% if object.creation_status == 14 %}
+                {% include "characters/mage/mage/mage_enhancements_form.html" %}
+            {% endif %}
+        {% endblock enhancements %}
+        {% block sanctum %}
+            {% if object.creation_status == 15 %}
+                {% include "characters/mage/mage/mage_sanctum_block_form.html" %}
+            {% endif %}
+        {% endblock sanctum %}
+        {% block ally %}
+            {% if object.creation_status == 16 %}
+                {% include "characters/core/human/ally_block_form.html" %}
+            {% elif object.creation_status > 16 %}
+                {% include "characters/core/human/ally_block_display.html" %}
+            {% endif %}
+        {% endblock ally %}
+        {% block specialties_form %}
+            {% if object.creation_status == 17 %}
                 {% include "characters/mage/mage/mage_specialties_block_form.html" %}
             {% endif %}
         {% endblock specialties_form %}

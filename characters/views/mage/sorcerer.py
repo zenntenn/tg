@@ -29,6 +29,15 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
 )
+from characters.views.mage.background_views import (
+    MtAAlliesView,
+    MtAEnhancementView,
+    MtAFamiliarView,
+    MtALibraryView,
+    MtANodeView,
+    MtASanctumView,
+    MtAWonderView,
+)
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
@@ -143,11 +152,11 @@ class LoadExamplesView(View):
             examples = [x for x in examples if getattr(m, x.property_name, 0) < 5]
         elif category_choice == "Ability":
             examples = Ability.objects.order_by("name")
+            examples = [x for x in examples if hasattr(m, x.property_name)]
             examples = [
-                x
-                for x in examples
-                if getattr(m, x.property_name, 0) < 4 and hasattr(m, x.property_name)
+                x for x in examples if isinstance(getattr(m, x.property_name), int)
             ]
+            examples = [x for x in examples if getattr(m, x.property_name, 0) < 4]
         elif category_choice == "New Background":
             examples = Background.objects.filter(
                 property_name__in=m.allowed_backgrounds
@@ -757,7 +766,9 @@ class SorcererSpecialtiesView(SpecialUserMixin, FormView):
         kwargs = super().get_form_kwargs()
         companion = Sorcerer.objects.get(id=self.kwargs["pk"])
         kwargs["object"] = companion
-        stats = list(Attribute.objects.all()) + list(Ability.objects.all())
+        stats = list(Attribute.objects.all()) + list(
+            Ability.objects.all().exclude(property_name="rituals")
+        )
         stats = [x for x in stats if getattr(companion, x.property_name, 0) >= 4] + [
             x
             for x in stats
@@ -794,6 +805,34 @@ class SorcererSpecialtiesView(SpecialUserMixin, FormView):
         return HttpResponseRedirect(companion.get_absolute_url())
 
 
+class SorcererAlliesView(MtAAlliesView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
+class SorcererEnhancementView(MtAEnhancementView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
+class SorcererFamiliarView(MtAFamiliarView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
+class SorcererLibraryView(MtALibraryView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
+class SorcererNodeView(MtANodeView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
+class SorcererSanctumView(MtASanctumView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
+class SorcererWonderView(MtAWonderView):
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+
 class SorcererCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: SorcererAttributeView,
@@ -805,7 +844,14 @@ class SorcererCharacterCreationView(HumanCharacterCreationView):
         7: SorcererExtrasView,
         8: SorcererFreebiesView,
         9: SorcererLanguagesView,
-        10: SorcererSpecialtiesView,
+        10: SorcererNodeView,
+        11: SorcererLibraryView,
+        12: SorcererFamiliarView,
+        # 13: SorcererWonderView, # Replace with Artifact
+        14: SorcererEnhancementView,
+        15: SorcererSanctumView,
+        16: SorcererAlliesView,
+        17: SorcererSpecialtiesView,
     }
 
     model_class = Sorcerer

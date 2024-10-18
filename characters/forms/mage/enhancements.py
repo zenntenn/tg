@@ -126,9 +126,9 @@ class EnhancementForm(forms.Form):
         )
 
     def save(self, *args, **kwargs):
-        mage = kwargs.pop("mage", None)
-        if mage is None:
-            raise ValueError("Form requires mage keyword")
+        char = kwargs.pop("char", None)
+        if char is None:
+            raise ValueError("Form requires char keyword")
 
         note = []
 
@@ -136,10 +136,10 @@ class EnhancementForm(forms.Form):
             for i in range(self.rank):
                 att = self.cleaned_data[f"attribute_{i}"]
                 note.append(att.name)
-                mage.add_attribute(att.property_name, maximum=10)
+                char.add_attribute(att.property_name, maximum=10)
             url = ""
         elif self.cleaned_data["enhancement_type"] == "Existing Device":
-            mage.enhancement_devices.add(self.cleaned_data["device"])
+            char.enhancement_devices.add(self.cleaned_data["device"])
             note.append(self.cleaned_data["device"].name)
             url = self.cleaned_data["device"].get_absolute_url()
         elif self.cleaned_data["enhancement_type"] == "New Device":
@@ -197,27 +197,27 @@ class EnhancementForm(forms.Form):
             note.append(w.name)
             url = w.get_absolute_url()
         elif self.cleaned_data["enhancement_type"] == "Health":
-            mage.max_health_levels += self.rank
+            char.max_health_levels += self.rank
             for _ in range(self.rank):
                 note.append("Health")
             url = ""
 
         if self.cleaned_data["enhancement_style"] == "Cybernetics":
-            mage.paradox += self.rank
+            char.paradox += self.rank
             note.append(f"{self.rank} Permanent Paradox")
         elif self.cleaned_data["enhancement_style"] == "Biomods":
-            mage.paradox += self.rank
+            char.paradox += self.rank
             note.append(f"{self.rank} Permanent Paradox")
         elif self.cleaned_data["enhancement_style"] == "Genegineering":
             MeritFlawRating.objects.create(
-                character=mage, mf=self.cleaned_data["flaw"], rating=-self.rank
+                character=char, mf=self.cleaned_data["flaw"], rating=-self.rank
             )
             note.append(self.cleaned_data["flaw"].name)
 
         note = ", ".join(note)
         # url
 
-        bgr = mage.backgrounds.filter(
+        bgr = char.backgrounds.filter(
             bg=Background.objects.get(property_name="enhancement"),
             rating=self.rank,
             complete=False,
