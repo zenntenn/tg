@@ -90,7 +90,7 @@
         <div class="col-sm">{{ form.device }}</div>
     </div>
 </div>
-<div class="form-group invisible" id="genetic_flaw">
+<div class="form-group" id="genetic_flaw">
     <div class="row">
         <div class="col-sm">{{ form.flaw }}</div>
     </div>
@@ -104,7 +104,6 @@
         const attributeElements = document.getElementById("attributes");
         const deviceElements = document.getElementById("device");
         const ndeviceElements = document.getElementById("new_device");
-        const flawElements = document.getElementById("genetic_flaw");
         const powerSelectElements = document.getElementById("new_device_power_select");
         const newPowerElements = document.getElementById("new_device_new_power");
         
@@ -132,18 +131,6 @@
             }
             else {
                 ndeviceElements.classList.add("invisible");
-            }
-            
-        });
-
-        styleSelectMenu.addEventListener("change", function() {
-            const selectedValue = this.value;
-            // Update the class of the element
-            if(selectedValue == "Genegineering"){
-                flawElements.classList.remove("invisible");
-            }
-            else {
-                flawElements.classList.add("invisible");
             }
             
         });

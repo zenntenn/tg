@@ -577,6 +577,11 @@ class CompanionAlliesView(MtAAlliesView):
 class CompanionEnhancementView(MtAEnhancementView):
     template_name = "characters/mage/companion/chargen.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["flaw"].required = True
+        return form
+
 
 class CompanionLibraryView(MtALibraryView):
     potential_skip = [
