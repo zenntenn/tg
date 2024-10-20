@@ -97,20 +97,34 @@ class Chronicle(models.Model):
     def storyteller_list(self):
         return ", ".join([x.username for x in self.storytellers.all()])
 
-    def total_stories(self):
-        return Story.objects.filter(chronicle=self).count()
-
-    def add_story(self, name):
-        if Story.objects.filter(name=name, chronicle=self).exists():
-            return Story.objects.filter(name=name, chronicle=self).first()
-        return Story.objects.create(name=name, chronicle=self)
-
     def get_scenes_url(self):
         return reverse("game:chronicle_scenes", kwargs={"pk": self.pk})
 
     def add_setting_element(self, name, description):
         se = SettingElement.objects.get_or_create(name=name, description=description)[0]
         self.common_knowledge_elements.add(se)
+
+    def total_scenes(self):
+        return Scene.objects.filter(chronicle=self).count()
+
+    def add_scene(self, name, location, date_played=None, date_of_scene=None):
+        if isinstance(location, str):
+            from locations.models import LocationModel
+
+            location = LocationModel.objects.get(name=location)
+        if Scene.objects.filter(name=name, chronicle=self, location=location).exists():
+            return Scene.objects.filter(
+                name=name, chronicle=self, location=location
+            ).first()
+        s = Scene.objects.create(
+            name=name,
+            chronicle=self,
+            location=location,
+            date_played=date_played,
+            date_of_scene=date_of_scene,
+        )
+        self.save()
+        return s
 
 
 class STRelationship(models.Model):
@@ -122,79 +136,11 @@ class STRelationship(models.Model):
         ordering = ["gameline__id"]
 
 
-class Story(models.Model):
-    name = models.CharField(max_length=100, default="")
-    pcs = models.ManyToManyField(
-        "characters.CharacterModel", blank=True, related_name="pc_in"
-    )
-    key_npcs = models.ManyToManyField(
-        "characters.CharacterModel", blank=True, related_name="npc_in"
-    )
-    plot_summary = models.TextField(default="")
-    key_locations = models.ManyToManyField("locations.LocationModel", blank=True)
-    chronicle = models.ForeignKey(
-        "game.Chronicle", null=True, blank=True, on_delete=models.SET_NULL
-    )
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-
-    class Meta:
-        verbose_name = "Story"
-        verbose_name_plural = "Stories"
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("game:story", kwargs={"pk": self.pk})
-
-    def total_locations(self):
-        return self.key_locations.count()
-
-    def total_pcs(self):
-        return self.pcs.count()
-
-    def total_npcs(self):
-        return self.key_npcs.count()
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if Scene.objects.filter(story=self).exists():
-            self.start_date = min(
-                x.date_of_scene for x in Scene.objects.filter(story=self)
-            )
-            self.end_date = max(
-                x.date_of_scene for x in Scene.objects.filter(story=self)
-            )
-            super().save()
-
-    def total_scenes(self):
-        return Scene.objects.filter(story=self).count()
-
-    def add_scene(self, name, location, date_played=None, date_of_scene=None):
-        if isinstance(location, str):
-            from locations.models import LocationModel
-
-            location = LocationModel.objects.get(name=location)
-        if Scene.objects.filter(name=name, story=self, location=location).exists():
-            return Scene.objects.filter(
-                name=name, story=self, location=location
-            ).first()
-        s = Scene.objects.create(
-            name=name,
-            story=self,
-            location=location,
-            date_played=date_played,
-            date_of_scene=date_of_scene,
-        )
-        self.key_locations.add(location)
-        self.save()
-        return s
-
-
 class Scene(models.Model):
     name = models.CharField(max_length=100, default="")
-    story = models.ForeignKey("game.Story", on_delete=models.SET_NULL, null=True)
+    chronicle = models.ForeignKey(
+        "game.Chronicle", on_delete=models.SET_NULL, null=True
+    )
     date_played = models.DateField(null=True, blank=True)
     characters = models.ManyToManyField(
         "characters.CharacterModel", related_name="scenes", blank=True
@@ -231,10 +177,6 @@ class Scene(models.Model):
 
             character = CharacterModel.objects.get(name=character)
         self.characters.add(character)
-        if character.npc:
-            self.story.key_npcs.add(character)
-        else:
-            self.story.pcs.add(character)
         return character
 
     def total_posts(self):

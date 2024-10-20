@@ -7,21 +7,16 @@
     <div class="container">
         <div class="centertext">
             <div class="row">
-                <h2 class="col-sm {{ object.story.chronicle.headings }}">{{ object.name }}</h2>
+                <h2 class="col-sm {{ object.chronicle.headings }}">{{ object.name }}</h2>
             </div>
             <div class="row">
-                <h3 class="col-sm {{ object.story.chronicle.headings }}">
-                    <a href="{{ object.story.get_absolute_url }}">{{ object.story.name }}</a>
-                </h3>
-            </div>
-            <div class="row">
-                <h3 class="col-sm {{ object.story.chronicle.headings }}">
+                <h3 class="col-sm {{ object.chronicle.headings }}">
                     <a href="{{ object.location.get_absolute_url }}">{{ object.location.name }}</a>
                 </h3>
             </div>
             <div class="row">
                 <div class="col-sm">
-                    <h4 class="col-sm {{ object.story.chronicle.headings }}">{{ object.location.description|sanitize_html }}</h4>
+                    <h4 class="col-sm {{ object.chronicle.headings }}">{{ object.location.description|sanitize_html }}</h4>
                 </div>
             </div>
         </div>
