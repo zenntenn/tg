@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+from characters.models.core.human import Human
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.mage import Mage
 from characters.models.mage.mtahuman import MtAHuman
@@ -91,7 +92,7 @@ class Companion(MtAHuman):
     )
 
     companion_of = models.ForeignKey(
-        Mage, blank=True, null=True, on_delete=models.SET_NULL
+        Human, blank=True, null=True, on_delete=models.SET_NULL
     )
 
     advantages = models.ManyToManyField(
