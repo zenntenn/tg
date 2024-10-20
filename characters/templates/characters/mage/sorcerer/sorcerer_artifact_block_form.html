@@ -1,0 +1,48 @@
+<div class="row">
+    <h2 class="col-sm mta_heading">Create Artifact</h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Create your Artifact. It should have a single power roughly equal to the Artifact's level in some Path.
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">Create New Artifact: {{ form.select_or_create_artifact }}</div>
+</div>
+<div id="artifact selection">
+    <div class="row">
+        <div class="col-sm">{{ form.artifact_options }}</div>
+    </div>
+</div>
+<div id="artifact creation" class="invisible">
+    <div class="row">
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">Rank</div>
+        <div class="col-sm">{{ form.rank }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with data-toggle="toggle"
+        const artifact_creation_toggle = document.getElementById('id_select_or_create_artifact');
+        const artifact_creation = document.getElementById('artifact creation');
+        const artifact_selection = document.getElementById('artifact selection');
+        
+        // Attach event listener to each toggle
+        artifact_creation_toggle.addEventListener('change', function() {
+
+            if ($(this).prop('checked')) {
+                artifact_selection.classList.add("invisible");
+                artifact_creation.classList.remove("invisible");
+            } else {
+                artifact_creation.classList.add("invisible")
+                artifact_selection.classList.remove("invisible")
+            }
+        });
+    });
+</script>
