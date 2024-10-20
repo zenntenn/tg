@@ -79,7 +79,7 @@
             {% endif %}
         {% endblock history %}
         {% block freebies %}
-            {% if object.creation_status >= 5 %}
+            {% if object.creation_status == 5 %}
                 {% include "characters/mage/companion/companion_freebies_form.html" %}
             {% endif %}
         {% endblock freebies %}
