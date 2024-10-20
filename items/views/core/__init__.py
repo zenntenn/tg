@@ -17,6 +17,7 @@ from items.models.core.weapon import Weapon
 from items.models.mage.artifact import Artifact
 from items.models.mage.charm import Charm
 from items.models.mage.grimoire import Grimoire
+from items.models.mage.sorcerer_artifact import SorcererArtifact
 from items.models.mage.talisman import Talisman
 from items.models.mage.wonder import Wonder
 from items.models.werewolf.fetish import Fetish
@@ -83,6 +84,7 @@ class ItemIndexView(View):
         "fetish": Fetish,
         "material": Material,
         "medium": Medium,
+        "sorcerer_artifact": SorcererArtifact,
     }
 
     def get(self, request, *args, **kwargs):

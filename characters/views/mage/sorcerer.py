@@ -36,7 +36,6 @@ from characters.views.mage.background_views import (
     MtALibraryView,
     MtANodeView,
     MtASanctumView,
-    MtAWonderView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
@@ -51,6 +50,8 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
+from items.forms.mage.sorcerer_artifact import SorcererArtifactForm
+from items.models.mage.sorcerer_artifact import SorcererArtifact
 
 
 class SorcererBasicsView(LoginRequiredMixin, CreateView):
@@ -694,6 +695,7 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
             for step in [
                 "node",
                 "library",
+                "familiar",
                 "artifact",
                 "enhancement",
                 "sanctum",
@@ -875,8 +877,100 @@ class SorcererSanctumView(MtASanctumView):
     template_name = "characters/mage/sorcerer/chargen.html"
 
 
-class SorcererWonderView(MtAWonderView):
+class SorcererArtifactView(SpecialUserMixin, FormView):
+    form_class = SorcererArtifactForm
     template_name = "characters/mage/sorcerer/chargen.html"
+
+    potential_skip = [
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = Human.objects.get(id=self.kwargs["pk"])
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        context["current_artifact"] = self.current_artifact
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        obj = context["object"]
+        if form.cleaned_data["select_or_create_artifact"]:
+            s = SorcererArtifact.objects.create(
+                name=form.cleaned_data["name"],
+                rank=self.current_artifact.rating,
+                description=form.cleaned_data["description"],
+            )
+            s.owned_by.add(obj)
+            s.save()
+        else:
+            s = form.cleaned_data["artifact_options"]
+            s.owned_by.add(obj)
+            s.save()
+
+        s.display = True
+        s.save()
+        self.current_artifact.note = s.name
+        self.current_artifact.url = s.get_absolute_url()
+        self.current_artifact.complete = True
+        self.current_artifact.save()
+
+        if (
+            BackgroundRating.objects.filter(
+                char=obj,
+                bg=Background.objects.get(property_name="artifact"),
+                complete=False,
+            ).count()
+            == 0
+        ):
+            obj.creation_status += 1
+            obj.save()
+            for step in self.potential_skip:
+                if (
+                    BackgroundRating.objects.filter(
+                        bg=Background.objects.get(property_name=step),
+                        char=obj,
+                        complete=False,
+                    ).count()
+                    == 0
+                ):
+                    obj.creation_status += 1
+                else:
+                    obj.save()
+                    break
+            obj.save()
+        return HttpResponseRedirect(obj.get_absolute_url())
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        self.current_artifact = BackgroundRating.objects.filter(
+            char=obj,
+            bg=Background.objects.get(property_name="artifact"),
+            complete=False,
+        ).first()
+        form.fields["name"].initial = self.current_artifact.note
+        form.fields["description"].widget.attrs.update(
+            {"placeholder": "Enter description here"}
+        )
+        return form
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        obj_id = self.kwargs.get("pk")
+        obj = Human.objects.get(pk=obj_id)
+        kwargs["instance"] = obj
+        bgr = BackgroundRating.objects.filter(
+            char=obj,
+            bg=Background.objects.get(property_name="artifact"),
+            complete=False,
+        ).first()
+        kwargs["rank"] = bgr.rating
+        return kwargs
 
 
 class SorcererCharacterCreationView(HumanCharacterCreationView):
@@ -893,7 +987,7 @@ class SorcererCharacterCreationView(HumanCharacterCreationView):
         10: SorcererNodeView,
         11: SorcererLibraryView,
         12: SorcererFamiliarView,
-        # 13: SorcererWonderView, # Replace with Artifact
+        13: SorcererArtifactView,
         14: SorcererEnhancementView,
         15: SorcererSanctumView,
         16: SorcererAlliesView,
