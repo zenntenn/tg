@@ -85,10 +85,14 @@ class LoadExamplesView(View):
                 examples = examples.exclude(max_rating__lt=min(0, -7 - m.total_flaws()))
             examples = examples.exclude(min_rating__gt=m.freebies)
         elif category_choice == "Advantage":
-            examples = Advantage.objects.all()
+            examples = Advantage.objects.filter(min_rating__lte=m.freebies)
             examples = [x for x in examples if x not in m.advantages.all()]
         elif category_choice == "Charms":
-            examples = SpiritCharm.objects.exclude(point_cost=0).order_by("name")
+            examples = (
+                SpiritCharm.objects.exclude(point_cost=0)
+                .filter(point_cost__lte=m.freebies)
+                .order_by("name")
+            )
             examples = [x for x in examples if x not in m.charms.all()]
         else:
             examples = []
@@ -461,7 +465,27 @@ class CompanionFreebiesView(SpecialUserMixin, UpdateView):
             ):
                 self.object.creation_status += 1
                 self.object.languages.add(Language.objects.get(name="English"))
-
+            for step in [
+                "node",
+                "library",
+                "wonder",
+                "enhancement",
+                "sanctum",
+                "allies",
+            ]:
+                if (
+                    BackgroundRating.objects.filter(
+                        bg=Background.objects.get(property_name=step),
+                        char=self.object,
+                        complete=False,
+                    ).count()
+                    == 0
+                ):
+                    self.object.creation_status += 1
+                else:
+                    self.object.save()
+                    break
+                self.object.save()
         self.object.save()
         return super().form_valid(form)
 
