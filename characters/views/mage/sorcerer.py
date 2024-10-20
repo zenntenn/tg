@@ -812,6 +812,11 @@ class SorcererAlliesView(MtAAlliesView):
 class SorcererEnhancementView(MtAEnhancementView):
     template_name = "characters/mage/sorcerer/chargen.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["flaw"].required = True
+        return form
+
 
 class SorcererFamiliarView(MtAFamiliarView):
     template_name = "characters/mage/sorcerer/chargen.html"

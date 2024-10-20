@@ -202,17 +202,14 @@ class EnhancementForm(forms.Form):
                 note.append("Health")
             url = ""
 
-        if self.cleaned_data["enhancement_style"] == "Cybernetics":
-            char.paradox += self.rank
-            note.append(f"{self.rank} Permanent Paradox")
-        elif self.cleaned_data["enhancement_style"] == "Biomods":
-            char.paradox += self.rank
-            note.append(f"{self.rank} Permanent Paradox")
-        elif self.cleaned_data["enhancement_style"] == "Genegineering":
+        if self.cleaned_data["flaw"] is not None:
             MeritFlawRating.objects.create(
                 character=char, mf=self.cleaned_data["flaw"], rating=-self.rank
             )
             note.append(self.cleaned_data["flaw"].name)
+        else:
+            char.paradox += self.rank
+            note.append(f"{self.rank} Permanent Paradox")
 
         note = ", ".join(note)
         # url
