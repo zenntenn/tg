@@ -1,9 +1,12 @@
+import itertools
+
 from characters.models.core import CharacterModel
 from core.utils import level_name, tree_sort
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.timezone import datetime, localtime
 from django.views import View
-from game.forms import AddCharForm, PostForm, SceneCreationForm, StoryCreationForm
-from game.models import Chronicle, Post, Scene, Story
+from game.forms import AddCharForm, PostForm, SceneCreationForm
+from game.models import Chronicle, Post, Scene
 from items.models.core import ItemModel
 from locations.models.core import LocationModel
 
@@ -17,12 +20,11 @@ class ChronicleDetailView(View):
 
         return {
             "object": chronicle,
-            "stories": Story.objects.filter(chronicle=chronicle).order_by("start_date"),
             "characters": CharacterModel.objects.filter(chronicle=chronicle).order_by(
                 "name"
             ),
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
-            "form": StoryCreationForm(),
+            "form": SceneCreationForm(chronicle=chronicle),
             "top_locations": top_locations,
         }
 
@@ -32,28 +34,11 @@ class ChronicleDetailView(View):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context(kwargs["pk"])
-        return redirect(context["object"].add_story(request.POST["name"]))
-
-
-class StoryDetailView(View):
-    def get_context(self, pk):
-        story = Story.objects.get(pk=pk)
-        return {
-            "object": story,
-            "scenes": Scene.objects.filter(story=story),
-            "form": SceneCreationForm(chronicle=story.chronicle),
-        }
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context(kwargs["pk"])
-        return render(request, "game/story/detail.html", context)
-
-    def post(self, request, *args, **kwargs):
-        context = self.get_context(kwargs["pk"])
-        loc = LocationModel.objects.get(pk=request.POST["location"])
         return redirect(
             context["object"].add_scene(
-                request.POST["name"], loc, date_of_scene=request.POST["date_of_scene"]
+                request.POST["name"],
+                LocationModel.objects.get(pk=request.POST["location"]),
+                date_of_scene=request.POST["date_of_scene"],
             )
         )
 
@@ -99,11 +84,19 @@ class SceneDetailView(View):
 
 class ChronicleScenesDetailView(View):
     def get(self, request, *args, **kwargs):
-        chronicle = Chronicle.objects.get(pk=kwargs["pk"])
+        chronicle = get_object_or_404(Chronicle, pk=kwargs["pk"])
+        scenes = Scene.objects.filter(chronicle=chronicle).order_by("-date_of_scene")
+
+        # Group scenes by year and month
+        scenes_grouped = [
+            (datetime(year=year, month=month, day=1), list(scenes_in_month))
+            for (year, month), scenes_in_month in itertools.groupby(
+                scenes, key=lambda x: (x.date_of_scene.year, x.date_of_scene.month)
+            )
+        ]
+
         context = {
             "chronicle": chronicle,
-            "scenes": Scene.objects.filter(story__chronicle=chronicle).order_by(
-                "date_of_scene"
-            ),
+            "scenes_grouped": scenes_grouped,
         }
         return render(request, "game/scenes/detail.html", context)

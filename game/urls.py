@@ -4,7 +4,6 @@ from game import views
 app_name = "game"
 urlpatterns = [
     path("chronicle/<pk>", views.ChronicleDetailView.as_view(), name="chronicle"),
-    path("story/<pk>", views.StoryDetailView.as_view(), name="story"),
     path(
         "chronicle/<pk>/scenes/",
         views.ChronicleScenesDetailView.as_view(),

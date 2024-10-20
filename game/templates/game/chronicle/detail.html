@@ -45,11 +45,6 @@
             </div>
         </div>
         <div class="row centertext">
-            <h3 class="col-sm {{ object.headings }}">
-                Stories <a href="{{ object.get_scenes_url }}">(All Scenes)</a>
-            </h3>
-        </div>
-        <div class="row centertext">
             <h3 class="col-sm {{ object.headings }}">Characters</h3>
         </div>
         {% for char in characters %}
@@ -76,20 +71,25 @@
                 <div class="col-sm border">{{ item.type.title }}</div>
             </div>
         {% endfor %}
-        {% for story in stories %}
-            <div class="row border centertext">
-                <a class="col-sm border" href="{{ story.get_absolute_url }}">{{ story.name }}</a>
-                <div class="col-sm border">{{ story.start_date }}</div>
-                <div class="col-sm border">{{ story.end_date }}</div>
-            </div>
-        {% endfor %}
+        <div class="row centertext">
+            <h3 class="col-sm {{ object.headings }}">
+                <a href="{{ object.get_scenes_url }}">Scene List</a>
+            </h3>
+        </div>
+        <div class="row centertext">
+            <h4 class="col-sm {{ object.headings }}">
+                <div>New Scene</div>
+            </h4>
+        </div>
         {% if request.user.is_authenticated %}
             <form method="post" action="">
                 {% csrf_token %}
-                <div class="row centertext">
+                <div class="row">
                     <div class="col-sm">{{ form.name }}</div>
+                    <div class="col-sm">{{ form.location }}</div>
+                    <div class="col-sm">{{ form.date_of_scene }}</div>
                     <div class="col-sm">
-                        <input type="submit" value="Create Story" />
+                        <input type="submit" value="Create Scene" />
                     </div>
                 </div>
             </form>

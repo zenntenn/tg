@@ -22,12 +22,6 @@ class SceneCreationForm(forms.Form):
         ).order_by("name")
 
 
-class StoryCreationForm(forms.Form):
-    name = forms.CharField(
-        max_length=100, widget=forms.TextInput(attrs={"placeholder": "Story Name"})
-    )
-
-
 class AddCharForm(forms.Form):
     character_to_add = forms.ModelChoiceField(
         queryset=CharacterModel.objects.none(), empty_label="Add Character"
@@ -38,7 +32,7 @@ class AddCharForm(forms.Form):
         scene = kwargs.pop("scene")
         super().__init__(*args, **kwargs)
         self.fields["character_to_add"].queryset = CharacterModel.objects.filter(
-            owner=user, chronicle=scene.story.chronicle
+            owner=user, chronicle=scene.chronicle
         ).exclude(pk__in=scene.characters.all())
 
 
@@ -61,6 +55,6 @@ class PostForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields["character"].queryset = CharacterModel.objects.filter(
             owner=user,
-            chronicle=scene.story.chronicle,
+            chronicle=scene.chronicle,
             pk__in=scene.characters.all(),
         )
