@@ -204,7 +204,7 @@ class Scene(models.Model):
     )
     finished = models.BooleanField(default=False)
     xp_given = models.BooleanField(default=False)
-    date_of_scene = models.CharField(default="", max_length=20, null=True, blank=True)
+    date_of_scene = models.DateField(default=now, null=True, blank=True)
 
     class Meta:
         verbose_name = "Scene"

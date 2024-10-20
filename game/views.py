@@ -1,6 +1,9 @@
+import itertools
+
 from characters.models.core import CharacterModel
 from core.utils import level_name, tree_sort
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.timezone import datetime, localtime
 from django.views import View
 from game.forms import AddCharForm, PostForm, SceneCreationForm, StoryCreationForm
 from game.models import Chronicle, Post, Scene, Story
@@ -99,11 +102,21 @@ class SceneDetailView(View):
 
 class ChronicleScenesDetailView(View):
     def get(self, request, *args, **kwargs):
-        chronicle = Chronicle.objects.get(pk=kwargs["pk"])
+        chronicle = get_object_or_404(Chronicle, pk=kwargs["pk"])
+        scenes = Scene.objects.filter(story__chronicle=chronicle).order_by(
+            "-date_of_scene"
+        )
+
+        # Group scenes by year and month
+        scenes_grouped = [
+            (datetime(year=year, month=month, day=1), list(scenes_in_month))
+            for (year, month), scenes_in_month in itertools.groupby(
+                scenes, key=lambda x: (x.date_of_scene.year, x.date_of_scene.month)
+            )
+        ]
+
         context = {
             "chronicle": chronicle,
-            "scenes": Scene.objects.filter(story__chronicle=chronicle).order_by(
-                "date_of_scene"
-            ),
+            "scenes_grouped": scenes_grouped,
         }
         return render(request, "game/scenes/detail.html", context)
