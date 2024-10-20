@@ -60,6 +60,40 @@ class Companion(MtAHuman):
 
     gameline = "mta"
 
+    allowed_backgrounds = [
+        "contacts",
+        "mentor",
+        "allies",
+        "alternate_identity",
+        "arcane",
+        "backup",
+        "blessing",
+        "certification",
+        "chantry",
+        "cult",
+        "demesne",
+        "destiny",
+        "dream",
+        "enhancement",
+        "fame",
+        "influence",
+        "legend",
+        "library",
+        "node",
+        "past_lives",
+        "patron",
+        "rank",
+        "requisitions",
+        "resources",
+        "retainers",
+        "sanctum",
+        "secret_weapons",
+        "spies",
+        "status_background",
+        "totem",
+        "wonder",
+    ]
+
     affiliation = models.ForeignKey(
         MageFaction,
         on_delete=models.SET_NULL,

@@ -691,7 +691,27 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
             ):
                 self.object.creation_status += 1
                 self.object.languages.add(Language.objects.get(name="English"))
-
+            for step in [
+                "node",
+                "library",
+                "artifact",
+                "enhancement",
+                "sanctum",
+                "allies",
+            ]:
+                if (
+                    BackgroundRating.objects.filter(
+                        bg=Background.objects.get(property_name=step),
+                        char=self.object,
+                        complete=False,
+                    ).count()
+                    == 0
+                ):
+                    self.object.creation_status += 1
+                else:
+                    self.object.save()
+                    break
+                self.object.save()
         self.object.save()
         return super().form_valid(form)
 
@@ -820,14 +840,35 @@ class SorcererEnhancementView(MtAEnhancementView):
 
 class SorcererFamiliarView(MtAFamiliarView):
     template_name = "characters/mage/sorcerer/chargen.html"
+    potential_skip = [
+        "artifact",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
 
 
 class SorcererLibraryView(MtALibraryView):
     template_name = "characters/mage/sorcerer/chargen.html"
+    potential_skip = [
+        "familiar",
+        "artifact",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
 
 
 class SorcererNodeView(MtANodeView):
     template_name = "characters/mage/sorcerer/chargen.html"
+    potential_skip = [
+        "library",
+        "familiar",
+        "artifact",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
 
 
 class SorcererSanctumView(MtASanctumView):

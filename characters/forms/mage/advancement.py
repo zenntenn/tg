@@ -27,6 +27,9 @@ class CompanionAdvancementForm(AdvancementForm):
         if self.instance.companion_type == "familiar":
             ADDITIONAL_CATS.append(("Charms", "Charms"))
         self.fields["category"].choices += ADDITIONAL_CATS
+        self.fields["category"].choices = [
+            x for x in self.fields["category"].choices if self.validator(x[0])
+        ]
 
     def save(self, *args, **kwargs):
         return self.instance
@@ -50,7 +53,20 @@ class SorcererAdvancementForm(AdvancementForm):
             ADDITIONAL_CATS.append(("Create Ritual", "Create Ritual"))
             ADDITIONAL_CATS.append(("Select Ritual", "Select Ritual"))
         self.fields["category"].choices += ADDITIONAL_CATS
+        self.fields["category"].choices = [
+            x for x in self.fields["category"].choices if self.validator(x[0])
+        ]
         self.fields["ability"].queryset = Ability.objects.none()
+
+    def validator(self, trait_type):
+        trait_type = trait_type.lower().split(" ")[-1]
+        if not isinstance(self.instance.freebie_cost(trait_type), int):
+            return True
+        if self.instance.freebie_cost(trait_type) == 10000:
+            return True
+        if self.instance.freebie_cost(trait_type) <= self.instance.freebies:
+            return True
+        return False
 
     def save(self, *args, **kwargs):
         return self.instance
@@ -83,6 +99,9 @@ class MageAdvancementForm(AdvancementForm):
         if self.instance.freebies < 3:
             ADDITIONAL_CATS = [x for x in ADDITIONAL_CATS if x[0] != "Resonance"]
         self.fields["category"].choices += ADDITIONAL_CATS
+        self.fields["category"].choices = [
+            x for x in self.fields["category"].choices if self.validator(x[0])
+        ]
 
     def save(self, *args, **kwargs):
         return self.instance

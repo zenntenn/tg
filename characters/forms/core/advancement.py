@@ -38,3 +38,16 @@ class AdvancementForm(forms.Form):
         if self.instance.freebies < 2:
             CATEGORY_CHOICES = [x for x in CATEGORY_CHOICES if x[0] != "Ability"]
         self.fields["category"].choices = CATEGORY_CHOICES
+        self.fields["category"].choices = [
+            x for x in self.fields["category"].choices if self.validator(x[0])
+        ]
+
+    def validator(self, trait_type):
+        trait_type = trait_type.lower().split(" ")[-1]
+        if not isinstance(self.instance.freebie_cost(trait_type), int):
+            return True
+        if self.instance.freebie_cost(trait_type) == 10000:
+            return True
+        if self.instance.freebie_cost(trait_type) <= self.instance.freebies:
+            return True
+        return False

@@ -1,5 +1,5 @@
 from .cabal import Cabal
-from .companion import Companion
+from .companion import Advantage, Companion
 from .effect import Effect
 from .faction import MageFaction
 from .fellowship import SorcererFellowship
