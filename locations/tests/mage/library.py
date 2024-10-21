@@ -1,4 +1,4 @@
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Practice

@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from characters.models.core.derangement import Derangement
-from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.werewolf.gift import Gift
 from characters.models.werewolf.kinfolk import Kinfolk
 from characters.models.werewolf.tribe import Tribe

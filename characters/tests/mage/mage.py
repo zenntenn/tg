@@ -2,9 +2,9 @@ import random
 from unittest import mock
 from unittest.mock import Mock
 
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.core.archetype import Archetype
-from characters.models.core.meritflaw import MeritFlaw
+from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction

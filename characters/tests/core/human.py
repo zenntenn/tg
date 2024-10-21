@@ -7,7 +7,7 @@ from characters.models.core import (
     MeritFlaw,
     MeritFlawRating,
 )
-from characters.models.core.background import Background, BackgroundRating
+from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.specialty import Specialty
 from characters.tests.utils import human_setup
 from core.models import Language, Number

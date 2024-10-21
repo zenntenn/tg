@@ -2,7 +2,7 @@ import random
 from unittest import mock
 from unittest.mock import Mock
 
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.mage import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Practice
