@@ -256,8 +256,9 @@ class TestPracticeUpdateView(TestCase):
 
 class TestSpecializedPracticeDetailView(TestCase):
     def setUp(self) -> None:
+        self.practice = Practice.objects.create(name="Practice")
         self.specialized_practice = SpecializedPractice.objects.create(
-            name="Test SpecializedPractice"
+            name="Test SpecializedPractice", parent_practice=self.practice
         )
         self.url = self.specialized_practice.get_absolute_url()
 
@@ -544,9 +545,13 @@ class TestGenericCharacterDetailViews(TestCase):
     def setUp(self) -> None:
         self.practice = Practice.objects.create(name="Practice")
         self.purl = self.practice.get_absolute_url()
-        self.corruptpractice = CorruptedPractice.objects.create(name="CPractice")
+        self.corruptpractice = CorruptedPractice.objects.create(
+            name="CPractice", parent_practice=self.practice
+        )
         self.curl = self.corruptpractice.get_absolute_url()
-        self.specializedpractice = SpecializedPractice.objects.create(name="SPractice")
+        self.specializedpractice = SpecializedPractice.objects.create(
+            name="SPractice", parent_practice=self.practice
+        )
         self.surl = self.specializedpractice.get_absolute_url()
 
     def test_character_detail_view_templates(self):

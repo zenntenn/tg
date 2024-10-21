@@ -835,7 +835,10 @@ class TestMageCreateView(TestCase):
             "paradox": 0,
             "quiet": 0,
             "quiet_type": "none",
+            "public_info": "Test Info",
         }
+        self.player = User.objects.create_user(username="User1", password="12345")
+        self.client.login(username="User1", password="12345")
         self.url = Mage.get_full_creation_url()
 
     def test_create_view_status_code(self):
@@ -848,15 +851,18 @@ class TestMageCreateView(TestCase):
 
     def test_create_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, Mage.objects.first().get_absolute_url())
         self.assertEqual(Mage.objects.count(), 1)
         self.assertEqual(Mage.objects.first().name, "Test Mage")
 
 
 class TestMageHumanUpdateView(TestCase):
     def setUp(self):
+        self.player = User.objects.create_user(username="User1", password="12345")
+        self.client.login(username="User1", password="12345")
         self.mage = Mage.objects.create(
-            name="Test Mage", description="Test", status="App"
+            name="Test Mage", description="Test", status="App", owner=self.player
         )
         self.valid_data = {
             "name": "Test Mage 2",
@@ -979,6 +985,7 @@ class TestMageHumanUpdateView(TestCase):
             "paradox": 0,
             "quiet": 0,
             "quiet_type": "none",
+            "public_info": "test_infor",
         }
         self.url = self.mage.get_full_update_url()
 
@@ -992,14 +999,16 @@ class TestMageHumanUpdateView(TestCase):
 
     def test_update_view_successful_post(self):
         response = self.client.post(self.url, data=self.valid_data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, self.mage.get_absolute_url())
         self.mage.refresh_from_db()
         self.assertEqual(self.mage.name, "Test Mage 2")
 
 
 class TestMageBasicsView(TestCase):
     def setUp(self):
-        self.player = User.objects.create_user(username="Test")
+        self.player = User.objects.create_user(username="Test", password="password")
+        self.client.login(username="Test", password="password")
         self.n = Archetype.objects.create(name="Nature")
         self.d = Archetype.objects.create(name="Demeanor")
         self.affiliation = MageFaction.objects.create(name="Affiliation")

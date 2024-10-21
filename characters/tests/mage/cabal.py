@@ -74,6 +74,7 @@ class TestCabalCreateView(TestCase):
         self.valid_data = {
             "name": "Test Cabal",
             "description": "Test",
+            "public_info": "Tetst",
         }
         self.url = Cabal.get_creation_url()
 
@@ -98,6 +99,7 @@ class TestCabalUpdateView(TestCase):
         self.valid_data = {
             "name": "Test Cabal Updated",
             "description": "Test",
+            "public_info": "Tetst",
         }
         self.url = self.cabal.get_update_url()
 
