@@ -132,7 +132,7 @@ class Human(
         return reverse("characters:create:human")
 
     def get_heading(self):
-        return "wod_heading"
+        return f"{self.gameline}_heading"
 
     def add_willpower(self):
         return add_dot(self, "willpower", 10)

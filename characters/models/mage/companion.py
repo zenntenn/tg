@@ -58,8 +58,6 @@ class Advantage(Model):
 class Companion(MtAHuman):
     type = "companion"
 
-    gameline = "mta"
-
     allowed_backgrounds = [
         "contacts",
         "mentor",
@@ -141,9 +139,6 @@ class Companion(MtAHuman):
     class Meta:
         verbose_name = "Companion"
         verbose_name_plural = "Companions"
-
-    def get_heading(self):
-        return "mta_heading"
 
     def freebie_costs(self):
         costs = super().freebie_costs()

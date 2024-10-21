@@ -280,9 +280,6 @@ class MtAHuman(Human):
         verbose_name_plural = "Humans (Mage)"
         ordering = ["name"]
 
-    def get_heading(self):
-        return "mta_heading"
-
     def get_update_url(self):
         return reverse("characters:mage:update:mtahuman", kwargs={"pk": self.pk})
 

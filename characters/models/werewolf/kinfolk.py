@@ -14,8 +14,6 @@ from items.models.werewolf.fetish import Fetish
 class Kinfolk(WtAHuman):
     type = "kinfolk"
 
-    gameline = "wta"
-
     allowed_backgrounds = ["allies", "contacts", "mentor", "pure_breed", "resources"]
 
     breed = models.CharField(

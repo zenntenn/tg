@@ -130,6 +130,3 @@ class VtMHuman(Human):
     @classmethod
     def get_creation_url(cls):
         return reverse("characters:vampire:create:vtm_human")
-
-    def get_heading(self):
-        return "vtm_heading"

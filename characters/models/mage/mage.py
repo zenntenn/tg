@@ -26,8 +26,6 @@ from locations.models.mage.node import Node
 class Mage(MtAHuman):
     type = "mage"
 
-    gameline = "mta"
-
     allowed_backgrounds = [
         "contacts",
         "mentor",

@@ -14,8 +14,6 @@ from django.utils.timezone import now
 class Changeling(CtDHuman):
     type = "changeling"
 
-    gameline = "ctd"
-
     court = models.CharField(
         default="",
         max_length=20,

@@ -112,6 +112,3 @@ class WtAHuman(Human):
     @classmethod
     def get_creation_url(cls):
         return reverse("characters:werewolf:create:wta_human")
-
-    def get_heading(self):
-        return "wta_heading"

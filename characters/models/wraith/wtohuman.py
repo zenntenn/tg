@@ -112,6 +112,3 @@ class WtOHuman(Human):
     @classmethod
     def get_creation_url(cls):
         return reverse("characters:wraith:create:wto_human")
-
-    def get_heading(self):
-        return "wto_heading"

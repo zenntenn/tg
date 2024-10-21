@@ -57,7 +57,6 @@ class LinearMagicRitual(Model):
 
 class Sorcerer(MtAHuman):
     type = "sorcerer"
-    gameline = "mta"
 
     allowed_backgrounds = [
         "allies",
@@ -138,12 +137,6 @@ class Sorcerer(MtAHuman):
     class Meta:
         verbose_name = "Sorcerer"
         verbose_name_plural = "Sorcerers"
-
-    def get_heading(self):
-        return "mta_heading"
-
-    def get_heading(self):
-        return "mta_heading"
 
     def freebie_cost(self, trait):
         cost = super().freebie_cost(trait)
