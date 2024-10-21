@@ -8,6 +8,7 @@ from characters.models.core.background_block import BackgroundBlock
 from characters.models.core.character import Character
 from characters.models.core.derangement import Derangement
 from characters.models.core.health_block import HealthBlock
+from characters.models.core.human_url_block import HumanUrlBlock
 from characters.models.core.merit_flaw_block import MeritFlawBlock
 from characters.models.core.specialty import Specialty
 from characters.utils import random_ethnicity, random_height, random_name, random_weight
@@ -18,6 +19,7 @@ from django.urls import reverse
 
 
 class Human(
+    HumanUrlBlock,
     AbilityBlock,
     MeritFlawBlock,
     HealthBlock,
@@ -116,32 +118,6 @@ class Human(
         if self.is_group_member():
             return Group.objects.get(members=self)
         return False
-
-    def get_full_update_url(self):
-        g = get_short_gameline_name(self.gameline)
-        if g:
-            g += ":"
-        return reverse(f"characters:{g}update:{self.type}_full", kwargs={"pk": self.pk})
-
-    def get_update_url(self):
-        g = get_short_gameline_name(self.gameline)
-        if g:
-            g += ":"
-        return reverse(f"characters:{g}update:{self.type}", kwargs={"pk": self.pk})
-
-    @classmethod
-    def get_full_creation_url(cls):
-        g = get_short_gameline_name(cls.gameline)
-        if g:
-            g += ":"
-        return reverse(f"characters:{g}create:{cls.type}_full")
-
-    @classmethod
-    def get_creation_url(cls):
-        g = get_short_gameline_name(cls.gameline)
-        if g:
-            g += ":"
-        return reverse(f"characters:{g}create:{cls.type}")
 
     def get_heading(self):
         return f"{self.gameline}_heading"
