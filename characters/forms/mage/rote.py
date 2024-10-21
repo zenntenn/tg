@@ -1,6 +1,6 @@
 from typing import Any, Mapping
 
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
 from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Practice

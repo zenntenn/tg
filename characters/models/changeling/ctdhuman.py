@@ -8,6 +8,75 @@ class CtDHuman(Human):
 
     gameline = "ctd"
 
+    talents = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "kenning",
+        "leadership",
+    ]
+    skills = [
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "animal_ken",
+        "larceny",
+        "performance",
+        "survival",
+    ]
+    knowledges = [
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+        "enigmas",
+        "gremayre",
+        "law",
+        "politics",
+        "technology",
+    ]
+    primary_abilities = [
+        "alertness",
+        "animal_ken",
+        "larceny",
+        "performance",
+        "survival",
+        "kenning",
+        "leadership",
+        "enigmas",
+        "gremayre",
+        "law",
+        "politics",
+        "technology",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+    ]
+
     allowed_backgrounds = [
         "contacts",
         "mentor",
@@ -48,38 +117,3 @@ class CtDHuman(Human):
 
     def get_heading(self):
         return "ctd_heading"
-
-    def get_talents(self):
-        d = super().get_talents()
-        d.update(
-            {
-                "kenning": self.kenning,
-                "leadership": self.leadership,
-            }
-        )
-        return d
-
-    def get_skills(self):
-        d = super().get_skills()
-        d.update(
-            {
-                "animal_ken": self.animal_ken,
-                "larceny": self.larceny,
-                "performance": self.performance,
-                "survival": self.survival,
-            }
-        )
-        return d
-
-    def get_knowledges(self):
-        d = super().get_knowledges()
-        d.update(
-            {
-                "enigmas": self.enigmas,
-                "gremayre": self.gremayre,
-                "law": self.law,
-                "politics": self.politics,
-                "technology": self.technology,
-            }
-        )
-        return d

@@ -1,4 +1,4 @@
-from .ability import Ability
+from .ability_block import Ability, AbilityBlock
 from .archetype import Archetype
 from .attribute_block import Attribute, AttributeBlock
 from .background_block import Background, BackgroundRating, PooledBackgroundRating

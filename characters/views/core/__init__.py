@@ -1,6 +1,6 @@
 from characters.forms.core.character_creation import CharacterCreationForm
 from characters.models.core import Character, Derangement, Group, Human
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty

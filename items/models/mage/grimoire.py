@@ -2,7 +2,7 @@ import datetime
 import math
 import random
 
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Instrument, Practice
 from characters.models.mage.resonance import Resonance
