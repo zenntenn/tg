@@ -8,6 +8,71 @@ class WtAHuman(Human):
 
     gameline = "wta"
 
+    talents = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "leadership",
+        "primal_urge",
+    ]
+    skills = [
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+    ]
+    knowledges = [
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+        "enigmas",
+        "law",
+        "occult",
+        "rituals",
+        "technology",
+    ]
+    primary_abilities = [
+        "alertness",
+        "leadership",
+        "primal_urge",
+        "animal_ken",
+        "larceny",
+        "performance",
+        "survival",
+        "enigmas",
+        "law",
+        "occult",
+        "rituals",
+        "technology",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+    ]
+
     allowed_backgrounds = [
         "contacts",
         "mentor",
@@ -50,38 +115,3 @@ class WtAHuman(Human):
 
     def get_heading(self):
         return "wta_heading"
-
-    def get_talents(self):
-        tmp = super().get_talents()
-        tmp.update(
-            {
-                "leadership": self.leadership,
-                "primal_urge": self.primal_urge,
-            }
-        )
-        return tmp
-
-    def get_skills(self):
-        tmp = super().get_skills()
-        tmp.update(
-            {
-                "animal_ken": self.animal_ken,
-                "larceny": self.larceny,
-                "performance": self.performance,
-                "survival": self.survival,
-            }
-        )
-        return tmp
-
-    def get_knowledges(self):
-        tmp = super().get_knowledges()
-        tmp.update(
-            {
-                "enigmas": self.enigmas,
-                "law": self.law,
-                "occult": self.occult,
-                "rituals": self.rituals,
-                "technology": self.technology,
-            }
-        )
-        return tmp

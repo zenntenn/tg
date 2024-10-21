@@ -1,5 +1,5 @@
 from characters.forms.core.advancement import CATEGORY_CHOICES, AdvancementForm
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.mage.focus import Practice
 from characters.models.mage.resonance import Resonance
 from core.widgets import AutocompleteTextInput

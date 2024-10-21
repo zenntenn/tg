@@ -1,7 +1,7 @@
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.advancement import CompanionAdvancementForm
-from characters.models.core.ability import Ability
+from characters.models.core.ability_block import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import Attribute
 from characters.models.core.background_block import Background, BackgroundRating

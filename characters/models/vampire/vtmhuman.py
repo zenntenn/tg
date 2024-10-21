@@ -7,6 +7,75 @@ class VtMHuman(Human):
     type = "vtm_human"
     gameline = "vtm"
 
+    talents = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "awareness",
+        "leadership",
+    ]
+    skills = [
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "animal_ken",
+        "larceny",
+        "performance",
+        "survival",
+    ]
+    knowledges = [
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+        "finance",
+        "law",
+        "occult",
+        "politics",
+        "technology",
+    ]
+    primary_abilities = [
+        "alertness",
+        "finance",
+        "law",
+        "occult",
+        "politics",
+        "technology",
+        "athletics",
+        "animal_ken",
+        "larceny",
+        "performance",
+        "survival",
+        "brawl",
+        "awareness",
+        "leadership",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+    ]
+
     allowed_backgrounds = [
         "contacts",
         "mentor",
@@ -26,10 +95,12 @@ class VtMHuman(Human):
 
     awareness = models.IntegerField(default=0)
     leadership = models.IntegerField(default=0)
+
     animal_ken = models.IntegerField(default=0)
     larceny = models.IntegerField(default=0)
     performance = models.IntegerField(default=0)
     survival = models.IntegerField(default=0)
+
     finance = models.IntegerField(default=0)
     law = models.IntegerField(default=0)
     occult = models.IntegerField(default=0)
@@ -62,38 +133,3 @@ class VtMHuman(Human):
 
     def get_heading(self):
         return "vtm_heading"
-
-    def get_talents(self):
-        talents = super().get_talents()
-        talents.update(
-            {
-                "awareness": self.awareness,
-                "leadership": self.leadership,
-            }
-        )
-        return talents
-
-    def get_skills(self):
-        skills = super().get_skills()
-        skills.update(
-            {
-                "animal_ken": self.animal_ken,
-                "larceny": self.larceny,
-                "performance": self.performance,
-                "survival": self.survival,
-            }
-        )
-        return skills
-
-    def get_knowledges(self):
-        knowledges = super().get_knowledges()
-        knowledges.update(
-            {
-                "finance": self.finance,
-                "law": self.law,
-                "occult": self.occult,
-                "politics": self.politics,
-                "technology": self.technology,
-            }
-        )
-        return knowledges

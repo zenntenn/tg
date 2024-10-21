@@ -8,6 +8,73 @@ class WtOHuman(Human):
 
     gameline = "wto"
 
+    talents = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "awareness",
+        "persuasion",
+    ]
+    skills = [
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "larceny",
+        "meditation",
+        "performance",
+    ]
+    knowledges = [
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+        "bureaucracy",
+        "enigmas",
+        "occult",
+        "politics",
+        "technology",
+    ]
+    primary_abilities = [
+        "alertness",
+        "awareness",
+        "persuasion",
+        "larceny",
+        "meditation",
+        "performance",
+        "bureaucracy",
+        "enigmas",
+        "occult",
+        "politics",
+        "technology",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+    ]
+
     allowed_backgrounds = [
         "contacts",
         "mentor",
@@ -24,9 +91,11 @@ class WtOHuman(Human):
 
     awareness = models.IntegerField(default=0)
     persuasion = models.IntegerField(default=0)
+
     larceny = models.IntegerField(default=0)
     meditation = models.IntegerField(default=0)
     performance = models.IntegerField(default=0)
+
     bureaucracy = models.IntegerField(default=0)
     enigmas = models.IntegerField(default=0)
     occult = models.IntegerField(default=0)
@@ -46,37 +115,3 @@ class WtOHuman(Human):
 
     def get_heading(self):
         return "wto_heading"
-
-    def get_talents(self):
-        talents = super().get_talents()
-        talents.update(
-            {
-                "awareness": self.awareness,
-                "persuasion": self.persuasion,
-            }
-        )
-        return talents
-
-    def get_skills(self):
-        skills = super().get_skills()
-        skills.update(
-            {
-                "larceny": self.larceny,
-                "meditation": self.meditation,
-                "performance": self.performance,
-            }
-        )
-        return skills
-
-    def get_knowledges(self):
-        knowledges = super().get_knowledges()
-        knowledges.update(
-            {
-                "bureaucracy": self.bureaucracy,
-                "enigmas": self.enigmas,
-                "occult": self.occult,
-                "politics": self.politics,
-                "technology": self.technology,
-            }
-        )
-        return knowledges

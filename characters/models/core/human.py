@@ -1,6 +1,7 @@
 import random
 from datetime import date, timedelta
 
+from characters.models.core.ability_block import AbilityBlock
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import AttributeBlock
 from characters.models.core.background_block import BackgroundBlock
@@ -16,12 +17,52 @@ from django.db import models
 from django.urls import reverse
 
 
-class Human(MeritFlawBlock, HealthBlock, BackgroundBlock, AttributeBlock, Character):
+class Human(
+    AbilityBlock,
+    MeritFlawBlock,
+    HealthBlock,
+    BackgroundBlock,
+    AttributeBlock,
+    Character,
+):
     type = "human"
 
     gameline = "wod"
 
     allowed_backgrounds = ["contacts", "mentor"]
+    talents = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+    ]
+    skills = ["crafts", "drive", "etiquette", "firearms", "melee", "stealth"]
+    knowledges = ["academics", "computer", "investigation", "medicine", "science"]
+    primary_abilities = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+    ]
 
     nature = models.ForeignKey(
         Archetype,
@@ -37,28 +78,6 @@ class Human(MeritFlawBlock, HealthBlock, BackgroundBlock, AttributeBlock, Charac
         null=True,
         related_name="demeanor_of",
     )
-
-    alertness = models.IntegerField(default=0)
-    athletics = models.IntegerField(default=0)
-    brawl = models.IntegerField(default=0)
-    empathy = models.IntegerField(default=0)
-    expression = models.IntegerField(default=0)
-    intimidation = models.IntegerField(default=0)
-    streetwise = models.IntegerField(default=0)
-    subterfuge = models.IntegerField(default=0)
-
-    crafts = models.IntegerField(default=0)
-    drive = models.IntegerField(default=0)
-    etiquette = models.IntegerField(default=0)
-    firearms = models.IntegerField(default=0)
-    melee = models.IntegerField(default=0)
-    stealth = models.IntegerField(default=0)
-
-    academics = models.IntegerField(default=0)
-    computer = models.IntegerField(default=0)
-    investigation = models.IntegerField(default=0)
-    medicine = models.IntegerField(default=0)
-    science = models.IntegerField(default=0)
 
     specialties = models.ManyToManyField(Specialty, blank=True)
 
@@ -155,88 +174,6 @@ class Human(MeritFlawBlock, HealthBlock, BackgroundBlock, AttributeBlock, Charac
         return Specialty.objects.filter(stat=stat).exclude(
             pk__in=self.specialties.all()
         )
-
-    def add_ability(self, ability, maximum=4):
-        return add_dot(self, ability, maximum)
-
-    def random_ability(self, maximum=4):
-        choice = weighted_choice(
-            self.filter_abilities(maximum=maximum), ceiling=5, floor=0
-        )
-        self.add_ability(choice, 5)
-
-    def get_abilities(self):
-        tmp = {}
-        tmp.update(self.get_talents())
-        tmp.update(self.get_skills())
-        tmp.update(self.get_knowledges())
-        return tmp
-
-    def filter_abilities(self, minimum=0, maximum=5):
-        return {
-            k: v for k, v in self.get_abilities().items() if minimum <= v <= maximum
-        }
-
-    def get_talents(self):
-        return {
-            "alertness": self.alertness,
-            "athletics": self.athletics,
-            "brawl": self.brawl,
-            "empathy": self.empathy,
-            "expression": self.expression,
-            "intimidation": self.intimidation,
-            "streetwise": self.streetwise,
-            "subterfuge": self.subterfuge,
-        }
-
-    def get_skills(self):
-        return {
-            "crafts": self.crafts,
-            "drive": self.drive,
-            "etiquette": self.etiquette,
-            "firearms": self.firearms,
-            "melee": self.melee,
-            "stealth": self.stealth,
-        }
-
-    def get_knowledges(self):
-        return {
-            "academics": self.academics,
-            "computer": self.computer,
-            "investigation": self.investigation,
-            "medicine": self.medicine,
-            "science": self.science,
-        }
-
-    def total_talents(self):
-        return sum(self.get_talents().values())
-
-    def total_skills(self):
-        return sum(self.get_skills().values())
-
-    def total_knowledges(self):
-        return sum(self.get_knowledges().values())
-
-    def random_abilities(self, primary=13, secondary=9, tertiary=5):
-        ability_types = [primary, secondary, tertiary]
-        random.shuffle(ability_types)
-        while self.total_talents() < ability_types[0]:
-            ability_choice = weighted_choice(self.get_talents())
-            self.add_ability(ability_choice, maximum=3)
-        while self.total_skills() < ability_types[1]:
-            ability_choice = weighted_choice(self.get_skills())
-            self.add_ability(ability_choice, maximum=3)
-        while self.total_knowledges() < ability_types[2]:
-            ability_choice = weighted_choice(self.get_knowledges())
-            self.add_ability(ability_choice, maximum=3)
-
-    def total_abilities(self):
-        return sum(self.get_abilities().values())
-
-    def has_abilities(self, primary=13, secondary=9, tertiary=5):
-        triple = [self.total_talents(), self.total_skills(), self.total_knowledges()]
-        triple.sort()
-        return triple == [tertiary, secondary, primary]
 
     def random_name(self, ethnicity=None):
         ethnicity = random_ethnicity()

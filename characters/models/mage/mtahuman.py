@@ -45,6 +45,113 @@ class MtAHuman(Human):
 
     gameline = "mta"
 
+    talents = [
+        "alertness",
+        "athletics",
+        "brawl",
+        "empathy",
+        "expression",
+        "intimidation",
+        "streetwise",
+        "subterfuge",
+        "awareness",
+        "art",
+        "leadership",
+        "animal_kinship",
+        "blatancy",
+        "carousing",
+        "flying",
+        "high_ritual",
+        "lucid_dreaming",
+        "search",
+        "seduction",
+        "cooking",
+        "diplomacy",
+        "instruction",
+        "intrigue",
+        "intuition",
+        "mimicry",
+        "negotiation",
+        "newspeak",
+        "scan",
+        "scrounging",
+        "style",
+    ]
+    skills = [
+        "crafts",
+        "drive",
+        "etiquette",
+        "firearms",
+        "melee",
+        "stealth",
+        "larceny",
+        "meditation",
+        "research",
+        "survival",
+        "technology",
+        "acrobatics",
+        "archery",
+        "biotech",
+        "energy_weapons",
+        "jetpack",
+        "riding",
+        "torture",
+        "blind_fighting",
+        "climbing",
+        "disguise",
+        "elusion",
+        "escapology",
+        "fast_draw",
+        "fast_talk",
+        "fencing",
+        "fortune_telling",
+        "gambling",
+        "gunsmith",
+        "heavy_weapons",
+        "hunting",
+        "hypnotism",
+        "jury_rigging",
+        "microgravity_operations",
+        "misdirection",
+        "networking",
+        "pilot",
+        "psychology",
+        "security",
+        "speed_reading",
+        "swimming",
+    ]
+    knowledges = [
+        "academics",
+        "computer",
+        "investigation",
+        "medicine",
+        "science",
+        "cosmology",
+        "enigmas",
+        "finance",
+        "law",
+        "occult",
+        "politics",
+        "area_knowledge",
+        "belief_systems",
+        "cryptography",
+        "demolitions",
+        "lore",
+        "media",
+        "pharmacopeia",
+        "conspiracy_theory",
+        "chantry_politics",
+        "covert_culture",
+        "cultural_savvy",
+        "helmsman",
+        "history_knowledge",
+        "power_brokering",
+        "propaganda",
+        "theology",
+        "unconventional_warface",
+        "vice",
+    ]
+
     primary_abilities = [
         "awareness",
         "art",
@@ -86,7 +193,6 @@ class MtAHuman(Human):
     animal_kinship = models.IntegerField(default=0)
     blatancy = models.IntegerField(default=0)
     carousing = models.IntegerField(default=0)
-    do = models.IntegerField(default=0)
     flying = models.IntegerField(default=0)
     high_ritual = models.IntegerField(default=0)
     lucid_dreaming = models.IntegerField(default=0)
@@ -176,164 +282,6 @@ class MtAHuman(Human):
 
     def get_heading(self):
         return "mta_heading"
-
-    def get_secondaries_for_display(self):
-        secondary_talents = {
-            k: v
-            for k, v in self.get_talents().items()
-            if k not in self.primary_abilities and v != 0
-        }
-        secondary_skills = {
-            k: v
-            for k, v in self.get_skills().items()
-            if k not in self.primary_abilities and v != 0
-        }
-        secondary_knowledges = {
-            k: v
-            for k, v in self.get_knowledges().items()
-            if k not in self.primary_abilities and v != 0
-        }
-
-        if "History Knowledge" in secondary_knowledges:
-            secondary_knowledges["History"] = secondary_knowledges.pop(
-                "History Knowledge"
-            )
-
-        secondary_talents = list(secondary_talents.items())
-        secondary_skills = list(secondary_skills.items())
-        secondary_knowledges = list(secondary_knowledges.items())
-
-        secondary_talents = [
-            (k.replace("_", " ").title(), v, k) for k, v in secondary_talents
-        ]
-        secondary_skills = [
-            (k.replace("_", " ").title(), v, k) for k, v in secondary_skills
-        ]
-        secondary_knowledges = [
-            (k.replace("_", " ").title(), v, k) for k, v in secondary_knowledges
-        ]
-
-        secondary_talents.sort(key=lambda x: x[0])
-        secondary_skills.sort(key=lambda x: x[0])
-        secondary_knowledges.sort(key=lambda x: x[0])
-
-        num_sec_tal = len(secondary_talents)
-        num_sec_ski = len(secondary_skills)
-        num_sec_kno = len(secondary_knowledges)
-        m = max(num_sec_tal, num_sec_ski, num_sec_kno)
-        for _ in range(m - num_sec_tal):
-            secondary_talents.append(("", 0, ""))
-        for _ in range(m - num_sec_ski):
-            secondary_skills.append(("", 0, ""))
-        for _ in range(m - num_sec_kno):
-            secondary_knowledges.append(("", 0, ""))
-        return list(zip(secondary_talents, secondary_skills, secondary_knowledges))
-
-    def get_talents(self):
-        tmp = super().get_talents()
-        tmp.update(
-            {
-                "awareness": self.awareness,
-                "art": self.art,
-                "leadership": self.leadership,
-                "animal_kinship": self.animal_kinship,
-                "blatancy": self.blatancy,
-                "carousing": self.carousing,
-                "do": self.do,
-                "flying": self.flying,
-                "high_ritual": self.high_ritual,
-                "lucid_dreaming": self.lucid_dreaming,
-                "search": self.search,
-                "seduction": self.seduction,
-                "cooking": self.cooking,
-                "diplomacy": self.diplomacy,
-                "instruction": self.instruction,
-                "intrigue": self.intrigue,
-                "intuition": self.intuition,
-                "mimicry": self.mimicry,
-                "negotiation": self.negotiation,
-                "newspeak": self.newspeak,
-                "scan": self.scan,
-                "scrounging": self.scrounging,
-                "style": self.style,
-            }
-        )
-        return tmp
-
-    def get_skills(self):
-        tmp = super().get_skills()
-        tmp.update(
-            {
-                "larceny": self.larceny,
-                "meditation": self.meditation,
-                "research": self.research,
-                "survival": self.survival,
-                "technology": self.technology,
-                "acrobatics": self.acrobatics,
-                "archery": self.archery,
-                "biotech": self.biotech,
-                "energy_weapons": self.energy_weapons,
-                "jetpack": self.jetpack,
-                "riding": self.riding,
-                "torture": self.torture,
-                "blind_fighting": self.blind_fighting,
-                "climbing": self.climbing,
-                "disguise": self.disguise,
-                "elusion": self.elusion,
-                "escapology": self.escapology,
-                "fast_draw": self.fast_draw,
-                "fast_talk": self.fast_talk,
-                "fencing": self.fencing,
-                "fortune_telling": self.fortune_telling,
-                "gambling": self.gambling,
-                "gunsmith": self.gunsmith,
-                "heavy_weapons": self.heavy_weapons,
-                "hunting": self.hunting,
-                "hypnotism": self.hypnotism,
-                "jury_rigging": self.jury_rigging,
-                "microgravity_operations": self.microgravity_operations,
-                "misdirection": self.misdirection,
-                "networking": self.networking,
-                "pilot": self.pilot,
-                "psychology": self.psychology,
-                "security": self.security,
-                "speed_reading": self.speed_reading,
-                "swimming": self.swimming,
-            }
-        )
-        return tmp
-
-    def get_knowledges(self):
-        tmp = super().get_knowledges()
-        tmp.update(
-            {
-                "cosmology": self.cosmology,
-                "enigmas": self.enigmas,
-                "finance": self.finance,
-                "law": self.law,
-                "occult": self.occult,
-                "politics": self.politics,
-                "area_knowledge": self.area_knowledge,
-                "belief_systems": self.belief_systems,
-                "cryptography": self.cryptography,
-                "demolitions": self.demolitions,
-                "lore": self.lore,
-                "media": self.media,
-                "pharmacopeia": self.pharmacopeia,
-                "conspiracy_theory": self.conspiracy_theory,
-                "chantry_politics": self.chantry_politics,
-                "covert_culture": self.covert_culture,
-                "cultural_savvy": self.cultural_savvy,
-                "helmsman": self.helmsman,
-                "history_knowledge": self.history_knowledge,
-                "power_brokering": self.power_brokering,
-                "propaganda": self.propaganda,
-                "theology": self.theology,
-                "unconventional_warface": self.unconventional_warface,
-                "vice": self.vice,
-            }
-        )
-        return tmp
 
     def get_update_url(self):
         return reverse("characters:mage:update:mtahuman", kwargs={"pk": self.pk})
