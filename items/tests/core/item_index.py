@@ -5,7 +5,7 @@ from items.models.core.item import ItemModel
 
 class TestItemIndexView(TestCase):
     def setUp(self) -> None:
-        self.url = "/items/index/wod/"
+        self.url = "/items/index/"
         ObjectType.objects.get_or_create(name="item", type="obj", gameline="wod")[0]
         return super().setUp()
 

@@ -7,6 +7,9 @@ from locations.models.core import LocationModel
 class ChronicleTest(TestCase):
     def setUp(self):
         self.chronicle = Chronicle.objects.create(name="Test Chronicle")
+        self.location = LocationModel.objects.create(
+            name="Test Location", chronicle=self.chronicle
+        )
 
     def test_add_scene(self):
         self.assertEqual(self.chronicle.total_scenes(), 0)

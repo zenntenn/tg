@@ -6,7 +6,7 @@ from game.models import ObjectType
 
 class TestCharacterIndexView(TestCase):
     def setUp(self) -> None:
-        self.url = "/characters/index/wod/"
+        self.url = "/characters/index/"
         ObjectType.objects.get_or_create(name="human", type="char", gameline="wod")[0]
         return super().setUp()
 
