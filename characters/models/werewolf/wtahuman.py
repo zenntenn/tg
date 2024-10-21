@@ -27,6 +27,10 @@ class WtAHuman(Human):
         "firearms",
         "melee",
         "stealth",
+        "animal_ken",
+        "larceny",
+        "performance",
+        "survival",
     ]
     knowledges = [
         "academics",

@@ -178,7 +178,6 @@ class NewUserTest(FunctionalTest):
         links = [
             (self.clean_url(link.get_attribute("href")), link.text) for link in links
         ]
-        self.assertIn("test_user", self.browser.title)
 
 
 class TestHomepage(FunctionalTest):

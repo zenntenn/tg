@@ -27,12 +27,13 @@ class TestProfileView(TestCase):
         )
 
         mta = Gameline.objects.create(name="Mage: the Ascension")
-        STRelationship.objects.create(
-            user=self.storyteller, gameline=mta, chronicle=None
-        )
 
         chronicle = Chronicle.objects.create(name="Test Chronicle")
-        chronicle.storytellers.add(self.storyteller)
+
+        STRelationship.objects.create(
+            user=self.storyteller, gameline=mta, chronicle=chronicle
+        )
+
         self.char1 = Human.objects.create(name="Test Character 1", owner=self.user1)
         self.char2 = Human.objects.create(
             name="Test Character 2", owner=self.user2, chronicle=chronicle
@@ -44,17 +45,17 @@ class TestProfileView(TestCase):
 
     def test_template_logged_in(self):
         self.client.login(username="Test User 1", password="testpass")
-        response = self.client.get("/accounts/")
-        self.assertTemplateUsed(response, "accounts/index.html")
+        response = self.client.get(self.user1.profile.get_absolute_url())
+        self.assertTemplateUsed(response, "accounts/detail.html")
 
     def test_template_logged_out(self):
         response = self.client.get("/accounts/", follow=True)
-        self.assertTemplateUsed(response, "registration/login.html")
+        self.assertTemplateUsed(response, "core/index.html")
 
     def test_character_list(self):
         self.client.login(username="Test User 1", password="testpass")
-        response = self.client.get("/accounts/")
-        self.assertTemplateUsed(response, "accounts/index.html")
+        response = self.client.get(self.user1.profile.get_absolute_url())
+        self.assertTemplateUsed(response, "accounts/detail.html")
 
         self.assertContains(response, "Test Character 1")
         self.assertNotContains(response, "Test Character 2")
@@ -70,6 +71,6 @@ class TestProfileView(TestCase):
 
     def test_approval_list(self):
         self.client.login(username="Test Storyteller", password="testpass")
-        response = self.client.get("/accounts/")
+        response = self.client.get(self.storyteller.profile.get_absolute_url())
         self.assertContains(response, "Test Character 2")
         self.assertContains(response, "To Approve")

@@ -28,6 +28,7 @@ class TestWtAHuman(TestCase):
         self.character.law = 3
         self.character.rituals = 2
         self.character.technology = 1
+        self.character.save()
 
     def test_get_abilities(self):
         self.assertEqual(

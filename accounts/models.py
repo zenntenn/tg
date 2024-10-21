@@ -70,7 +70,7 @@ class Profile(models.Model):
 
     def xp_requests(self):
         return Scene.objects.filter(
-            story__chronicle__in=self.user.chronicle_set.all(),
+            chronicle__in=self.user.chronicle_set.all(),
             finished=True,
             xp_given=False,
         )
