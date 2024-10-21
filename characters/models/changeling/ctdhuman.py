@@ -107,10 +107,3 @@ class CtDHuman(Human):
     class Meta:
         verbose_name = "Human (Changeling)"
         verbose_name_plural = "Humans (Changeling)"
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:changeling:create:ctd_human")
-
-    def get_update_url(self):
-        return reverse("characters:changeling:update:ctd_human", kwargs={"pk": self.pk})

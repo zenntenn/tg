@@ -61,7 +61,7 @@ urls = [
     path(
         "mtahuman/",
         views.mage.MtAHumanCreateView.as_view(),
-        name="mtahuman",
+        name="mta_human",
     ),
     path(
         "companion/",

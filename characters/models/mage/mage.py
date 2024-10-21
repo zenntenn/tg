@@ -193,22 +193,8 @@ class Mage(MtAHuman):
         verbose_name_plural = "Mages"
         ordering = ["name"]
 
-    def get_update_url(self):
-        return reverse("characters:mage:update:mage", kwargs={"pk": self.pk})
-
-    def get_full_update_url(self):
-        return reverse("characters:mage:update:mage_full", kwargs={"pk": self.pk})
-
     def get_items_owned(self):
         return ItemModel.objects.filter(owned_by=self)
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:mage:create:mage")
-
-    @classmethod
-    def get_full_creation_url(cls):
-        return reverse("characters:mage:create:mage_full")
 
     def add_ability(self, ability, maximum=5):
         return add_dot(self, ability, maximum)

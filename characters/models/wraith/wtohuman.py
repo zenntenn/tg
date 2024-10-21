@@ -105,10 +105,3 @@ class WtOHuman(Human):
     class Meta:
         verbose_name = "Human (Wraith)"
         verbose_name_plural = "Humans (Wraith)"
-
-    def get_update_url(self):
-        return reverse("characters:wraith:update:wto_human", kwargs={"pk": self.pk})
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:wraith:create:wto_human")

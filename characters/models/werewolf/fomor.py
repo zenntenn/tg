@@ -21,13 +21,6 @@ class Fomor(WtAHuman):
         verbose_name = "Fomor"
         verbose_name_plural = "Fomori"
 
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:werewolf:create:fomor")
-
-    def get_update_url(self):
-        return reverse("characters:werewolf:update:fomor", kwargs={"pk": self.pk})
-
     def add_power(self, power):
         self.powers.add(power)
         return True

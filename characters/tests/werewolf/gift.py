@@ -7,7 +7,7 @@ class TestGift(TestCase):
         self.gift = Gift.objects.create()
 
     def test_save(self):
-        self.assertIn("garou", self.gift.allowed)
+        self.assertIn("werewolf", self.gift.allowed)
 
 
 class TestGiftDetailView(TestCase):

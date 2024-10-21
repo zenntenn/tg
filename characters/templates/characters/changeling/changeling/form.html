@@ -1,5 +1,8 @@
-{% extends "characters/changeling/ctdhuman/detail.html" %}
+{% extends "characters/changeling/ctdhuman/form.html" %}
 {% load dots %}
+{% block title %}
+    Changeling
+{% endblock title %}
 {% block basics %}
     <div class="row">
         <h2 class="col-sm {{ form.get_heading }}">Basics</h2>
@@ -31,7 +34,7 @@
             <div class="col-sm"></div>
         {% endif %}
         <div class="col-sm">Seeming</div>
-        <div class="col-sm">{{ form.get_seeming_display }}</div>
+        <div class="col-sm">{{ form.eeming_display }}</div>
     </div>
 {% endblock basics %}
 {% block advantages %}

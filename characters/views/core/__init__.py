@@ -80,7 +80,7 @@ class GenericCharacterDetailView(DictView):
         "wto_human": wraith.WtOHumanDetailView,
         "wta_human": werewolf.WtAHumanDetailView,
         "kinfolk": werewolf.KinfolkDetailView,
-        "garou": werewolf.WerewolfDetailView,
+        "werewolf": werewolf.WerewolfDetailView,
         "fomor": werewolf.FomorDetailView,
         "changeling": changeling.ChangelingDetailView,
         "ctd_human": changeling.CtDHumanDetailView,

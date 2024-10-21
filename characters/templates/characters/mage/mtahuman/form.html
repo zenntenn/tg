@@ -43,17 +43,4 @@
             {% endif %}
         </div>
     {% endfor %}
-    {% if form.faction.name == "Akashayana" %}
-        <div class="row">
-            <div class="col-sm">
-                Do
-                {% if do_spec %}({{ do_spec }}){% endif %}
-            </div>
-            <div class="col-sm dots">{{ form.do|dots }}</div>
-            <div class="col-sm"></div>
-            <div class="col-sm"></div>
-            <div class="col-sm"></div>
-            <div class="col-sm"></div>
-        </div>
-    {% endif %}
 {% endblock abilities %}

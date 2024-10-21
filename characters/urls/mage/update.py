@@ -61,7 +61,7 @@ urls = [
     path(
         "mtahuman/<pk>/",
         views.mage.MtAHumanUpdateView.as_view(),
-        name="mtahuman",
+        name="mta_human",
     ),
     path(
         "mage/full/<pk>/",
@@ -73,6 +73,7 @@ urls = [
         views.mage.MageCharacterCreationView.as_view(),
         name="mage",
     ),
+    # path("companion/<pk>/", ),
     path(
         "cabal/<pk>/",
         views.mage.CabalUpdateView.as_view(),

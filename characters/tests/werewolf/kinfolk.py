@@ -147,10 +147,10 @@ class TestRandomKinfolk(TestCase):
 
     def test_choose_random_gift(self):
         Gift.objects.create(
-            name="Test Gift 1", rank=1, allowed={"garou": ["homid", "Test Tribe"]}
+            name="Test Gift 1", rank=1, allowed={"werewolf": ["homid", "Test Tribe"]}
         )
         Gift.objects.create(
-            name="Test Gift 2", rank=1, allowed={"garou": ["lupus", "Test Tribe"]}
+            name="Test Gift 2", rank=1, allowed={"werewolf": ["lupus", "Test Tribe"]}
         )
         Gift.objects.create(name="Test Gift 3", rank=2)
         Gift.objects.create(name="Test Gift 4", rank=2)

@@ -43,13 +43,6 @@ class Kinfolk(WtAHuman):
         verbose_name = "Kinfolk"
         verbose_name_plural = "Kinfolk"
 
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:werewolf:create:kinfolk")
-
-    def get_update_url(self):
-        return reverse("characters:werewolf:update:kinfolk", kwargs={"pk": self.pk})
-
     def has_breed(self):
         return self.breed != ""
 
@@ -114,12 +107,12 @@ class Kinfolk(WtAHuman):
                 choice = Gift.objects.get(pk=index)
                 correct = True
                 if breed:
-                    if self.breed not in choice.allowed["garou"]:
+                    if self.breed not in choice.allowed["werewolf"]:
                         correct = False
                 if tribe:
-                    if self.tribe.name not in choice.allowed["garou"]:
+                    if self.tribe.name not in choice.allowed["werewolf"]:
                         correct = False
-                    elif self.tribe.name not in choice.allowed["garou"]:
+                    elif self.tribe.name not in choice.allowed["werewolf"]:
                         correct = False
                 if choice.rank != 1:
                     correct = False

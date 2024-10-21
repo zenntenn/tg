@@ -114,15 +114,6 @@ class Changeling(CtDHuman):
         verbose_name = "Changeling"
         verbose_name_plural = "Changelings"
 
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:changeling:create:changeling")
-
-    def get_update_url(self):
-        return reverse(
-            "characters:changeling:update:changeling", kwargs={"pk": self.pk}
-        )
-
     def has_court(self):
         return self.court != ""
 

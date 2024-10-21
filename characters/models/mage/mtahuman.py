@@ -279,10 +279,3 @@ class MtAHuman(Human):
         verbose_name = "Human (Mage)"
         verbose_name_plural = "Humans (Mage)"
         ordering = ["name"]
-
-    def get_update_url(self):
-        return reverse("characters:mage:update:mtahuman", kwargs={"pk": self.pk})
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:mage:create:mtahuman")

@@ -16,7 +16,7 @@ from items.models.werewolf.fetish import Fetish
 
 
 class Werewolf(WtAHuman):
-    type = "garou"
+    type = "werewolf"
 
     rank_names = {
         1: "Cliath",
@@ -111,13 +111,6 @@ class Werewolf(WtAHuman):
     class Meta:
         verbose_name = "Werewolf"
         verbose_name_plural = "Werewolves"
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:werewolf:create:werewolf")
-
-    def get_update_url(self):
-        return reverse("characters:werewolf:update:werewolf", kwargs={"pk": self.pk})
 
     def has_breed(self):
         return self.breed != ""
@@ -256,18 +249,26 @@ class Werewolf(WtAHuman):
         b = (
             b
             and len(
-                [x for x in self.gifts.all() if self.tribe.name in x.allowed["garou"]]
+                [
+                    x
+                    for x in self.gifts.all()
+                    if self.tribe.name in x.allowed["werewolf"]
+                ]
             )
             > 0
         )
         b = (
             b
-            and len([x for x in self.gifts.all() if self.auspice in x.allowed["garou"]])
+            and len(
+                [x for x in self.gifts.all() if self.auspice in x.allowed["werewolf"]]
+            )
             > 0
         )
         b = (
             b
-            and len([x for x in self.gifts.all() if self.breed in x.allowed["garou"]])
+            and len(
+                [x for x in self.gifts.all() if self.breed in x.allowed["werewolf"]]
+            )
             > 0
         )
         return b
@@ -280,20 +281,20 @@ class Werewolf(WtAHuman):
             if Gift.objects.filter(pk=index).exists():
                 choice = Gift.objects.get(pk=index)
                 correct = True
-                if "kinfolk" in choice.allowed["garou"]:
+                if "kinfolk" in choice.allowed["werewolf"]:
                     return False
-                if breed and self.breed not in choice.allowed["garou"]:
+                if breed and self.breed not in choice.allowed["werewolf"]:
                     correct = False
-                if auspice and self.auspice not in choice.allowed["garou"]:
+                if auspice and self.auspice not in choice.allowed["werewolf"]:
                     correct = False
                 if tribe:
                     if self.camp is not None:
                         if (
-                            self.tribe.name not in choice.allowed["garou"]
-                            and self.camp.name not in choice.allowed["garou"]
+                            self.tribe.name not in choice.allowed["werewolf"]
+                            and self.camp.name not in choice.allowed["werewolf"]
                         ):
                             correct = False
-                    elif self.tribe.name not in choice.allowed["garou"]:
+                    elif self.tribe.name not in choice.allowed["werewolf"]:
                         correct = False
                 if choice.rank < min_rank:
                     correct = False
@@ -309,11 +310,11 @@ class Werewolf(WtAHuman):
         possible_gifts = [x for x in possible_gifts if min_rank <= x.rank <= max_rank]
         if breed:
             possible_gifts = [
-                x for x in possible_gifts if self.breed in x.allowed["garou"]
+                x for x in possible_gifts if self.breed in x.allowed["werewolf"]
             ]
         if tribe:
             possible_gifts = [
-                x for x in possible_gifts if self.tribe.name in x.allowed["garou"]
+                x for x in possible_gifts if self.tribe.name in x.allowed["werewolf"]
             ]
             if self.camps.count() != 0:
                 possible_gifts.extend(
@@ -322,7 +323,7 @@ class Werewolf(WtAHuman):
                         for x in possible_gifts
                         if len(
                             set(x.name for x in self.camps.all()).intersection(
-                                set(x.allowed["garou"])
+                                set(x.allowed["werewolf"])
                             )
                         )
                         != 0
@@ -330,7 +331,7 @@ class Werewolf(WtAHuman):
                 )
         if auspice:
             possible_gifts = [
-                x for x in possible_gifts if self.auspice in x.allowed["garou"]
+                x for x in possible_gifts if self.auspice in x.allowed["werewolf"]
             ]
         choice = random.choice(possible_gifts)
         return self.add_gift(choice)

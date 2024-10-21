@@ -94,20 +94,22 @@ def werewolf_setup():
     for i in range(5):
         Totem.objects.create(name=f"Totem {i}", cost=10 + i)
     for i in range(1, 6):
-        Gift.objects.create(name=f"Gift {i}", rank=i, allowed={"garou": []})
-        Gift.objects.create(name=f"Gift {5+i}", rank=i, allowed={"garou": []})
+        Gift.objects.create(name=f"Gift {i}", rank=i, allowed={"werewolf": []})
+        Gift.objects.create(name=f"Gift {5+i}", rank=i, allowed={"werewolf": []})
     t = Tribe.objects.create(name="Test Tribe", willpower=5)
     Tribe.objects.create(name="Test Tribe 2", willpower=3)
     Camp.objects.create(name="Test Camp", tribe=t)
     for t in Tribe.objects.all():
-        Gift.objects.create(name=f"{t.name} Gift", rank=1, allowed={"garou": [t.name]})
+        Gift.objects.create(
+            name=f"{t.name} Gift", rank=1, allowed={"werewolf": [t.name]}
+        )
     for auspice in ["ragabash", "theurge", "philodox", "galliard", "ahroun"]:
         Gift.objects.create(
-            name=f"{auspice.title()} Gift", rank=1, allowed={"garou": [auspice]}
+            name=f"{auspice.title()} Gift", rank=1, allowed={"werewolf": [auspice]}
         )
     for breed in ["homid", "metis", "lupus"]:
         Gift.objects.create(
-            name=f"{breed.title()} Gift", rank=1, allowed={"garou": [breed]}
+            name=f"{breed.title()} Gift", rank=1, allowed={"werewolf": [breed]}
         )
     for i in range(6):
         Rite.objects.create(name=f"Rite {i}", level=i)

@@ -123,10 +123,3 @@ class VtMHuman(Human):
     class Meta:
         verbose_name = "Human (Vampire)"
         verbose_name_plural = "Humans (Vampire)"
-
-    def get_update_url(self):
-        return reverse("characters:vampire:update:vtm_human", kwargs={"pk": self.pk})
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:vampire:create:vtm_human")

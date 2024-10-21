@@ -12,7 +12,7 @@ from characters.models.core.merit_flaw_block import MeritFlawBlock
 from characters.models.core.specialty import Specialty
 from characters.utils import random_ethnicity, random_height, random_name, random_weight
 from core.models import Language
-from core.utils import add_dot, weighted_choice
+from core.utils import add_dot, get_short_gameline_name, weighted_choice
 from django.db import models
 from django.urls import reverse
 
@@ -118,18 +118,30 @@ class Human(
         return False
 
     def get_full_update_url(self):
-        return reverse("characters:update:human_full", kwargs={"pk": self.pk})
+        g = get_short_gameline_name(self.gameline)
+        if g:
+            g += ":"
+        return reverse(f"characters:{g}update:{self.type}_full", kwargs={"pk": self.pk})
 
     def get_update_url(self):
-        return reverse("characters:update:human", kwargs={"pk": self.pk})
+        g = get_short_gameline_name(self.gameline)
+        if g:
+            g += ":"
+        return reverse(f"characters:{g}update:{self.type}", kwargs={"pk": self.pk})
 
     @classmethod
     def get_full_creation_url(cls):
-        return reverse("characters:create:human_full")
+        g = get_short_gameline_name(cls.gameline)
+        if g:
+            g += ":"
+        return reverse(f"characters:{g}create:{cls.type}_full")
 
     @classmethod
     def get_creation_url(cls):
-        return reverse("characters:create:human")
+        g = get_short_gameline_name(cls.gameline)
+        if g:
+            g += ":"
+        return reverse(f"characters:{g}create:{cls.type}")
 
     def get_heading(self):
         return f"{self.gameline}_heading"

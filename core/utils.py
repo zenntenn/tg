@@ -91,6 +91,21 @@ def get_gameline_name(s):
         return "Changeling: the Dreaming"
 
 
+def get_short_gameline_name(s):
+    if s == "wod":
+        return ""
+    elif s == "vtm":
+        return "vampire"
+    elif s == "wta":
+        return "werewolf"
+    elif s == "mta":
+        return "mage"
+    elif s == "wto":
+        return "wraith"
+    elif s == "ctd":
+        return "changeling"
+
+
 def fast_selector(cls):
     max_value = cls.objects.last().id
     index = random.randint(1, max_value)

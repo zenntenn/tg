@@ -1,6 +1,9 @@
 {% extends "characters/core/human/form.html" %}
 {% load dots %}
 {% load get_specialty %}
+{% block title %}
+    Human (Vampire)
+{% endblock title %}
 {% block abilities %}
     <div class="row">
         <h2 class="col-sm {{ form.get_heading }}">Abilities</h2>

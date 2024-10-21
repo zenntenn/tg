@@ -105,10 +105,3 @@ class WtAHuman(Human):
     class Meta:
         verbose_name = "Human (Werewolf)"
         verbose_name_plural = "Humans (Werewolf)"
-
-    def get_update_url(self):
-        return reverse("characters:werewolf:update:wta_human", kwargs={"pk": self.pk})
-
-    @classmethod
-    def get_creation_url(cls):
-        return reverse("characters:werewolf:create:wta_human")
