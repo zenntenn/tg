@@ -11,10 +11,7 @@ class FamiliarForm(forms.ModelForm):
             "name",
             "nature",
             "demeanor",
-            "affiliation",
             "concept",
-            "subfaction",
-            "faction",
             "image",
         ]
 
@@ -22,9 +19,6 @@ class FamiliarForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["nature"].queryset = Archetype.objects.all().order_by("name")
         self.fields["demeanor"].queryset = Archetype.objects.all().order_by("name")
-        self.fields["affiliation"].queryset = MageFaction.objects.filter(parent=None)
-        self.fields["faction"].queryset = MageFaction.objects.none()
-        self.fields["subfaction"].queryset = MageFaction.objects.none()
         self.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
         self.fields["concept"].widget.attrs.update(
             {"placeholder": "Enter concept here"}
