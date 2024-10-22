@@ -6,9 +6,6 @@ class TestGift(TestCase):
     def setUp(self):
         self.gift = Gift.objects.create()
 
-    def test_save(self):
-        self.assertIn("werewolf", self.gift.allowed)
-
 
 class TestGiftDetailView(TestCase):
     def setUp(self) -> None:

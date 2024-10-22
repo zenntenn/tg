@@ -7,16 +7,6 @@ class GiftDetailView(DetailView):
     model = Gift
     template_name = "characters/werewolf/gift/detail.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["allowed"] = []
-        for key, value in self.object.allowed.items():
-            value = sorted(value)
-            context["allowed"].append(
-                f"{key.title()}: {', '.join([x.title() for x in value])}"
-            )
-        return context
-
 
 class GiftCreateView(CreateView):
     model = Gift

@@ -28,19 +28,20 @@ class TestWerewolf(TestCase):
 
     def test_filter_gifts(self):
         self.character.rank = 2
-        self.assertEqual(len(self.character.filter_gifts()), 14)
-        self.character.add_gift(Gift.objects.get(name="Gift 1"))
-        self.character.add_gift(Gift.objects.get(name="Gift 2"))
-        self.assertEqual(len(self.character.filter_gifts()), 12)
+        self.assertEqual(len(self.character.filter_gifts()), 0)
+        self.character.set_breed("homid")
+        self.assertEqual(len(self.character.filter_gifts()), 5)
+        self.character.add_gift(Gift.objects.get(name="Homid Gift 1"))
+        self.assertEqual(len(self.character.filter_gifts()), 4)
 
     def test_has_gifts(self):
         t = Tribe.objects.get(name="Test Tribe", willpower=5)
         self.character.set_tribe(t)
         self.character.set_breed("homid")
         self.character.set_auspice("ragabash")
-        g1 = Gift.objects.get(name="Test Tribe Gift")
-        g2 = Gift.objects.get(name="Ragabash Gift")
-        g3 = Gift.objects.get(name="Homid Gift")
+        g1 = Gift.objects.get(name="Test Tribe Gift 1")
+        g2 = Gift.objects.get(name="Ragabash Gift 1")
+        g3 = Gift.objects.get(name="Homid Gift 1")
         self.assertFalse(self.character.has_gifts())
         self.character.add_gift(g1)
         self.assertFalse(self.character.has_gifts())
@@ -354,10 +355,16 @@ class TestRandomWerewolf(TestCase):
         self.assertTrue(self.character.has_auspice())
 
     def test_choose_random_gift(self):
+        self.character.set_breed("homid")
+        self.character.set_auspice("ahroun")
+        self.character.set_tribe(Tribe.objects.first())
         chosen_gift = self.character.choose_random_gift()
         self.assertIsInstance(chosen_gift, Gift)
 
     def test_random_gift(self):
+        self.character.set_breed("homid")
+        self.character.set_auspice("ahroun")
+        self.character.set_tribe(Tribe.objects.first())
         self.character.random_gift()
         self.assertEqual(self.character.gifts.count(), 1)
 
