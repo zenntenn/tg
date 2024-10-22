@@ -307,7 +307,7 @@ class TribeAdmin(admin.ModelAdmin):
 
 @admin.register(Gift)
 class GiftAdmin(admin.ModelAdmin):
-    list_display = ("name", "rank", "allowed")
+    list_display = ("name", "rank")
 
 
 @admin.register(RenownIncident)

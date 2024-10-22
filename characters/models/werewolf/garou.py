@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from characters.models.werewolf.battlescar import BattleScar
 from characters.models.werewolf.camp import Camp
-from characters.models.werewolf.gift import Gift
+from characters.models.werewolf.gift import Gift, GiftPermission
 from characters.models.werewolf.renownincident import RenownIncident
 from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.tribe import Tribe
@@ -26,26 +26,31 @@ class Werewolf(WtAHuman):
         5: "Elder",
     }
 
+    AUSPICES = [
+        ("ragabash", "Ragabash"),
+        ("theurge", "Theurge"),
+        ("philodox", "Philodox"),
+        ("galliard", "Galliard"),
+        ("ahroun", "Ahroun"),
+    ]
+
     rank = models.IntegerField(default=1)
     auspice = models.CharField(
         default="",
         max_length=100,
-        choices=[
-            ("ragabash", "Ragabash"),
-            ("theurge", "Theurge"),
-            ("philodox", "Philodox"),
-            ("galliard", "Galliard"),
-            ("ahroun", "Ahroun"),
-        ],
+        choices=AUSPICES,
     )
+
+    BREEDS = [
+        ("homid", "Homid"),
+        ("metis", "Metis"),
+        ("lupus", "Lupus"),
+    ]
+
     breed = models.CharField(
         default="",
         max_length=100,
-        choices=[
-            ("homid", "Homid"),
-            ("metis", "Metis"),
-            ("lupus", "Lupus"),
-        ],
+        choices=BREEDS,
     )
     tribe = models.ForeignKey(Tribe, blank=True, null=True, on_delete=models.SET_NULL)
     camps = models.ManyToManyField(Camp, blank=True)
@@ -69,6 +74,8 @@ class Werewolf(WtAHuman):
     first_change = models.TextField(default="")
     battle_scars = models.ManyToManyField("BattleScar", blank=True)
     age_of_first_change = models.IntegerField(default=0)
+
+    gift_permissions = models.ManyToManyField(GiftPermission, blank=True)
 
     requirements = {
         "ragabash": {
@@ -116,6 +123,14 @@ class Werewolf(WtAHuman):
         return self.breed != ""
 
     def set_breed(self, breed):
+        for b in self.BREEDS:
+            self.gift_permissions.remove(
+                GiftPermission.objects.get_or_create(shifter="werewolf", condition=b)[0]
+            )
+        self.gift_permissions.add(
+            GiftPermission.objects.get_or_create(shifter="werewolf", condition=breed)[0]
+        )
+
         self.breed = breed
         if breed == "homid":
             self.set_gnosis(1)
@@ -133,6 +148,16 @@ class Werewolf(WtAHuman):
         return self.auspice != ""
 
     def set_auspice(self, auspice, ragabash_renown=(1, 1, 1)):
+        for a in self.AUSPICES:
+            self.gift_permissions.remove(
+                GiftPermission.objects.get_or_create(shifter="werewolf", condition=a)[0]
+            )
+        self.gift_permissions.add(
+            GiftPermission.objects.get_or_create(shifter="werewolf", condition=auspice)[
+                0
+            ]
+        )
+
         self.auspice = auspice
         if auspice == "ragabash":
             self.set_glory(ragabash_renown[0])
@@ -179,11 +204,22 @@ class Werewolf(WtAHuman):
         return self.tribe is not None
 
     def set_tribe(self, tribe):
+        for t in Tribe.objects.all():
+            self.gift_permissions.remove(
+                GiftPermission.objects.get_or_create(
+                    shifter="werewolf", condition=t.name
+                )[0]
+            )
+        self.gift_permissions.add(
+            GiftPermission.objects.get_or_create(
+                shifter="werewolf", condition=tribe.name
+            )[0]
+        )
+
         if tribe.name == "Red Talons" and self.breed == "homid":
             return False
-        # TODO: fix this as self.sex is no longer included
-        if tribe.name == "Black Furies" and self.sex == "Male":
-            return False
+        # if tribe.name == "Black Furies" and self.sex == "Male":
+        #     return False
         self.tribe = tribe
         self.willpower = tribe.willpower
         if self.tribe.name == "Silver Fangs" and self.pure_breed < 3:
@@ -203,6 +239,17 @@ class Werewolf(WtAHuman):
         return self.camps.count() != 0
 
     def add_camp(self, camp):
+        if camp is None:
+            return False
+        if (
+            GiftPermission.objects.filter(
+                shifter="werewolf", condition=camp.name
+            ).count()
+            == 1
+        ):
+            self.gift_permissions.add(
+                GiftPermission.objects.filter(shifter="werewolf", condition=camp.name)
+            )
         self.camps.add(camp)
         self.save()
         return True
@@ -242,98 +289,78 @@ class Werewolf(WtAHuman):
         return True
 
     def filter_gifts(self):
-        return Gift.objects.filter(rank__lte=self.rank).exclude(pk__in=self.gifts.all())
+        return Gift.objects.filter(
+            rank__lte=self.rank, allowed__in=self.gift_permissions.all()
+        ).exclude(pk__in=self.gifts.all())
 
     def has_gifts(self):
         b = self.gifts.count() >= 3
-        b = (
-            b
-            and len(
-                [
-                    x
-                    for x in self.gifts.all()
-                    if self.tribe.name in x.allowed["werewolf"]
-                ]
-            )
-            > 0
-        )
-        b = (
-            b
-            and len(
-                [x for x in self.gifts.all() if self.auspice in x.allowed["werewolf"]]
-            )
-            > 0
-        )
-        b = (
-            b
-            and len(
-                [x for x in self.gifts.all() if self.breed in x.allowed["werewolf"]]
-            )
-            > 0
-        )
+        breed = GiftPermission.objects.get_or_create(
+            shifter="werewolf", condition=self.breed
+        )[0]
+        auspice = GiftPermission.objects.get_or_create(
+            shifter="werewolf", condition=self.auspice
+        )[0]
+        if self.tribe is not None:
+            tribe = GiftPermission.objects.get_or_create(
+                shifter="werewolf", condition=self.tribe.name
+            )[0]
+        else:
+            b = False
+
+        b = b and self.gifts.filter(allowed=breed).count() > 0
+        b = b and self.gifts.filter(allowed=auspice).count() > 0
+        b = b and self.gifts.filter(allowed=tribe).count() > 0
+
         return b
 
     def choose_random_gift(
         self, breed=False, tribe=False, auspice=False, min_rank=1, max_rank=5
     ):
-        while True:
-            index = random.randint(1, Gift.objects.last().id)
-            if Gift.objects.filter(pk=index).exists():
-                choice = Gift.objects.get(pk=index)
-                correct = True
-                if "kinfolk" in choice.allowed["werewolf"]:
-                    return False
-                if breed and self.breed not in choice.allowed["werewolf"]:
-                    correct = False
-                if auspice and self.auspice not in choice.allowed["werewolf"]:
-                    correct = False
-                if tribe:
-                    if self.camp is not None:
-                        if (
-                            self.tribe.name not in choice.allowed["werewolf"]
-                            and self.camp.name not in choice.allowed["werewolf"]
-                        ):
-                            correct = False
-                    elif self.tribe.name not in choice.allowed["werewolf"]:
-                        correct = False
-                if choice.rank < min_rank:
-                    correct = False
-                if choice.rank > max(max_rank, self.rank):
-                    correct = False
-                if correct:
-                    return choice
+        options = self.filter_gifts()
+        if breed:
+            options = options.filter(
+                allowed=GiftPermission.objects.get(
+                    shifter="werewolf", condition=self.breed
+                )
+            )
+        if tribe:
+            q = options.filter(
+                allowed=GiftPermission.objects.get(
+                    shifter="werewolf", condition=self.tribe.name
+                )
+            )
+            if self.camps.count() != 0:
+                for camp in self.camps.all():
+                    q = q | options.filter(
+                        allowed=GiftPermission.objects.get_or_create(
+                            shifter="werewolf", condition=camp.name
+                        )[0]
+                    )
+            options = q
+        if auspice:
+            options = options.filter(
+                allowed=GiftPermission.objects.get(
+                    shifter="werewolf", condition=self.auspice
+                )
+            )
+
+        # rank
+        options = options.filter(rank__gte=min_rank)
+        options = options.filter(rank__lte=min(max_rank, self.rank))
+        options = list(options)
+        return random.choice(options)
 
     def random_gift(
         self, breed=False, tribe=False, auspice=False, min_rank=1, max_rank=5
     ):
-        possible_gifts = self.filter_gifts()
-        possible_gifts = [x for x in possible_gifts if min_rank <= x.rank <= max_rank]
-        if breed:
-            possible_gifts = [
-                x for x in possible_gifts if self.breed in x.allowed["werewolf"]
-            ]
-        if tribe:
-            possible_gifts = [
-                x for x in possible_gifts if self.tribe.name in x.allowed["werewolf"]
-            ]
-            if self.camps.count() != 0:
-                possible_gifts.extend(
-                    [
-                        x
-                        for x in possible_gifts
-                        if len(
-                            set(x.name for x in self.camps.all()).intersection(
-                                set(x.allowed["werewolf"])
-                            )
-                        )
-                        != 0
-                    ]
-                )
-        if auspice:
-            possible_gifts = [
-                x for x in possible_gifts if self.auspice in x.allowed["werewolf"]
-            ]
-        choice = random.choice(possible_gifts)
+        choice = self.choose_random_gift(
+            breed=breed,
+            tribe=tribe,
+            auspice=auspice,
+            min_rank=min_rank,
+            max_rank=max_rank,
+        )
         return self.add_gift(choice)
 
     def random_gifts(self):

@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from characters.models.core.derangement import Derangement
 from characters.models.core.merit_flaw_block import MeritFlaw
-from characters.models.werewolf.gift import Gift
+from characters.models.werewolf.gift import Gift, GiftPermission
 from characters.models.werewolf.kinfolk import Kinfolk
 from characters.models.werewolf.tribe import Tribe
 from characters.tests.utils import werewolf_setup
@@ -146,11 +146,27 @@ class TestRandomKinfolk(TestCase):
         self.assertIsInstance(self.kinfolk.tribe, Tribe)
 
     def test_choose_random_gift(self):
-        Gift.objects.create(
-            name="Test Gift 1", rank=1, allowed={"werewolf": ["homid", "Test Tribe"]}
+        g = Gift.objects.create(name="Test Gift 1", rank=1)
+        g.allowed.add(
+            GiftPermission.objects.get_or_create(shifter="werewolf", condition="homid")[
+                0
+            ]
         )
-        Gift.objects.create(
-            name="Test Gift 2", rank=1, allowed={"werewolf": ["lupus", "Test Tribe"]}
+        g.allowed.add(
+            GiftPermission.objects.get_or_create(
+                shifter="werewolf", condition="Test Tribe"
+            )[0]
+        )
+        g = Gift.objects.create(name="Test Gift 2", rank=1)
+        g.allowed.add(
+            GiftPermission.objects.get_or_create(shifter="werewolf", condition="lupus")[
+                0
+            ]
+        )
+        g.allowed.add(
+            GiftPermission.objects.get_or_create(
+                shifter="werewolf", condition="Test Tribe"
+            )[0]
         )
         Gift.objects.create(name="Test Gift 3", rank=2)
         Gift.objects.create(name="Test Gift 4", rank=2)

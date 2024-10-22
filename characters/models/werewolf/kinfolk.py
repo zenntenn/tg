@@ -2,7 +2,7 @@ import random
 from collections import defaultdict
 
 from characters.models.core.merit_flaw_block import MeritFlaw, MeritFlawRating
-from characters.models.werewolf.gift import Gift
+from characters.models.werewolf.gift import Gift, GiftPermission
 from characters.models.werewolf.tribe import Tribe
 from characters.models.werewolf.wtahuman import WtAHuman
 from core.utils import add_dot
@@ -16,18 +16,23 @@ class Kinfolk(WtAHuman):
 
     allowed_backgrounds = ["allies", "contacts", "mentor", "pure_breed", "resources"]
 
+    BREEDS = [
+        ("homid", "Homid"),
+        ("lupus", "Lupus"),
+    ]
+
     breed = models.CharField(
         default="",
         max_length=100,
-        choices=[
-            ("homid", "Homid"),
-            ("lupus", "Lupus"),
-        ],
+        choices=BREEDS,
     )
+
     tribe = models.ForeignKey(Tribe, blank=True, null=True, on_delete=models.SET_NULL)
 
     relation = models.CharField(max_length=100, default="")
     gifts = models.ManyToManyField(Gift, blank=True)
+
+    gift_permissions = models.ManyToManyField(GiftPermission, blank=True)
 
     gnosis = models.IntegerField(default=0)
     fetishes_owned = models.ManyToManyField(Fetish, blank=True)
@@ -47,6 +52,14 @@ class Kinfolk(WtAHuman):
         return self.breed != ""
 
     def set_breed(self, breed):
+        for b in self.BREEDS:
+            self.gift_permissions.remove(
+                GiftPermission.objects.get_or_create(shifter="werewolf", condition=b)[0]
+            )
+        self.gift_permissions.add(
+            GiftPermission.objects.get_or_create(shifter="werewolf", condition=breed)[0]
+        )
+
         self.breed = breed
         self.save()
         return True
@@ -58,6 +71,18 @@ class Kinfolk(WtAHuman):
         return self.tribe is not None
 
     def set_tribe(self, tribe):
+        for t in Tribe.objects.all():
+            self.gift_permissions.remove(
+                GiftPermission.objects.get_or_create(
+                    shifter="werewolf", condition=t.name
+                )[0]
+            )
+        self.gift_permissions.add(
+            GiftPermission.objects.get_or_create(
+                shifter="werewolf", condition=tribe.name
+            )[0]
+        )
+
         if tribe.name == "Red Talons" and self.breed == "homid":
             return False
         self.tribe = tribe
@@ -100,24 +125,30 @@ class Kinfolk(WtAHuman):
                 return False
         return super().add_background(background, maximum=maximum)
 
+    def filter_gifts(self):
+        return Gift.objects.filter(
+            rank__lte=1, allowed__in=self.gift_permissions.all()
+        ).exclude(pk__in=self.gifts.all())
+
     def choose_random_gift(self, breed=False, tribe=False):
-        while True:
-            index = random.randint(1, Gift.objects.last().id)
-            if Gift.objects.filter(pk=index).exists():
-                choice = Gift.objects.get(pk=index)
-                correct = True
-                if breed:
-                    if self.breed not in choice.allowed["werewolf"]:
-                        correct = False
-                if tribe:
-                    if self.tribe.name not in choice.allowed["werewolf"]:
-                        correct = False
-                    elif self.tribe.name not in choice.allowed["werewolf"]:
-                        correct = False
-                if choice.rank != 1:
-                    correct = False
-                if correct:
-                    return choice
+        options = self.filter_gifts()
+        if breed:
+            options = options.filter(
+                allowed=GiftPermission.objects.get(
+                    shifter="werewolf", condition=self.breed
+                )
+            )
+        if tribe:
+            options = options.filter(
+                allowed=GiftPermission.objects.get(
+                    shifter="werewolf", condition=self.tribe.name
+                )
+            )
+
+        # rank
+        options = options.filter(rank=1)
+        options = list(options)
+        return random.choice(options)
 
     def add_gift(self, gift):
         if gift in self.gifts.all():

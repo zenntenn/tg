@@ -3,20 +3,23 @@ from django.db import models
 from django.urls import reverse
 
 
+class GiftPermission(models.Model):
+    shifter = models.CharField(max_length=100)
+    condition = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.shifter}/{self.condition}"
+
+
 class Gift(Model):
     type = "gift"
 
     rank = models.IntegerField(default=0)
-    allowed = models.JSONField(default=dict)
+    allowed = models.ManyToManyField(GiftPermission, blank=True)
 
     class Meta:
         verbose_name = "Gift"
         verbose_name_plural = "Gifts"
-
-    def save(self, *args, **kwargs):
-        if "werewolf" not in self.allowed:
-            self.allowed["werewolf"] = []
-        return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("characters:werewolf:gift", kwargs={"pk": self.pk})

@@ -18,7 +18,7 @@ from characters.models.mage.sphere import Sphere
 from characters.models.werewolf.battlescar import BattleScar
 from characters.models.werewolf.camp import Camp
 from characters.models.werewolf.garou import Werewolf
-from characters.models.werewolf.gift import Gift
+from characters.models.werewolf.gift import Gift, GiftPermission
 from characters.models.werewolf.renownincident import RenownIncident
 from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.totem import Totem
@@ -93,24 +93,33 @@ def werewolf_setup():
         w = Werewolf.objects.create(name=f"Character {i}")
     for i in range(5):
         Totem.objects.create(name=f"Totem {i}", cost=10 + i)
-    for i in range(1, 6):
-        Gift.objects.create(name=f"Gift {i}", rank=i, allowed={"werewolf": []})
-        Gift.objects.create(name=f"Gift {5+i}", rank=i, allowed={"werewolf": []})
     t = Tribe.objects.create(name="Test Tribe", willpower=5)
     Tribe.objects.create(name="Test Tribe 2", willpower=3)
     Camp.objects.create(name="Test Camp", tribe=t)
-    for t in Tribe.objects.all():
-        Gift.objects.create(
-            name=f"{t.name} Gift", rank=1, allowed={"werewolf": [t.name]}
-        )
-    for auspice in ["ragabash", "theurge", "philodox", "galliard", "ahroun"]:
-        Gift.objects.create(
-            name=f"{auspice.title()} Gift", rank=1, allowed={"werewolf": [auspice]}
-        )
-    for breed in ["homid", "metis", "lupus"]:
-        Gift.objects.create(
-            name=f"{breed.title()} Gift", rank=1, allowed={"werewolf": [breed]}
-        )
+    for i in range(1, 6):
+        Gift.objects.create(name=f"Gift {i}", rank=i)
+        Gift.objects.create(name=f"Gift {5+i}", rank=i)
+        for t in Tribe.objects.all():
+            g = Gift.objects.create(name=f"{t.name} Gift {i}", rank=1)
+            g.allowed.add(
+                GiftPermission.objects.get_or_create(
+                    shifter="werewolf", condition=t.name
+                )[0]
+            )
+        for auspice in ["ragabash", "theurge", "philodox", "galliard", "ahroun"]:
+            g = Gift.objects.create(name=f"{auspice.title()} Gift {i}", rank=1)
+            g.allowed.add(
+                GiftPermission.objects.get_or_create(
+                    shifter="werewolf", condition=auspice
+                )[0]
+            )
+        for breed in ["homid", "metis", "lupus"]:
+            g = Gift.objects.create(name=f"{breed.title()} Gift {i}", rank=1)
+            g.allowed.add(
+                GiftPermission.objects.get_or_create(
+                    shifter="werewolf", condition=breed
+                )[0]
+            )
     for i in range(6):
         Rite.objects.create(name=f"Rite {i}", level=i)
         Rite.objects.create(name=f"Rite {6+i}", level=i)
