@@ -92,28 +92,6 @@ class Companion(MtAHuman):
         "wonder",
     ]
 
-    affiliation = models.ForeignKey(
-        MageFaction,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="companion_affiliations",
-    )
-    faction = models.ForeignKey(
-        MageFaction,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="companion_factions",
-    )
-    subfaction = models.ForeignKey(
-        MageFaction,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="companion_subfactions",
-    )
-
     companion_type = models.CharField(
         max_length=20,
         choices=[
