@@ -91,7 +91,7 @@ class Model(PolymorphicModel):
         default="sub",
     )
 
-    st_nodes = models.TextField(default="")
+    st_notes = models.TextField(default="")
 
     class Meta:
         abstract = True
