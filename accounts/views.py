@@ -52,14 +52,27 @@ class ProfileView(DetailView):
             char.save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
-        else:
-            char = [
-                x
-                for x in self.object.objects_to_approve()
-                if x.name in request.POST.keys()
+        elif len([x for x in request.POST.keys() if x.endswith("_approve")]):
+            approved = [
+                x.replace("_approve", "")
+                for x in request.POST.keys()
+                if x.endswith("_approve")
             ][0]
-            char.status = "App"
-            char.save()
+            approved = [
+                x for x in self.object.objects_to_approve() if x.name == approved
+            ][0]
+            approved.status = "App"
+            approved.save()
+        elif len([x for x in request.POST.keys() if x.endswith("_edit")]):
+            to_edit = [
+                x.replace("_edit", "")
+                for x in request.POST.keys()
+                if x.endswith("_edit")
+            ][0]
+            to_edit = [
+                x for x in self.object.objects_to_approve() if x.name == to_edit
+            ][0]
+            return redirect(to_edit.get_update_url())
         return render(
             request,
             "accounts/detail.html",
