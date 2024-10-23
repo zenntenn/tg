@@ -58,7 +58,7 @@ from characters.models.werewolf import (
     Camp,
     Fomor,
     FomoriPower,
-    Gift,
+    Gift, GiftPermission,
     Kinfolk,
     Pack,
     RenownIncident,
@@ -409,3 +409,4 @@ admin.site.register(Sphere)
 admin.site.register(SorcererFellowship)
 admin.site.register(Advantage)
 admin.site.register(AdvantageRating)
+admin.site.register(GiftPermission)
