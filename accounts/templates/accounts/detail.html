@@ -188,8 +188,8 @@
                                             <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
                                         </div>
                                         <div>
-                                            {% if char.owner is not None %}
-                                                <a href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner }}</a>
+                                            {% if obj.owner is not None %}
+                                                <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
                                             {% else %}
                                                 <div>No Owner</div>
                                             {% endif %}
