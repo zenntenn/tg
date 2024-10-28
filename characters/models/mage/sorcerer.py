@@ -15,6 +15,8 @@ class LinearMagicPath(Model):
     type = "linear_magic_path"
     gameline = "mta"
 
+    freebie_step = 8
+
     numina_type = models.CharField(
         max_length=20,
         choices=[
