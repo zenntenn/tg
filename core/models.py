@@ -90,6 +90,7 @@ class Model(PolymorphicModel):
         choices=zip(["sub", "app"], ["Submitted", "Approved"]),
         default="sub",
     )
+    freebies_approved = models.BooleanField(default=False)
 
     st_notes = models.TextField(default="")
 

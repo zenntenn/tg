@@ -99,6 +99,13 @@ class Profile(models.Model):
         to_approve.sort(key=lambda x: x.name)
         return to_approve
 
+    def freebies_to_approve(self):
+        f = Character.objects.filter(
+            chronicle__in=self.user.chronicle_set.all(), freebies_approved=False
+        )
+        f = [x for x in f if x.creation_status == x.freebie_step]
+        return f
+
     def image_to_approve(self):
         to_approve_images = (
             list(

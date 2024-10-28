@@ -18,6 +18,8 @@ class CharacterModel(Model):
 class Character(CharacterModel):
     type = "character"
 
+    freebie_step = -1
+
     gameline = "wod"
 
     concept = models.CharField(max_length=100)

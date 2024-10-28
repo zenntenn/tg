@@ -88,7 +88,7 @@
             {% endif %}
         {% endblock history %}
         {% block freebies %}
-            {% if object.creation_status == 7 %}
+            {% if object.creation_status == 7 and object.freebies_approved %}
                 {% include "characters/mage/mage/mage_freebies_form.html" %}
             {% endif %}
         {% endblock freebies %}

@@ -175,6 +175,48 @@
                     </div>
                 </form>
                 <div class="row">
+                    <h2 class="col-sm {{ object.preferred_heading }}">Frebies To Approve</h2>
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for obj in object.freebies_to_approve %}
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div>
+                                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                                        </div>
+                                        <div>
+                                            {% if obj.owner is not None %}
+                                                <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
+                                            {% else %}
+                                                <div>No Owner</div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div>{{ obj.get_status_display }}</div>
+                                        </div>
+                                        <div>
+                                            {% if obj.get_type %}
+                                                <div>{{ obj.get_type }}</div>
+                                            {% else %}
+                                                <div>{{ obj.type.title }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <input type="number" step="1" name="freebiesField" min="0" max="30", value="0">
+                                            <input type="submit" name="{{ obj.name }}_freebies" value="Add Freebies" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col">No Characters.</div>
+                        {% endfor %}
+                    </div>
+                </form>
+                <div class="row">
                     <h2 class="col-sm {{ object.preferred_heading }}">To Approve</h2>
                 </div>
                 <form action="" method="post">

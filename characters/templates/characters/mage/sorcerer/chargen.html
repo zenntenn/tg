@@ -87,7 +87,7 @@
             {% endif %}
         {% endblock history %}
         {% block freebies %}
-            {% if object.creation_status == 8 %}
+            {% if object.creation_status == 8 and object.freebies_approved %}
                 {% include "characters/mage/sorcerer/sorcerer_freebies_form.html" %}
             {% endif %}
         {% endblock freebies %}

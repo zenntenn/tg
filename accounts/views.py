@@ -73,6 +73,19 @@ class ProfileView(DetailView):
                 x for x in self.object.objects_to_approve() if x.name == to_edit
             ][0]
             return redirect(to_edit.get_update_url())
+        elif len([x for x in request.POST.keys() if x.endswith("_freebies")]):
+            to_approve = [
+                x.replace("_freebies", "")
+                for x in request.POST.keys()
+                if x.endswith("_freebies")
+            ][0]
+            to_approve = [
+                x for x in self.object.freebies_to_approve() if x.name == to_approve
+            ][0]
+            num_to_add = int(request.POST["freebiesField"])
+            to_approve.freebies += num_to_add
+            to_approve.freebies_approved = True
+            to_approve.save()
         return render(
             request,
             "accounts/detail.html",
