@@ -16,6 +16,8 @@ class Cabal(Group):
         return "mta_heading"
 
     def get_display_type(self):
+        if self.leader is None:
+            return "Cabal"
         if Mage.objects.filter(pk=self.leader.pk).count() == 0:
             return "Cabal"
         m = Mage.objects.get(pk=self.leader.pk)
