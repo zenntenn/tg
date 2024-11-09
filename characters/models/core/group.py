@@ -29,6 +29,9 @@ class Group(Model):
     def get_absolute_url(self):
         return reverse("characters:group", kwargs={"pk": self.pk})
 
+    def get_display_type(self):
+        return self.type.title()
+
     def get_update_url(self):
         return reverse("characters:update:group", kwargs={"pk": self.pk})
 
