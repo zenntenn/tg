@@ -5,7 +5,7 @@
 {% block content %}
     {% load sanitize_text %}
     {% load location_tags %}
-    <div class="container">
+    <div class="container centertext">
         <div class="row">
             <h2 class="col-sm {{ object.headings }} centertext">{{ object.name }}</h2>
         </div>
@@ -44,17 +44,45 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="row centertext">
-            <h3 class="col-sm {{ object.headings }}">Characters</h3>
-        </div>
+        {% for group in groups %}
+            {% if group.display %}
+                <h3 class="row {{ header }} border">
+                    <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
+                    <div class="col-sm border pointer"
+                         data-toggle="collapse"
+                         data-target="#group-{{ group.id }}Section"
+                         aria-expanded="true"
+                         aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
+                    <div class="col-sm border">{{ group.get_display_type }}</div>
+                </h3>
+                <div id="group-{{ group.id }}Section" class="collapse show">
+                    {% for char in group.members.all %}
+                        <div class="row border">
+                            <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                            <a class="col-sm border"
+                               href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
+                            <div class="col-sm border">{{ char.get_type }}</div>
+                            <div class="col-sm border">{{ char.get_status_display }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <h3 class="row {{ header }} border">
+            <div class="col-sm border">Solo Characters</div>
+            <div class="col-sm border"></div>
+            <div class="col-sm border"></div>
+        </h3>
         {% for char in characters %}
-            <div class="row border centertext">
-                <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                <div class="col-sm border">{{ char.get_type }}</div>
-                <a class="col-sm border"
-                   href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
-                <div class="col-sm border">{{ char.get_status_display }}</div>
-            </div>
+            {% if char.display and char.group_set.count == 0 %}
+                <div class="row border">
+                    <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                    <a class="col-sm border"
+                       href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
+                    <div class="col-sm border">{{ char.get_type }}</div>
+                    <div class="col-sm border">{{ char.get_status_display }}</div>
+                </div>
+            {% endif %}
         {% endfor %}
         <div class="row">
             <h3 class="col-sm {{ object.headings }} centertext">Locations</h3>

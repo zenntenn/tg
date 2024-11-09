@@ -1,6 +1,7 @@
 import itertools
 
 from characters.models.core import CharacterModel
+from characters.models.core.group import Group
 from core.utils import level_name, tree_sort
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import datetime, localtime
@@ -23,6 +24,7 @@ class ChronicleDetailView(View):
             "characters": CharacterModel.objects.filter(chronicle=chronicle).order_by(
                 "name"
             ),
+            "groups": Group.objects.filter(chronicle=chronicle).order_by("name"),
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
             "form": SceneCreationForm(chronicle=chronicle),
             "top_locations": top_locations,
