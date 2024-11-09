@@ -104,7 +104,7 @@ class MeritFlawBlock(models.Model):
         return language_rating
 
     def get_mf_and_rating_list(self):
-        return [(x.name, self.mf_rating(x)) for x in self.merits_and_flaws.all()]
+        return [(x, self.mf_rating(x)) for x in self.merits_and_flaws.all()]
 
     def add_mf(self, mf, rating):
         if rating in mf.get_ratings():
