@@ -84,6 +84,8 @@ class ProfileView(DetailView):
             ][0]
             num_to_add = int(request.POST["freebiesField"])
             to_approve.freebies += num_to_add
+            if f"{to_approve.name}_checkbox" in request.POST.keys():
+                to_approve.freebies += 15
             to_approve.freebies_approved = True
             to_approve.save()
         return render(
