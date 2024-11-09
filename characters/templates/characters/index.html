@@ -24,7 +24,7 @@
                              data-target="#group-{{ group.id }}Section"
                              aria-expanded="true"
                              aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
-                        <div class="col-sm border">{{ group.type.title }}</div>
+                        <div class="col-sm border">{{ group.get_display_type }}</div>
                     </h3>
                     <div id="group-{{ group.id }}Section" class="collapse show">
                         {% for char in group.members.all %}

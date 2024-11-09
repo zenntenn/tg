@@ -15,6 +15,17 @@ class Cabal(Group):
     def get_heading(self):
         return "mta_heading"
 
+    def get_display_type(self):
+        if Mage.objects.filter(pk=self.leader.pk).count() == 0:
+            return "Cabal"
+        m = Mage.objects.get(pk=self.leader.pk)
+        if (
+            m.affiliation
+            == MageFaction.objects.get_or_create(name="Technocratic Union")[0]
+        ):
+            return "Amalgam"
+        return self.type.title()
+
     def random(
         self,
         num_chars=None,
