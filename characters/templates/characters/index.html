@@ -33,7 +33,13 @@
                                 <a class="col-sm border"
                                    href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
                                 <div class="col-sm border">{{ char.get_type }}</div>
-                                <div class="col-sm border">{{ char.get_status_display }}</div>
+                                <div class="col-sm border">
+                                    {% if not char.npc %}
+                                        {{ char.get_status_display }}
+                                    {% else %}
+                                        NPC
+                                    {% endif %}
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
