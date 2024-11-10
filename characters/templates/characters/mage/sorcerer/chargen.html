@@ -141,6 +141,7 @@
 {% endblock contents %}
 {% block buttons %}
     {% if object.creation_status == 8 and not object.freebies_approved %}
+    {% elif not is_approved_user %}
     {% else %}
         {{ block.super }}
     {% endif %}
