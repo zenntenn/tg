@@ -9,8 +9,12 @@
         <a href="{{ location.get_absolute_url }}"
            style="padding-left: {{ indent_level }}px">{{ location.name|sanitize_html }}</a>
     </div>
-    <a class="col-sm border centertext"
-       href="{{ location.owner.profile.get_absolute_url }}">{{ location.owner.username }}</a>
+    {% if location.owner %}
+        <a class="col-sm border centertext"
+           href="{{ location.owner.profile.get_absolute_url }}">{{ location.owner.username }}</a>
+    {% else %}
+        <div class="col-sm border centertext"></div>
+    {% endif %}
     <div class="col-sm border centertext">{{ location.type.title }}</div>
 </div>
 {% if location.children.all %}
