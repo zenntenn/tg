@@ -145,3 +145,9 @@
         {% include "characters/core/character/not_owner.html" %}
     {% endif %}
 {% endblock contents %}
+{% block buttons %}
+    {% if object.creation_status == 7 and not object.freebies_approved %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock buttons %}
