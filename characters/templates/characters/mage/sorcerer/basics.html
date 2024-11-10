@@ -37,6 +37,19 @@
             <div class="col-sm-2">Affinity Path</div>
             <div class="col-sm-2">{{ form.affinity_path }}</div>
         </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2">Cabal</div>
+            <div class="col-sm-2">{{ form.cabal }}</div>
+            {% if storyteller %}
+                <div class="col-sm-2">NPC</div>
+                <div class="col-sm-2">{{ form.npc }}</div>
+            {% else %}
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2"></div>
+            {% endif %}
+        </div>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

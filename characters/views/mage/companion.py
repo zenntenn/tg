@@ -8,6 +8,7 @@ from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
 from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
+from characters.models.mage.cabal import Cabal
 from characters.models.mage.companion import Advantage, Companion
 from characters.models.mage.faction import MageFaction
 from characters.models.werewolf.charm import SpiritCharm
@@ -125,8 +126,16 @@ class CompanionBasicsView(LoginRequiredMixin, CreateView):
         "chronicle",
         "image",
         "companion_of",
+        "npc",
     ]
     template_name = "characters/mage/companion/basics.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["storyteller"] = False
+        if self.request.user.profile.is_st():
+            context["storyteller"] = True
+        return context
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -140,6 +149,10 @@ class CompanionBasicsView(LoginRequiredMixin, CreateView):
             {"placeholder": "Enter concept here"}
         )
         form.fields["image"].required = False
+        form.fields["cabal"] = forms.ModelChoiceField(
+            queryset=Cabal.objects.filter(permitted_users=self.request.user),
+            required=False,
+        )
         return form
 
     def form_invalid(self, form):
