@@ -9,6 +9,16 @@
           {% endblock formdetails %}>
         {% csrf_token %}
         <div class="centertext container">
+            {% block image %}
+                {% if object.image and object.image_status == "app" %}
+                    <img src="{{ object.image.url }}"
+                         width="300"
+                         height="{{ image.height }}"
+                         alt="image of {{ object.name }}" />
+                {% elif object.image %}
+                    Image pending approval
+                {% endif %}
+            {% endblock image %}
             {% block contents %}
             {% endblock contents %}
             {% block buttons %}
@@ -17,10 +27,8 @@
         </div>
     </form>
     {% block errors %}
-    {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-                <p class="alert centertext">{{ error }}</p>
-        {% endfor %}
-    {% endif %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}<p class="alert centertext">{{ error }}</p>{% endfor %}
+        {% endif %}
     {% endblock errors %}
 {% endblock content %}
