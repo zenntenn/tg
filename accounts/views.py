@@ -82,7 +82,7 @@ class ProfileView(DetailView):
             to_approve = [
                 x for x in self.object.freebies_to_approve() if x.name == to_approve
             ][0]
-            num_to_add = int(request.POST["freebiesField"])
+            num_to_add = int(request.POST[f"{ to_approve.name }_freebiesField"])
             to_approve.freebies += num_to_add
             if f"{to_approve.name}_checkbox" in request.POST.keys():
                 to_approve.freebies += 15
