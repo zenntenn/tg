@@ -116,7 +116,7 @@ class LocationIndexView(View):
             chron_dict[chron] = LocationModel.objects.filter(
                 chronicle=chron, parent=None
             ).order_by("name")
-        context["form"] = LocationCreationForm()
+        context["form"] = LocationCreationForm(user=self.request.user)
         context["chrondict"] = chron_dict
         if self.request.user.is_authenticated:
             context["header"] = self.request.user.profile.preferred_heading
