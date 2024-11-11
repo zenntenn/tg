@@ -79,7 +79,7 @@ class Profile(models.Model):
 
     def characters_to_approve(self):
         return Character.objects.filter(
-            status__in=["Un", "Sub"],
+            status__in=["Sub"],
             chronicle__in=self.user.chronicle_set.all(),
         ).order_by("name")
 
