@@ -164,6 +164,7 @@ class RoteCreationForm(forms.Form):
                 description=description,
                 effect=e,
                 status="Sub",
+                chronicle=self.instance.chronicle,
             )
         else:
             # Select Rote
