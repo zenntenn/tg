@@ -107,6 +107,9 @@ class Human(
         verbose_name_plural = "Humans"
         ordering = ["name"]
 
+    def total_freebies(self):
+        return self.freebies + sum([x["cost"] for x in self.spent_freebies])
+
     def is_group_member(self):
         from characters.models.core.group import Group
 

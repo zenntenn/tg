@@ -1079,9 +1079,14 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             self.object.freebies -= cost
             trait = trait.name
         elif form.data["category"] == "Arete":
-            if self.object.arete >= 3:
+            if self.object.arete >= 3 and self.object.total_freebies() != 45:
                 form.add_error(
                     None, "Arete Cannot Be Raised Above 3 At Character Creation"
+                )
+                return super().form_invalid(form)
+            if self.object.arete >= 4 and self.object.total_freebies() == 45:
+                form.add_error(
+                    None, "Arete Cannot Be Raised Above 4 At Character Creation"
                 )
                 return super().form_invalid(form)
             prac = Practice.objects.get(pk=form.data["example"])
