@@ -152,7 +152,7 @@ class ItemIndexView(View):
             chron_dict[chron] = c
 
         context["chron_dict"] = chron_dict
-        context["form"] = ItemCreationForm()
+        context["form"] = ItemCreationForm(user=self.request.user)
         if self.request.user.is_authenticated:
             context["header"] = self.request.user.profile.preferred_heading
         else:

@@ -218,7 +218,7 @@ class CharacterIndexView(View):
 
         context["chron_char_dict"] = chron_char_dict
         context["chron_group_dict"] = chron_group_dict
-        context["form"] = CharacterCreationForm()
+        context["form"] = CharacterCreationForm(user=self.request.user)
         if self.request.user.is_authenticated:
             context["header"] = self.request.user.profile.preferred_heading
         else:

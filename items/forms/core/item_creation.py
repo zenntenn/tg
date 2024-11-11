@@ -15,9 +15,17 @@ class ItemCreationForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        self.fields["item_type"].choices = [
-            (x.name, x.name.replace("_", " ").title())
-            for x in ObjectType.objects.filter(type="obj")
-            if x.name in []
-        ]
+        if user is not None:
+            if user.profile.is_st():
+                self.fields["item_type"].choices = [
+                    (x.name, x.name.replace("_", " ").title())
+                    for x in ObjectType.objects.filter(type="obj")
+                ]
+            else:
+                self.fields["item_type"].choices = [
+                    (x.name, x.name.replace("_", " ").title())
+                    for x in ObjectType.objects.filter(type="obj")
+                    if x.name in []
+                ]

@@ -15,9 +15,17 @@ class LocationCreationForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        self.fields["loc_type"].choices = [
-            (x.name, x.name.replace("_", " ").title())
-            for x in ObjectType.objects.filter(type="loc")
-            if x.name in []
-        ]
+        if user is not None:
+            if user.profile.is_st():
+                self.fields["loc_type"].choices = [
+                    (x.name, x.name.replace("_", " ").title())
+                    for x in ObjectType.objects.filter(type="loc")
+                ]
+            else:
+                self.fields["loc_type"].choices = [
+                    (x.name, x.name.replace("_", " ").title())
+                    for x in ObjectType.objects.filter(type="loc")
+                    if x.name in []
+                ]
