@@ -4,6 +4,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from characters.models.mage.mage import Mage
+from characters.models.mage.rote import Rote
 from game.models import Chronicle, Scene, STRelationship
 from items.models.core.item import ItemModel
 from locations.models.core.location import LocationModel
@@ -74,6 +76,33 @@ class Profile(models.Model):
             finished=True,
             xp_given=False,
         )
+
+    def characters_to_approve(self):
+        return Character.objects.filter(
+            status__in=["Un", "Sub"],
+            chronicle__in=self.user.chronicle_set.all(),
+        ).order_by("name")
+
+    def items_to_approve(self):
+        return ItemModel.objects.filter(
+            status__in=["Un", "Sub"],
+            chronicle__in=self.user.chronicle_set.all(),
+        ).order_by("name")
+
+    def locations_to_approve(self):
+        return LocationModel.objects.filter(
+            status__in=["Un", "Sub"],
+            chronicle__in=self.user.chronicle_set.all(),
+        ).order_by("name")
+
+    def rotes_to_approve(self):
+        d = {}
+        for r in Rote.objects.filter(
+            status__in=["Un", "Sub"],
+            chronicle__in=self.user.chronicle_set.all(),
+        ).order_by("name"):
+            d[r] = Mage.objects.filter(rotes__in=[r])
+        return d
 
     def objects_to_approve(self):
         to_approve = (
