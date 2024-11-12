@@ -17,7 +17,7 @@ class ItemCreationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        if user is not None:
+        if user.is_authenticated:
             if user.profile.is_st():
                 self.fields["item_type"].choices = [
                     (x.name, x.name.replace("_", " ").title())
