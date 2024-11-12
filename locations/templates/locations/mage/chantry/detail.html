@@ -25,35 +25,45 @@
         </div>
     {% endfor %}
     <div class="row">
-        <div class="col-sm">Ambassador</div>
-        <a class="col-sm" href="{{ object.ambassador.get_absolute_url }}">{{ object.ambassador.name }}</a>
-        <div class="col-sm">Node Tender</div>
-        <a class="col-sm" href="{{ object.node_tender.get_absolute_url }}">{{ object.node_tender.name }}</a>
+        {% if object.ambassador %}
+            <div class="col-sm">Ambassador</div>
+            <a class="col-sm" href="{{ object.ambassador.get_absolute_url }}">{{ object.ambassador.name }}</a>
+        {% endif %}
+        {% if object.node_tender %}
+            <div class="col-sm">Node Tender</div>
+            <a class="col-sm" href="{{ object.node_tender.get_absolute_url }}">{{ object.node_tender.name }}</a>
+        {% endif %}
     </div>
-    <div class="row">
-        <div class="col-sm">Investigators</div>
-    </div>
-    {% for character in object.investigator.all %}
+    {% if object.investigator.count != 0 %}
         <div class="row">
-            <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+            <div class="col-sm">Investigators</div>
         </div>
-    {% endfor %}
-    <div class="row">
-        <div class="col-sm">Guardians</div>
-    </div>
-    {% for character in object.guardian.all %}
+        {% for character in object.investigator.all %}
+            <div class="row">
+                <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if object.guardian.count != 0 %}
         <div class="row">
-            <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+            <div class="col-sm">Guardians</div>
         </div>
-    {% endfor %}
-    <div class="row">
-        <div class="col-sm">Teachers</div>
-    </div>
-    {% for character in object.teacher.all %}
+        {% for character in object.guardian.all %}
+            <div class="row">
+                <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if object.teacher.count != 0 %}
         <div class="row">
-            <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+            <div class="col-sm">Teachers</div>
         </div>
-    {% endfor %}
+        {% for character in object.teacher.all %}
+            <div class="row">
+                <a class="col-sm" href={{ character.get_absolute_url }}>{{ character.name }}</a>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock prominents %}
 {% block other %}
     <div class="row">
