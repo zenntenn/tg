@@ -28,6 +28,13 @@
         {% endblock contents %}
         <form method="post">
             {% block update %}
+                {% if user.is_authenticated %}
+                    {% if object.get_full_update_url %}
+                        {% if user.profile.is_st %}<a href="{{ object.get_full_update_url }}" class="btn btn-primary">Update</a>{% endif %}
+                    {% else %}
+                        {% if user.profile.is_st %}<a href="{{ object.get_update_url }}" class="btn btn-primary">Update</a>{% endif %}
+                    {% endif %}
+                {% endif %}
             {% endblock update %}
         </form>
     </div>
