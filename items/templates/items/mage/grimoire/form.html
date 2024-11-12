@@ -6,37 +6,30 @@
             {% if form.faction.parent is not None %}
                 {% if form.faction.parent.parent is not None %}
                     <a href="{{ form.faction.parent.parent.get_absolute_url }}">{{ form.faction.parent.parent }}</a> -
+                {% endif %}
+                <a href="{{ form.faction.parent.get_absolute_url }}">{{ form.faction.parent }}</a> -
             {% endif %}
-            <a href="{{ form.faction.parent.get_absolute_url }}">{{ form.faction.parent }}</a> -
-    {% endif %}
-    <a href="{{ form.faction.get_absolute_url }}">{{ form.faction }}</a>
-</div>
-<div class="col-sm">Primer</div>
-<div class="col-sm">{{ form.is_primer }}</div>
-</div>
-<div class="row">
-    <div class="col-sm">Medium</div>
-    <a class="col-sm" href="{{ form.medium.get_absolute_url }}">{{ form.medium }}</a>
-    <div class="col-sm">Cover Material</div>
-    <a class="col-sm" href="{{ form.cover_material.get_absolute_url }}">{{ form.cover_material }}</a>
-    <div class="col-sm">Inner Material</div>
-    <a class="col-sm" href="{{ form.inner_material.get_absolute_url }}">{{ form.inner_material }}</a>
-</div>
-<div class="row">
-    <div class="col-sm">Length</div>
-    <div class="col-sm">{{ form.length }}</div>
-    <div class="col-sm">Date Written</div>
-    <div class="col-sm">
-        {{ year }}
-        {% if date_written > 0 %}
-            AD
-        {% else %}
-            BC
-        {% endif %}
+            <a href="{{ form.faction.get_absolute_url }}">{{ form.faction }}</a>
+        </div>
+        <div class="col-sm">Primer</div>
+        <div class="col-sm">{{ form.is_primer }}</div>
     </div>
-    <div class="col-sm">Language</div>
-    <a class="col-sm" href="{{ form.language.get_absolute_url }}">{{ form.language }}</a>
-</div>
+    <div class="row">
+        <div class="col-sm">Medium</div>
+        <a class="col-sm" href="{{ form.medium.get_absolute_url }}">{{ form.medium }}</a>
+        <div class="col-sm">Cover Material</div>
+        <a class="col-sm" href="{{ form.cover_material.get_absolute_url }}">{{ form.cover_material }}</a>
+        <div class="col-sm">Inner Material</div>
+        <a class="col-sm" href="{{ form.inner_material.get_absolute_url }}">{{ form.inner_material }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Length</div>
+        <div class="col-sm">{{ form.length }}</div>
+        <div class="col-sm">Date Written</div>
+        <div class="col-sm">{{ form.date_written }}</div>
+        <div class="col-sm">Language</div>
+        <a class="col-sm" href="{{ form.language.get_absolute_url }}">{{ form.language }}</a>
+    </div>
 {% endblock creation %}
 {% block powers %}
     <h2 class="{{ form.get_heading }}">Focus</h2>
@@ -62,23 +55,16 @@
         <div class="col-sm">Spheres</div>
         <div class="col-sm">{{ form.spheres }}</div>
         <div class="col-sm"></div>
-        <div class="col-sm">
-        </div>
+        <div class="col-sm"></div>
     </div>
     <div class="row">
-        <h2 class="col-sm {{ form.get_heading }}">
-            Effects
-        </h2>
+        <h2 class="col-sm {{ form.get_heading }}">Effects</h2>
     </div>
     {% for row in effects %}
         <div class="row">
             {% for effect in row %}
-                <a class="col-sm" href="{{ effect.get_absolute_url }}">
-                    {{ effect.name }}
-                </a>
-                <div class="col-sm dots">
-                    {{ effect.spheres }}
-                </div>
+                <a class="col-sm" href="{{ effect.get_absolute_url }}">{{ effect.name }}</a>
+                <div class="col-sm dots">{{ effect.spheres }}</div>
             {% endfor %}
         </div>
     {% endfor %}
