@@ -6,37 +6,37 @@
             {% if object.faction.parent is not None %}
                 {% if object.faction.parent.parent is not None %}
                     <a href="{{ object.faction.parent.parent.get_absolute_url }}">{{ object.faction.parent.parent }}</a> -
+                {% endif %}
+                <a href="{{ object.faction.parent.get_absolute_url }}">{{ object.faction.parent }}</a> -
             {% endif %}
-            <a href="{{ object.faction.parent.get_absolute_url }}">{{ object.faction.parent }}</a> -
-    {% endif %}
-    <a href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
-</div>
-<div class="col-sm">Primer</div>
-<div class="col-sm">{{ object.is_primer }}</div>
-</div>
-<div class="row">
-    <div class="col-sm">Medium</div>
-    <a class="col-sm" href="{{ object.medium.get_absolute_url }}">{{ object.medium }}</a>
-    <div class="col-sm">Cover Material</div>
-    <a class="col-sm" href="{{ object.cover_material.get_absolute_url }}">{{ object.cover_material }}</a>
-    <div class="col-sm">Inner Material</div>
-    <a class="col-sm" href="{{ object.inner_material.get_absolute_url }}">{{ object.inner_material }}</a>
-</div>
-<div class="row">
-    <div class="col-sm">Length</div>
-    <div class="col-sm">{{ object.length }}</div>
-    <div class="col-sm">Date Written</div>
-    <div class="col-sm">
-        {{ year }}
-        {% if object.date_written > 0 %}
-            AD
-        {% else %}
-            BC
-        {% endif %}
+            <a href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
+        </div>
+        <div class="col-sm">Primer</div>
+        <div class="col-sm">{{ object.is_primer }}</div>
     </div>
-    <div class="col-sm">Language</div>
-    <a class="col-sm" href="{{ object.language.get_absolute_url }}">{{ object.language }}</a>
-</div>
+    <div class="row">
+        <div class="col-sm">Medium</div>
+        <a class="col-sm" href="{{ object.medium.get_absolute_url }}">{{ object.medium }}</a>
+        <div class="col-sm">Cover Material</div>
+        <a class="col-sm" href="{{ object.cover_material.get_absolute_url }}">{{ object.cover_material }}</a>
+        <div class="col-sm">Inner Material</div>
+        <a class="col-sm" href="{{ object.inner_material.get_absolute_url }}">{{ object.inner_material }}</a>
+    </div>
+    <div class="row">
+        <div class="col-sm">Length</div>
+        <div class="col-sm">{{ object.length }}</div>
+        <div class="col-sm">Date Written</div>
+        <div class="col-sm">
+            {{ year }}
+            {% if object.date_written > 0 %}
+                AD
+            {% else %}
+                BC
+            {% endif %}
+        </div>
+        <div class="col-sm">Language</div>
+        <a class="col-sm" href="{{ object.language.get_absolute_url }}">{{ object.language }}</a>
+    </div>
 {% endblock creation %}
 {% block powers %}
     <h2 class="{{ object.get_heading }}">Focus</h2>
@@ -62,22 +62,22 @@
         <div class="col-sm">Spheres</div>
         <div class="col-sm">{{ spheres| safe }}</div>
         <div class="col-sm"></div>
-        <div class="col-sm">
-        </div>
+        <div class="col-sm"></div>
     </div>
     <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">
-            Rotes
-        </h2>
+        <h2 class="col-sm {{ object.get_heading }}">Rotes</h2>
     </div>
-    <div class="row">
-        {% for rote in object.rotes.all %}
-            {% if forloop.counter0|divisibleby:2 %}
+    {% for rote in object.rotes.all %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <a href="{{ rote.get_absolute_url }}">{{ rote.name }}</a>
+                    <div class="dots">{{ rote.effect.spheres }}</div>
+                    <a href="{{ rote.practice.get_absolute_url }}">{{ rote.practice }}</a>
+                </div>
             </div>
-            <div class="row">
-            {% endif %}
-            <a class="col-sm-6" href="{{ rote.get_absolute_url }}">{{ rote }}</a>
-            {% if forloop.last %}</div>{% endif %}
+        </div>
     {% empty %}
+        <div class="col">No rotes available.</div>
     {% endfor %}
 {% endblock powers %}
