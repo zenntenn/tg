@@ -112,13 +112,13 @@
         {% block footer %}
             {% load sanitize_text %}
             {% if messages %}{% endif %}
-            <u1 class="messages">
+            <ul class="messages">
             {% for message in messages %}
                 <li class="{{ message.tags }}">
                     {{ message|sanitize_html }}<a href="#" class="close">x</a>
                 </li>
             {% endfor %}
-            </u1>
+            </ul>
         {% endblock footer %}
         {% block extrascripts %}
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
