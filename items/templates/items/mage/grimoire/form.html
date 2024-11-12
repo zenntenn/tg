@@ -58,14 +58,9 @@
         <div class="col-sm"></div>
     </div>
     <div class="row">
-        <h2 class="col-sm {{ form.get_heading }}">Effects</h2>
+        <h2 class="col-sm {{ form.get_heading }}">Rotes</h2>
     </div>
-    {% for row in effects %}
-        <div class="row">
-            {% for effect in row %}
-                <a class="col-sm" href="{{ effect.get_absolute_url }}">{{ effect.name }}</a>
-                <div class="col-sm dots">{{ effect.spheres }}</div>
-            {% endfor %}
-        </div>
-    {% endfor %}
+    <div class="row">
+        <div class="col-sm">{{ form.rotes }}</div>
+    </div>
 {% endblock powers %}
