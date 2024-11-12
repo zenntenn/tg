@@ -195,6 +195,15 @@ class Mage(MtAHuman):
         verbose_name_plural = "Mages"
         ordering = ["name"]
 
+    def get_affinity_sphere_name(self):
+        if self.affinity_sphere == Sphere.objects.get(name="Correspondence"):
+            return self.get_corr_name_display()
+        if self.affinity_sphere == Sphere.objects.get(name="Prime"):
+            return self.get_prime_name_display()
+        if self.affinity_sphere == Sphere.objects.get(name="Spirit"):
+            return self.get_spirit_name_display()
+        return self.affinity_sphere
+
     def get_items_owned(self):
         return ItemModel.objects.filter(owned_by=self)
 
