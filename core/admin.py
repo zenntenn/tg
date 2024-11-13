@@ -1,4 +1,4 @@
-from core.models import Book, BookReference, Language, NewsItem
+from core.models import Book, BookReference, HouseRule, Language, NewsItem
 from django.contrib import admin
 
 admin.site.register(NewsItem)
@@ -19,3 +19,5 @@ class LanguageAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name = "Language"
         verbose_name_plural = "Languages"
+
+admin.site.register(HouseRule)
