@@ -3,7 +3,7 @@
 </div>
 <div class="row">
     <div class="col-sm">
-        Create your Wonder. It may be built on up to {{ points }} points. These go towards effects (1 for Charms and Artifacts, up to {{ object.wonder }} for Talismans) at a cost of the total number of spheres (maximum of {{ object.wonder }} for Charms and twice that for Artifacts and Talismans), Resonance ({{ object.wonder }} ranks required), and additional Arete for Charms and Talismans.
+        Create your Wonder. It may be built on up to {{ points }} points. These go towards effects (1 for Charms and Artifacts, up to {{ current_wonder.rating }} for Talismans) at a cost of the total number of spheres (maximum of {{ current_wonder.rating }} for Charms and twice that for Artifacts and Talismans), Resonance ({{ object.wonder }} ranks required), and additional Arete for Charms and Talismans.
     </div>
 </div>
 <div class="row">
@@ -125,7 +125,9 @@
             <div class="col-sm">{{ effects_form_context.empty_form.description }}</div>
         </div>
     </div>
-    <button type="button" id="{{ effects_form_context.add_button_id }}" class="invisible">Add Power</button>
+    <button type="button"
+            id="{{ effects_form_context.add_button_id }}"
+            class="invisible">Add Power</button>
     {{ effects_form_js|safe }}
     {{ resonance_form_js|safe }}
     <br>
