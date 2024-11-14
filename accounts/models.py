@@ -105,27 +105,10 @@ class Profile(models.Model):
         return d
 
     def objects_to_approve(self):
-        to_approve = (
-            list(
-                Character.objects.filter(
-                    status__in=["Un", "Sub"],
-                    chronicle__in=self.user.chronicle_set.all(),
-                ).order_by("name")
-            )
-            + list(
-                LocationModel.objects.filter(
-                    status__in=["Un", "Sub"],
-                    chronicle__in=self.user.chronicle_set.all(),
-                ).order_by("name")
-            )
-            + list(
-                ItemModel.objects.filter(
-                    status__in=["Un", "Sub"],
-                    chronicle__in=self.user.chronicle_set.all(),
-                ).order_by("name")
-            )
-        )
-        to_approve.sort(key=lambda x: x.name)
+        to_approve = list(self.characters_to_approve())
+        to_approve.extend(list(self.items_to_approve()))
+        to_approve.extend(list(self.locations_to_approve()))
+        to_approve.extend(list(self.rotes_to_approve()))
         return to_approve
 
     def freebies_to_approve(self):
