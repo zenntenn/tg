@@ -105,3 +105,7 @@ populate_db/*
 media/*
 remove_pycache.sh
 selenium_fix.sh
+
+# Visual Studio stuff
+.vs/
+*.pyproj
