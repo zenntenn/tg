@@ -76,6 +76,13 @@
             });
         });
     });
+
+    $(document).ready(function() {
+        $('#id_select_or_create_rote').click(function() {
+            $('#id_ability').empty();
+            $('#id_ability').append($('<option>', { value: '', text: '--------' }));
+        });
+    });
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

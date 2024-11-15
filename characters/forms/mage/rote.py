@@ -24,7 +24,7 @@ class RoteCreationForm(forms.Form):
     name = forms.CharField(max_length=100, required=False)
     practice = forms.ModelChoiceField(queryset=Practice.objects.none(), required=False)
     attribute = forms.ModelChoiceField(queryset=Attribute.objects.all(), required=False)
-    ability = forms.ModelChoiceField(queryset=Ability.objects.none(), required=False)
+    ability = forms.ModelChoiceField(queryset=Ability.objects.all(), required=False)
     systems = forms.CharField(widget=forms.Textarea(), required=False)
     description = forms.CharField(widget=forms.Textarea(), required=False)
     correspondence = forms.IntegerField(min_value=0, initial=0, required=False)
