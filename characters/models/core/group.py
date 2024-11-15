@@ -1,5 +1,7 @@
+from collections import defaultdict
 import random
 
+from characters.models.core.background_block import BackgroundRating, PooledBackgroundRating
 from characters.models.core.human import Human
 from core.models import Model
 from django.contrib.auth.models import User
@@ -42,6 +44,17 @@ class Group(Model):
     def random_name(self):
         self.name = f"Random Group {Group.objects.count()}"
         return True
+    
+    def update_pooled_backgrounds(self):
+        bgs = BackgroundRating.objects.filter(char__in=self.members.all(), pooled=True)
+        d = defaultdict(lambda : defaultdict(int))
+        for bgr in bgs:
+            d[bgr.bg][bgr.note] += bgr.rating
+        for bg in d.keys():
+            for note in d[bg].keys():
+                p = PooledBackgroundRating.objects.get_or_create(bg=bg, note=note, group=self)[0]
+                p.rating = d[bg][note]
+                p.save()
 
     def random(
         self,
