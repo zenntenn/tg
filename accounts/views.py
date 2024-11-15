@@ -63,6 +63,9 @@ class ProfileView(DetailView):
             ][0]
             approved.status = "App"
             approved.save()
+            if hasattr(approved, "group_set"):
+                for g in approved.group_set.all():
+                    g.update_pooled_backgrounds()
         elif len([x for x in request.POST.keys() if x.endswith("_edit")]):
             to_edit = [
                 x.replace("_edit", "")
