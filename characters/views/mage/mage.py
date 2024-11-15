@@ -781,9 +781,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields[
-            "affinity_sphere"
-        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
+        form.fields["affinity_sphere"].queryset = (
+            self.object.get_affinity_sphere_options().order_by("name")
+        )
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
@@ -1200,8 +1200,9 @@ class MageRoteView(SpecialUserMixin, CreateView):
 
     def form_invalid(self, form):
         errors = form.errors
-        if "ability" in errors:
-            del errors["ability"]
+        print(errors)
+        # if "ability" in errors:
+        #     del errors["ability"]
         if not errors:
             return self.form_valid(form)
         return super().form_invalid(form)
@@ -1209,6 +1210,54 @@ class MageRoteView(SpecialUserMixin, CreateView):
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
         mage = context["object"]
+        print(form.cleaned_data)
+        if (
+            not form.cleaned_data["select_or_create_rote"]
+            and not form.cleaned_data["rote_options"]
+        ):
+            form.add_error(None, "Must create or select a rote")
+            return super().form_invalid(form)
+        if form.cleaned_data["select_or_create_rote"]:
+            if (
+                not form.cleaned_data["select_or_create_effect"]
+                and not form.cleaned_data["effect_options"]
+            ):
+                form.add_error(None, "Must create or select an effect")
+                return super().form_invalid(form)
+            if not form.cleaned_data["name"]:
+                form.add_error(None, "Must choose rote name")
+                return super().form_invalid(form)
+            if not form.cleaned_data["practice"]:
+                form.add_error(None, "Must choose rote Practice")
+                return super().form_invalid(form)
+            if not form.cleaned_data["attribute"]:
+                form.add_error(None, "Must choose rote Attribute")
+                return super().form_invalid(form)
+            if not form.cleaned_data["ability"]:
+                form.add_error(None, "Must choose rote Ability")
+                return super().form_invalid(form)
+            if not form.cleaned_data["description"]:
+                form.add_error(None, "Must choose rote description")
+                return super().form_invalid(form)
+            if form.cleaned_data["select_or_create_effect"]:
+                if not form.cleaned_data["systems"]:
+                    form.add_error(None, "Must choose rote systems")
+                    return super().form_invalid(form)
+                if (
+                    form.cleaned_data["correspondence"]
+                    + form.cleaned_data["entropy"]
+                    + form.cleaned_data["forces"]
+                    + form.cleaned_data["life"]
+                    + form.cleaned_data["matter"]
+                    + form.cleaned_data["mind"]
+                    + form.cleaned_data["prime"]
+                    + form.cleaned_data["spirit"]
+                    + form.cleaned_data["time"]
+                    == 0
+                ):
+                    form.add_error(None, "Effects must have sphere ratings")
+                    return super().form_invalid(form)
+
         if form.save(mage):
             if mage.rote_points == 0:
                 mage.creation_status += 1
