@@ -316,37 +316,15 @@ class MtAFamiliarView(SpecialUserMixin, FormView):
         )
         return context
 
-    def form_invalid(self, form):
-        errors = form.errors
-        if "faction" in errors:
-            del errors["faction"]
-        if "subfaction" in errors:
-            del errors["subfaction"]
-
-        if not errors:
-            return self.form_valid(form)
-        return super().form_invalid(form)
-
     def form_valid(self, form):
         context = self.get_context_data()
         obj = context["object"]
 
-        if form.data["faction"]:
-            faction = MageFaction.objects.get(pk=form.data["faction"])
-        else:
-            faction = None
-        if form.data["subfaction"]:
-            subfaction = MageFaction.objects.get(pk=form.data["subfaction"])
-        else:
-            subfaction = None
 
         c = Companion(
             name=form.cleaned_data["name"],
             nature=form.cleaned_data["nature"],
             demeanor=form.cleaned_data["demeanor"],
-            affiliation=form.cleaned_data["affiliation"],
-            faction=faction,
-            subfaction=subfaction,
             companion_type="familiar",
             concept=form.cleaned_data["concept"],
             chronicle=obj.chronicle,
