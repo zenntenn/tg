@@ -499,7 +499,7 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
 
             for resonance in resonance_data:
                 WonderResonanceRating.objects.create(
-                    wonder=None,
+                    wonder=w,
                     resonance=resonance["resonance"],
                     rating=resonance["rating"],
                 )
