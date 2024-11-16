@@ -430,7 +430,7 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 owner=obj.owner,
                 status="Sub",
             )
-            w.owned_by.add(obj)
+            
             points = 3 * w.rank
 
             resonance_data = self.get_form_data("resonance_form")
@@ -489,6 +489,7 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 return self.form_invalid(form)
 
             w.save()
+            w.owned_by.add(obj)
             for e in effects:
                 e.save()
                 if wonder_type in ["charm", "artifact"]:
