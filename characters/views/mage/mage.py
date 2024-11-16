@@ -179,10 +179,11 @@ class LoadExamplesView(View):
             examples = Practice.objects.exclude(
                 polymorphic_ctype__model="specializedpractice"
             ).exclude(polymorphic_ctype__model="corruptedpractice")
-            spec = SpecializedPractice.objects.get(faction=m.faction)
-            examples = examples.exclude(
-                id=spec.parent_practice.id
-            ) | Practice.objects.filter(id=spec.id)
+            spec = SpecializedPractice.objects.filter(faction=m.faction)
+            if spec.count() > 0:
+                examples = examples.exclude(
+                    id=spec.parent_practice.id
+                ) | Practice.objects.filter(id=spec.id)
             ids = PracticeRating.objects.filter(mage=m, rating=5).values_list(
                 "practice__id", flat=True
             )
