@@ -20,4 +20,5 @@ class LanguageAdmin(admin.ModelAdmin):
         verbose_name = "Language"
         verbose_name_plural = "Languages"
 
+
 admin.site.register(HouseRule)

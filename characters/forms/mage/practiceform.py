@@ -21,10 +21,9 @@ class PracticeRatingForm(forms.ModelForm):
             q = Practice.objects.exclude(
                 polymorphic_ctype__model="specializedpractice"
             ).exclude(polymorphic_ctype__model="corruptedpractice")
-            spec = SpecializedPractice.objects.get(faction=mage.faction)
-            q = q.exclude(id=spec.parent_practice.id) | Practice.objects.filter(
-                id=spec.id
-            )
+            spec = SpecializedPractice.objects.filter(faction=mage.faction)
+            if spec.count() > 0:
+                q = q.exclude(id=[x.parent_practice.id for x in spec]) | spec
             self.fields["practice"].queryset = q.order_by("name")
         else:
             self.fields["practice"].queryset = Practice.objects.exclude(
@@ -46,10 +45,9 @@ class BasePracticeRatingFormSet(BaseInlineFormSet):
                 polymorphic_ctype__model="specializedpractice"
             ).exclude(polymorphic_ctype__model="corruptedpractice")
             if self.mage.faction is not None:
-                spec = SpecializedPractice.objects.get(faction=self.mage.faction)
-                q = q.exclude(id=spec.parent_practice.id) | Practice.objects.filter(
-                    id=spec.id
-                )
+                spec = SpecializedPractice.objects.filter(faction=self.mage.faction)
+                if spec.count() > 0:
+                    q = q.exclude(id=[x.parent_practice.id for x in spec]) | spec
             return q.order_by("name")
         return Practice.objects.exclude(
             polymorphic_ctype__model="specializedpractice"

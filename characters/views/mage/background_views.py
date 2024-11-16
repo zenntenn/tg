@@ -320,7 +320,6 @@ class MtAFamiliarView(SpecialUserMixin, FormView):
         context = self.get_context_data()
         obj = context["object"]
 
-
         c = Companion(
             name=form.cleaned_data["name"],
             nature=form.cleaned_data["nature"],
@@ -430,7 +429,7 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
                 owner=obj.owner,
                 status="Sub",
             )
-            
+
             points = 3 * w.rank
 
             resonance_data = self.get_form_data("resonance_form")
