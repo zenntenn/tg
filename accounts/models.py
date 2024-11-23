@@ -45,6 +45,8 @@ class Profile(models.Model):
         default="themes/default.css",
     )
 
+    discord_id = models.CharField(max_length=100, default="")
+
     class Meta:
         verbose_name = "Profile"
         verbose_name_plural = "Profiles"

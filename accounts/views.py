@@ -100,5 +100,5 @@ class ProfileView(DetailView):
 
 class ProfileUpdateView(UpdateView):
     model = Profile
-    fields = ["preferred_heading", "theme"]
+    form_class = ProfileUpdateForm
     template_name = "accounts/form.html"
