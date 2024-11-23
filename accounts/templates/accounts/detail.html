@@ -1,448 +1,439 @@
 {% extends "core/base.html" %}
 {% block title %}
-    {{ object.user.username }}
+{{ object.user.username }}
 {% endblock title %}
 {% block content %}
-    {% load field %}
-    <div class="centertext container">
+{% load field %}
+<div class="centertext container">
+    <div class="row">
+        <h1 class="col-sm {{ object.preferred_heading }}">{{ object.user.username }}</h1>
+    </div>
+    {% if user == object.user %}
+    <form method="post" action="">
+        {% csrf_token %}
         <div class="row">
-            <h1 class="col-sm {{ object.preferred_heading }}">{{ object.user.username }}</h1>
+            <div class="col-sm">Heading</div>
+            <div class="col-sm">{{ object.get_preferred_heading_display }}</div>
         </div>
+        <div class="row">
+            <div class="col-sm">Theme</div>
+            <div class="col-sm">{{ object.get_theme_display }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Discord</div>
+            <div class="col-sm">{{ object.discord_id }}</div>
+        </div>
+        {% endif %}
         {% if user == object.user %}
-            <form method="post" action="">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-sm">Heading</div>
-                    <div class="col-sm">{{ object.get_preferred_heading_display }}</div>
+        <div class="row">
+            <div class="col-sm">
+                <input type="submit" value="Edit Preferences" name="Edit Preferences" />
+            </div>
+        </div>
+    </form>
+    {% endif %}
+    {% if object.is_st %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Chronicles STed</h2>
+    </div>
+    <div class="row">
+        {% for chronicle in object.st_relations %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center">
+                    <div>
+                        <a href="{{ chronicle.get_absolute_url }}">{{ chronicle.name }}</a>
+                    </div>
+                    {% for str in object.st_relations|field:chronicle %}
+                    <div class="text-center">
+                        <div>{{ str.gameline }}</div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <div class="row">
-                    <div class="col-sm">Theme</div>
-                    <div class="col-sm">{{ object.get_theme_display }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">
-                        <input type="submit" value="Edit Preferences" name="Edit Preferences" />
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% block my_characters %}
+    {% if object.my_characters %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Characters</h2>
+    </div>
+    <div class="row">
+        {% for char in object.my_characters %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center">
+                    <div>
+                        <a href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                    </div>
+                    <div>
+                        <div>{{ char.get_status_display }}</div>
+                    </div>
+                    <div>
+                        <div>{{ char.get_full_gameline }}</div>
+                    </div>
+                    <div>
+                        <div>{{ char.get_type }}</div>
                     </div>
                 </div>
-            </form>
-        {% endif %}
-        {% if object.is_st %}
-            <div class="row">
-                <h2 class="col-sm {{ object.preferred_heading }}">Chronicles STed</h2>
             </div>
-            <div class="row">
-                {% for chronicle in object.st_relations %}
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <div class="card mb-3">
-                            <div class="card-body text-center">
-                                <div>
-                                    <a href="{{ chronicle.get_absolute_url }}">{{ chronicle.name }}</a>
+        </div>
+        {% empty %}
+        <div class="col">No Characters.</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endblock my_characters %}
+    {% block my_locations %}
+    {% if object.my_locations %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Locations</h2>
+    </div>
+    <div class="row">
+        {% for loc in object.my_locations %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center">
+                    <div>
+                        <a href="{{ loc.get_absolute_url }}">{{ loc.name }}</a>
+                    </div>
+                    <div>
+                        <div>{{ loc.get_status_display }}</div>
+                    </div>
+                    <div>
+                        <div>{{ loc.get_full_gameline }}</div>
+                    </div>
+                    <div>
+                        <div>{{ loc.type.title }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">No Locations.</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endblock my_locations %}
+    {% block my_items %}
+    {% if object.my_items %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Items</h2>
+    </div>
+    <div class="row">
+        {% for item in object.my_items %}
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center">
+                    <div>
+                        <a href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                    </div>
+                    <div>
+                        <div>{{ item.get_status_display }}</div>
+                    </div>
+                    <div>
+                        <div>{{ item.get_full_gameline }}</div>
+                    </div>
+                    <div>
+                        <div>{{ item.type.title }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">No Items.</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endblock my_items %}
+    {% if object.is_st %}
+    {% if user == object.user %}
+    {% if object.xp_requests %}
+    <div class="row">
+        <h2 class="col-sm {{ user.profile.preferred_heading }}">XP Requests</h2>
+    </div>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="row">
+            {% for scene in object.xp_requests %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <h3>
+                            <a class="col-sm {{ user.profile.preferred_heading }}">{{ scene.name }}</a>
+                        </h3>
+                        {% for character in scene.characters.all %}
+                        <div>
+                            <div>
+                                <a class="col-sm" href="{{ character.get_absolute_url }}">{{ character.name }}</a>
+                                <label>
+                                    <input type="number" value="{{ character.name }}" name="{{ character.name }}" />
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <input type="submit" value="XP for {{ scene.name }}" name="XP for {{ scene.name }}" />
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">No Characters.</div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+    {% if object.freebies_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Freebies To Approve</h2>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for obj in object.freebies_to_approve %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                        </div>
+                        <div>
+                            {% if obj.owner is not None %}
+                            <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
+                            {% else %}
+                            <div>No Owner</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>{{ obj.get_status_display }}</div>
+                        </div>
+                        <div>
+                            {% if obj.get_type %}
+                            <div>{{ obj.get_type }}</div>
+                            {% else %}
+                            <div>{{ obj.type.title }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input type="number" step="1" name="{{ obj.name }}_freebiesField" min="0" max="15"
+                                value="0">
+                        </div>
+                        <div>
+                            Cabal:
+                            <input type="checkbox" name="{{ obj.name }}_checkbox" id="{{ obj.name }}_checkbox">
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_freebies" value="Add Freebies" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">No Characters.</div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+    {% if object.characters_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Characters To Approve</h2>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for obj in object.characters_to_approve %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                        </div>
+                        <div>
+                            {% if obj.owner is not None %}
+                            <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
+                            {% else %}
+                            <div>No Owner</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>{{ obj.get_status_display }}</div>
+                        </div>
+                        <div>
+                            {% if obj.get_type %}
+                            <div>{{ obj.get_type }}</div>
+                            {% else %}
+                            <div>{{ obj.type.title }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">No Characters.</div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+    {% if object.locations_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Locations To Approve</h2>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for obj in object.locations_to_approve %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                        </div>
+                        <div>
+                            {% if obj.owner is not None %}
+                            <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
+                            {% else %}
+                            <div>No Owner</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>{{ obj.get_status_display }}</div>
+                        </div>
+                        <div>
+                            {% if obj.get_type %}
+                            <div>{{ obj.get_type }}</div>
+                            {% else %}
+                            <div>{{ obj.type.title }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">No Locations.</div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+    {% if object.items_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Items To Approve</h2>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for obj in object.items_to_approve %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                        </div>
+                        <div>
+                            {% if obj.owner is not None %}
+                            <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
+                            {% else %}
+                            <div>No Owner</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>{{ obj.get_status_display }}</div>
+                        </div>
+                        <div>
+                            {% if obj.get_type %}
+                            <div>{{ obj.get_type }}</div>
+                            {% else %}
+                            <div>{{ obj.type.title }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">No Items.</div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+    {% if object.rotes_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Rotes To Approve</h2>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for obj in object.rotes_to_approve %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                        </div>
+                        <div>
+                            <div>{{ obj.get_status_display }}</div>
+                        </div>
+                        <div>
+                            <div>
+                                {% for c in object.rotes_to_approve|field:obj %}
+                                <div class="text-center">
+                                    <a href="{{ c.get_absolute_url }}">{{ c }}</a>
                                 </div>
-                                {% for str in object.st_relations|field:chronicle %}
-                                    <div class="text-center">
-                                        <div>{{ str.gameline }}</div>
-                                    </div>
                                 {% endfor %}
                             </div>
                         </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
+                        </div>
+                        <div>
+                            <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
+                        </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% endif %}
-        {% block my_characters %}
-            {% if object.my_characters %}
-                <div class="row">
-                    <h2 class="col-sm {{ object.preferred_heading }}">Characters</h2>
-                </div>
-                <div class="row">
-                    {% for char in object.my_characters %}
-                        <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="card mb-3">
-                                <div class="card-body text-center">
-                                    <div>
-                                        <a href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                                    </div>
-                                    <div>
-                                        <div>{{ char.get_status_display }}</div>
-                                    </div>
-                                    <div>
-                                        <div>{{ char.get_full_gameline }}</div>
-                                    </div>
-                                    <div>
-                                        <div>{{ char.get_type }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <div class="col">No Characters.</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endblock my_characters %}
-        {% block my_locations %}
-            {% if object.my_locations %}
-                <div class="row">
-                    <h2 class="col-sm {{ object.preferred_heading }}">Locations</h2>
-                </div>
-                <div class="row">
-                    {% for loc in object.my_locations %}
-                        <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="card mb-3">
-                                <div class="card-body text-center">
-                                    <div>
-                                        <a href="{{ loc.get_absolute_url }}">{{ loc.name }}</a>
-                                    </div>
-                                    <div>
-                                        <div>{{ loc.get_status_display }}</div>
-                                    </div>
-                                    <div>
-                                        <div>{{ loc.get_full_gameline }}</div>
-                                    </div>
-                                    <div>
-                                        <div>{{ loc.type.title }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <div class="col">No Locations.</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endblock my_locations %}
-        {% block my_items %}
-            {% if object.my_items %}
-                <div class="row">
-                    <h2 class="col-sm {{ object.preferred_heading }}">Items</h2>
-                </div>
-                <div class="row">
-                    {% for item in object.my_items %}
-                        <div class="col-sm-12 col-md-6 col-lg-4">
-                            <div class="card mb-3">
-                                <div class="card-body text-center">
-                                    <div>
-                                        <a href="{{ item.get_absolute_url }}">{{ item.name }}</a>
-                                    </div>
-                                    <div>
-                                        <div>{{ item.get_status_display }}</div>
-                                    </div>
-                                    <div>
-                                        <div>{{ item.get_full_gameline }}</div>
-                                    </div>
-                                    <div>
-                                        <div>{{ item.type.title }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <div class="col">No Items.</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endblock my_items %}
-        {% if object.is_st %}
-            {% if user == object.user %}
-                {% if object.xp_requests %}
-                    <div class="row">
-                        <h2 class="col-sm {{ user.profile.preferred_heading }}">XP Requests</h2>
-                    </div>
-                    <form method="post" action="">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for scene in object.xp_requests %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
-                                            <h3>
-                                                <a class="col-sm {{ user.profile.preferred_heading }}">{{ scene.name }}</a>
-                                            </h3>
-                                            {% for character in scene.characters.all %}
-                                                <div>
-                                                    <div>
-                                                        <a class="col-sm" href="{{ character.get_absolute_url }}">{{ character.name }}</a>
-                                                        <label>
-                                                            <input type="number"
-                                                                   value="{{ character.name }}"
-                                                                   name="{{ character.name }}" />
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                            <input type="submit"
-                                                   value="XP for {{ scene.name }}"
-                                                   name="XP for {{ scene.name }}" />
-                                        </div>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <div class="col">No Characters.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
-                {% endif %}
-                {% if object.freebies_to_approve %}
-                    <div class="row">
-                        <h2 class="col-sm {{ object.preferred_heading }}">Freebies To Approve</h2>
-                    </div>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for obj in object.freebies_to_approve %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
-                                            <div>
-                                                <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
-                                            </div>
-                                            <div>
-                                                {% if obj.owner is not None %}
-                                                    <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
-                                                {% else %}
-                                                    <div>No Owner</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <div>{{ obj.get_status_display }}</div>
-                                            </div>
-                                            <div>
-                                                {% if obj.get_type %}
-                                                    <div>{{ obj.get_type }}</div>
-                                                {% else %}
-                                                    <div>{{ obj.type.title }}</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <input type="number"
-                                                       step="1"
-                                                       name="{{ obj.name }}_freebiesField"
-                                                       min="0"
-                                                       max="15"
-                                                       value="0">
-                                            </div>
-                                            <div>
-                                                Cabal:
-                                                <input type="checkbox"
-                                                       name="{{ obj.name }}_checkbox"
-                                                       id="{{ obj.name }}_checkbox">
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_freebies" value="Add Freebies" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <div class="col">No Characters.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
-                {% endif %}
-                {% if object.characters_to_approve %}
-                    <div class="row">
-                        <h2 class="col-sm {{ object.preferred_heading }}">Characters To Approve</h2>
-                    </div>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for obj in object.characters_to_approve %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
-                                            <div>
-                                                <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
-                                            </div>
-                                            <div>
-                                                {% if obj.owner is not None %}
-                                                    <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
-                                                {% else %}
-                                                    <div>No Owner</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <div>{{ obj.get_status_display }}</div>
-                                            </div>
-                                            <div>
-                                                {% if obj.get_type %}
-                                                    <div>{{ obj.get_type }}</div>
-                                                {% else %}
-                                                    <div>{{ obj.type.title }}</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <div class="col">No Characters.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
-                {% endif %}
-                {% if object.locations_to_approve %}
-                    <div class="row">
-                        <h2 class="col-sm {{ object.preferred_heading }}">Locations To Approve</h2>
-                    </div>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for obj in object.locations_to_approve %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
-                                            <div>
-                                                <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
-                                            </div>
-                                            <div>
-                                                {% if obj.owner is not None %}
-                                                    <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
-                                                {% else %}
-                                                    <div>No Owner</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <div>{{ obj.get_status_display }}</div>
-                                            </div>
-                                            <div>
-                                                {% if obj.get_type %}
-                                                    <div>{{ obj.get_type }}</div>
-                                                {% else %}
-                                                    <div>{{ obj.type.title }}</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <div class="col">No Locations.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
-                {% endif %}
-                {% if object.items_to_approve %}
-                    <div class="row">
-                        <h2 class="col-sm {{ object.preferred_heading }}">Items To Approve</h2>
-                    </div>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for obj in object.items_to_approve %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
-                                            <div>
-                                                <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
-                                            </div>
-                                            <div>
-                                                {% if obj.owner is not None %}
-                                                    <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
-                                                {% else %}
-                                                    <div>No Owner</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <div>{{ obj.get_status_display }}</div>
-                                            </div>
-                                            <div>
-                                                {% if obj.get_type %}
-                                                    <div>{{ obj.get_type }}</div>
-                                                {% else %}
-                                                    <div>{{ obj.type.title }}</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <div class="col">No Items.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
-                {% endif %}
-                {% if object.rotes_to_approve %}
-                    <div class="row">
-                        <h2 class="col-sm {{ object.preferred_heading }}">Rotes To Approve</h2>
-                    </div>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for obj in object.rotes_to_approve %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
-                                            <div>
-                                                <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
-                                            </div>
-                                            <div>
-                                                <div>{{ obj.get_status_display }}</div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    {% for c in object.rotes_to_approve|field:obj %}
-                                                        <div class="text-center">
-                                                            <a href="{{ c.get_absolute_url }}">{{ c }}</a>
-                                                        </div>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_approve" value="Approve" />
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_edit" value="Edit" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% empty %}
-                                <div class="col">No Items.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
-                {% endif %}
-                {% if object.image_to_approve %}
-                    <h2 class="col-sm {{ user.profile.preferred_heading }}">Images To Approve</h2>
-                    {% for char in object.image_to_approve %}
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            <div class="row border">
-                                <a class="col-sm-3 border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                                <div class="col-sm-3 border">
-                                    {% if char.owner is not None %}{{ char.owner }}{% endif %}
-                                </div>
-                                <div class="cols-sm-3 border">
-                                    <img src="{{ char.image.url }}"
-                                         width="300"
-                                         height="{{ image.height }}"
-                                         alt="image of {{ char.name }}" />
-                                </div>
-                                <input class="col-sm-2 border"
-                                       type="submit"
-                                       name="image {{ char.name }}"
-                                       value="Approve Image" />
-                            </form>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endif %}
-        {% endif %}
-    </div>
+            {% empty %}
+            <div class="col">No Items.</div>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+    {% if object.image_to_approve %}
+    <h2 class="col-sm {{ user.profile.preferred_heading }}">Images To Approve</h2>
+    {% for char in object.image_to_approve %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="row border">
+            <a class="col-sm-3 border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+            <div class="col-sm-3 border">
+                {% if char.owner is not None %}{{ char.owner }}{% endif %}
+            </div>
+            <div class="cols-sm-3 border">
+                <img src="{{ char.image.url }}" width="300" height="{{ image.height }}"
+                    alt="image of {{ char.name }}" />
+            </div>
+            <input class="col-sm-2 border" type="submit" name="image {{ char.name }}" value="Approve Image" />
+    </form>
+</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endif %}
+</div>
 {% endblock content %}

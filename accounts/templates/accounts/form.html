@@ -1,14 +1,18 @@
 {% extends "core/form.html" %}
 {% block title %}
-    {{ object.user.username }}
+{{ object.user.username }}
 {% endblock title %}
 {% block contents %}
-    <div class="row">
-        <div class="col-sm">Heading</div>
-        <div class="col-sm">{{ form.preferred_heading }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Theme</div>
-        <div class="col-sm">{{ form.theme }}</div>
-    </div>
+<div class="row">
+    <div class="col-sm">Heading</div>
+    <div class="col-sm">{{ form.preferred_heading }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Theme</div>
+    <div class="col-sm">{{ form.theme }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Discord</div>
+    <div class="col-sm">{{ form.discord_id }}</div>
+</div>
 {% endblock contents %}
