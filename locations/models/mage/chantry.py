@@ -71,6 +71,7 @@ class Chantry(LocationModel):
 
     rank = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
+    total_points = models.IntegerField(default=0)
 
     allies = models.IntegerField(default=0)
     arcane = models.IntegerField(default=0)
