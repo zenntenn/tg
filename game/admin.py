@@ -18,7 +18,11 @@ class SceneAdmin(admin.ModelAdmin):
         "name",
         "location",
         "finished",
+        "num_pcs",
     )
+
+    def num_pcs(self, obj):
+        return obj.characters.filter(npc=False).count()
 
 
 admin.site.register(Post)
