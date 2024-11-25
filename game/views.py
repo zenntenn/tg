@@ -28,6 +28,7 @@ class ChronicleDetailView(View):
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
             "form": SceneCreationForm(chronicle=chronicle),
             "top_locations": top_locations,
+            "active_scenes": Scene.objects.filter(chronicle=chronicle, finished=False),
         }
 
     def get(self, request, *args, **kwargs):
