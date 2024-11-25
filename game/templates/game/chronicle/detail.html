@@ -111,11 +111,7 @@
             <a href="{{ object.get_scenes_url }}">Scene List</a>
         </h3>
     </div>
-    <div class="row centertext">
-        <h4 class="col-sm {{ object.headings }}">
-            <div>New Scene</div>
-        </h4>
-    </div>
+
 
     <div class="row border">
         <h3 class="col-sm border {{ chronicle.headings }} pointer" data-toggle="collapse" data-target="#scenes-Section"
@@ -142,21 +138,23 @@
             <div class="col-sm border">{{ scene.date_of_scene|date:"F d, Y" }}</div>
         </div>
         {% endfor %}
-
-
-
-        {% if request.user.is_authenticated %}
-        <form method="post" action="">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-sm">{{ form.name }}</div>
-                <div class="col-sm">{{ form.location }}</div>
-                <div class="col-sm">{{ form.date_of_scene }}</div>
-                <div class="col-sm">
-                    <input type="submit" value="Create Scene" />
-                </div>
-            </div>
-        </form>
-        {% endif %}
     </div>
+    {% if request.user.is_authenticated %}
+    <div class="row centertext">
+        <h4 class="col-sm {{ object.headings }}">
+            <div>New Scene</div>
+        </h4>
+    </div>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm">{{ form.name }}</div>
+            <div class="col-sm">{{ form.location }}</div>
+            <div class="col-sm">{{ form.date_of_scene }}</div>
+            <div class="col-sm">
+                <input type="submit" value="Create Scene" />
+            </div>
+        </div>
+    </form>
+    {% endif %}
     {% endblock content %}
