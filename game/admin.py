@@ -19,10 +19,14 @@ class SceneAdmin(admin.ModelAdmin):
         "location",
         "finished",
         "num_pcs",
+        "total_posts",
     )
 
     def num_pcs(self, obj):
         return obj.characters.filter(npc=False).count()
+
+    def total_posts(self, obj):
+        return obj.total_posts()
 
 
 admin.site.register(Post)
