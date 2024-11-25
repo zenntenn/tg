@@ -211,17 +211,49 @@ class Scene(models.Model):
             specialty = True if specialty_lower == "true" else False
             post.rolls(num_rolls, num_dice, difficulty, specialty)
         elif message.startswith("/roll"):
-            pattern = r"^/roll\s+(\d+)\s+difficulty\s+(\d+)\s+(\S+)$"
+            # Full Pattern
+            if match := re.match(
+                r"^/roll\s+(?P<num_dice>\d+)\s+difficulty\s+(?P<difficulty>\d+)\s+(?P<specialty>\S+)$",
+                message,
+                re.IGNORECASE,
+            ):
+                num_dice = int(match.group("num_dice"))
+                difficulty = int(match.group("difficulty"))
+                specialty_str = match.group("specialty")
+                specialty = True if specialty_str.lower() == "true" else False
 
-            match = re.match(pattern, message, re.IGNORECASE)
+            # Pattern for no specialty
+            elif match := re.match(
+                r"^/roll\s+(?P<num_dice>\d+)\s+difficulty\s+(?P<difficulty>\d+)$",
+                message,
+                re.IGNORECASE,
+            ):
+                num_dice = int(match.group("num_dice"))
+                difficulty = int(match.group("difficulty"))
+                specialty = False
 
-            if not match:
+            # Pattern for no difficulty
+            elif match := re.match(
+                r"^/roll\s+(?P<num_dice>\d+)\s+(?P<specialty>\S+)$",
+                message,
+                re.IGNORECASE,
+            ):
+                num_dice = int(match.group("num_dice"))
+                difficulty = 6
+                specialty_str = match.group("specialty")
+                specialty = True if specialty_str.lower() == "true" else False
+
+            # Pattern for neither
+            elif match := re.match(
+                r"^/roll\s+(?P<num_dice>\d+)$", message, re.IGNORECASE
+            ):
+                num_dice = int(match.group("num_dice"))
+                difficulty = 6
+                specialty = False
+
+            else:
                 raise ValueError("Command does not match the expected format.")
 
-            num_dice = int(match.group(1))
-            difficulty = int(match.group(2))
-            specialty_str = match.group(3).lower()
-            specialty = True if specialty_str == "true" else False
             post.roll(num_dice, difficulty=difficulty, specialty=specialty)
         return post
 
