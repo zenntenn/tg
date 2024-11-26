@@ -28,7 +28,7 @@
         <div class="col-sm">
             <p>
                 <b {% if post.character.owner.profile.is_st %}class="st" {% endif %}>{{ post.display_name }}</b>:
-                {{ post.message|sanitize_html }}
+                {{ post.message|quote_tag|sanitize_html }}
             </p>
         </div>
     </div>
