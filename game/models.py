@@ -107,7 +107,7 @@ class Chronicle(models.Model):
     def total_scenes(self):
         return Scene.objects.filter(chronicle=self).count()
 
-    def add_scene(self, name, location, date_played=None, date_of_scene=None):
+    def add_scene(self, name, location, date_of_scene=None):
         if isinstance(location, str):
             from locations.models import LocationModel
 
@@ -120,7 +120,6 @@ class Chronicle(models.Model):
             name=name,
             chronicle=self,
             location=location,
-            date_played=date_played,
             date_of_scene=date_of_scene,
         )
         self.save()
@@ -141,7 +140,7 @@ class Scene(models.Model):
     chronicle = models.ForeignKey(
         "game.Chronicle", on_delete=models.SET_NULL, null=True
     )
-    date_played = models.DateField(null=True, blank=True)
+    date_played = models.DateField(auto_now_add=True)
     characters = models.ManyToManyField(
         "characters.CharacterModel", related_name="scenes", blank=True
     )
