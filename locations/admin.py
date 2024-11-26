@@ -1,7 +1,7 @@
 from django.contrib import admin
 from locations.models.core import City, LocationModel
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
-from locations.models.mage.chantry import Chantry
+from locations.models.mage.chantry import Chantry, ChantryBackgroundRating
 from locations.models.mage.library import Library
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.realm import HorizonRealm
@@ -50,3 +50,6 @@ class CaernAdmin(admin.ModelAdmin):
 @admin.register(Chantry)
 class ChantryAdmin(admin.ModelAdmin):
     list_display = ("name", "rank", "parent", "faction")
+
+
+admin.site.register(ChantryBackgroundRating)

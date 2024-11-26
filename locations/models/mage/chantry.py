@@ -1,5 +1,6 @@
 import random
 
+from characters.models.core.background_block import Background, BackgroundBlock
 from characters.models.core.human import Human
 from characters.models.mage.resonance import Resonance
 from core.utils import add_dot, weighted_choice
@@ -11,7 +12,23 @@ from locations.models.mage.node import Node
 from locations.models.mage.reality_zone import RealityZone
 
 
-class Chantry(LocationModel):
+class Chantry(BackgroundBlock, LocationModel):
+    allowed_backgrounds = [
+        "allies",
+        "arcane",
+        "backup",
+        "cult",
+        "elders",
+        "retainers",
+        "spies",
+        "resources",
+        "enhancement",
+        "requisitions",
+        "sanctum",
+        "node",
+        "library",
+    ]
+
     type = "chantry"
 
     faction = models.ForeignKey(
@@ -70,31 +87,9 @@ class Chantry(LocationModel):
     )
 
     rank = models.IntegerField(default=0)
-    points = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
 
-    allies = models.IntegerField(default=0)
-    arcane = models.IntegerField(default=0)
-    backup = models.IntegerField(default=0)
-    cult = models.IntegerField(default=0)
-    elders = models.IntegerField(default=0)
     integrated_effects = models.IntegerField(default=0)
-    retainers = models.IntegerField(default=0)
-    spies = models.IntegerField(default=0)
-    resources = models.IntegerField(default=0)
-    enhancement = models.IntegerField(default=0)
-    requisitions = models.IntegerField(default=0)
-    reality_zone_rating = models.IntegerField(default=0)
-    node_rating = models.IntegerField(default=0)
-    library_rating = models.IntegerField(default=0)
-
-    chantry_library = models.ForeignKey(
-        Library, on_delete=models.SET_NULL, blank=True, null=True
-    )
-    nodes = models.ManyToManyField(Node, blank=True)
-    reality_zone = models.ForeignKey(
-        RealityZone, blank=True, null=True, on_delete=models.SET_NULL
-    )
 
     members = models.ManyToManyField(Human, blank=True, related_name="member_of")
     cabals = models.ManyToManyField("characters.Cabal", blank=True)
@@ -157,6 +152,22 @@ class Chantry(LocationModel):
 
     def get_heading(self):
         return "mta_heading"
+
+    @property
+    def points(self):
+        return self.total_points - self.total_cost()
+
+    def bg_cost(self, background_rating):
+        return (
+            self.trait_cost(background_rating.bg.property_name)
+            * background_rating.rating
+        )
+
+    def total_cost(self):
+        tot = 0
+        for bgr in self.backgrounds.all():
+            tot += self.bg_cost(bgr)
+        return tot
 
     def random_name(self, name=None):
         if name is not None:
@@ -450,3 +461,23 @@ class Chantry(LocationModel):
                     faction_probs[faction] = 0
                 faction = weighted_choice(faction_probs, ceiling=100)
         return self.set_faction(faction)
+
+
+class ChantryBackgroundRating(models.Model):
+    bg = models.ForeignKey(Background, on_delete=models.SET_NULL, null=True)
+    chantry = models.ForeignKey(
+        Chantry,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="backgrounds",
+    )
+    rating = models.IntegerField(default=0)
+    note = models.CharField(default="", max_length=100)
+    url = models.CharField(default="", max_length=500)
+    complete = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["bg__name"]
+
+    def __str__(self):
+        return f"{self.bg} ({self.note})"

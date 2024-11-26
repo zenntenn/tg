@@ -15,9 +15,10 @@ class ChantryDetailView(DetailView):
         factions = []
         f = self.object.faction
         while f is not None:
-            factions.append(f.name)
+            factions.append(f)
             f = f.parent
         factions.reverse()
+        factions = [f'<a href="{x.get_absolute_url()}">{x}</a>' for x in factions]
         factions = "/".join(factions)
         context["factions"] = factions
         return context
@@ -36,22 +37,8 @@ class ChantryCreateView(CreateView):
         "chantry_type",
         "rank",
         "points",
-        "allies",
-        "arcane",
-        "backup",
-        "cult",
-        "elders",
+        "total_points",
         "integrated_effects",
-        "retainers",
-        "spies",
-        "resources",
-        "enhancement",
-        "requisitions",
-        "reality_zone_rating",
-        "node_rating",
-        "library_rating",
-        "chantry_library",
-        "nodes",
         "members",
         "cabals",
         "ambassador",
@@ -84,22 +71,8 @@ class ChantryUpdateView(UpdateView):
         "chantry_type",
         "rank",
         "points",
-        "allies",
-        "arcane",
-        "backup",
-        "cult",
-        "elders",
+        "total_points",
         "integrated_effects",
-        "retainers",
-        "spies",
-        "resources",
-        "enhancement",
-        "requisitions",
-        "reality_zone_rating",
-        "node_rating",
-        "library_rating",
-        "chantry_library",
-        "nodes",
         "members",
         "cabals",
         "ambassador",
