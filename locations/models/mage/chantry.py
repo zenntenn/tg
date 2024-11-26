@@ -86,7 +86,6 @@ class Chantry(BackgroundBlock, LocationModel):
         choices=CHANTRY_TYPES,
     )
 
-    rank = models.IntegerField(default=0)
     total_points = models.IntegerField(default=0)
 
     integrated_effects = models.IntegerField(default=0)
@@ -168,6 +167,18 @@ class Chantry(BackgroundBlock, LocationModel):
         for bgr in self.backgrounds.all():
             tot += self.bg_cost(bgr)
         return tot
+    
+    @property
+    def rank(self):
+        if self.total_points < 11:
+            return 1
+        elif self.total_points < 21:
+            return 2
+        elif self.total_points < 31:
+            return 3
+        elif self.total_points < 71:
+            return 4
+        return 5
 
     def random_name(self, name=None):
         if name is not None:
