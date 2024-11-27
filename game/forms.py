@@ -62,7 +62,8 @@ class PostForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        del self.errors["character"]
+        if self.errors['character']:
+            del self.errors["character"]
 
         message = cleaned_data.get("message")
 
