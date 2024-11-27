@@ -181,3 +181,10 @@
     background-repeat: no-repeat;
     background-position: center center;
 }
+
+a.text-link {
+    color: inherit !important;
+    /* Force inheritance of body color */
+    text-decoration: none !important;
+    /* Remove underline */
+}
