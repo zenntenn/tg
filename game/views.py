@@ -56,7 +56,7 @@ class SceneDetailView(View):
         return {
             "object": scene,
             "posts": Post.objects.filter(scene=scene),
-            "post_form": PostForm(user=user, scene=scene),
+            "post_form": PostForm,
             "add_char_form": a,
             "num_chars": num_chars,
             "num_logged_in_chars": scene.characters.filter(owner=user).count(),
@@ -65,6 +65,9 @@ class SceneDetailView(View):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context(kwargs["pk"], request.user)
+        context["post_form"] = context["post_form"](
+            user=request.user, scene=context["object"]
+        )
         return render(request, "game/scene/detail.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -75,13 +78,25 @@ class SceneDetailView(View):
             c = CharacterModel.objects.get(pk=request.POST["character_to_add"])
             context["object"].add_character(c)
         elif "message" in request.POST.keys():
-            if context["num_logged_in_chars"] == 1:
-                character = context["first_char"]
-            else:
-                character = CharacterModel.objects.get(pk=request.POST["character"])
-            context["object"].add_post(
-                character, request.POST["display_name"], request.POST["message"]
+            context["post_form"] = context["post_form"](
+                request.POST, user=request.user, scene=context["object"]
             )
+            if context["post_form"].is_valid():
+                if context["num_logged_in_chars"] == 1:
+                    character = context["first_char"]
+                else:
+                    character = CharacterModel.objects.get(pk=request.POST["character"])
+                try:
+                    context["object"].add_post(
+                        character, request.POST["display_name"], request.POST["message"]
+                    )
+                    context["post_form"] = PostForm(
+                        user=request.user, scene=context["object"]
+                    )
+                except ValueError:
+                    context["post_form"].add_error(
+                        None, "Command does not match the expected format."
+                    )
         return render(request, "game/scene/detail.html", context)
 
 

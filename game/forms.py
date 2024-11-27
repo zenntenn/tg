@@ -58,3 +58,15 @@ class PostForm(forms.Form):
             chronicle=scene.chronicle,
             pk__in=scene.characters.all(),
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        del self.errors["character"]
+
+        message = cleaned_data.get("message")
+
+        # Validate the message content (example: no prohibited words or empty message)
+        if not message or len(message.strip()) == 0:
+            raise forms.ValidationError("The message cannot be empty.")
+        return cleaned_data

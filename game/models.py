@@ -220,6 +220,7 @@ class Scene(models.Model):
                 difficulty = int(match.group("difficulty"))
                 specialty_str = match.group("specialty")
                 specialty = True if specialty_str.lower() == "true" else False
+                post.roll(num_dice, difficulty=difficulty, specialty=specialty)
 
             # Pattern for no specialty
             elif match := re.match(
@@ -230,6 +231,7 @@ class Scene(models.Model):
                 num_dice = int(match.group("num_dice"))
                 difficulty = int(match.group("difficulty"))
                 specialty = False
+                post.roll(num_dice, difficulty=difficulty, specialty=specialty)
 
             # Pattern for no difficulty
             elif match := re.match(
@@ -241,6 +243,7 @@ class Scene(models.Model):
                 difficulty = 6
                 specialty_str = match.group("specialty")
                 specialty = True if specialty_str.lower() == "true" else False
+                post.roll(num_dice, difficulty=difficulty, specialty=specialty)
 
             # Pattern for neither
             elif match := re.match(
@@ -249,11 +252,12 @@ class Scene(models.Model):
                 num_dice = int(match.group("num_dice"))
                 difficulty = 6
                 specialty = False
+                post.roll(num_dice, difficulty=difficulty, specialty=specialty)
 
             else:
+                post.delete()
                 raise ValueError("Command does not match the expected format.")
 
-            post.roll(num_dice, difficulty=difficulty, specialty=specialty)
         return post
 
 

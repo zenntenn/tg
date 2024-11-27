@@ -23,6 +23,11 @@
             <hr>
         </div>
     </div>
+    {% block errors %}
+    {% if post_form.non_field_errors %}
+    {% for error in post_form.non_field_errors %}<p class="alert centertext">{{ error }}</p>{% endfor %}
+    {% endif %}
+    {% endblock errors %}
     {% for post in object.post_set.all %}
     <div class="row">
         <div class="col-sm">
