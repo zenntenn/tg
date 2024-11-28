@@ -152,7 +152,7 @@ class LoadExamplesView(View):
                 examples = examples.exclude(max_rating__lt=min(0, -7 - m.total_flaws()))
             examples = examples.exclude(min_rating__gt=m.freebies)
         elif category_choice == "Sphere":
-            examples = Sphere.objects.all()
+            examples = Sphere.objects.all().order_by("name")
             examples = [
                 x
                 for x in examples
@@ -182,8 +182,8 @@ class LoadExamplesView(View):
             spec = SpecializedPractice.objects.filter(faction=m.faction)
             if spec.count() > 0:
                 examples = examples.exclude(
-                    id=spec.parent_practice.id
-                ) | Practice.objects.filter(id=spec.id)
+                    id__in=[x.parent_practice.id for x in spec]
+                ) | Practice.objects.filter(id__in=[x.id for x in spec])
             ids = PracticeRating.objects.filter(mage=m, rating=5).values_list(
                 "practice__id", flat=True
             )
