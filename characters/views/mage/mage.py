@@ -1222,7 +1222,6 @@ class MageRoteView(SpecialUserMixin, CreateView):
     def form_valid(self, form, **kwargs):
         context = self.get_context_data(**kwargs)
         mage = context["object"]
-        print(form.cleaned_data)
         if (
             not form.cleaned_data["select_or_create_rote"]
             and not form.cleaned_data["rote_options"]
