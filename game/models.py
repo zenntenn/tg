@@ -154,7 +154,7 @@ class Scene(models.Model):
     class Meta:
         verbose_name = "Scene"
         verbose_name_plural = "Scenes"
-        ordering = ["-date_of_scene", "date_played"]
+        ordering = ["-date_of_scene", "-date_played"]
 
     def __str__(self):
         if self.name not in ["", "''"]:
