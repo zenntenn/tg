@@ -718,18 +718,18 @@ class MageFocusView(SpecialUserMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        context['form'].full_clean()
-        if context['form'].cleaned_data['metaphysical_tenet'] is None:
-            context['form'].add_error(None, "Must include Metaphysical Tenet")
-            return self.form_invalid(context['form'])
-        if context['form'].cleaned_data['personal_tenet'] is None:
-            context['form'].add_error(None, "Must include Personal Tenet")
-            return self.form_invalid(context['form'])
-        if context['form'].cleaned_data['ascension_tenet'] is None:
-            context['form'].add_error(None, "Must include Ascension Tenet")
-            return self.form_invalid(context['form'])
+        context["form"].full_clean()
+        if context["form"].cleaned_data["metaphysical_tenet"] is None:
+            context["form"].add_error(None, "Must include Metaphysical Tenet")
+            return self.form_invalid(context["form"])
+        if context["form"].cleaned_data["personal_tenet"] is None:
+            context["form"].add_error(None, "Must include Personal Tenet")
+            return self.form_invalid(context["form"])
+        if context["form"].cleaned_data["ascension_tenet"] is None:
+            context["form"].add_error(None, "Must include Ascension Tenet")
+            return self.form_invalid(context["form"])
         practice_formset = context["practice_formset"]
-        
+
         if practice_formset.is_valid():
             self.object = form.save()
             ratings = [x.cleaned_data.get("rating") for x in practice_formset]

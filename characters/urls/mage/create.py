@@ -84,6 +84,11 @@ urls = [
         name="mage_full",
     ),
     path(
+        "companion/full/",
+        views.mage.CompanionCreateView.as_view(),
+        name="companion_full",
+    ),
+    path(
         "cabal/",
         views.mage.CabalCreateView.as_view(),
         name="cabal",

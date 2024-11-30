@@ -73,7 +73,11 @@ urls = [
         views.mage.MageCharacterCreationView.as_view(),
         name="mage",
     ),
-    # path("companion/<pk>/", ),
+    path(
+        "companion/full/<pk>/",
+        views.mage.CompanionUpdateView.as_view(),
+        name="companion_full",
+    ),
     path(
         "cabal/<pk>/",
         views.mage.CabalUpdateView.as_view(),

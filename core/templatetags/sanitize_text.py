@@ -1,7 +1,8 @@
+import re
+
 import bleach
 from django import template
 from django.utils.html import format_html
-import re
 
 register = template.Library()
 

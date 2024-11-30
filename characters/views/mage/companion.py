@@ -52,6 +52,32 @@ class CompanionDetailView(HumanDetailView):
         return context
 
 
+class MageCreateView(CreateView):
+    model = Companion
+    fields = "__all__"
+    template_name = "characters/mage/companion/form.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["affiliation"].queryset = MageFaction.objects.filter(parent=None)
+        form.fields["faction"].queryset = MageFaction.objects.none()
+        form.fields["subfaction"].queryset = MageFaction.objects.none()
+        return form
+
+
+class MageUpdateView(SpecialUserMixin, UpdateView):
+    model = Companion
+    fields = "__all__"
+    template_name = "characters/mage/companion/form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+
 class LoadExamplesView(View):
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 

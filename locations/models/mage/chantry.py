@@ -167,7 +167,7 @@ class Chantry(BackgroundBlock, LocationModel):
         for bgr in self.backgrounds.all():
             tot += self.bg_cost(bgr)
         return tot
-    
+
     @property
     def rank(self):
         if self.total_points < 11:
