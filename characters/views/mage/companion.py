@@ -52,7 +52,7 @@ class CompanionDetailView(HumanDetailView):
         return context
 
 
-class MageCreateView(CreateView):
+class CompanionCreateView(CreateView):
     model = Companion
     fields = "__all__"
     template_name = "characters/mage/companion/form.html"
@@ -65,7 +65,7 @@ class MageCreateView(CreateView):
         return form
 
 
-class MageUpdateView(SpecialUserMixin, UpdateView):
+class CompanionUpdateView(SpecialUserMixin, UpdateView):
     model = Companion
     fields = "__all__"
     template_name = "characters/mage/companion/form.html"

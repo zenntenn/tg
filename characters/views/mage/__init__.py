@@ -1,6 +1,11 @@
 from .advantage import AdvantageDetailView
 from .cabal import CabalCreateView, CabalDetailView, CabalUpdateView
-from .companion import CompanionBasicsView, CopanionCharacterCreationView
+from .companion import (
+    CompanionBasicsView,
+    CompanionCreateView,
+    CompanionUpdateView,
+    CopanionCharacterCreationView,
+)
 from .effect import EffectCreateView, EffectDetailView, EffectListView, EffectUpdateView
 from .faction import (
     MageFactionCreateView,
