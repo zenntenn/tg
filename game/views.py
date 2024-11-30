@@ -103,7 +103,7 @@ class SceneDetailView(View):
 class ChronicleScenesDetailView(View):
     def get(self, request, *args, **kwargs):
         chronicle = get_object_or_404(Chronicle, pk=kwargs["pk"])
-        scenes = Scene.objects.filter(chronicle=chronicle).order_by("-date_of_scene")
+        scenes = Scene.objects.filter(chronicle=chronicle)
 
         # Group scenes by year and month
         scenes_grouped = [
