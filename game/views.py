@@ -93,8 +93,9 @@ class SceneDetailView(View):
                 else:
                     character = CharacterModel.objects.get(pk=request.POST["character"])
                 try:
+                    message = self.straighten_quotes(request.POST["message"])
                     context["object"].add_post(
-                        character, request.POST["display_name"], request.POST["message"]
+                        character, request.POST["display_name"], message
                     )
                     context["post_form"] = PostForm(
                         user=request.user, scene=context["object"]
@@ -104,6 +105,48 @@ class SceneDetailView(View):
                         None, "Command does not match the expected format."
                     )
         return render(request, "game/scene/detail.html", context)
+
+    @staticmethod
+    def straighten_quotes(s):
+        # Define the Unicode code points for various quotation marks and apostrophes
+        single_quote_chars = [
+            0x2018,  # ‘ LEFT SINGLE QUOTATION MARK
+            0x2019,  # ’ RIGHT SINGLE QUOTATION MARK
+            0x201A,  # ‚ SINGLE LOW-9 QUOTATION MARK
+            0x201B,  # ‛ SINGLE HIGH-REVERSED-9 QUOTATION MARK
+            0x2032,  # ′ PRIME
+            0x02B9,  # ʹ MODIFIER LETTER PRIME
+            0x02BB,  # ʻ MODIFIER LETTER TURNED COMMA
+            0x02BC,  # ʼ MODIFIER LETTER APOSTROPHE
+            0x02BD,  # ʽ MODIFIER LETTER REVERSED COMMA
+            0x275B,  # ❛ HEAVY SINGLE TURNED COMMA QUOTATION MARK ORNAMENT
+            0x275C,  # ❜ HEAVY SINGLE COMMA QUOTATION MARK ORNAMENT
+            0xFF07,  # ＇ FULLWIDTH APOSTROPHE
+            0x00B4,  # ´ ACUTE ACCENT
+            0x0060,  # ` GRAVE ACCENT
+        ]
+
+        double_quote_chars = [
+            0x201C,  # “ LEFT DOUBLE QUOTATION MARK
+            0x201D,  # ” RIGHT DOUBLE QUOTATION MARK
+            0x201E,  # „ DOUBLE LOW-9 QUOTATION MARK
+            0x201F,  # ‟ DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+            0x2033,  # ″ DOUBLE PRIME
+            0x02BA,  # ʺ MODIFIER LETTER DOUBLE PRIME
+            0x275D,  # ❝ HEAVY DOUBLE TURNED COMMA QUOTATION MARK ORNAMENT
+            0x275E,  # ❞ HEAVY DOUBLE COMMA QUOTATION MARK ORNAMENT
+            0xFF02,  # ＂ FULLWIDTH QUOTATION MARK
+        ]
+
+        # Create a translation table
+        translation_table = {}
+        for code_point in single_quote_chars:
+            translation_table[code_point] = ord("'")
+        for code_point in double_quote_chars:
+            translation_table[code_point] = ord('"')
+
+        # Translate the string using the translation table
+        return s.translate(translation_table)
 
 
 class ChronicleScenesDetailView(View):
