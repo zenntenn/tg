@@ -73,9 +73,15 @@ class SceneDetailView(View):
     def post(self, request, *args, **kwargs):
         context = self.get_context(kwargs["pk"], request.user)
         if "close_scene" in request.POST.keys():
+            context["post_form"] = context["post_form"](
+                user=request.user, scene=context["object"]
+            )
             context["object"].close()
         elif "character_to_add" in request.POST.keys():
             c = CharacterModel.objects.get(pk=request.POST["character_to_add"])
+            context["post_form"] = context["post_form"](
+                user=request.user, scene=context["object"]
+            )
             context["object"].add_character(c)
         elif "message" in request.POST.keys():
             context["post_form"] = context["post_form"](
