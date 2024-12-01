@@ -10,6 +10,7 @@ from characters.forms.mage.enhancements import EnhancementForm
 from characters.forms.mage.familiar import FamiliarForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
+from characters.forms.mage.xp import MageXPForm
 from characters.models.core.ability_block import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import Attribute
@@ -218,6 +219,7 @@ class MageDetailView(HumanDetailView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
+        context['form'] = MageXPForm(character=self.object)
         return context
 
 
