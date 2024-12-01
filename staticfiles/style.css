@@ -188,3 +188,7 @@ a.text-link {
     text-decoration: none !important;
     /* Remove underline */
 }
+
+.highlight {
+    color: #9b59b6 ;
+}
