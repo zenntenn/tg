@@ -195,6 +195,82 @@ class LoadExamplesView(View):
         return render(request, self.template_name, {"examples": examples})
 
 
+class LoadXPExamplesView(View):
+    template_name = "characters/core/human/load_examples_dropdown_list.html"
+
+    def get(self, request, *args, **kwargs):
+        category_choice = request.GET.get("category")
+        object_id = request.GET.get("object")
+        self.character = Mage.objects.get(pk=object_id)
+        examples = []
+
+        if category_choice == "Attribute":
+            filtered_attributes = [
+                attribute
+                for attribute in Attribute.objects.all()
+                if getattr(self.character, attribute.property_name) < 5
+            ]
+            filtered_for_xp_cost = [
+                x for x in filtered_attributes if self.character.xp_cost(
+                    "attribute",
+                    getattr(self.character, x.property_name),
+                ) <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "Ability":
+            filtered_abilities = [
+                ability
+                for ability in Ability.objects.filter(property_name__in=self.character.talents + self.character.skills + self.character.knowledges)
+                if getattr(self.character, ability.property_name) < 5
+            ]
+            filtered_for_xp_cost = [
+                x for x in filtered_abilities if self.character.xp_cost(
+                    "ability",
+                    getattr(self.character, x.property_name),
+                ) <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "New Background":
+            examples = Background.objects.filter(
+                property_name__in=self.character.allowed_backgrounds
+            ).order_by("name")
+        elif category_choice == "Existing Background":
+            bgs = self.character.backgrounds.filter(rating__lt=5)
+            filtered_for_xp_cost = [
+                    x for x in bgs if self.character.xp_cost(
+                        "background",
+                        x.rating,
+                    ) <= self.character.xp
+                ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "MeritFlaw":
+            pass
+        elif category_choice == "Sphere":
+            filtered_spheres = [
+                sphere
+                for sphere in Sphere.objects.all()
+                if getattr(self.character, sphere.property_name) < self.character.arete
+            ]
+            filtered_for_xp_cost = [
+                x for x in filtered_spheres if self.character.xp_cost(
+                    self.character.sphere_to_trait_type(x.property_name),
+                    getattr(self.character, x.property_name),
+                ) <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "Resonance":
+            pass
+        elif category_choice == "Tenet":
+            pass
+        elif category_choice == "Remove Tenet":
+            pass
+        elif category_choice == "Practice":
+            pass
+        elif category_choice == "Rote":
+            pass
+        return render(request, self.template_name, {"examples": examples})
+
+
 def get_abilities(request):
     object_id = request.GET.get("object")
     object = Human.objects.get(id=object_id)
@@ -219,7 +295,7 @@ class MageDetailView(HumanDetailView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
-        context['form'] = MageXPForm(character=self.object)
+        context["form"] = MageXPForm(character=self.object)
         return context
 
 
@@ -795,9 +871,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields[
-            "affinity_sphere"
-        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
+        form.fields["affinity_sphere"].queryset = (
+            self.object.get_affinity_sphere_options().order_by("name")
+        )
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]

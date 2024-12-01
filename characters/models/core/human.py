@@ -382,8 +382,9 @@ class Human(
             "attribute": 4,
             "ability": 2,
             "background": 3,
+            "new background": 5,
             "willpower": 1,
         }
         if trait_type == "ability" and trait_value == 0:
             return costs["new_ability"]
-        return costs["trait_type"] * trait_value
+        return costs[trait_type] * trait_value
