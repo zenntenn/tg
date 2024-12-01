@@ -1,2 +1,2 @@
-from .advancement import AdvancementForm
+from .freebies import FreebiesForm
 from .character_creation import CharacterCreationForm

@@ -1,10 +1,10 @@
 from typing import Any
 
-from characters.forms.core.advancement import AdvancementForm
+from characters.forms.core.freebies import FreebiesForm
 from characters.forms.core.ally import AllyForm
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
-from characters.forms.mage.advancement import MageAdvancementForm
+from characters.forms.mage.freebies import MageFreebiesForm
 from characters.forms.mage.effect import EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
 from characters.forms.mage.familiar import FamiliarForm
@@ -948,7 +948,7 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
 
 class MageFreebiesView(SpecialUserMixin, UpdateView):
     model = Mage
-    form_class = MageAdvancementForm
+    form_class = MageFreebiesForm
     template_name = "characters/mage/mage/chargen.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:

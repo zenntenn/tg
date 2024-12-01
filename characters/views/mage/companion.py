@@ -1,6 +1,6 @@
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
-from characters.forms.mage.advancement import CompanionAdvancementForm
+from characters.forms.mage.freebies import CompanionFreebiesForm
 from characters.models.core.ability_block import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import Attribute
@@ -388,7 +388,7 @@ class CompanionExtrasView(SpecialUserMixin, UpdateView):
 
 class CompanionFreebiesView(SpecialUserMixin, UpdateView):
     model = Companion
-    form_class = CompanionAdvancementForm
+    form_class = CompanionFreebiesForm
     template_name = "characters/mage/companion/chargen.html"
 
     def get_context_data(self, **kwargs):
