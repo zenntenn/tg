@@ -384,6 +384,7 @@ class Human(
             "background": 3,
             "new background": 5,
             "willpower": 1,
+            "meritflaw": 3,
         }
         if trait_type == "ability" and trait_value == 0:
             return costs["new_ability"]

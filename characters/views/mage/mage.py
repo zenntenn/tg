@@ -258,14 +258,25 @@ class LoadXPExamplesView(View):
                 ) <= self.character.xp
             ]
             examples = filtered_for_xp_cost
-        elif category_choice == "Resonance":
-            pass
         elif category_choice == "Tenet":
             pass
         elif category_choice == "Remove Tenet":
             pass
         elif category_choice == "Practice":
-            pass
+            examples = Practice.objects.exclude(polymorphic_ctype__model="specializedpractice").exclude(polymorphic_ctype__model="corruptedpractice")
+            spec = SpecializedPractice.objects.filter(faction=self.character.faction)
+            if spec.count() > 0:
+                examples = examples.exclude(id__in=[x.parent_practice.id for x in spec]) | Practice.objects.filter(id__in=[x.id for x in spec])
+            
+            ids = PracticeRating.objects.filter(mage=self.character, rating=5).values_list("practice__id", flat=True)
+            
+            filtered_practices = examples.exclude(pk__in=ids).order_by("name")
+            examples = [
+                    x for x in filtered_practices if self.character.xp_cost(
+                        "practice",
+                        self.character.practice_rating(x),
+                    ) <= self.character.xp
+                ]
         elif category_choice == "Rote":
             pass
         return render(request, self.template_name, {"examples": examples})

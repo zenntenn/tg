@@ -1,5 +1,6 @@
 from characters.models.core.ability_block import Ability
-from characters.models.mage.focus import Practice
+from characters.models.mage.focus import Practice, SpecializedPractice
+from characters.models.mage.mage import PracticeRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
 from core.widgets import AutocompleteTextInput
@@ -26,6 +27,9 @@ class MageXPForm(XPForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if suggestions is None:
+            suggestions = [x.name.title() for x in Resonance.objects.order_by("name")]
+        self.fields["resonance"].widget.suggestions = suggestions
         if not self.spheres_valid():
             self.fields["category"].choices = [x for x in self.fields["category"].choices if x[0] != "Sphere"]
         if not self.rote_points_valid():
@@ -61,20 +65,35 @@ class MageXPForm(XPForm):
         return True
     
     def resonance_valid(self):
-        return True
+        return self.character.xp >= 3
     
     def add_tenet_valid(self):
         return True
     
     def remove_tenet_valid(self):
+        if self.character.other_tenets.count() + 3 <= self.character.arete:
+            return False
         return True
     
     def practice_valid(self):
-        return True
+        examples = Practice.objects.exclude(polymorphic_ctype__model="specializedpractice").exclude(polymorphic_ctype__model="corruptedpractice")
+        spec = SpecializedPractice.objects.filter(faction=self.character.faction)
+        if spec.count() > 0:
+            examples = examples.exclude(id__in=[x.parent_practice.id for x in spec]) | Practice.objects.filter(id__in=[x.id for x in spec])
+        
+        ids = PracticeRating.objects.filter(mage=self.character, rating=5).values_list("practice__id", flat=True)
+        
+        filtered_practices = examples.exclude(pk__in=ids).order_by("name")
+        filtered_for_xp_cost = [
+                x for x in filtered_practices if self.character.xp_cost(
+                    "practice",
+                    self.character.practice_rating(x),
+                ) <= self.character.xp
+            ]
+        return len(filtered_for_xp_cost) > 0
     
     def arete_valid(self):
-        return self.character.xp_cost("arete", self.character.arete) <= self.character.xp
+        return self.character.xp_cost("arete", self.character.arete) <= self.character.xp and self.character.arete <= self.character.other_tenets.count() + 3
     
     def rote_valid(self):
         return self.character.rote_points > 0
-    

@@ -1,7 +1,9 @@
 from django import forms
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
+from characters.models.core.merit_flaw_block import MeritFlaw
 from core.models import Number
+from game.models import ObjectType
 
 CATEGORY_CHOICES = [
     ("-----", "-----"),
@@ -92,4 +94,4 @@ class XPForm(forms.Form):
         return self.character.xp_cost("willpower", self.character.willpower) <= self.character.xp
 
     def mf_valid(self):
-        return True
+        return self.character.xp >= 3
