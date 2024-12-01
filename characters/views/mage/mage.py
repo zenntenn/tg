@@ -1,13 +1,13 @@
 from typing import Any
 
-from characters.forms.core.freebies import FreebiesForm
 from characters.forms.core.ally import AllyForm
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
+from characters.forms.core.freebies import FreebiesForm
 from characters.forms.core.specialty import SpecialtiesForm
-from characters.forms.mage.freebies import MageFreebiesForm
 from characters.forms.mage.effect import EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
 from characters.forms.mage.familiar import FamiliarForm
+from characters.forms.mage.freebies import MageFreebiesForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.forms.mage.xp import MageXPForm
@@ -211,23 +211,33 @@ class LoadXPExamplesView(View):
                 if getattr(self.character, attribute.property_name) < 5
             ]
             filtered_for_xp_cost = [
-                x for x in filtered_attributes if self.character.xp_cost(
+                x
+                for x in filtered_attributes
+                if self.character.xp_cost(
                     "attribute",
                     getattr(self.character, x.property_name),
-                ) <= self.character.xp
+                )
+                <= self.character.xp
             ]
             examples = filtered_for_xp_cost
         elif category_choice == "Ability":
             filtered_abilities = [
                 ability
-                for ability in Ability.objects.filter(property_name__in=self.character.talents + self.character.skills + self.character.knowledges)
+                for ability in Ability.objects.filter(
+                    property_name__in=self.character.talents
+                    + self.character.skills
+                    + self.character.knowledges
+                )
                 if getattr(self.character, ability.property_name) < 5
             ]
             filtered_for_xp_cost = [
-                x for x in filtered_abilities if self.character.xp_cost(
+                x
+                for x in filtered_abilities
+                if self.character.xp_cost(
                     "ability",
                     getattr(self.character, x.property_name),
-                ) <= self.character.xp
+                )
+                <= self.character.xp
             ]
             examples = filtered_for_xp_cost
         elif category_choice == "New Background":
@@ -237,14 +247,19 @@ class LoadXPExamplesView(View):
         elif category_choice == "Existing Background":
             bgs = self.character.backgrounds.filter(rating__lt=5)
             filtered_for_xp_cost = [
-                    x for x in bgs if self.character.xp_cost(
-                        "background",
-                        x.rating,
-                    ) <= self.character.xp
-                ]
+                x
+                for x in bgs
+                if self.character.xp_cost(
+                    "background",
+                    x.rating,
+                )
+                <= self.character.xp
+            ]
             examples = filtered_for_xp_cost
         elif category_choice == "MeritFlaw":
-            pass
+            mage = ObjectType.objects.get(name="mage")
+            examples = MeritFlaw.objects.filter(allowed_types=mage, max_rating__gte=0)
+            # Filter to purchaseable
         elif category_choice == "Sphere":
             filtered_spheres = [
                 sphere
@@ -252,31 +267,66 @@ class LoadXPExamplesView(View):
                 if getattr(self.character, sphere.property_name) < self.character.arete
             ]
             filtered_for_xp_cost = [
-                x for x in filtered_spheres if self.character.xp_cost(
+                x
+                for x in filtered_spheres
+                if self.character.xp_cost(
                     self.character.sphere_to_trait_type(x.property_name),
                     getattr(self.character, x.property_name),
-                ) <= self.character.xp
+                )
+                <= self.character.xp
             ]
             examples = filtered_for_xp_cost
         elif category_choice == "Tenet":
-            pass
+            examples = Tenet.objects.exclude(
+                id__in=[
+                    self.character.metaphysical_tenet.id,
+                    self.character.personal_tenet.id,
+                    self.character.ascension_tenet.id,
+                ]
+            )
+            examples = examples.objects.exclude(
+                id__in=[x.id for x in self.character.other_tenets.all()]
+            )
         elif category_choice == "Remove Tenet":
-            pass
+            # any "other" that isn't MPA, but also MPA if there's a replacement
+            examples = self.character.other_tenets.all()
+            types = [x.tenet_type for x in examples]
+            if "met" in types:
+                examples |= Tenet.objects.filter(
+                    id_in=[self.character.metaphysical_tenet.id]
+                )
+            if "asc" in types:
+                examples |= Tenet.objects.filter(
+                    id_in=[self.character.ascension_tenet.id]
+                )
+            if "per" in types:
+                examples |= Tenet.objects.filter(
+                    id_in=[self.character.personal_tenet.id]
+                )
         elif category_choice == "Practice":
-            examples = Practice.objects.exclude(polymorphic_ctype__model="specializedpractice").exclude(polymorphic_ctype__model="corruptedpractice")
+            examples = Practice.objects.exclude(
+                polymorphic_ctype__model="specializedpractice"
+            ).exclude(polymorphic_ctype__model="corruptedpractice")
             spec = SpecializedPractice.objects.filter(faction=self.character.faction)
             if spec.count() > 0:
-                examples = examples.exclude(id__in=[x.parent_practice.id for x in spec]) | Practice.objects.filter(id__in=[x.id for x in spec])
-            
-            ids = PracticeRating.objects.filter(mage=self.character, rating=5).values_list("practice__id", flat=True)
-            
+                examples = examples.exclude(
+                    id__in=[x.parent_practice.id for x in spec]
+                ) | Practice.objects.filter(id__in=[x.id for x in spec])
+
+            ids = PracticeRating.objects.filter(
+                mage=self.character, rating=5
+            ).values_list("practice__id", flat=True)
+
             filtered_practices = examples.exclude(pk__in=ids).order_by("name")
             examples = [
-                    x for x in filtered_practices if self.character.xp_cost(
-                        "practice",
-                        self.character.practice_rating(x),
-                    ) <= self.character.xp
-                ]
+                x
+                for x in filtered_practices
+                if self.character.xp_cost(
+                    "practice",
+                    self.character.practice_rating(x),
+                )
+                <= self.character.xp
+            ]
         elif category_choice == "Rote":
             pass
         return render(request, self.template_name, {"examples": examples})
@@ -882,9 +932,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["affinity_sphere"].queryset = (
-            self.object.get_affinity_sphere_options().order_by("name")
-        )
+        form.fields[
+            "affinity_sphere"
+        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]

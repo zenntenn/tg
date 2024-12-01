@@ -18,6 +18,7 @@
     <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
     <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
     <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
+    <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -28,6 +29,7 @@
         const resElement = document.getElementById("resonance_wrap");
         const noteElement = document.getElementById("note_wrap");
         const pooled_wrap = document.getElementById("pooled_wrap");
+        const image_field_wrap = document.getElementById("image_field_wrap");
 
         var isGroupMember = {{ object.is_group_member|lower }};
     
@@ -35,24 +37,27 @@
             const selectedValue = this.value;
             
             // Update the class of the element
-            if(["Willpower", "-----", "Rotes", "Quintessence"].includes(this.value)){
+            if(["Willpower", "-----", "Rote Points", "Quintessence"].includes(this.value)){
                 exampleElement.classList.add("invisible");
                 valueElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
                 resElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.add("invisible")
             } else {
                 exampleElement.classList.remove("invisible");
                 valueElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
                 resElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.add("invisible")
             }
             if(this.value == "MeritFlaw"){
                 valueElement.classList.remove("invisible");
                 resElement.classList.add("invisible");
                 noteElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.add("invisible")
             }
             if(this.value == "Resonance"){
                 resElement.classList.remove("invisible");
@@ -60,6 +65,7 @@
                 noteElement.classList.add("invisible");
                 valueElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.add("invisible")
             }
             if(this.value == "New Background"){
                 resElement.classList.add("invisible");
@@ -71,6 +77,7 @@
                 } else {
                     pooled_wrap.classList.add("invisible");
                 }
+                image_field_wrap.classList.add("invisible")
             }
             if(this.value == "Arete"){
                 resElement.classList.add("invisible")
@@ -78,6 +85,15 @@
                 noteElement.classList.add("invisible");
                 valueElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.add("invisible")
+            }
+            if(this.value == "Image"){
+                resElement.classList.add("invisible")
+                exampleElement.classList.add("invisible");;
+                noteElement.classList.add("invisible");
+                valueElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.remove("invisible")
             }
             
             // Make the AJAX call
