@@ -28,7 +28,7 @@ class CustomUSerCreationForm(UserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["preferred_heading", "theme", "discord_id"]
+        fields = ["preferred_heading", "theme", "discord_id", "lines", "veils"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
