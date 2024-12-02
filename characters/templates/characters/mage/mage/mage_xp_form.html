@@ -7,19 +7,28 @@
 </div>
 {% for item in object.spent_xp %}
     <div class="row">
-        <div class="col-sm">{{ item.trait }} {{ item.value }}</div>
+        <div class="col-sm">{{ item.trait }}{% if item.value %} {{ item.value }}{% endif %}</div>
         <div class="col-sm">{{ item.cost }} XP</div>
+        <div class="col-sm">{{ item.approved }}</div>
     </div>
 {% endfor %}
-<div class="row">
-    <div class="col-sm">{{ form.category }}</div>
-    <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
-    <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
-    <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
-    <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
-    <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
-    <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
-</div>
+<form action="" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-sm">{{ form.category }}</div>
+        <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
+        <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
+        <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
+        <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
+        <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
+        <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <input type="submit" value="Spend XP" />
+        </div>
+    </div>
+</form>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const categorySelectMenu = document.getElementById("id_category");
@@ -81,7 +90,7 @@
             }
             if(this.value == "Arete"){
                 resElement.classList.add("invisible")
-                exampleElement.classList.remove("invisible");;
+                exampleElement.classList.add("invisible");;
                 noteElement.classList.add("invisible");
                 valueElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");

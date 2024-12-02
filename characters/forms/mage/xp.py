@@ -1,6 +1,6 @@
 from characters.forms.core.xp import CATEGORY_CHOICES, XPForm
 from characters.models.core.ability_block import Ability
-from characters.models.mage.focus import Practice, SpecializedPractice
+from characters.models.mage.focus import Practice, SpecializedPractice, Tenet
 from characters.models.mage.mage import PracticeRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
@@ -62,6 +62,25 @@ class MageXPForm(XPForm):
             self.fields["category"].choices = [
                 x for x in self.fields["category"].choices if x[0] != "Rote"
             ]
+
+        category = self.data.get("category")
+        if category == "Sphere":
+            self.fields["example"].choices = [
+                (sphere.id, sphere.name) for sphere in Sphere.objects.all()
+            ]
+        elif category == "Tenet":
+            self.fields["example"].choices = [
+                (tenet.id, tenet.name) for tenet in Tenet.objects.all()
+            ]
+        elif category == "Remove Tenet":
+            self.fields["example"].choices = [
+                (tenet.id, tenet.name) for tenet in Tenet.objects.all()
+            ]
+        elif category == "Practice":
+            self.fields["example"].choices = [
+                (practice.id, practice.name) for practice in Practice.objects.all()
+            ]
+        
 
     def spheres_valid(self):
         filtered_spheres = [
@@ -128,3 +147,18 @@ class MageXPForm(XPForm):
 
     def rote_valid(self):
         return self.character.rote_points > 0
+
+    def clean_example(self):
+        example = super().clean_example()
+        category = self.cleaned_data.get('category')
+        
+        if category == "Sphere":
+            example = Sphere.objects.get(pk=example)
+        if category == "Tenet":
+            example = Tenet.objects.get(pk=example)
+        if category == "Remove Tenet":
+            example = Tenet.objects.get(pk=example)
+        if category == "Practice":
+            example = Practice.objects.get(pk=example)
+
+        return example

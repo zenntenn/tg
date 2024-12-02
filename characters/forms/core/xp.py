@@ -1,6 +1,8 @@
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
+from characters.models.core.background_block import Background
 from characters.models.core.merit_flaw_block import MeritFlaw
+from characters.models.core.statistic import Statistic
 from core.models import Number
 from django import forms
 from game.models import ObjectType
@@ -19,8 +21,8 @@ CATEGORY_CHOICES = [
 
 class XPForm(forms.Form):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
-    example = forms.ModelChoiceField(queryset=Attribute.objects.none(), required=False)
-    value = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)
+    example = forms.ChoiceField(choices=[], required=False)
+    value = forms.ModelChoiceField(queryset=Number.objects.all(), required=False)
     note = forms.CharField(max_length=300, required=False)
     pooled = forms.BooleanField(required=False)
     image_field = forms.ImageField(required=False)
@@ -59,6 +61,29 @@ class XPForm(forms.Form):
             self.fields["category"].choices = [
                 x for x in self.fields["category"].choices if x[0] != "MeritFlaw"
             ]
+
+        category = self.data.get("category")
+        if category == "Attribute":
+            self.fields["example"].choices = [
+                (attr.id, attr.name) for attr in Attribute.objects.all()
+            ]
+        elif category == "Ability":
+            self.fields["example"].choices = [
+                (ability.id, ability.name) for ability in Ability.objects.all()
+            ]
+        elif category == "New Background":
+            self.fields["example"].choices = [
+                (bg.id, bg.name) for bg in Background.objects.all()
+            ]
+        elif category == "Existing Background":
+            self.fields["example"].choices = [
+                (bg.id, bg.bg.name + f" ({bg.note})") for bg in self.character.backgrounds.all()
+            ]
+        elif category == "MeritFlaw":
+            self.fields["example"].choices = [
+                (mf.id, mf.name) for mf in MeritFlaw.objects.all()
+            ]
+            # self.fields['value'].queryset = Number.objects.all()
 
     def image_valid(self):
         if self.character.image and self.character.image.storage.exists(
@@ -130,3 +155,34 @@ class XPForm(forms.Form):
 
     def mf_valid(self):
         return self.character.xp >= 3
+
+    def clean_category(self):
+        category = self.cleaned_data.get('category')
+        
+        if category == '-----':
+            raise forms.ValidationError("Invalid category selected")
+
+        return category
+    
+    def clean_example(self):
+        category = self.cleaned_data.get('category')
+        example = self.cleaned_data.get('example')
+
+        if category == "Attribute":
+            example = Attribute.objects.get(pk=example)
+        elif category == "Ability":
+            example = Ability.objects.get(pk=example)
+        elif category == "New Background":
+            example = Background.objects.get(pk=example)
+        elif category == "Existing Background":
+            example = self.character.backgrounds.get(pk=example)
+        elif category == "MeritFlaw":
+            example = MeritFlaw.objects.get(pk=example)
+
+        return example
+
+    def clean_value(self):
+        value = self.cleaned_data.get('value')
+        if value is not None:
+            return value.id
+        return value
