@@ -394,7 +394,7 @@ class Human(
         if cost is None:
             cost = self.xp_cost(trait_type, value)
         return {
-            "index": f"{self.id}_{trait_type}_{trait}_{value}",
+            "index": f"{self.id}_{trait_type}_{trait}_{value}".replace(" ", "-"),
             "trait": trait,
             "value": value,
             "cost": cost,

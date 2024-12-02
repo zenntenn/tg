@@ -5,16 +5,20 @@
     <div class="col-sm">XP Remaining</div>
     <div class="col-sm">{{ object.xp }}</div>
 </div>
-{% for item in object.spent_xp %}
-    <div class="row">
-        <div class="col-sm">{{ item.index }}</div>
-        <div class="col-sm">{{ item.trait }}{% if item.value %} {{ item.value }}{% endif %}</div>
-        <div class="col-sm">{{ item.cost }} XP</div>
-        <div class="col-sm">{{ item.approved }}</div>
-    </div>
-{% endfor %}
 <form action="" enctype="multipart/form-data" method="post">
     {% csrf_token %}
+    {% for item in object.spent_xp %}
+        <div class="row">
+            <div class="col-sm">{{ item.index }}</div>
+            <div class="col-sm">
+                {{ item.trait }}
+                {% if item.value %}{{ item.value }}{% endif %}
+            </div>
+            <div class="col-sm">{{ item.cost }} XP</div>
+            <div class="col-sm">{{ item.approved }}</div>
+            {% if request.user.profile.is_st %}<input type="submit" name="{{ item.index }}_approve" value="Approve" /><input type="submit" name="{{ item.index }}_approve" value="Reject" />{% endif %}
+        </div>
+    {% endfor %}
     <div class="row">
         <div class="col-sm">{{ form.category }}</div>
         <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
@@ -26,7 +30,7 @@
     </div>
     <div class="row">
         <div class="col-sm">
-            <input type="submit" value="Spend XP" />
+            <input type="submit" name="spend_xp" value="Spend XP" />
         </div>
     </div>
 </form>
