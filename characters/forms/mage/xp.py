@@ -80,7 +80,6 @@ class MageXPForm(XPForm):
             self.fields["example"].choices = [
                 (practice.id, practice.name) for practice in Practice.objects.all()
             ]
-        
 
     def spheres_valid(self):
         filtered_spheres = [
@@ -150,8 +149,8 @@ class MageXPForm(XPForm):
 
     def clean_example(self):
         example = super().clean_example()
-        category = self.cleaned_data.get('category')
-        
+        category = self.cleaned_data.get("category")
+
         if category == "Sphere":
             example = Sphere.objects.get(pk=example)
         if category == "Tenet":

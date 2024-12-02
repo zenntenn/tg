@@ -77,7 +77,8 @@ class XPForm(forms.Form):
             ]
         elif category == "Existing Background":
             self.fields["example"].choices = [
-                (bg.id, bg.bg.name + f" ({bg.note})") for bg in self.character.backgrounds.all()
+                (bg.id, bg.bg.name + f" ({bg.note})")
+                for bg in self.character.backgrounds.all()
             ]
         elif category == "MeritFlaw":
             self.fields["example"].choices = [
@@ -157,16 +158,16 @@ class XPForm(forms.Form):
         return self.character.xp >= 3
 
     def clean_category(self):
-        category = self.cleaned_data.get('category')
-        
-        if category == '-----':
+        category = self.cleaned_data.get("category")
+
+        if category == "-----":
             raise forms.ValidationError("Invalid category selected")
 
         return category
-    
+
     def clean_example(self):
-        category = self.cleaned_data.get('category')
-        example = self.cleaned_data.get('example')
+        category = self.cleaned_data.get("category")
+        example = self.cleaned_data.get("example")
 
         if category == "Attribute":
             example = Attribute.objects.get(pk=example)
@@ -182,7 +183,7 @@ class XPForm(forms.Form):
         return example
 
     def clean_value(self):
-        value = self.cleaned_data.get('value')
+        value = self.cleaned_data.get("value")
         if value is not None:
             return value.id
         return value

@@ -987,11 +987,15 @@ class Mage(MtAHuman):
             "new_practice": 3,
             "practice": 1,
             "rotes": 1,
+            "resonance": 3,
+            "new_resonance": 5,
         }
         if trait_type == "sphere" and trait_value == 0:
             return mage_costs["new_sphere"]
         if trait_type == "practice" and trait_value == 0:
             return mage_costs["new_practice"]
+        if trait_type == "resonance" and trait_value == 0:
+            return mage_costs["new_resonance"]
         elif trait_type in mage_costs.keys():
             return mage_costs[trait_type] * trait_value
         return super().xp_cost(trait_type, trait_value)

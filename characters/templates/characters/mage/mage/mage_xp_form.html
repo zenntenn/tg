@@ -7,6 +7,7 @@
 </div>
 {% for item in object.spent_xp %}
     <div class="row">
+        <div class="col-sm">{{ item.index }}</div>
         <div class="col-sm">{{ item.trait }}{% if item.value %} {{ item.value }}{% endif %}</div>
         <div class="col-sm">{{ item.cost }} XP</div>
         <div class="col-sm">{{ item.approved }}</div>

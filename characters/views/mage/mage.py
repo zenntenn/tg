@@ -358,21 +358,21 @@ class MageDetailView(HumanDetailView):
         )
         context["form"] = MageXPForm(character=self.object)
         return context
-    
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data()
         form = MageXPForm(request.POST, request.FILES, character=self.object)
-        print("value", form.data['value'])
+        print("value", form.data["value"])
         if form.is_valid():
             print(form.cleaned_data)
-            category = form.cleaned_data['category']
-            example = form.cleaned_data['example']
-            value = form.cleaned_data['value']
-            note = form.cleaned_data['note']
-            pooled = form.cleaned_data['pooled']
-            image_field = form.cleaned_data['image_field']
-            resonance = form.cleaned_data['resonance']
+            category = form.cleaned_data["category"]
+            example = form.cleaned_data["example"]
+            value = form.cleaned_data["value"]
+            note = form.cleaned_data["note"]
+            pooled = form.cleaned_data["pooled"]
+            image_field = form.cleaned_data["image_field"]
+            resonance = form.cleaned_data["resonance"]
             if category == "Image":
                 self.object.image = image_field
                 self.object.save()
@@ -434,7 +434,10 @@ class MageDetailView(HumanDetailView):
                 trait = example.name
                 trait_type = "sphere"
                 value = getattr(self.object, example.property_name) + 1
-                cost = self.object.xp_cost(self.object.sphere_to_trait_type(example.property_name), getattr(self.object, example.property_name))
+                cost = self.object.xp_cost(
+                    self.object.sphere_to_trait_type(example.property_name),
+                    getattr(self.object, example.property_name),
+                )
                 d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
                 self.object.xp -= cost
                 self.object.spent_xp.append(d)
@@ -447,15 +450,16 @@ class MageDetailView(HumanDetailView):
                 self.object.xp -= cost
                 self.object.spent_xp.append(d)
                 self.object.save()
-            # elif category == "Resonance":
-            #     trait = example.name
-            #     trait_type = "attribute"
-            #     value = getattr(self.object, example.property_name) + 1
-            #     cost = self.object.xp_cost("attribute", value)
-            #     d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
-            #     self.object.xp -= cost
-            #     self.object.spent_xp.append(d)
-            #     self.object.save()
+            elif category == "Resonance":
+                trait = f"Resonance ({resonance})"
+                r = Resonance.objects.get_or_create(name=resonance)[0]
+                trait_type = "resonance"
+                value = self.object.resonance_rating(r)
+                cost = self.object.xp_cost("resonance", value)
+                d = self.object.xp_spend_record(trait, trait_type, value + 1, cost=cost)
+                self.object.xp -= cost
+                self.object.spent_xp.append(d)
+                self.object.save()
             elif category == "Tenet":
                 trait = example.name
                 trait_type = "tenet"
@@ -491,10 +495,10 @@ class MageDetailView(HumanDetailView):
                 self.object.spent_xp.append(d)
                 self.object.save()
             elif category == "Rote":
-                # 
-                # 
-                # 
-                # 
+                #
+                #
+                #
+                #
                 pass
         else:
             print("errors", form.errors)
@@ -503,7 +507,6 @@ class MageDetailView(HumanDetailView):
             self.template_name,
             context,
         )
-
 
 
 class MageCreateView(CreateView):
