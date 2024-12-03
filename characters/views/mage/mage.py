@@ -118,6 +118,7 @@ def load_mf_ratings(request):
         {"ratings": ratings},
     )
 
+
 class LoadExamplesView(View):
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 
@@ -188,7 +189,15 @@ class LoadExamplesView(View):
                 "practice__id", flat=True
             )
             examples = examples.exclude(pk__in=ids).order_by("name")
-            examples = [x for x in examples if (sum([getattr(m, abb.property_name) for abb in x.abilities.all()]) / 2 > m.practice_rating(x) + 1)]
+            examples = [
+                x
+                for x in examples
+                if (
+                    sum([getattr(m, abb.property_name) for abb in x.abilities.all()])
+                    / 2
+                    > m.practice_rating(x) + 1
+                )
+            ]
         else:
             examples = []
 
@@ -259,8 +268,19 @@ class LoadXPExamplesView(View):
         elif category_choice == "MeritFlaw":
             mage = ObjectType.objects.get(name="mage")
             examples = MeritFlaw.objects.filter(allowed_types=mage, max_rating__gte=0)
-            examples = [x for x in examples if self.character.mf_rating(x) != x.max_rating]
-            examples = [x for x in examples if (min([y for y in x.get_ratings() if y > self.character.mf_rating(x)]) - self.character.mf_rating(x)) * 3 <= self.character.xp]
+            examples = [
+                x for x in examples if self.character.mf_rating(x) != x.max_rating
+            ]
+            examples = [
+                x
+                for x in examples
+                if (
+                    min([y for y in x.get_ratings() if y > self.character.mf_rating(x)])
+                    - self.character.mf_rating(x)
+                )
+                * 3
+                <= self.character.xp
+            ]
         elif category_choice == "Sphere":
             filtered_spheres = [
                 sphere
@@ -327,9 +347,20 @@ class LoadXPExamplesView(View):
                 )
                 <= self.character.xp
             ]
-            examples = [x for x in examples if (sum([getattr(self.character, abb.property_name) for abb in x.abilities.all()]) / 2 > self.character.practice_rating(x) + 1)]
-        elif category_choice == "Rote":
-            pass
+            examples = [
+                x
+                for x in examples
+                if (
+                    sum(
+                        [
+                            getattr(self.character, abb.property_name)
+                            for abb in x.abilities.all()
+                        ]
+                    )
+                    / 2
+                    > self.character.practice_rating(x) + 1
+                )
+            ]
         return render(request, self.template_name, {"examples": examples})
 
 
@@ -358,12 +389,14 @@ class MageDetailView(HumanDetailView):
             self.object, self.request.user
         )
         context["form"] = MageXPForm(character=self.object)
+        context["rote_form"] = RoteCreationForm(instance=self.object)
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data()
         form = MageXPForm(request.POST, request.FILES, character=self.object)
+        rote_form = RoteCreationForm(request.POST, instance=self.object)
         if "spend_xp" in form.data.keys():
             if form.is_valid():
                 category = form.cleaned_data["category"]
@@ -484,7 +517,9 @@ class MageDetailView(HumanDetailView):
                 elif category == "Remove Tenet":
                     trait = "Remove " + example.name
                     trait_type = "remove tenet"
-                    cost = self.object.xp_cost("remove tenet", self.object.other_tenets.count() + 3)
+                    cost = self.object.xp_cost(
+                        "remove tenet", self.object.other_tenets.count() + 3
+                    )
                     d = self.object.xp_spend_record(trait, trait_type, None, cost=cost)
                     self.object.xp -= cost
                     self.object.spent_xp.append(d)
@@ -512,8 +547,89 @@ class MageDetailView(HumanDetailView):
                     self.object.spent_xp.append(d)
                     self.object.save()
                 elif category == "Rote":
-                    # TODO: Adding new Rotes
-                    pass
+                    if rote_form.is_valid():
+                        if (
+                            not rote_form.cleaned_data["select_or_create_rote"]
+                            and not rote_form.cleaned_data["rote_options"]
+                        ):
+                            rote_form.add_error(None, "Must create or select a rote")
+                            return render(
+                                request, self.template_name, self.get_context_data()
+                            )
+                        if rote_form.cleaned_data["select_or_create_rote"]:
+                            if (
+                                not rote_form.cleaned_data["select_or_create_effect"]
+                                and not rote_form.cleaned_data["effect_options"]
+                            ):
+                                rote_form.add_error(
+                                    None, "Must create or select an effect"
+                                )
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["name"]:
+                                rote_form.add_error(None, "Must choose rote name")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["practice"]:
+                                rote_form.add_error(None, "Must choose rote Practice")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["attribute"]:
+                                rote_form.add_error(None, "Must choose rote Attribute")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["ability"]:
+                                rote_form.add_error(None, "Must choose rote Ability")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["description"]:
+                                rote_form.add_error(
+                                    None, "Must choose rote description"
+                                )
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if rote_form.cleaned_data["select_or_create_effect"]:
+                                if not rote_form.cleaned_data["systems"]:
+                                    rote_form.add_error(
+                                        None, "Must choose rote systems"
+                                    )
+                                    return render(
+                                        request,
+                                        self.template_name,
+                                        self.get_context_data(),
+                                    )
+                                if (
+                                    rote_form.cleaned_data["correspondence"]
+                                    + rote_form.cleaned_data["entropy"]
+                                    + rote_form.cleaned_data["forces"]
+                                    + rote_form.cleaned_data["life"]
+                                    + rote_form.cleaned_data["matter"]
+                                    + rote_form.cleaned_data["mind"]
+                                    + rote_form.cleaned_data["prime"]
+                                    + rote_form.cleaned_data["spirit"]
+                                    + rote_form.cleaned_data["time"]
+                                    == 0
+                                ):
+                                    rote_form.add_error(
+                                        None, "Effects must have sphere ratings"
+                                    )
+                                    return render(
+                                        request,
+                                        self.template_name,
+                                        self.get_context_data(),
+                                    )
+                        try:
+                            rote_form.save(self.object)
+                        except forms.ValidationError:
+                            return render(
+                                request, self.template_name, self.get_context_data()
+                            )
             else:
                 print("errors", form.errors)
         if "Approve" in form.data.values():

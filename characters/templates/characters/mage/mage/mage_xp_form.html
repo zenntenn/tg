@@ -17,10 +17,12 @@
             <div class="col-sm">{{ item.approved }}</div>
             {% if request.user.profile.is_st %}
                 {% if item.approved != "Approved" %}
-                <div class="col-sm"><input type="submit" name="{{ item.index }}_approve" value="Approve" />
-                    <input type="submit" name="{{ item.index }}_approve" value="Reject" /></div>
+                    <div class="col-sm">
+                        <input type="submit" name="{{ item.index }}_approve" value="Approve" />
+                        <input type="submit" name="{{ item.index }}_approve" value="Reject" />
+                    </div>
                 {% else %}
-                <div class="col-sm"></div>
+                    <div class="col-sm"></div>
                 {% endif %}
             {% endif %}
         </div>
@@ -34,9 +36,75 @@
         <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
         <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
     </div>
+    <div class="invisible" id="rote_wrap">
+        <div class="row">
+            <div class="col-sm">Create New Rote: {{ rote_form.select_or_create_rote }}</div>
+        </div>
+        <div id="rote selection">
+            <div class="row">
+                <div class="col-sm">{{ rote_form.rote_options }}</div>
+            </div>
+        </div>
+        <div id="rote creation" class="invisible">
+            <div class="row">
+                <div class="col-sm">Name</div>
+                <div class="col-sm">{{ rote_form.name }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Practice</div>
+                <div class="col-sm">{{ rote_form.practice }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Dicepool</div>
+                <div class="col-sm">{{ rote_form.attribute }} + {{ rote_form.ability }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Description</div>
+                <div class="col-sm">{{ rote_form.description }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm">Create New Effect: {{ rote_form.select_or_create_effect }}</div>
+            </div>
+            <div id="effect selection">
+                <div class="row">
+                    <div class="col-sm">{{ rote_form.effect_options }}</div>
+                </div>
+            </div>
+            <div id="effect creation" class="invisible">
+                <div class="row">
+                    <div class="col-sm-2">Correspondence</div>
+                    <div class="col-sm-2 dots">{{ rote_form.correspondence }}</div>
+                    <div class="col-sm-2">Life</div>
+                    <div class="col-sm-2 dots">{{ rote_form.life }}</div>
+                    <div class="col-sm-2">Prime</div>
+                    <div class="col-sm-2 dots">{{ rote_form.prime }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">Entropy</div>
+                    <div class="col-sm-2 dots">{{ rote_form.entropy }}</div>
+                    <div class="col-sm-2">Matter</div>
+                    <div class="col-sm-2 dots">{{ rote_form.matter }}</div>
+                    <div class="col-sm-2">Spirit</div>
+                    <div class="col-sm-2 dots">{{ rote_form.spirit }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">Forces</div>
+                    <div class="col-sm-2 dots">{{ rote_form.forces }}</div>
+                    <div class="col-sm-2">Mind</div>
+                    <div class="col-sm-2 dots">{{ rote_form.mind }}</div>
+                    <div class="col-sm-2">Time</div>
+                    <div class="col-sm-2 dots">{{ rote_form.time }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Systems</div>
+                    <div class="col-sm">{{ rote_form.systems }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm">
-            <input type="submit" name="spend_xp" value="Spend XP" />
+            <input type="submit" name="spend_xp" value="Spend XP/Rote Points" />
         </div>
     </div>
 </form>
@@ -50,6 +118,7 @@
         const noteElement = document.getElementById("note_wrap");
         const pooled_wrap = document.getElementById("pooled_wrap");
         const image_field_wrap = document.getElementById("image_field_wrap");
+        const rote_wrap = document.getElementById("rote_wrap");
 
         var isGroupMember = {{ object.is_group_member|lower }};
     
@@ -64,6 +133,7 @@
                 resElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
                 image_field_wrap.classList.add("invisible")
+                rote_wrap.classList.add("invisible")
             } else {
                 exampleElement.classList.remove("invisible");
                 valueElement.classList.add("invisible");
@@ -71,6 +141,16 @@
                 resElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
                 image_field_wrap.classList.add("invisible")
+                rote_wrap.classList.add("invisible")
+            }
+            if(this.value == "Rote"){
+                exampleElement.classList.add("invisible")
+                valueElement.classList.add("invisible");
+                resElement.classList.add("invisible");
+                noteElement.classList.add("invisible");
+                pooled_wrap.classList.add("invisible");
+                image_field_wrap.classList.add("invisible")
+                rote_wrap.classList.remove("invisible")
             }
             if(this.value == "MeritFlaw"){
                 valueElement.classList.remove("invisible");
@@ -78,6 +158,7 @@
                 noteElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
                 image_field_wrap.classList.add("invisible")
+                rote_wrap.classList.add("invisible")
             }
             if(this.value == "Resonance"){
                 resElement.classList.remove("invisible");
@@ -86,12 +167,14 @@
                 valueElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
                 image_field_wrap.classList.add("invisible")
+                rote_wrap.classList.add("invisible")
             }
             if(this.value == "New Background"){
                 resElement.classList.add("invisible");
                 exampleElement.classList.remove("invisible");
                 noteElement.classList.remove("invisible");
                 valueElement.classList.add("invisible");
+                rote_wrap.classList.add("invisible")
                 if (isGroupMember) {
                     pooled_wrap.classList.remove("invisible");
                 } else {
@@ -106,6 +189,7 @@
                 valueElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
                 image_field_wrap.classList.add("invisible")
+                rote_wrap.classList.add("invisible")
             }
             if(this.value == "Image"){
                 resElement.classList.add("invisible")
@@ -114,6 +198,7 @@
                 valueElement.classList.add("invisible");
                 pooled_wrap.classList.add("invisible");
                 image_field_wrap.classList.remove("invisible")
+                rote_wrap.classList.add("invisible")
             }
             
             // Make the AJAX call
@@ -145,5 +230,70 @@
             }
         });
     });
+    
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#id_practice').change(function(){
+            var practiceId = $(this).val();
+            $.ajax({
+                url: "{% url 'characters:mage:ajax:get_abilities' %}",  // Your AJAX view URL
+                data: {
+                    'practice_id': practiceId,
+                    'object': {{ object.id }}
+                },
+                success: function(data) {
+                    var $abilitySelect = $('#id_ability');
+                    $abilitySelect.empty();
+                    $.each(data, function(index, item) {
+                        $abilitySelect.append($('<option>', { 
+                            value: item.id,
+                            text : item.name 
+                        }));
+                    });
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#id_select_or_create_rote').click(function() {
+            $('#id_ability').empty();
+            $('#id_ability').append($('<option>', { value: '', text: '--------' }));
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with data-toggle="toggle"
+        const rote_creation_toggle = document.getElementById('id_select_or_create_rote');
+        const effect_creation_toggle = document.getElementById('id_select_or_create_effect');
+        const rote_creation = document.getElementById('rote creation');
+        const rote_selection = document.getElementById('rote selection');
+        const effect_creation = document.getElementById('effect creation');
+        const effect_selection = document.getElementById('effect selection');
+        
+        // Attach event listener to each toggle
+        rote_creation_toggle.addEventListener('change', function() {
+            if ($(this).prop('checked')) {
+                rote_selection.classList.add("invisible");
+                rote_creation.classList.remove("invisible");
+            } else {
+                rote_creation.classList.add("invisible")
+                rote_selection.classList.remove("invisible")
+            }
+        });
+
+        effect_creation_toggle.addEventListener('change', function() {
+            if ($(this).prop('checked')) {
+                effect_selection.classList.add("invisible");
+                effect_creation.classList.remove("invisible");
+            } else {
+                effect_selection.classList.add("invisible")
+                effect_creation.classList.remove("invisible")
+            }
+        });
+    });
+
     
 </script>
