@@ -96,6 +96,7 @@ class MageFreebiesForm(FreebiesForm):
             self.instance.freebies < 4
             or (self.instance.total_freebies() == 45 and self.instance.arete >= 4)
             or (self.instance.total_freebies() != 45 and self.instance.arete >= 3)
+            or (self.instance.other_tenets.count() + 3 == self.instance.arete)
         ):
             ADDITIONAL_CATS = [x for x in ADDITIONAL_CATS if x[0] != "Arete"]
         if self.instance.freebies < 7:
