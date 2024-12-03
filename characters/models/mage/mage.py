@@ -983,7 +983,7 @@ class Mage(MtAHuman):
             "sphere": 8,
             "arete": 8,
             "tenet": 0,
-            "remove_tenet": 1,
+            "remove tenet": 1,
             "new_practice": 3,
             "practice": 1,
             "rotes": 1,

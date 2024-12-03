@@ -259,7 +259,7 @@ class LoadXPExamplesView(View):
         elif category_choice == "MeritFlaw":
             mage = ObjectType.objects.get(name="mage")
             examples = MeritFlaw.objects.filter(allowed_types=mage, max_rating__gte=0)
-            # Filter to purchaseable
+            # TODO: Filter to purchaseable
         elif category_choice == "Sphere":
             filtered_spheres = [
                 sphere
@@ -288,7 +288,6 @@ class LoadXPExamplesView(View):
                 id__in=[x.id for x in self.character.other_tenets.all()]
             )
         elif category_choice == "Remove Tenet":
-            # any "other" that isn't MPA, but also MPA if there's a replacement
             examples = self.character.other_tenets.all()
             types = [x.tenet_type for x in examples]
             if "met" in types:
@@ -363,10 +362,8 @@ class MageDetailView(HumanDetailView):
         self.object = self.get_object()
         context = self.get_context_data()
         form = MageXPForm(request.POST, request.FILES, character=self.object)
-        print(form.data)
         if "spend_xp" in form.data.keys():
             if form.is_valid():
-                print(form.cleaned_data)
                 category = form.cleaned_data["category"]
                 example = form.cleaned_data["example"]
                 value = form.cleaned_data["value"]
@@ -484,13 +481,14 @@ class MageDetailView(HumanDetailView):
                     self.object.save()
                 elif category == "Remove Tenet":
                     trait = "Remove " + example.name
-                    trait_type = "remove_tenet"
-                    cost = self.object.xp_cost("remove_tenet", 1)
+                    trait_type = "remove tenet"
+                    cost = self.object.xp_cost("remove tenet", 1)
                     d = self.object.xp_spend_record(trait, trait_type, None, cost=cost)
                     self.object.xp -= cost
                     self.object.spent_xp.append(d)
                     self.object.save()
                 elif category == "Practice":
+                    # TODO: Check abilities
                     trait = example.name
                     trait_type = "practice"
                     value = self.object.practice_rating(example)
@@ -513,20 +511,111 @@ class MageDetailView(HumanDetailView):
                     self.object.spent_xp.append(d)
                     self.object.save()
                 elif category == "Rote":
-                    #
-                    #
-                    #
-                    #
+                    # TODO: Adding new Rotes
                     pass
             else:
                 print("errors", form.errors)
         if "Approve" in form.data.values():
-            print("XP APPROVAL")
             xp_index = [x for x in form.data.keys() if form.data[x] == "Approve"][0]
+            index = "_".join(xp_index.split("_")[:-1])
+            d = [x for x in self.object.spent_xp if x["index"] == index][0]
+            i = self.object.spent_xp.index(d)
+            self.object.spent_xp[i]["approved"] = "Approved"
+            char_id, trait_type, trait, value = index.split("_")
+            if trait_type == "attribute":
+                att = Attribute.objects.get(name=trait)
+                setattr(self.object, att.property_name, value)
+                self.object.save()
+            elif trait_type == "ability":
+                abb = Ability.objects.get(name=trait)
+                setattr(self.object, abb.property_name, value)
+                self.object.save()
+            elif trait_type == "background":
+                trait, note = trait.replace("-", " ").split(" (")
+                note = note[:-1]
+                bgr = self.object.backgrounds.filter(bg__name=trait, note=note).first()
+                bgr.rating += 1
+                bgr.save()
+                self.object.save()
+            elif trait_type == "new-background":
+                trait = trait.split("-")
+                if len(trait) == 1:
+                    note = ""
+                    trait = trait[0]
+                else:
+                    note = trait[1][1:-1]
+                    trait = trait[0]
+                BackgroundRating.objects.create(
+                    bg=Background.objects.get(name=trait),
+                    rating=1,
+                    char=self.object,
+                    note=note,
+                )
+                self.object.save()
+            elif trait_type == "willpower":
+                self.object.willpower = value
+                self.object.save()
+            elif trait_type == "meritflaw":
+                trait = trait.replace("-", " ")
+                value = int(value)
+                mf = MeritFlaw.objects.get(name=trait)
+                self.object.add_mf(mf, value)
+                self.object.save()
+            elif trait_type == "sphere":
+                s = Sphere.objects.get(name=trait)
+                setattr(self.object, s.property_name, value)
+                self.object.save()
+            elif trait_type == "arete":
+                self.object.arete = value
+                self.object.save()
+            elif trait_type == "tenet":
+                t = Tenet.objects.get(name=trait.replace("-", " "))
+                self.object.other_tenets.add(t)
+                self.object.save()
+            elif trait_type == "remove-tenet":
+                trait = " ".join(trait.split("-")[1:])
+                tenet = Tenet.objects.get(name=trait)
+                if tenet in self.object.other_tenets.all():
+                    self.object.other_tenets.remove(tenet)
+                    self.object.save()
+                else:
+                    replacement = self.object.other_tenets.filter(
+                        tenet_type=tenet.tenet_type
+                    ).first()
+                    if tenet.tenet_type == "met":
+                        self.object.metaphysical_tenet = replacement
+                    elif tenet.tenet_type == "per":
+                        self.object.personal_tenet = replacement
+                    elif tenet.tenet_type == "asc":
+                        self.object.ascension_tenet = replacement
+                    self.object.other_tenets.remove(replacement)
+                    self.object.save()
+            elif trait_type == "practice":
+                practice = Practice.objects.get(name=trait)
+                self.object.add_practice(practice)
+                self.object.save()
+            elif trait_type == "rotes":
+                self.object.rote_points += 3
+                self.object.save()
+            elif trait_type == "resonance":
+                t = trait.split("-")
+                detail = " ".join(t[1:])[1:-1]
+                trait = t[0]
+                self.object.add_resonance(detail)
+                self.object.save()
         if "Reject" in form.data.values():
-            print("XP REJECTED")
             xp_index = [x for x in form.data.keys() if form.data[x] == "Reject"][0]
-        print(xp_index)
+            index = "_".join(xp_index.split("_")[:-1])
+            spends = [x for x in self.object.spent_xp if x["index"] == index]
+            for spend in spends:
+                self.object.xp += spend["cost"]
+            self.object.spent_xp = [
+                x
+                for x in self.object.spent_xp
+                if x["index"] != index
+                or not (x["index"] == index and x["approved"] == "Pending")
+            ]
+            self.object.save()
         return render(
             request,
             self.template_name,
