@@ -153,6 +153,8 @@ class RoteCreationForm(forms.Form):
                 )
                 if e.is_learnable(mage) and e.cost() <= mage.rote_points:
                     e.save()
+                else:
+                    raise forms.ValidationError("Not enough Rote Points")
             else:
                 # Select Effect
                 e = self.cleaned_data["effect_options"]

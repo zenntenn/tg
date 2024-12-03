@@ -14,7 +14,7 @@ CATEGORY_CHOICES = [
 ]
 
 
-class AdvancementForm(forms.Form):
+class FreebiesForm(forms.Form):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
     example = forms.ModelChoiceField(queryset=Attribute.objects.none(), required=False)
     value = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)

@@ -1,15 +1,16 @@
 from typing import Any
 
-from characters.forms.core.advancement import AdvancementForm
 from characters.forms.core.ally import AllyForm
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
+from characters.forms.core.freebies import FreebiesForm
 from characters.forms.core.specialty import SpecialtiesForm
-from characters.forms.mage.advancement import MageAdvancementForm
 from characters.forms.mage.effect import EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
 from characters.forms.mage.familiar import FamiliarForm
+from characters.forms.mage.freebies import MageFreebiesForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
+from characters.forms.mage.xp import MageXPForm
 from characters.models.core.ability_block import Ability
 from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import Attribute
@@ -188,9 +189,178 @@ class LoadExamplesView(View):
                 "practice__id", flat=True
             )
             examples = examples.exclude(pk__in=ids).order_by("name")
+            examples = [
+                x
+                for x in examples
+                if (
+                    sum([getattr(m, abb.property_name) for abb in x.abilities.all()])
+                    / 2
+                    > m.practice_rating(x) + 1
+                )
+            ]
         else:
             examples = []
 
+        return render(request, self.template_name, {"examples": examples})
+
+
+class LoadXPExamplesView(View):
+    template_name = "characters/core/human/load_examples_dropdown_list.html"
+
+    def get(self, request, *args, **kwargs):
+        category_choice = request.GET.get("category")
+        object_id = request.GET.get("object")
+        self.character = Mage.objects.get(pk=object_id)
+        examples = []
+
+        if category_choice == "Attribute":
+            filtered_attributes = [
+                attribute
+                for attribute in Attribute.objects.all()
+                if getattr(self.character, attribute.property_name) < 5
+            ]
+            filtered_for_xp_cost = [
+                x
+                for x in filtered_attributes
+                if self.character.xp_cost(
+                    "attribute",
+                    getattr(self.character, x.property_name),
+                )
+                <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "Ability":
+            filtered_abilities = [
+                ability
+                for ability in Ability.objects.filter(
+                    property_name__in=self.character.talents
+                    + self.character.skills
+                    + self.character.knowledges
+                )
+                if getattr(self.character, ability.property_name) < 5
+            ]
+            filtered_for_xp_cost = [
+                x
+                for x in filtered_abilities
+                if self.character.xp_cost(
+                    "ability",
+                    getattr(self.character, x.property_name),
+                )
+                <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "New Background":
+            examples = Background.objects.filter(
+                property_name__in=self.character.allowed_backgrounds
+            ).order_by("name")
+        elif category_choice == "Existing Background":
+            bgs = self.character.backgrounds.filter(rating__lt=5)
+            filtered_for_xp_cost = [
+                x
+                for x in bgs
+                if self.character.xp_cost(
+                    "background",
+                    x.rating,
+                )
+                <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "MeritFlaw":
+            mage = ObjectType.objects.get(name="mage")
+            examples = MeritFlaw.objects.filter(allowed_types=mage, max_rating__gte=0)
+            examples = [
+                x for x in examples if self.character.mf_rating(x) != x.max_rating
+            ]
+            examples = [
+                x
+                for x in examples
+                if (
+                    min([y for y in x.get_ratings() if y > self.character.mf_rating(x)])
+                    - self.character.mf_rating(x)
+                )
+                * 3
+                <= self.character.xp
+            ]
+        elif category_choice == "Sphere":
+            filtered_spheres = [
+                sphere
+                for sphere in Sphere.objects.all()
+                if getattr(self.character, sphere.property_name) < self.character.arete
+            ]
+            filtered_for_xp_cost = [
+                x
+                for x in filtered_spheres
+                if self.character.xp_cost(
+                    self.character.sphere_to_trait_type(x.property_name),
+                    getattr(self.character, x.property_name),
+                )
+                <= self.character.xp
+            ]
+            examples = filtered_for_xp_cost
+        elif category_choice == "Tenet":
+            examples = Tenet.objects.exclude(
+                id__in=[
+                    self.character.metaphysical_tenet.id,
+                    self.character.personal_tenet.id,
+                    self.character.ascension_tenet.id,
+                ]
+            )
+            examples = examples.exclude(
+                id__in=[x.id for x in self.character.other_tenets.all()]
+            )
+        elif category_choice == "Remove Tenet":
+            examples = self.character.other_tenets.all()
+            types = [x.tenet_type for x in examples]
+            if "met" in types:
+                examples |= Tenet.objects.filter(
+                    id__in=[self.character.metaphysical_tenet.id]
+                )
+            if "asc" in types:
+                examples |= Tenet.objects.filter(
+                    id__in=[self.character.ascension_tenet.id]
+                )
+            if "per" in types:
+                examples |= Tenet.objects.filter(
+                    id__in=[self.character.personal_tenet.id]
+                )
+        elif category_choice == "Practice":
+            examples = Practice.objects.exclude(
+                polymorphic_ctype__model="specializedpractice"
+            ).exclude(polymorphic_ctype__model="corruptedpractice")
+            spec = SpecializedPractice.objects.filter(faction=self.character.faction)
+            if spec.count() > 0:
+                examples = examples.exclude(
+                    id__in=[x.parent_practice.id for x in spec]
+                ) | Practice.objects.filter(id__in=[x.id for x in spec])
+
+            ids = PracticeRating.objects.filter(
+                mage=self.character, rating=5
+            ).values_list("practice__id", flat=True)
+
+            filtered_practices = examples.exclude(pk__in=ids).order_by("name")
+            examples = [
+                x
+                for x in filtered_practices
+                if self.character.xp_cost(
+                    "practice",
+                    self.character.practice_rating(x),
+                )
+                <= self.character.xp
+            ]
+            examples = [
+                x
+                for x in examples
+                if (
+                    sum(
+                        [
+                            getattr(self.character, abb.property_name)
+                            for abb in x.abilities.all()
+                        ]
+                    )
+                    / 2
+                    > self.character.practice_rating(x) + 1
+                )
+            ]
         return render(request, self.template_name, {"examples": examples})
 
 
@@ -218,7 +388,356 @@ class MageDetailView(HumanDetailView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
+        context["form"] = MageXPForm(character=self.object)
+        context["rote_form"] = RoteCreationForm(instance=self.object)
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data()
+        form = MageXPForm(request.POST, request.FILES, character=self.object)
+        rote_form = RoteCreationForm(request.POST, instance=self.object)
+        if "spend_xp" in form.data.keys():
+            if form.is_valid():
+                category = form.cleaned_data["category"]
+                example = form.cleaned_data["example"]
+                value = form.cleaned_data["value"]
+                note = form.cleaned_data["note"]
+                pooled = form.cleaned_data["pooled"]
+                image_field = form.cleaned_data["image_field"]
+                resonance = form.cleaned_data["resonance"]
+                if category == "Image":
+                    self.object.image = image_field
+                    self.object.save()
+                elif category == "Attribute":
+                    trait = example.name
+                    trait_type = "attribute"
+                    value = getattr(self.object, example.property_name)
+                    cost = self.object.xp_cost("attribute", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Ability":
+                    trait = example.name
+                    trait_type = "ability"
+                    value = getattr(self.object, example.property_name)
+                    cost = self.object.xp_cost("ability", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "New Background":
+                    if note:
+                        trait = example.name + f" ({note})"
+                    else:
+                        trait = example.name
+                    trait_type = "new background"
+                    value = 1
+                    cost = self.object.xp_cost("new background", value)
+                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Existing Background":
+                    trait = example.bg.name + f" ({example.note})"
+                    trait_type = "background"
+                    value = example.rating
+                    cost = self.object.xp_cost("background", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Willpower":
+                    trait = "Willpower"
+                    trait_type = "willpower"
+                    value = self.object.willpower
+                    cost = self.object.xp_cost("willpower", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "MeritFlaw":
+                    current_rating = self.object.mf_rating(example)
+                    trait = example.name
+                    trait_type = "meritflaw"
+                    cost = self.object.xp_cost("meritflaw", value - current_rating)
+                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Sphere":
+                    trait = example.name
+                    trait_type = "sphere"
+                    value = getattr(self.object, example.property_name) + 1
+                    cost = self.object.xp_cost(
+                        self.object.sphere_to_trait_type(example.property_name),
+                        getattr(self.object, example.property_name),
+                    )
+                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Rote Points":
+                    trait = "Rote Points"
+                    trait_type = "rotes"
+                    cost = self.object.xp_cost("rotes", 1)
+                    d = self.object.xp_spend_record(trait, trait_type, 3, cost=cost)
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Resonance":
+                    trait = f"Resonance ({resonance})"
+                    r = Resonance.objects.get_or_create(name=resonance)[0]
+                    trait_type = "resonance"
+                    value = self.object.resonance_rating(r)
+                    cost = self.object.xp_cost("resonance", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Tenet":
+                    trait = example.name
+                    trait_type = "tenet"
+                    cost = self.object.xp_cost("tenet", 1)
+                    d = self.object.xp_spend_record(trait, trait_type, None, cost=cost)
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Remove Tenet":
+                    trait = "Remove " + example.name
+                    trait_type = "remove tenet"
+                    cost = self.object.xp_cost(
+                        "remove tenet", self.object.other_tenets.count() + 3
+                    )
+                    d = self.object.xp_spend_record(trait, trait_type, None, cost=cost)
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Practice":
+                    trait = example.name
+                    trait_type = "practice"
+                    value = self.object.practice_rating(example)
+                    cost = self.object.xp_cost("practice", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Arete":
+                    trait = "Arete"
+                    trait_type = "arete"
+                    value = self.object.arete
+                    cost = self.object.xp_cost("arete", value)
+                    d = self.object.xp_spend_record(
+                        trait, trait_type, value + 1, cost=cost
+                    )
+                    self.object.xp -= cost
+                    self.object.spent_xp.append(d)
+                    self.object.save()
+                elif category == "Rote":
+                    if rote_form.is_valid():
+                        if (
+                            not rote_form.cleaned_data["select_or_create_rote"]
+                            and not rote_form.cleaned_data["rote_options"]
+                        ):
+                            rote_form.add_error(None, "Must create or select a rote")
+                            return render(
+                                request, self.template_name, self.get_context_data()
+                            )
+                        if rote_form.cleaned_data["select_or_create_rote"]:
+                            if (
+                                not rote_form.cleaned_data["select_or_create_effect"]
+                                and not rote_form.cleaned_data["effect_options"]
+                            ):
+                                rote_form.add_error(
+                                    None, "Must create or select an effect"
+                                )
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["name"]:
+                                rote_form.add_error(None, "Must choose rote name")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["practice"]:
+                                rote_form.add_error(None, "Must choose rote Practice")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["attribute"]:
+                                rote_form.add_error(None, "Must choose rote Attribute")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["ability"]:
+                                rote_form.add_error(None, "Must choose rote Ability")
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if not rote_form.cleaned_data["description"]:
+                                rote_form.add_error(
+                                    None, "Must choose rote description"
+                                )
+                                return render(
+                                    request, self.template_name, self.get_context_data()
+                                )
+                            if rote_form.cleaned_data["select_or_create_effect"]:
+                                if not rote_form.cleaned_data["systems"]:
+                                    rote_form.add_error(
+                                        None, "Must choose rote systems"
+                                    )
+                                    return render(
+                                        request,
+                                        self.template_name,
+                                        self.get_context_data(),
+                                    )
+                                if (
+                                    rote_form.cleaned_data["correspondence"]
+                                    + rote_form.cleaned_data["entropy"]
+                                    + rote_form.cleaned_data["forces"]
+                                    + rote_form.cleaned_data["life"]
+                                    + rote_form.cleaned_data["matter"]
+                                    + rote_form.cleaned_data["mind"]
+                                    + rote_form.cleaned_data["prime"]
+                                    + rote_form.cleaned_data["spirit"]
+                                    + rote_form.cleaned_data["time"]
+                                    == 0
+                                ):
+                                    rote_form.add_error(
+                                        None, "Effects must have sphere ratings"
+                                    )
+                                    return render(
+                                        request,
+                                        self.template_name,
+                                        self.get_context_data(),
+                                    )
+                        try:
+                            rote_form.save(self.object)
+                        except forms.ValidationError:
+                            return render(
+                                request, self.template_name, self.get_context_data()
+                            )
+            else:
+                print("errors", form.errors)
+        if "Approve" in form.data.values():
+            xp_index = [x for x in form.data.keys() if form.data[x] == "Approve"][0]
+            index = "_".join(xp_index.split("_")[:-1])
+            d = [x for x in self.object.spent_xp if x["index"] == index][0]
+            i = self.object.spent_xp.index(d)
+            self.object.spent_xp[i]["approved"] = "Approved"
+            char_id, trait_type, trait, value = index.split("_")
+            if trait_type == "attribute":
+                att = Attribute.objects.get(name=trait)
+                setattr(self.object, att.property_name, value)
+                self.object.save()
+            elif trait_type == "ability":
+                abb = Ability.objects.get(name=trait)
+                setattr(self.object, abb.property_name, value)
+                self.object.save()
+            elif trait_type == "background":
+                trait, note = trait.replace("-", " ").split(" (")
+                note = note[:-1]
+                bgr = self.object.backgrounds.filter(bg__name=trait, note=note).first()
+                bgr.rating += 1
+                bgr.save()
+                self.object.save()
+            elif trait_type == "new-background":
+                trait = trait.split("-")
+                if len(trait) == 1:
+                    note = ""
+                    trait = trait[0]
+                else:
+                    note = trait[1][1:-1]
+                    trait = trait[0]
+                BackgroundRating.objects.create(
+                    bg=Background.objects.get(name=trait),
+                    rating=1,
+                    char=self.object,
+                    note=note,
+                )
+                self.object.save()
+            elif trait_type == "willpower":
+                self.object.willpower = value
+                self.object.save()
+            elif trait_type == "meritflaw":
+                trait = trait.replace("-", " ")
+                value = int(value)
+                mf = MeritFlaw.objects.get(name=trait)
+                self.object.add_mf(mf, value)
+                self.object.save()
+            elif trait_type == "sphere":
+                s = Sphere.objects.get(name=trait)
+                setattr(self.object, s.property_name, value)
+                self.object.save()
+            elif trait_type == "arete":
+                self.object.arete = value
+                self.object.save()
+            elif trait_type == "tenet":
+                t = Tenet.objects.get(name=trait.replace("-", " "))
+                self.object.other_tenets.add(t)
+                self.object.save()
+            elif trait_type == "remove-tenet":
+                trait = " ".join(trait.split("-")[1:])
+                tenet = Tenet.objects.get(name=trait)
+                if tenet in self.object.other_tenets.all():
+                    self.object.other_tenets.remove(tenet)
+                    self.object.save()
+                else:
+                    replacement = self.object.other_tenets.filter(
+                        tenet_type=tenet.tenet_type
+                    ).first()
+                    if tenet.tenet_type == "met":
+                        self.object.metaphysical_tenet = replacement
+                    elif tenet.tenet_type == "per":
+                        self.object.personal_tenet = replacement
+                    elif tenet.tenet_type == "asc":
+                        self.object.ascension_tenet = replacement
+                    self.object.other_tenets.remove(replacement)
+                    self.object.save()
+            elif trait_type == "practice":
+                practice = Practice.objects.get(name=trait)
+                self.object.add_practice(practice)
+                self.object.save()
+            elif trait_type == "rotes":
+                self.object.rote_points += 3
+                self.object.save()
+            elif trait_type == "resonance":
+                t = trait.split("-")
+                detail = " ".join(t[1:])[1:-1]
+                trait = t[0]
+                self.object.add_resonance(detail)
+                self.object.save()
+        if "Reject" in form.data.values():
+            xp_index = [x for x in form.data.keys() if form.data[x] == "Reject"][0]
+            index = "_".join(xp_index.split("_")[:-1])
+            spends = [x for x in self.object.spent_xp if x["index"] == index]
+            for spend in spends:
+                self.object.xp += spend["cost"]
+            self.object.spent_xp = [
+                x
+                for x in self.object.spent_xp
+                if x["index"] != index
+                or not (x["index"] == index and x["approved"] == "Pending")
+            ]
+            self.object.save()
+        return render(
+            request,
+            self.template_name,
+            context,
+        )
 
 
 class MageCreateView(CreateView):
@@ -948,7 +1467,7 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
 
 class MageFreebiesView(SpecialUserMixin, UpdateView):
     model = Mage
-    form_class = MageAdvancementForm
+    form_class = MageFreebiesForm
     template_name = "characters/mage/mage/chargen.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:

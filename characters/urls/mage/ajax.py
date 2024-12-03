@@ -24,6 +24,11 @@ urls = [
         name="load_examples",
     ),
     path(
+        "load_xp_examples/",
+        views.mage.mage.LoadXPExamplesView.as_view(),
+        name="load_xp_examples",
+    ),
+    path(
         "load_companion_examples/",
         views.mage.companion.LoadExamplesView.as_view(),
         name="load_companion_examples",
