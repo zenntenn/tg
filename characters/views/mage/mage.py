@@ -118,7 +118,6 @@ def load_mf_ratings(request):
         {"ratings": ratings},
     )
 
-
 class LoadExamplesView(View):
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 
@@ -189,6 +188,7 @@ class LoadExamplesView(View):
                 "practice__id", flat=True
             )
             examples = examples.exclude(pk__in=ids).order_by("name")
+            examples = [x for x in examples if (sum([getattr(m, abb.property_name) for abb in x.abilities.all()]) / 2 > m.practice_rating(x) + 1)]
         else:
             examples = []
 
@@ -259,7 +259,8 @@ class LoadXPExamplesView(View):
         elif category_choice == "MeritFlaw":
             mage = ObjectType.objects.get(name="mage")
             examples = MeritFlaw.objects.filter(allowed_types=mage, max_rating__gte=0)
-            # TODO: Filter to purchaseable
+            examples = [x for x in examples if self.character.mf_rating(x) != x.max_rating]
+            examples = [x for x in examples if (min([y for y in x.get_ratings() if y > self.character.mf_rating(x)]) - self.character.mf_rating(x)) * 3 <= self.character.xp]
         elif category_choice == "Sphere":
             filtered_spheres = [
                 sphere
@@ -326,6 +327,7 @@ class LoadXPExamplesView(View):
                 )
                 <= self.character.xp
             ]
+            examples = [x for x in examples if (sum([getattr(self.character, abb.property_name) for abb in x.abilities.all()]) / 2 > self.character.practice_rating(x) + 1)]
         elif category_choice == "Rote":
             pass
         return render(request, self.template_name, {"examples": examples})
@@ -488,7 +490,6 @@ class MageDetailView(HumanDetailView):
                     self.object.spent_xp.append(d)
                     self.object.save()
                 elif category == "Practice":
-                    # TODO: Check abilities
                     trait = example.name
                     trait_type = "practice"
                     value = self.object.practice_rating(example)
