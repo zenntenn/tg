@@ -35,11 +35,10 @@ class ProfileView(DetailView):
         if any(x.startswith("XP for") for x in request.POST.keys()):
             to_remove = [x for x in request.POST.keys() if x.startswith("XP for")][0]
             new_dict = {
-                k: v
+                "-".join(k.split("-")[1:]): v
                 for k, v in request.POST.items()
-                if k not in [to_remove, "csrfmiddlewaretoken"]
+                if (k not in [to_remove, "csrfmiddlewaretoken"] and v != "")
             }
-            print(new_dict)
             scene_name = [x for x in request.POST.keys() if x.startswith("XP for")][
                 0
             ].split("XP for ")[-1]
