@@ -39,10 +39,11 @@ class ProfileView(DetailView):
                 for k, v in request.POST.items()
                 if k not in [to_remove, "csrfmiddlewaretoken"]
             }
+            print(new_dict)
             scene_name = [x for x in request.POST.keys() if x.startswith("XP for")][
                 0
             ].split("XP for ")[-1]
-            scene = Scene.objects.get(name=scene_name)
+            scene = Scene.objects.get(id=scene_name.split("-")[-1])
             for char in scene.characters.all():
                 if char.name in new_dict.keys():
                     char.xp += int(new_dict[char.name])
