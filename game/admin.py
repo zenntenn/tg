@@ -16,11 +16,15 @@ admin.site.register(Chronicle)
 class SceneAdmin(admin.ModelAdmin):
     list_display = (
         "name",
+        "chronicle",
         "location",
         "finished",
+        "xp_given",
+        "waiting_for_st",
         "num_pcs",
         "total_posts",
     )
+    list_filter = ("chronicle", "finished", "xp_given", "waiting_for_st")
 
     def num_pcs(self, obj):
         return obj.characters.filter(npc=False).count()
