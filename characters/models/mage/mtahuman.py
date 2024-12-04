@@ -150,6 +150,8 @@ class MtAHuman(Human):
         "theology",
         "unconventional_warface",
         "vice",
+        "enochian",
+        "umbrood_protocols"
     ]
 
     primary_abilities = [
@@ -270,6 +272,9 @@ class MtAHuman(Human):
     theology = models.IntegerField(default=0)
     unconventional_warface = models.IntegerField(default=0)
     vice = models.IntegerField(default=0)
+    
+    enochian = models.IntegerField(default=0)
+    umbrood_protocols = models.IntegerField(default=0)
 
     allied_characters = models.ManyToManyField(Character, blank=True)
     enhancement_devices = models.ManyToManyField(Wonder, blank=True)
