@@ -188,7 +188,7 @@ class Scene(models.Model):
             self.add_character(character)
         if display == "":
             display = character.name
-        if message == "@Storyteller":
+        if message.lower() == "@storyteller":
             self.waiting_for_st = True
             self.save()
             return None
