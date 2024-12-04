@@ -149,6 +149,7 @@ class Scene(models.Model):
     )
     finished = models.BooleanField(default=False)
     xp_given = models.BooleanField(default=False)
+    waiting_for_st = models.BooleanField(default=False)
     date_of_scene = models.DateField(default=now, null=True, blank=True)
 
     class Meta:
@@ -187,6 +188,13 @@ class Scene(models.Model):
             self.add_character(character)
         if display == "":
             display = character.name
+        if message == "@Storyteller":
+            self.waiting_for_st = True
+            self.save()
+            return None
+        if self.waiting_for_st and character.owner.profile.is_st():
+            self.waiting_for_st = False
+            self.save()
         post = Post.objects.create(
             character=character, message=message, display_name=display, scene=self
         )
