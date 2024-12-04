@@ -192,21 +192,23 @@
                                                    href="{{ scene.get_absolute_url }}">{{ scene.name }}</a>
                                             </h3>
                                             {% for character in scene.characters.all %}
-                                                <div class="row align-items-center mb-2">
-                                                    <!-- Name Column -->
-                                                    <div class="col-6 text-start">
-                                                        <a class="col-sm" href="{{ character.get_absolute_url }}">{{ character.name }}</a>
+                                                {% if not character.npc %}
+                                                    <div class="row align-items-center mb-2">
+                                                        <!-- Name Column -->
+                                                        <div class="col-6 text-start">
+                                                            <a class="col-sm" href="{{ character.get_absolute_url }}">{{ character.name }}</a>
+                                                        </div>
+                                                        <!-- Number Input Column -->
+                                                        <div class="col-6 text-end">
+                                                            <label class="mb-0">
+                                                                <input type="number"
+                                                                       value="{{ scene.id }}-{{ character.name }}"
+                                                                       name="{{ scene.id }}-{{ character.name }}"
+                                                                       class="form-control" />
+                                                            </label>
+                                                        </div>
                                                     </div>
-                                                    <!-- Number Input Column -->
-                                                    <div class="col-6 text-end">
-                                                        <label class="mb-0">
-                                                            <input type="number"
-                                                                   value="{{ scene.id }}-{{ character.name }}"
-                                                                   name="{{ scene.id }}-{{ character.name }}"
-                                                                   class="form-control" />
-                                                        </label>
-                                                    </div>
-                                                </div>
+                                                {% endif %}
                                             {% endfor %}
                                             <input type="submit"
                                                    value="XP for {{ scene.name }}"
