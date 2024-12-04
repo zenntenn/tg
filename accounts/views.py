@@ -22,6 +22,13 @@ class ProfileView(DetailView):
     model = Profile
     template_name = "accounts/detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["scenes_waiting"] = []
+        if self.object.is_st():
+            context["scenes_waiting"] = Scene.objects.filter(waiting_for_st=True)
+        return context
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data()
