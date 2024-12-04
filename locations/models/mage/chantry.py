@@ -216,7 +216,7 @@ class Chantry(BackgroundBlock, LocationModel):
     def set_chantry_type(self, chantry_type):
         self.chantry_type = chantry_type
         if chantry_type == "library":
-            self.library_rating = 3
+            self.library = 3
         self.save()
         return True
 
@@ -233,16 +233,16 @@ class Chantry(BackgroundBlock, LocationModel):
             "cult",
             "elders",
             "integrated_effects",
-            "library_rating",
+            "library",
             "retainers",
             "spies",
         ]:
             return 2
-        if trait in ["node_rating", "resources"]:
+        if trait in ["node", "resources"]:
             return 3
         if trait in ["enhancement", "requisitions"]:
             return 4
-        if trait in ["reality_zone_rating"]:
+        if trait in ["sanctum"]:
             return 5
         return 1000
 
@@ -256,17 +256,17 @@ class Chantry(BackgroundBlock, LocationModel):
                 + self.cult
                 + self.elders
                 + self.integrated_effects
-                + self.library_rating
+                + self.library
                 + self.retainers
                 + self.spies
             )
-            + 3 * (self.node_rating + self.resources)
+            + 3 * (self.node + self.resources)
             + 4 * (self.enhancement + self.requisitions)
-            + 5 * (self.reality_zone_rating)
+            + 5 * (self.sanctum)
         )
 
     def has_node(self):
-        return self.total_node() == self.node_rating
+        return self.total_node() == self.node
 
     def add_node(self, node):
         self.nodes.add(node)
@@ -278,8 +278,8 @@ class Chantry(BackgroundBlock, LocationModel):
                 self.add_node(node)
             return True
         node_ranks = []
-        while sum(node_ranks) < self.node_rating:
-            x = random.randint(1, min(5, self.node_rating - sum(node_ranks)))
+        while sum(node_ranks) < self.node:
+            x = random.randint(1, min(5, self.node - sum(node_ranks)))
             node_ranks.append(x)
 
         for i, rank in enumerate(node_ranks):
@@ -311,7 +311,7 @@ class Chantry(BackgroundBlock, LocationModel):
         l, _ = Library.objects.get_or_create(
             name=f"{self.name} Library", owner=self.owner
         )
-        l.rank = self.library_rating
+        l.rank = self.library
         while l.num_books() < l.rank:
             l.random_book()
         return self.set_library(l)
@@ -423,7 +423,7 @@ class Chantry(BackgroundBlock, LocationModel):
                 }
             choice = weighted_choice(d)
             if self.trait_cost(choice) <= self.points - self.points_spent():
-                if choice != "node_rating":
+                if choice != "node":
                     add_dot(self, choice, maximum=10)
                 else:
                     add_dot(self, choice, maximum=100)
@@ -444,9 +444,9 @@ class Chantry(BackgroundBlock, LocationModel):
             "resources": self.resources,
             "enhancement": self.enhancement,
             "requisitions": self.requisitions,
-            "reality_zone": self.reality_zone_rating,
-            "node_rating": self.node_rating,
-            "library_rating": self.library_rating,
+            "reality_zone": self.sanctum,
+            "node": self.node,
+            "library": self.library,
         }
 
     def set_faction(self, faction):
