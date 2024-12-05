@@ -1,7 +1,9 @@
 from typing import Any
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic import CreateView, DetailView, UpdateView
+from locations.forms.mage.node import NodeForm
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 
 
@@ -20,31 +22,19 @@ class NodeDetailView(DetailView):
         return context
 
 
-class NodeCreateView(CreateView):
-    model = Node
-    fields = [
-        "name",
-        "parent",
-        "reality_zone",
-        "description",
-        "rank",
-        "size",
-        "quintessence_per_week",
-        "quintessence_form",
-        "tass_per_week",
-        "tass_form",
-        "merits_and_flaws",
-        "resonance",
-    ]
-    template_name = "locations/mage/node/form.html"
+from django.views.generic.edit import FormView
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
-        )
-        return form
+
+class NodeCreateView(FormView):
+    template_name = "locations/mage/node/form.html"
+    form_class = NodeForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super(NodeCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
 
 class NodeUpdateView(UpdateView):

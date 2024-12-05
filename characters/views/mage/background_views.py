@@ -27,12 +27,12 @@ from items.models.mage.charm import Charm
 from items.models.mage.talisman import Talisman
 from items.models.mage.wonder import WonderResonanceRating
 from locations.forms.core.sanctum import SanctumForm
-from locations.forms.mage.node import (
+from locations.forms.mage.node import (  # NodeMeritFlawFormSet,; NodeResonancePracticeRatingFormSet,
     NodeForm,
     NodeMeritFlawForm,
-    NodeMeritFlawFormSet,
-    NodeResonancePracticeRatingFormSet,
+    NodeMeritFlawRatingFormSet,
     NodeResonanceRatingForm,
+    NodeResonanceRatingFormSet,
 )
 from locations.forms.mage.reality_zone import (
     RealityZonePracticeRatingForm,
@@ -50,8 +50,8 @@ class MtANodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     template_name = "characters/mage/mage/chargen.html"
     formsets = {
         "rz_form": RealityZonePracticeRatingFormSet,
-        "resonance_form": NodeResonancePracticeRatingFormSet,
-        "mf_form": NodeMeritFlawFormSet,
+        "resonance_form": NodeResonanceRatingFormSet,
+        "mf_form": NodeMeritFlawRatingFormSet,
     }
     potential_skip = [
         "library",
@@ -386,7 +386,7 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
     form_class = WonderForm
     formsets = {
         "effects_form": EffectFormSet,
-        "resonance_form": NodeResonancePracticeRatingFormSet,
+        "resonance_form": NodeResonanceRatingFormSet,
     }
     template_name = "characters/mage/mage/chargen.html"
 
