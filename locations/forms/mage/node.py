@@ -110,6 +110,9 @@ class NodeForm(forms.ModelForm):
             "quintessence_form",
             "tass_form",
             "parent",
+            "gauntlet",
+            "shroud",
+            "dimension_barrier",
         )
 
     def __init__(self, *args, **kwargs):

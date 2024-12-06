@@ -1,5 +1,7 @@
 from typing import Any
 
+from django import forms
+
 from characters.forms.core.ally import AllyForm
 from characters.forms.mage.effect import EffectForm, EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
@@ -45,14 +47,9 @@ from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.sanctum import Sanctum
 
 
-class MtANodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
+class MtANodeView(SpecialUserMixin, FormView):
     form_class = NodeForm
     template_name = "characters/mage/mage/chargen.html"
-    formsets = {
-        "rz_form": RealityZonePracticeRatingFormSet,
-        "resonance_form": NodeResonanceRatingFormSet,
-        "mf_form": NodeMeritFlawRatingFormSet,
-    }
     potential_skip = [
         "library",
         "familiar",
@@ -64,68 +61,11 @@ class MtANodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        obj = context["object"]
-
-        n = Node(
-            name=form.cleaned_data["name"],
-            description=form.cleaned_data["description"],
-            ratio=form.cleaned_data["ratio"],
-            size=form.cleaned_data["size"],
-            quintessence_form=form.cleaned_data["quintessence_form"],
-            tass_form=form.cleaned_data["tass_form"],
-            gauntlet=3,
-            owned_by=obj,
-            chronicle=obj.chronicle,
-            owner=obj.owner,
-            status="Sub",
-        )
-        n.set_rank(self.current_node.rating)
-        n.points -= form.cleaned_data["ratio"]
-        n.points -= form.cleaned_data["size"]
-
-        resonance_data = self.get_form_data("resonance_form")
-        for res in resonance_data:
-            res["resonance"] = Resonance.objects.get_or_create(name=res["resonance"])[0]
-            res["rating"] = int(res["rating"])
-            if res["rating"] > 5:
-                form.add_error(
-                    None,
-                    "Resonance may not be higher than 5",
-                )
-                return self.form_invalid(form)
-        total_resonance = sum([x["rating"] for x in resonance_data])
-
-        mf_data = self.get_form_data("mf_form")
-        for res in mf_data:
-            res["mf"] = MeritFlaw.objects.get(id=res["mf"])
-            res["rating"] = int(res["rating"])
-        total_mfs = sum([x["rating"] for x in mf_data])
-
-        rz_data = self.get_form_data("rz_form")
-        for res in rz_data:
-            res["practice"] = Practice.objects.get(id=res["practice"])
-            res["rating"] = int(res["rating"])
-        total_rz = sum([x["rating"] for x in rz_data])
-        total_positive = sum([x["rating"] for x in rz_data if x["rating"] > 0])
-        if total_rz != 0:
-            form.add_error(None, "Ratings must total 0")
-            return super().form_invalid(form)
-        if total_positive != self.current_node.rating:
-            form.add_error(None, "Positive Ratings must equal Node rating")
-            return super().form_invalid(form)
-
-        if total_resonance < n.rank:
-            form.add_error(None, "Resonance total must match or exceed rank")
-            return self.form_invalid(form)
-        n.points -= total_resonance - n.rank
-        n.points -= total_mfs
-        if n.points < 0:
-            form.add_error(
-                None,
-                "Node invalid: spend fewer points on merits/flaws, resonance, size, or ratio",
-            )
-            return self.form_invalid(form)
-        n.update_output()
+        n = form.save()
+        n.owned_by = context["object"]
+        n.owner = context["object"].owner
+        n.chronicle = context["object"].chronicle
+        n.status = "Sub"
         n.save()
 
         self.current_node.note = n.name
@@ -133,47 +73,27 @@ class MtANodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         self.current_node.complete = True
         self.current_node.save()
 
-        for resonance in resonance_data:
-            NodeResonanceRating.objects.create(
-                node=n, resonance=resonance["resonance"], rating=resonance["rating"]
-            )
-
-        for mf in mf_data:
-            NodeMeritFlawRating.objects.create(node=n, mf=mf["mf"], rating=mf["rating"])
-
-        rzone = RealityZone.objects.create(name="{n.name} Reality Zone")
-        n.reality_zone = rzone
-        n.save()
-        for rz in rz_data:
-            ZoneRating.objects.create(
-                zone=rzone, practice=rz["practice"], rating=rz["rating"]
-            )
-
         if (
-            BackgroundRating.objects.filter(
-                char=obj,
-                bg=Background.objects.get(property_name="node"),
-                complete=False,
-            ).count()
+            context["object"]
+            .backgrounds.filter(bg__property_name="node", complete=False)
+            .count()
             == 0
         ):
-            obj.creation_status += 1
-            obj.save()
+            context["object"].creation_status += 1
+            context["object"].save()
             for step in self.potential_skip:
                 if (
-                    BackgroundRating.objects.filter(
-                        bg=Background.objects.get(property_name=step),
-                        char=obj,
-                        complete=False,
-                    ).count()
+                    context["object"]
+                    .backgrounds.filter(bg__property_name=step, complete=False)
+                    .count()
                     == 0
                 ):
-                    obj.creation_status += 1
+                    context["object"].creation_status += 1
                 else:
-                    obj.save()
+                    context["object"].save()
                     break
-            obj.save()
-        return HttpResponseRedirect(obj.get_absolute_url())
+            context["object"].save()
+        return HttpResponseRedirect(context["object"].get_absolute_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -181,16 +101,31 @@ class MtANodeView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
-        context["points"] = 3 * self.current_node.rating
-        context["current_node"] = self.current_node
+        context["current_node"] = (
+            context["object"]
+            .backgrounds.filter(bg__property_name="node", complete=False)
+            .first()
+        )
         return context
 
     def get_form(self, form_class=None):
         obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        self.current_node = BackgroundRating.objects.filter(
-            char=obj, bg=Background.objects.get(property_name="node"), complete=False
+        self.current_node = obj.backgrounds.filter(
+            bg__property_name="node", complete=False
         ).first()
         form = super().get_form(form_class)
+
+        form.fields["rank"].widget.attrs.update(
+            {
+                "min": self.current_node.rating,
+                "max": self.current_node.rating,
+                "initial": self.current_node.rating,
+            }
+        )
+
+        # form.fields["rank"].initial = self.current_node.rating
+        form.fields["rank"].max = self.current_node.rating
+        form.fields["rank"].min = self.current_node.rating
         form.fields["name"].initial = self.current_node.note
         form.fields["quintessence_form"].widget.attrs.update(
             {"placeholder": "Enter quintessence form here"}
