@@ -1,7 +1,5 @@
 from typing import Any
 
-from django import forms
-
 from characters.forms.core.ally import AllyForm
 from characters.forms.mage.effect import EffectForm, EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
@@ -20,6 +18,7 @@ from characters.models.mage.sphere import Sphere
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import MultipleFormsetsMixin
+from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, FormView
@@ -121,20 +120,6 @@ class MtANodeView(SpecialUserMixin, FormView):
                 "max": self.current_node.rating,
                 "initial": self.current_node.rating,
             }
-        )
-
-        # form.fields["rank"].initial = self.current_node.rating
-        form.fields["rank"].max = self.current_node.rating
-        form.fields["rank"].min = self.current_node.rating
-        form.fields["name"].initial = self.current_node.note
-        form.fields["quintessence_form"].widget.attrs.update(
-            {"placeholder": "Enter quintessence form here"}
-        )
-        form.fields["tass_form"].widget.attrs.update(
-            {"placeholder": "Enter tass form here"}
-        )
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
         )
         return form
 

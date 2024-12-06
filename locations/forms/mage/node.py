@@ -104,6 +104,7 @@ class NodeForm(forms.ModelForm):
         model = Node
         fields = (
             "name",
+            "rank",
             "description",
             "ratio",
             "size",
@@ -127,9 +128,6 @@ class NodeForm(forms.ModelForm):
         self.fields["description"].widget.attrs.update(
             {"placeholder": "Enter description here"}
         )
-        self.rank = kwargs.get("rank", None)
-        if self.rank is None:
-            self.fields["rank"] = forms.IntegerField(min_value=1, max_value=10)
         self.fields["parent"].required = False
 
         self.resonance_formset = NodeResonanceRatingFormSet(
