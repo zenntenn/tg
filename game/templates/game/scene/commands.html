@@ -3,81 +3,39 @@
     Command List
 {% endblock title %}
 {% block content %}
+<div class="centertext container">
     <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-inline-flex align-items-center">
-                        <div>
-                            <b>Roll</b>
-                        </div>
-                    </div>
-                    <div class="mt-2">
-                        <div class="dots ml-2">/roll &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt</div>
-                    </div>
-                    <div class="mt-2">Example: /roll 5 difficulty 6 specialty True</div>
-                    <ul class="mt-2">
-                        &ltnum_dice&gt the number of dice to roll
-                    </ul>
-                    <ul class="mt-2">
-                        &ltdiff&gt the difficulty
-                    </ul>
-                    <ul class="mt-2">
-                        &ltspecialty&gt True or False depending on if you have a relevant specialty
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-inline-flex align-items-center">
-                    <div>
-                        <b>Multiple Rolls</b>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <div class="dots ml-2">/rolls &ltnum_rolls&gt @ &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt</div>
-                </div>
-                <div class="mt-2">Example: /rolls 5 rolls @ 5 difficulty 6 True</div>
-                <div class="mt-2">Warning: This will roll until botch and increase difficulty on failures</div>
-                <ul class="mt-2">
-                    &ltnum_rolls&gt the number of times to roll
-                </ul>
-                <ul class="mt-2">
-                    &ltnum_dice&gt the number of dice to roll
-                </ul>
-                <ul class="mt-2">
-                    &ltdiff&gt the difficulty
-                </ul>
-                <ul class="mt-2">
-                    &ltspecialty&gt True or False depending on if you have a relevant specialty
-                </ul>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-inline-flex align-items-center">
-                    <div>
-                        <b>Allowed Tags</b>
-                    </div>
-                </div>
-                <div class="mt-2">The following HTML tags may be used in post formatting:</div>
-                <ul class="mt-2">
-                    b, i, em, strong, p, br, strike, ul, li
-                </ul>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-inline-flex align-items-center">
-                    <div>
-                        <b>Calling an ST</b>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    Posting @Storyteller and nothing else will set a flag so that STs see that you need attention on the scene
-                </div>
-            </div>
-        </div>
+        <div class="col-sm">The following commands can be used on this site</div>
     </div>
+    <div class="row border">
+        <h4 class="col-sm border">Command</h4>
+        <h4 class="col-sm border">Example</h4>
+        <h4 class="col-sm border">Syntax</h4>
+        <h4 class="col-sm border">Explanation</h4>
+    </div>
+    <div class="row border">
+        <div class="col-sm border">/roll</div>
+        <div class="col-sm border">/roll 5 diffiulty 6 True</div>
+        <div class="col-sm border">/roll &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt</div>
+        <div class="col-sm border">Mostly self explanatory, noting that &ltspecialty&gt is True or False. Specialty and difficulty can be left off and default to False and "difficulty 6"</div>
+    </div>
+    <div class="row border">
+        <div class="col-sm border">/rolls</div>
+        <div class="col-sm border">/roll 3 @ 5 diffiulty 6 True</div>
+        <div class="col-sm border">/roll &ltnum_rolls&gt @ &ltnum_dice&gt difficulty &ltdiff&gt &ltspecialty&gt</div>
+        <div class="col-sm border">Runs the /roll command num_rolls times. This does require difficulty and specialty values. <br><b>Warning</b>: this will roll until botching or finished and increases difficulty on failures automatically.</div>
+    </div>
+    <div class="row border">
+        <div class="col-sm border">Tags</div>
+        <div class="col-sm border">&ltb&gt&lt/b&gt etc</div>
+        <div class="col-sm border">As HTML</div>
+        <div class="col-sm border">This applies the permitted tags to your text. The allowed tags are b, i, em, strong, p, br, strike, ul, li. Please don't overuse line breaks, they can make scenes harder to read.</div>
+    </div>
+    <div class="row border">
+        <div class="col-sm border">@storyteller</div>
+        <div class="col-sm border">@storyteller</div>
+        <div class="col-sm border">@storyteller</div>
+        <div class="col-sm border">This flags the scene as needing ST attention. It does not appear as a post. Note: this must be a post all by itself, but capitalization doesn't matter.</div>
+    </div>
+</div>
 {% endblock content %}
