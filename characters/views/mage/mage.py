@@ -1037,10 +1037,6 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
             form.fields["affiliation"].queryset = form.fields[
                 "affiliation"
             ].queryset.exclude(name__in=["Nephandi", "Marauders"])
-        form.fields["cabal"] = forms.ModelChoiceField(
-            queryset=Cabal.objects.filter(permitted_users=self.request.user),
-            required=False,
-        )
         return form
 
     def form_invalid(self, form):
@@ -1063,8 +1059,6 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
             )
         form.instance.owner = self.request.user
         self.object = form.save()
-        if form.cleaned_data["cabal"]:
-            form.cleaned_data["cabal"].members.add(self.object)
         return super().form_valid(form)
 
 
@@ -1279,9 +1273,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields[
-            "affinity_sphere"
-        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
+        form.fields["affinity_sphere"].queryset = (
+            self.object.get_affinity_sphere_options().order_by("name")
+        )
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]

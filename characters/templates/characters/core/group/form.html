@@ -1,4 +1,7 @@
 {% extends "core/form.html" %}
+{% block creation_title %}
+    Create Group
+{% endblock creation_title %}
 {% block contents %}
     <div class="row">
         <div class="col-sm">Name</div>
@@ -13,10 +16,6 @@
         <div class="col-sm">{{ form.leader }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">Permitted Users</div>
-        <div class="col-sm">{{ form.permitted_users }}</div>
-    </div>
-    <div class="row">
         <div class="col-sm">Description</div>
         <div class="col-sm">{{ form.description }}</div>
     </div>
@@ -24,4 +23,10 @@
         <div class="col-sm">Public Info</div>
         <div class="col-sm">{{ form.public_info }}</div>
     </div>
+    {% if object %}
+        <div class="row">
+            <div class="col-sm">Add Character</div>
+            <div class="col-sm">{{ form.new_character }}</div>
+        </div>
+    {% endif %}
 {% endblock contents %}

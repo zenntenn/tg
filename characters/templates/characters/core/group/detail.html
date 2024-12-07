@@ -76,3 +76,18 @@
         </div>
     </div>
 {% endblock contents %}
+{% block update %}
+    <div class="row">
+        <div class="col-sm">
+            {% if user.is_authenticated %}
+                {% if user.profile.is_st or user == object.leader.owner %}
+                    {% if object.get_full_update_url %}
+                        <a href="{{ object.get_full_update_url }}" class="btn btn-primary">Update</a>
+                    {% else %}
+                        <a href="{{ object.get_update_url }}" class="btn btn-primary">Update</a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock update %}

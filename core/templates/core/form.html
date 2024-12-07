@@ -1,6 +1,12 @@
 {% extends "core/base.html" %}
 {% block title %}
-    {{ object.name| safe }}
+    {% if object %}
+        {{ object.name| safe }}
+    {% else %}
+        {% block creation_title %}
+            Create
+        {% endblock creation_title %}
+    {% endif %}
 {% endblock title %}
 {% block content %}
     <form {% block formdetails %}
