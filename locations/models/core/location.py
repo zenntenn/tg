@@ -3,6 +3,8 @@ from core.models import Model
 from django.db import models
 from django.urls import reverse
 
+from game.models import Scene
+
 
 class LocationModel(Model):
     type = "location"
@@ -38,3 +40,6 @@ class LocationModel(Model):
 
     def get_heading(self):
         return "wod_heading"
+
+    def get_scenes(self):
+        return Scene.objects.filter(location=self)
