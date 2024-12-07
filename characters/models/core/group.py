@@ -23,9 +23,6 @@ class Group(Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    permitted_users = models.ManyToManyField(
-        User, blank=True, related_name="groups_permitted"
-    )
 
     class Meta:
         verbose_name = "Group"
