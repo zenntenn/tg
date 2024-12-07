@@ -5,7 +5,7 @@
         aria-expanded="true"
         aria-controls="charmSection">Charms</h2>
 </div>
-<div id="charmSection" class="collapse show">
+<div id="charmSection" class="collapse show multi-collapse">
     <div class="row">
         {% for charm in object.charms.all %}<a class="col-sm" href="{{ charm.get_absolute_url }}">{{ charm }}</a>{% endfor %}
     </div>

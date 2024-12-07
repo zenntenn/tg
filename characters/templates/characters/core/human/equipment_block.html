@@ -5,7 +5,7 @@
         aria-expanded="true"
         aria-controls="equipmentSection">Equipment</h2>
 </div>
-<div id="equipmentSection" class="collapse show">
+<div id="equipmentSection" class="collapse show multi-collapse">
     <div class="row">
         {% for item in object.get_items_owned %}
             {% if forloop.counter0|divisibleby:6 %}

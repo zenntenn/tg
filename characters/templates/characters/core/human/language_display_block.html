@@ -5,7 +5,7 @@
         aria-expanded="true"
         aria-controls="languageSection">Languages</h2>
 </div>
-<div id="languageSection" class="collapse show">
+<div id="languageSection" class="collapse show multi-collapse">
     <div class="row">
         {% for lang in object.languages.all %}
             {% if forloop.counter0|divisibleby:6 %}

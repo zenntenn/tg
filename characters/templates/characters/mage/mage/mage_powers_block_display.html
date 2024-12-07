@@ -7,7 +7,7 @@
         aria-expanded="true"
         aria-controls="spheresSection">Spheres</h2>
 </div>
-<div id="spheresSection" class="collapse show">
+<div id="spheresSection" class="collapse show multi-collapse">
     {% include "characters/mage/spheres/display_with_names_and_specs.html" %}
 </div>
 <div class="row">
@@ -17,7 +17,7 @@
         aria-expanded="true"
         aria-controls="resSection">Resonance</h2>
 </div>
-<div id="resSection" class="collapse show">
+<div id="resSection" class="collapse show multi-collapse">
     <div class="row">
         {% for res in object.get_resonance %}
             <div class="col-sm">{{ res.resonance }}</div>
@@ -33,7 +33,7 @@
             aria-expanded="true"
             aria-controls="rotesSection">Rotes</h2>
     </div>
-    <div id="rotesSection" class="collapse show">
+    <div id="rotesSection" class="collapse show multi-collapse">
         <div class="row">
             <div class="col-sm {{ object.get_heading }}">Rote Points Remaining</div>
             <div class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</div>
