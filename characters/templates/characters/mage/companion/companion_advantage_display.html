@@ -19,4 +19,16 @@
             <div class="col-sm">{{ object.rage }}</div>
         {% endif %}
     </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm dots">{{ object.temporary_willpower|boxes:10 }}</div>
+        {% if object.essence > 0 %}
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+        {% endif %}
+        {% if object.rage > 0 %}
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+        {% endif %}
+    </div>
 </div>

@@ -15,5 +15,13 @@
         <div class="col-sm">Affinity Sphere</div>
         <div class="col-sm">{{ object.get_affinity_sphere_name }}</div>
     </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm dots">{{ object.temporary_willpower|boxes:10 }}</div>
+        <div class="col-sm"></div>
+        <div class="col-sm"></div>
+        <div class="col-sm"></div>
+        <div class="col-sm"></div>
+    </div>
     {% include "characters/mage/mage/qp_wheel.html" %}
 </div>
