@@ -58,11 +58,11 @@ class SceneDetailView(View):
             return {
                 "object": scene,
                 "posts": Post.objects.filter(scene=scene),
-                "post_form": PostForm,
                 "add_char_form": a,
                 "num_chars": num_chars,
                 "num_logged_in_chars": scene.characters.filter(owner=user).count(),
                 "first_char": scene.characters.filter(owner=user).first(),
+                "post_form": PostForm,
             }
         return {
             "object": scene,
@@ -111,6 +111,10 @@ class SceneDetailView(View):
                     context["post_form"].add_error(
                         None, "Command does not match the expected format."
                     )
+        context = self.get_context(kwargs["pk"], request.user)
+        context["post_form"] = context["post_form"](
+            user=request.user, scene=context["object"]
+        )
         return render(request, "game/scene/detail.html", context)
 
     @staticmethod
