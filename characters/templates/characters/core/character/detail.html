@@ -1,56 +1,38 @@
 {% extends "core/object.html" %}
 {% block contents %}
-{% if is_approved_user %}
-{% block statistics %}
-{% block name %}
-<div class="row">
-    <div class="col-sm {{ object.get_heading }}">
-        <h1>{{ object.name }}</h1>
-    </div>
-</div>
-{% endblock name %}
-{% block basics %}
-<div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
-</div>
-<div class="row">
-    <div class="col-sm">Name</div>
-    <div class="col-sm">{{ object.name }}</div>
-</div>
-<div class="row">
-    <div class="col-sm">Player</div>
-    <div class="col-sm">{{ object.player }}</div>
-</div>
-<div class="row">
-    <div class="col-sm">Concept</div>
-    <div class="col-sm">{{ object.concept }}</div>
-</div>
-{% endblock basics %}
-{% endblock statistics %}
-{% block flavor %}
-{% endblock flavor %}
-{% block scenes %}
-<div class="row">
-    <h3 class="col-sm {{ object.get_heading }}">Scenes</h3>
-</div>
-<div class="row border">
-    <div class="col-sm border">
-        <b>Title</b>
-    </div>
-    <div class="col-sm border">
-        <b>Date of Scene</b>
-    </div>
-</div>
-{% for scene in scenes %}
-<div class="row border">
-    <a class="col-sm border" href="{{ scene.get_absolute_url }}">{{ scene.name }}
-        {% if not scene.finished %}- <b>Ongoing</b>{% endif %}
-    </a>
-    <div class="col-sm">{{ scene.date_of_scene }}</div>
-</div>
-{% endfor %}
-{% endblock scenes %}
-{% else %}
-{% include "characters/core/character/not_owner.html" %}
-{% endif %}
+    {% if is_approved_user %}
+        {% block statistics %}
+            {% block name %}
+                <div class="row">
+                    <div class="col-sm {{ object.get_heading }}">
+                        <h1>{{ object.name }}</h1>
+                    </div>
+                </div>
+            {% endblock name %}
+            {% block basics %}
+                <div class="row">
+                    <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Name</div>
+                    <div class="col-sm">{{ object.name }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Player</div>
+                    <div class="col-sm">{{ object.player }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Concept</div>
+                    <div class="col-sm">{{ object.concept }}</div>
+                </div>
+            {% endblock basics %}
+        {% endblock statistics %}
+        {% block flavor %}
+        {% endblock flavor %}
+        {% block scenes %}
+            {% include "characters/core/character/char_scene_display.html" %}
+        {% endblock scenes %}
+    {% else %}
+        {% include "characters/core/character/not_owner.html" %}
+    {% endif %}
 {% endblock contents %}
