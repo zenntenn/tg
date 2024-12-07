@@ -5,7 +5,7 @@
         aria-expanded="true"
         aria-controls="allySection">Allies</h2>
 </div>
-<div id="allySection" class="collapse show">
+<div id="allySection" class="collapse show multi-collapse">
     <div class="row">
         {% for c in object.allied_characters.all %}
             {% if forloop.counter0|divisibleby:6 %}

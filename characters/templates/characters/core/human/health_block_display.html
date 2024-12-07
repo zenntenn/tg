@@ -5,7 +5,7 @@
         aria-expanded="true"
         aria-controls="healthSection">Health</h2>
 </div>
-<div id="healthSection" class="collapse show">
+<div id="healthSection" class="collapse show multi-collapse">
     {% for nm, pen, hl in object.get_health_table %}
         <div class="row">
             <div class="col-sm">{{ nm }}</div>
