@@ -33,7 +33,12 @@ class SceneAdmin(admin.ModelAdmin):
         return obj.total_posts()
 
 
-admin.site.register(Post)
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("character", "display_name", "scene", "message")
+    list_filter = ("scene", "character", "display_name")
+
+
 admin.site.register(SettingElement)
 admin.site.register(ObjectType)
 
