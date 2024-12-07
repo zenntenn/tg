@@ -1,113 +1,119 @@
 <div class="row">
-    <h2 class="col-sm {{ object.get_heading }}">Experience</h2>
+    <h2 class="col-sm {{ object.get_heading }} pointer"
+        data-toggle="collapse"
+        data-target="#xpSection"
+        aria-expanded="true"
+        aria-controls="xpSection">Experience</h2>
 </div>
-<div class="row">
-    <div class="col-sm">XP Remaining</div>
-    <div class="col-sm">{{ object.xp }}</div>
-</div>
-<form action="" enctype="multipart/form-data" method="post">
-    {% csrf_token %}
-    {% for item in object.spent_xp %}
+<div id="xpSection" class="collapse show">
+    <div class="row">
+        <div class="col-sm">XP Remaining</div>
+        <div class="col-sm">{{ object.xp }}</div>
+    </div>
+    <form action="" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {% for item in object.spent_xp %}
+            <div class="row">
+                <div class="col-sm">
+                    {{ item.trait }}
+                    {% if item.value %}{{ item.value }}{% endif %}
+                </div>
+                <div class="col-sm">{{ item.cost }} XP</div>
+                <div class="col-sm">{{ item.approved }}</div>
+                {% if request.user.profile.is_st %}
+                    {% if item.approved != "Approved" %}
+                        <div class="col-sm">
+                            <input type="submit" name="{{ item.index }}_approve" value="Approve" />
+                            <input type="submit" name="{{ item.index }}_approve" value="Reject" />
+                        </div>
+                    {% else %}
+                        <div class="col-sm"></div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-sm">{{ form.category }}</div>
+            <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
+            <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
+            <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
+            <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
+            <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
+            <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
+        </div>
+        <div class="invisible" id="rote_wrap">
+            <div class="row">
+                <div class="col-sm">Create New Rote: {{ rote_form.select_or_create_rote }}</div>
+            </div>
+            <div id="rote selection">
+                <div class="row">
+                    <div class="col-sm">{{ rote_form.rote_options }}</div>
+                </div>
+            </div>
+            <div id="rote creation" class="invisible">
+                <div class="row">
+                    <div class="col-sm">Name</div>
+                    <div class="col-sm">{{ rote_form.name }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Practice</div>
+                    <div class="col-sm">{{ rote_form.practice }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Dicepool</div>
+                    <div class="col-sm">{{ rote_form.attribute }} + {{ rote_form.ability }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Description</div>
+                    <div class="col-sm">{{ rote_form.description }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">Create New Effect: {{ rote_form.select_or_create_effect }}</div>
+                </div>
+                <div id="effect selection">
+                    <div class="row">
+                        <div class="col-sm">{{ rote_form.effect_options }}</div>
+                    </div>
+                </div>
+                <div id="effect creation" class="invisible">
+                    <div class="row">
+                        <div class="col-sm-2">Correspondence</div>
+                        <div class="col-sm-2 dots">{{ rote_form.correspondence }}</div>
+                        <div class="col-sm-2">Life</div>
+                        <div class="col-sm-2 dots">{{ rote_form.life }}</div>
+                        <div class="col-sm-2">Prime</div>
+                        <div class="col-sm-2 dots">{{ rote_form.prime }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">Entropy</div>
+                        <div class="col-sm-2 dots">{{ rote_form.entropy }}</div>
+                        <div class="col-sm-2">Matter</div>
+                        <div class="col-sm-2 dots">{{ rote_form.matter }}</div>
+                        <div class="col-sm-2">Spirit</div>
+                        <div class="col-sm-2 dots">{{ rote_form.spirit }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">Forces</div>
+                        <div class="col-sm-2 dots">{{ rote_form.forces }}</div>
+                        <div class="col-sm-2">Mind</div>
+                        <div class="col-sm-2 dots">{{ rote_form.mind }}</div>
+                        <div class="col-sm-2">Time</div>
+                        <div class="col-sm-2 dots">{{ rote_form.time }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">Systems</div>
+                        <div class="col-sm">{{ rote_form.systems }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm">
-                {{ item.trait }}
-                {% if item.value %}{{ item.value }}{% endif %}
-            </div>
-            <div class="col-sm">{{ item.cost }} XP</div>
-            <div class="col-sm">{{ item.approved }}</div>
-            {% if request.user.profile.is_st %}
-                {% if item.approved != "Approved" %}
-                    <div class="col-sm">
-                        <input type="submit" name="{{ item.index }}_approve" value="Approve" />
-                        <input type="submit" name="{{ item.index }}_approve" value="Reject" />
-                    </div>
-                {% else %}
-                    <div class="col-sm"></div>
-                {% endif %}
-            {% endif %}
-        </div>
-    {% endfor %}
-    <div class="row">
-        <div class="col-sm">{{ form.category }}</div>
-        <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
-        <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
-        <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
-        <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
-        <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
-        <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
-    </div>
-    <div class="invisible" id="rote_wrap">
-        <div class="row">
-            <div class="col-sm">Create New Rote: {{ rote_form.select_or_create_rote }}</div>
-        </div>
-        <div id="rote selection">
-            <div class="row">
-                <div class="col-sm">{{ rote_form.rote_options }}</div>
+                <input type="submit" name="spend_xp" value="Spend XP/Rote Points" />
             </div>
         </div>
-        <div id="rote creation" class="invisible">
-            <div class="row">
-                <div class="col-sm">Name</div>
-                <div class="col-sm">{{ rote_form.name }}</div>
-            </div>
-            <div class="row">
-                <div class="col-sm">Practice</div>
-                <div class="col-sm">{{ rote_form.practice }}</div>
-            </div>
-            <div class="row">
-                <div class="col-sm">Dicepool</div>
-                <div class="col-sm">{{ rote_form.attribute }} + {{ rote_form.ability }}</div>
-            </div>
-            <div class="row">
-                <div class="col-sm">Description</div>
-                <div class="col-sm">{{ rote_form.description }}</div>
-            </div>
-            <div class="row">
-                <div class="col-sm">Create New Effect: {{ rote_form.select_or_create_effect }}</div>
-            </div>
-            <div id="effect selection">
-                <div class="row">
-                    <div class="col-sm">{{ rote_form.effect_options }}</div>
-                </div>
-            </div>
-            <div id="effect creation" class="invisible">
-                <div class="row">
-                    <div class="col-sm-2">Correspondence</div>
-                    <div class="col-sm-2 dots">{{ rote_form.correspondence }}</div>
-                    <div class="col-sm-2">Life</div>
-                    <div class="col-sm-2 dots">{{ rote_form.life }}</div>
-                    <div class="col-sm-2">Prime</div>
-                    <div class="col-sm-2 dots">{{ rote_form.prime }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2">Entropy</div>
-                    <div class="col-sm-2 dots">{{ rote_form.entropy }}</div>
-                    <div class="col-sm-2">Matter</div>
-                    <div class="col-sm-2 dots">{{ rote_form.matter }}</div>
-                    <div class="col-sm-2">Spirit</div>
-                    <div class="col-sm-2 dots">{{ rote_form.spirit }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2">Forces</div>
-                    <div class="col-sm-2 dots">{{ rote_form.forces }}</div>
-                    <div class="col-sm-2">Mind</div>
-                    <div class="col-sm-2 dots">{{ rote_form.mind }}</div>
-                    <div class="col-sm-2">Time</div>
-                    <div class="col-sm-2 dots">{{ rote_form.time }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-sm">Systems</div>
-                    <div class="col-sm">{{ rote_form.systems }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm">
-            <input type="submit" name="spend_xp" value="Spend XP/Rote Points" />
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const categorySelectMenu = document.getElementById("id_category");
