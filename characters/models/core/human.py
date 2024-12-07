@@ -86,6 +86,7 @@ class Human(
     languages = models.ManyToManyField(Language, blank=True)
 
     willpower = models.IntegerField(default=3)
+    temporary_willpower = models.IntegerField(default=3)
     derangements = models.ManyToManyField("Derangement", blank=True)
 
     age = models.IntegerField(blank=True, null=True)
@@ -126,7 +127,8 @@ class Human(
         return f"{self.gameline}_heading"
 
     def add_willpower(self):
-        return add_dot(self, "willpower", 10)
+        add_dot(self, "willpower", 10)
+        return add_dot(self, "temporary_willpower", 10)
 
     def has_finishing_touches(self):
         return (

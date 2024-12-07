@@ -63,6 +63,11 @@ urls = [
         name="werewolf",
     ),
     path(
+        "werewolf/full/<pk>/",
+        views.werewolf.WerewolfUpdateView.as_view(),
+        name="werewolf_full",
+    ),
+    path(
         "kinfolk/<pk>/",
         views.werewolf.KinfolkUpdateView.as_view(),
         name="kinfolk",
