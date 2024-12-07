@@ -52,23 +52,29 @@ class SceneDetailView(View):
         if not user.is_authenticated:
             user = None
         scene = Scene.objects.get(pk=pk)
-        a = AddCharForm(user=user, scene=scene)
-        num_chars = (a.fields["character_to_add"].queryset).count()
+        if user is not None:
+            a = AddCharForm(user=user, scene=scene)
+            num_chars = (a.fields["character_to_add"].queryset).count()
+            return {
+                "object": scene,
+                "posts": Post.objects.filter(scene=scene),
+                "post_form": PostForm,
+                "add_char_form": a,
+                "num_chars": num_chars,
+                "num_logged_in_chars": scene.characters.filter(owner=user).count(),
+                "first_char": scene.characters.filter(owner=user).first(),
+            }
         return {
             "object": scene,
             "posts": Post.objects.filter(scene=scene),
-            "post_form": PostForm,
-            "add_char_form": a,
-            "num_chars": num_chars,
-            "num_logged_in_chars": scene.characters.filter(owner=user).count(),
-            "first_char": scene.characters.filter(owner=user).first(),
         }
 
     def get(self, request, *args, **kwargs):
         context = self.get_context(kwargs["pk"], request.user)
-        context["post_form"] = context["post_form"](
-            user=request.user, scene=context["object"]
-        )
+        if request.user.is_authenticated:
+            context["post_form"] = context["post_form"](
+                user=request.user, scene=context["object"]
+            )
         return render(request, "game/scene/detail.html", context)
 
     def post(self, request, *args, **kwargs):
