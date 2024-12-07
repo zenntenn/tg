@@ -10,4 +10,5 @@ urlpatterns = [
         name="chronicle_scenes",
     ),
     path("scene/<pk>", views.SceneDetailView.as_view(), name="scene"),
+    path("commands/", views.CommandsView.as_view(), name="commands"),
 ]

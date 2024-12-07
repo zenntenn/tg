@@ -6,6 +6,7 @@ from core.utils import level_name, tree_sort
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import datetime, localtime
 from django.views import View
+from django.views.generic import TemplateView
 from game.forms import AddCharForm, PostForm, SceneCreationForm
 from game.models import Chronicle, Post, Scene
 from items.models.core import ItemModel
@@ -167,3 +168,7 @@ class ChronicleScenesDetailView(View):
             "scenes_grouped": scenes_grouped,
         }
         return render(request, "game/scenes/detail.html", context)
+
+
+class CommandsView(TemplateView):
+    template_name = "game/scene/commands.html"
