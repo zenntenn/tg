@@ -91,6 +91,12 @@ class Chronicle(models.Model):
     def __str__(self):
         return self.name
 
+    def get_scenes(self):
+        return Scene.objects.filter(chronicle=self)
+
+    def get_active_scenes(self):
+        return Scene.objects.filter(chronicle=self, finished=False)
+
     def get_absolute_url(self):
         return reverse("game:chronicle", kwargs={"pk": self.pk})
 

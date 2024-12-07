@@ -78,7 +78,7 @@
                             {% endif %}
                         </div>
                     </li>
-                    <li class="nav-tiem dropdown">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle"
                            href="#"
                            id="navbarDropdown"
@@ -86,11 +86,21 @@
                            data-toggle="dropdown"
                            aria-haspopup="true"
                            aria-expanded="false">Chronicles</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% for chronicle in chronicles %}
-                                <a class="dropdown-item" href="{{ chronicle.get_absolute_url }}">{{ chronicle }}</a>
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle"
+                                       href="{{ chronicle.get_absolute_url }}">{{ chronicle }}</a>
+                                    <ul class="dropdown-menu">
+                                        {% for scene in chronicle.get_active_scenes %}
+                                            <a class="dropdown-item" href="{{ scene.get_absolute_url }}">{{ scene }}</a>
+                                        {% endfor %}
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ chronicle.get_scenes_url }}">All Scenes</a>
+                                    </ul>
+                                </li>
                             {% endfor %}
-                        </div>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'characters:index' %}" role="button">Characters</a>
@@ -113,11 +123,11 @@
             {% load sanitize_text %}
             {% if messages %}{% endif %}
             <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">
-                    {{ message|sanitize_html }}<a href="#" class="close">x</a>
-                </li>
-            {% endfor %}
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {{ message|sanitize_html }}<a href="#" class="close">x</a>
+                    </li>
+                {% endfor %}
             </ul>
         {% endblock footer %}
         {% block extrascripts %}
