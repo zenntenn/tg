@@ -72,10 +72,10 @@
                     {% csrf_token %}
                     <input type="submit" value="Close Scene" name="close_scene" />
                 </form>
+                <div class="row">
+                    <a class="col-sm" href="{% url 'game:commands' %}">List of Commands</a>
+                </div>
             {% endif %}
-            <div class="row">
-                <a class="col-sm" href="{% url 'game:commands' %}">List of Commands</a>
-            </div>
         {% endif %}
     </div>
 {% endblock content %}
