@@ -1,6 +1,8 @@
 import random
 from collections import defaultdict
 
+from characters.models.core.ability_block import Ability
+from characters.models.core.attribute_block import Attribute
 from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import (
@@ -669,6 +671,47 @@ class Mage(MtAHuman):
         super().random_specialties()
         for sphere in self.filter_spheres(minimum=4):
             self.specialties.add(random.choice(self.filter_specialties(stat=sphere)))
+
+    def needs_specialties(self):
+        return len(self.needed_specialties()) > 0
+
+    def needed_specialties(self):
+        stats = (
+            list(Attribute.objects.all())
+            + list(
+                Ability.objects.filter(
+                    property_name__in=self.talents + self.skills + self.knowledges
+                )
+            )
+            + list(Sphere.objects.all())
+        )
+
+        stats4 = [x for x in stats if getattr(self, x.property_name, 0) >= 4]
+        stats1 = [
+            x
+            for x in stats
+            if getattr(self, x.property_name, 0) >= 1
+            and x.property_name
+            in [
+                "arts",
+                "athletics",
+                "crafts",
+                "firearms",
+                "larceny",
+                "melee",
+                "academics",
+                "esoterica",
+                "lore",
+                "politics",
+                "science",
+            ]
+        ]
+
+        stats = stats1 + stats4
+
+        existing_specialties = [x.stat for x in self.specialties.all()]
+        stats = [x.property_name for x in stats]
+        return [x for x in stats if x not in existing_specialties]
 
     def has_mage_history(self):
         return self.age_of_awakening != 0 and self.avatar_description != ""
