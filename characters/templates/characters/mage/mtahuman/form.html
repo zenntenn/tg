@@ -1,6 +1,9 @@
 {% extends "characters/core/human/form.html" %}
 {% load dots %}
 {% load get_specialty %}
+{% block creation_title %}
+    Create Human (Mage)
+{% endblock creation_title %}
 {% block abilities %}
     {% include "characters/mage/mtahuman/ability_block_form.html" %}
     <div class="row">

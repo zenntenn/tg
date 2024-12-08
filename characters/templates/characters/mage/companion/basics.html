@@ -8,6 +8,9 @@
     novalidate
     enctype="multipart/form-data"
 {% endblock formdetails %}
+{% block creation_title %}
+    Create Companion
+{% endblock creation_title %}
 {% block contents %}
     {% csrf_token %}
     <div class="row">
