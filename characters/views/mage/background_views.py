@@ -1,15 +1,13 @@
 from typing import Any
 
 from characters.forms.core.ally import AllyForm
-from characters.forms.mage.effect import EffectForm, EffectFormSet
+from characters.forms.mage.effect import EffectFormSet
 from characters.forms.mage.enhancements import EnhancementForm
 from characters.forms.mage.familiar import FamiliarForm
 from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
-from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.mage.companion import Companion
 from characters.models.mage.effect import Effect
-from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Practice
 from characters.models.mage.mage import Mage
 from characters.models.mage.mtahuman import MtAHuman
@@ -18,7 +16,6 @@ from characters.models.mage.sphere import Sphere
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import MultipleFormsetsMixin
-from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, FormView
@@ -28,20 +25,15 @@ from items.models.mage.charm import Charm
 from items.models.mage.talisman import Talisman
 from items.models.mage.wonder import WonderResonanceRating
 from locations.forms.core.sanctum import SanctumForm
-from locations.forms.mage.node import (  # NodeMeritFlawFormSet,; NodeResonancePracticeRatingFormSet,
+from locations.forms.mage.node import (
     NodeForm,
-    NodeMeritFlawForm,
-    NodeMeritFlawRatingFormSet,
-    NodeResonanceRatingForm,
     NodeResonanceRatingFormSet,
 )
 from locations.forms.mage.reality_zone import (
-    RealityZonePracticeRatingForm,
     RealityZonePracticeRatingFormSet,
 )
 from locations.models.core.location import LocationModel
 from locations.models.mage.library import Library
-from locations.models.mage.node import Node, NodeMeritFlawRating, NodeResonanceRating
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
 from locations.models.mage.sanctum import Sanctum
 
