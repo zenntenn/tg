@@ -38,11 +38,13 @@
                     <div class="col-sm">{{ object.lines }}</div>
                 </div>
             {% endif %}
+            {% if user == object.user %}
             <div class="row">
                 <div class="col-sm">
                     <input type="submit" value="Edit Preferences" name="Edit Preferences" />
                 </div>
             </div>
+            {% endif %}
         </form>
         {% if object.is_st %}
             <div class="row">
