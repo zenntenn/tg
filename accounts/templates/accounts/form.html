@@ -12,15 +12,23 @@
         <div class="col-sm">{{ form.theme }}</div>
     </div>
     <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm"></div>
+        <div class="col-sm">Visible?</div>
+    </div>
+    <div class="row">
         <div class="col-sm">Discord</div>
         <div class="col-sm">{{ form.discord_id }}</div>
+        <div class="col-sm">{{ form.discord_toggle }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Veils (Prefer not to have on screen)</div>
         <div class="col-sm">{{ form.veils }}</div>
+        <div class="col-sm">{{ form.veils_toggle }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Lines (Prefer not to interact with at all)</div>
         <div class="col-sm">{{ form.lines }}</div>
+        <div class="col-sm">{{ form.lines_toggle }}</div>
     </div>
 {% endblock contents %}

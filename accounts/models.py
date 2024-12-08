@@ -46,9 +46,12 @@ class Profile(models.Model):
     )
 
     discord_id = models.CharField(max_length=100, default="")
-
     lines = models.TextField(default="", blank=True, null=True)
     veils = models.TextField(default="", blank=True, null=True)
+
+    discord_toggle = models.BooleanField(default=False)
+    lines_toggle = models.BooleanField(default=False)
+    veils_toggle = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Profile"
