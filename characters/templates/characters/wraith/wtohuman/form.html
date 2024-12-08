@@ -1,8 +1,8 @@
 {% extends "characters/core/human/form.html" %}
 {% load dots %}
-{% block title %}
-    Human (Wraith)
-{% endblock title %}
+{% block creation_title %}
+    Create Human (Wraith)
+{% endblock creation_title %}
 {% load get_specialty %}
 {% block abilities %}
     <div class="row">
@@ -142,134 +142,101 @@
             Research
             {% if research_spec %}({{ research_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.research|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.research|dots }}</div>
         <div class="col-sm">
             Medicine
             {% if medicine_spec %}({{ medicine_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.medicine|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.medicine|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Leadership
             {% if leadership_spec %}({{ leadership_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.leadership|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.leadership|dots }}</div>
         <div class="col-sm">
             Stealth
             {% if stealth_spec %}({{ stealth_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.stealth|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.stealth|dots }}</div>
         <div class="col-sm">
             Occult
             {% if occult_spec %}({{ occult_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.occult|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.occult|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Streetwise
             {% if streetwise_spec %}({{ streetwise_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.streetwise|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.streetwise|dots }}</div>
         <div class="col-sm">
             Survival
             {% if survival_spec %}({{ survival_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.survival|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.survival|dots }}</div>
         <div class="col-sm">
             Politics
             {% if politics_spec %}({{ politics_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.politics|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.politics|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Subterfuge
             {% if subterfuge_spec %}({{ subterfuge_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.subterfuge|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.subterfuge|dots }}</div>
         <div class="col-sm">
             Technology
             {% if technology_spec %}({{ technology_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.technology|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.technology|dots }}</div>
         <div class="col-sm">
             Science
             {% if science_spec %}({{ science_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ form.science|dots }}
-        </div>
+        <div class="col-sm dots">{{ form.science|dots }}</div>
     </div>
     <div class="row">
-        <h2 class="col-sm {{ form.get_heading }}">
-            Secondary Abilities
-        </h2>
+        <h2 class="col-sm {{ form.get_heading }}">Secondary Abilities</h2>
     </div>
     {% for tal, ski, kno in form.get_secondaries_for_display %}
         <div class="row">
             <div class="col-sm">
                 {{ tal|first }}
                 {% with talname=tal|last %}
-                {% if form|get_specialty:talname %}({{ form|get_specialty:talname }}){% endif %}
+                    {% if form|get_specialty:talname %}({{ form|get_specialty:talname }}){% endif %}
                 {% endwith %}
             </div>
             {% if tal|slice:"1:"|first != 0 %}
-                <div class="col-sm dots">
-                    {{ tal|slice:"1:"|first|dots }}
-                </div>
+                <div class="col-sm dots">{{ tal|slice:"1:"|first|dots }}</div>
             {% else %}
-                <div class="col-sm dots">
-                </div>
+                <div class="col-sm dots"></div>
             {% endif %}
             <div class="col-sm">
                 {{ ski|first }}
                 {% with skiname=ski|last %}
-                {% if form|get_specialty:skiname %}({{ form|get_specialty:skiname }}){% endif %}
+                    {% if form|get_specialty:skiname %}({{ form|get_specialty:skiname }}){% endif %}
                 {% endwith %}
             </div>
             {% if ski|slice:"1:"|first != 0 %}
-                <div class="col-sm dots">
-                    {{ ski|slice:"1:"|first|dots }}
-                </div>
+                <div class="col-sm dots">{{ ski|slice:"1:"|first|dots }}</div>
             {% else %}
-                <div class="col-sm dots">
-                </div>
+                <div class="col-sm dots"></div>
             {% endif %}
             <div class="col-sm">
                 {{ kno|first }}
                 {% with knoname=kno|last %}
-                {% if form|get_specialty:knoname %}({{ form|get_specialty:knoname }}){% endif %}
+                    {% if form|get_specialty:knoname %}({{ form|get_specialty:knoname }}){% endif %}
                 {% endwith %}
             </div>
             {% if kno|slice:"1:"|first != 0 %}
-                <div class="col-sm dots">
-                    {{ kno|slice:"1:"|first|dots }}
-                </div>
+                <div class="col-sm dots">{{ kno|slice:"1:"|first|dots }}</div>
             {% else %}
-                <div class="col-sm dots">
-                </div>
+                <div class="col-sm dots"></div>
             {% endif %}
         </div>
     {% endfor %}
@@ -279,17 +246,11 @@
                 Do
                 {% if do_spec %}({{ do_spec }}){% endif %}
             </div>
-            <div class="col-sm dots">
-                {{ form.do|dots }}
-            </div>
-            <div class="col-sm">
-            </div>
-            <div class="col-sm">
-            </div>
-            <div class="col-sm">
-            </div>
-            <div class="col-sm">
-            </div>
+            <div class="col-sm dots">{{ form.do|dots }}</div>
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
         </div>
     {% endif %}
 {% endblock abilities %}

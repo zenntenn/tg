@@ -1,11 +1,7 @@
 {% extends "core/form.html" %}
-{% block title %}
-    {% if object %}
-        {{ object.name| safe }}
-    {% else %}
-        Create Node
-    {% endif %}
-{% endblock title %}
+{% block creation_title %}
+    Create Node
+{% endblock creation_title %}
 {% block contents %}
     {% include "locations/mage/node/form_include.html" %}
 {% endblock contents %}
