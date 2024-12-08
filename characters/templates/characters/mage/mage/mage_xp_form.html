@@ -10,6 +10,128 @@
         <div class="col-sm">XP Remaining</div>
         <div class="col-sm">{{ object.xp }}</div>
     </div>
+
+    <div class="row">
+        <div class="col-sm">Spend Freebie points. The costs are as follows:</div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">
+            <b>Trait</b>
+        </div>
+        <div class="col-sm-3 border">
+            <b>Cost</b>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Attribute</div>
+        <div class="col-sm-3 border">4 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">New Ability</div>
+        <div class="col-sm-3 border">3</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Ability</div>
+        <div class="col-sm-3 border">2 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">New Background</div>
+        <div class="col-sm-3 border">5</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Background</div>
+        <div class="col-sm-3 border">3 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Willpower</div>
+        <div class="col-sm-3 border">Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Merits</div>
+        <div class="col-sm-3 border">3 x (New Rating - Current Rating)</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">New Sphere</div>
+        <div class="col-sm-3 border">10</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Affinity Sphere</div>
+        <div class="col-sm-3 border">7 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Sphere</div>
+        <div class="col-sm-3 border">8 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Three Rote Points</div>
+        <div class="col-sm-3 border">1</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">New Resonance</div>
+        <div class="col-sm-3 border">5</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Resonance</div>
+        <div class="col-sm-3 border">3 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Tenet</div>
+        <div class="col-sm-3 border">0</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Remove Tenet</div>
+        <div class="col-sm-3 border">Number of Tenets</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">New Practice</div>
+        <div class="col-sm-3 border">3</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Practice</div>
+        <div class="col-sm-3 border">Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="row centertext">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border">Arete</div>
+        <div class="col-sm-3 border">8 x Current Rating</div>
+        <div class="col-sm-3"></div>
+    </div>
     <form action="" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {% for item in object.spent_xp %}
