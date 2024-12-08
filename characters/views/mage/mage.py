@@ -357,6 +357,9 @@ class MageDetailView(HumanDetailView):
         )
         context["form"] = MageXPForm(character=self.object)
         context["rote_form"] = RoteCreationForm(instance=self.object)
+        context["spec_form"] = SpecialtiesForm(
+            object=self.object, specialties_needed=self.object.needed_specialties()
+        )
         return context
 
     def post(self, request, *args, **kwargs):
@@ -606,6 +609,7 @@ class MageDetailView(HumanDetailView):
             i = self.object.spent_xp.index(d)
             self.object.spent_xp[i]["approved"] = "Approved"
             char_id, trait_type, trait, value = index.split("_")
+            value = int(value)
             if trait_type == "attribute":
                 att = Attribute.objects.get(name=trait)
                 setattr(self.object, att.property_name, value)
@@ -700,6 +704,17 @@ class MageDetailView(HumanDetailView):
                 or not (x["index"] == index and x["approved"] == "Pending")
             ]
             self.object.save()
+        if "specialties" in form.data.keys():
+            specs = {
+                k: v
+                for k, v in form.data.items()
+                if k not in ["csrfmiddlewaretoken", "specialties"]
+            }
+            for stat, spec in specs.items():
+                spec = Specialty.objects.get_or_create(name=spec, stat=stat)[0]
+                self.object.specialties.add(spec)
+            self.object.save()
+        context = self.get_context_data()
         return render(
             request,
             self.template_name,
@@ -1273,9 +1288,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["affinity_sphere"].queryset = (
-            self.object.get_affinity_sphere_options().order_by("name")
-        )
+        form.fields[
+            "affinity_sphere"
+        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
@@ -1823,31 +1838,7 @@ class MageSpecialtiesView(SpecialUserMixin, FormView):
         kwargs = super().get_form_kwargs()
         mage = Mage.objects.get(id=self.kwargs["pk"])
         kwargs["object"] = mage
-        stats = (
-            list(Attribute.objects.all())
-            + list(Ability.objects.all())
-            + list(Sphere.objects.all())
-        )
-        stats = [x for x in stats if getattr(mage, x.property_name, 0) >= 4] + [
-            x
-            for x in stats
-            if getattr(mage, x.property_name, 0) >= 1
-            and x.property_name
-            in [
-                "arts",
-                "athletics",
-                "crafts",
-                "firearms",
-                "larceny",
-                "melee",
-                "academics",
-                "esoterica",
-                "lore",
-                "politics",
-                "science",
-            ]
-        ]
-        kwargs["specialties_needed"] = [x.property_name for x in stats]
+        kwargs["specialties_needed"] = mage.needed_specialties()
         return kwargs
 
     def form_valid(self, form):
