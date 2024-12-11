@@ -2,9 +2,6 @@
 {% block creation_title %}
     Create Artifact
 {% endblock creation_title %}
-{% block powers %}
-    <div class="row">
-        <div class="col-sm">Power</div>
-        <div class="col-sm">{{ form.power }}</div>
-    </div>
-{% endblock powers %}
+{% block content %}
+    {% include "items/mage/artifact/form_include.html" %}
+{% endblock content %}

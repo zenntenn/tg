@@ -1,3 +1,5 @@
+from typing import Any
+
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.freebies import SorcererFreebiesForm
@@ -51,7 +53,10 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
-from items.forms.mage.sorcerer_artifact import SorcererArtifactForm
+from items.forms.mage.sorcerer_artifact import (
+    ArtifactCreateOrSelectForm,
+    SorcererArtifactForm,
+)
 from items.models.mage.sorcerer_artifact import SorcererArtifact
 
 
@@ -90,10 +95,6 @@ class SorcererBasicsView(LoginRequiredMixin, CreateView):
         form.fields["image"].required = False
         form.fields["casting_attribute"].queryset = Attribute.objects.none()
         form.fields["affinity_path"].queryset = LinearMagicPath.objects.none()
-        form.fields["cabal"] = forms.ModelChoiceField(
-            queryset=Cabal.objects.filter(permitted_users=self.request.user),
-            required=False,
-        )
         return form
 
     def form_invalid(self, form):
@@ -891,7 +892,7 @@ class SorcererSanctumView(MtASanctumView):
 
 
 class SorcererArtifactView(SpecialUserMixin, FormView):
-    form_class = SorcererArtifactForm
+    form_class = ArtifactCreateOrSelectForm
     template_name = "characters/mage/sorcerer/chargen.html"
 
     potential_skip = [
@@ -900,90 +901,72 @@ class SorcererArtifactView(SpecialUserMixin, FormView):
         "allies",
     ]
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["object"] = Human.objects.get(id=self.kwargs["pk"])
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
-        context["current_artifact"] = self.current_artifact
+        context["current_artifact"] = (
+            context["object"]
+            .backgrounds.filter(bg__property_name="artifact", complete=False)
+            .first()
+        )
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
+        a = form.save()
         obj = context["object"]
-        if form.cleaned_data["select_or_create_artifact"]:
-            s = SorcererArtifact.objects.create(
-                name=form.cleaned_data["name"],
-                rank=self.current_artifact.rating,
-                description=form.cleaned_data["description"],
-            )
-            s.owned_by.add(obj)
-            s.save()
-        else:
-            s = form.cleaned_data["artifact_options"]
-            s.owned_by.add(obj)
-            s.save()
+        a.owned_by.add(obj)
+        a.owner = context["object"].owner
+        a.chronicle = context["object"].chronicle
+        a.status = "Sub"
+        a.save()
 
-        s.display = True
-        s.save()
-        self.current_artifact.note = s.name
-        self.current_artifact.url = s.get_absolute_url()
+        self.current_artifact.note = a.name
+        self.current_artifact.url = a.get_absolute_url()
         self.current_artifact.complete = True
         self.current_artifact.save()
 
         if (
-            BackgroundRating.objects.filter(
-                char=obj,
-                bg=Background.objects.get(property_name="artifact"),
-                complete=False,
-            ).count()
+            context["object"]
+            .backgrounds.filter(bg__property_name="artifact", complete=False)
+            .count()
             == 0
         ):
-            obj.creation_status += 1
-            obj.save()
+            context["object"].creation_status += 1
+            context["object"].save()
             for step in self.potential_skip:
                 if (
-                    BackgroundRating.objects.filter(
-                        bg=Background.objects.get(property_name=step),
-                        char=obj,
-                        complete=False,
-                    ).count()
+                    context["object"]
+                    .backgrounds.filter(bg__property_name=step, complete=False)
+                    .count()
                     == 0
                 ):
-                    obj.creation_status += 1
+                    context["object"].creation_status += 1
                 else:
-                    obj.save()
+                    context["object"].save()
                     break
-            obj.save()
-        return HttpResponseRedirect(obj.get_absolute_url())
+            context["object"].save()
+        return HttpResponseRedirect(context["object"].get_absolute_url())
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
         obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        self.current_artifact = BackgroundRating.objects.filter(
-            char=obj,
-            bg=Background.objects.get(property_name="artifact"),
-            complete=False,
+        self.current_artifact = obj.backgrounds.filter(
+            bg__property_name="artifact", complete=False
         ).first()
-        form.fields["name"].initial = self.current_artifact.note
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
+        form = super().get_form(form_class)
+
+        form.artifact_form.fields["name"].initial = self.current_artifact.note
+        form.artifact_form.fields["rank"].widget.attrs.update(
+            {
+                "min": self.current_artifact.rating,
+                "max": self.current_artifact.rating,
+                "initial": self.current_artifact.rating,
+            }
         )
         return form
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        obj_id = self.kwargs.get("pk")
-        obj = Human.objects.get(pk=obj_id)
-        kwargs["instance"] = obj
-        bgr = BackgroundRating.objects.filter(
-            char=obj,
-            bg=Background.objects.get(property_name="artifact"),
-            complete=False,
-        ).first()
-        kwargs["rank"] = bgr.rating
-        return kwargs
 
 
 class SorcererCharacterCreationView(HumanCharacterCreationView):
