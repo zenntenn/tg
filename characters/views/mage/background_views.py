@@ -25,13 +25,8 @@ from items.models.mage.charm import Charm
 from items.models.mage.talisman import Talisman
 from items.models.mage.wonder import WonderResonanceRating
 from locations.forms.core.sanctum import SanctumForm
-from locations.forms.mage.node import (
-    NodeForm,
-    NodeResonanceRatingFormSet,
-)
-from locations.forms.mage.reality_zone import (
-    RealityZonePracticeRatingFormSet,
-)
+from locations.forms.mage.node import NodeForm, NodeResonanceRatingFormSet
+from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
 from locations.models.core.location import LocationModel
 from locations.models.mage.library import Library
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
@@ -294,12 +289,8 @@ class MtAFamiliarView(SpecialUserMixin, FormView):
         return form
 
 
-class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
+class MtAWonderView(SpecialUserMixin, FormView):
     form_class = WonderForm
-    formsets = {
-        "effects_form": EffectFormSet,
-        "resonance_form": NodeResonanceRatingFormSet,
-    }
     template_name = "characters/mage/mage/chargen.html"
 
     wonder_classes = {
@@ -320,161 +311,66 @@ class MtAWonderView(SpecialUserMixin, MultipleFormsetsMixin, FormView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
-        context["points"] = 3 * context["object"].wonder
-        context["current_wonder"] = self.current_wonder
+        context["current_wonder"] = (
+            context["object"]
+            .backgrounds.filter(bg__property_name="wonder", complete=False)
+            .first()
+        )
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
+        w = form.save()
         obj = context["object"]
-        if form.cleaned_data["select_or_create_wonder"]:
-            del form.cleaned_data["select_or_create_wonder"]
-            del form.cleaned_data["wonder_options"]
-            if form.cleaned_data["wonder_type"] == "artifact":
-                del form.cleaned_data["arete"]
-            wonder_type = form.cleaned_data["wonder_type"]
-            del form.cleaned_data["wonder_type"]
-            w = self.wonder_classes[wonder_type](
-                **form.cleaned_data,
-                rank=self.current_wonder.rating,
-                chronicle=obj.chronicle,
-                owner=obj.owner,
-                status="Sub",
-            )
-
-            points = 3 * w.rank
-
-            resonance_data = self.get_form_data("resonance_form")
-            for res in resonance_data:
-                res["resonance"] = Resonance.objects.get_or_create(
-                    name=res["resonance"]
-                )[0]
-                res["rating"] = int(res["rating"])
-                if res["rating"] > 5:
-                    form.add_error(
-                        None,
-                        "Resonance may not be higher than 5",
-                    )
-                    return self.form_invalid(form)
-            total_resonance = sum([x["rating"] for x in resonance_data])
-            if total_resonance < w.rank:
-                form.add_error(None, "Resonance must be at least rank")
-                return self.form_invalid(form)
-            if wonder_type == "charm":
-                max_cost = w.rank
-            else:
-                max_cost = 2 * w.rank
-
-            effects = []
-            total_effect_cost = 0
-            effects_data = self.get_form_data("effects_form")
-            if wonder_type == "charm" and len(effects_data) > 1:
-                form.add_error(None, "Charms can only have one power")
-                return self.form_invalid(form)
-            elif wonder_type == "artifact" and len(effects_data) > 1:
-                form.add_error(None, "Artifacts can only have one power")
-                return self.form_invalid(form)
-            elif wonder_type == "talisman" and len(effects_data) > w.rank:
-                form.add_error(None, "Talismans may up to their rank in effects")
-                return self.form_invalid(form)
-            for effect in effects_data:
-                for sphere in Sphere.objects.all():
-                    effect[sphere.property_name] = int(effect[sphere.property_name])
-                e = Effect(**effect)
-                effects.append(e)
-                total_effect_cost += e.cost()
-                if total_effect_cost > max_cost:
-                    form.add_error(
-                        None,
-                        "Effects cost more than allowed: rank for Charms, twice rank for Artifacts and Talismans",
-                    )
-                    return self.form_invalid(form)
-            cost = (total_resonance - w.rank) + total_effect_cost
-            if wonder_type != "artifact":
-                cost += w.arete - w.rank
-            if cost > points:
-                form.add_error(
-                    None,
-                    "Extra Resonance, Arete, and Effects must be less than 3 times the rank of the Wonder",
-                )
-                return self.form_invalid(form)
-
-            w.save()
-            w.owned_by.add(obj)
-            for e in effects:
-                e.save()
-                if wonder_type in ["charm", "artifact"]:
-                    w.power = e
-                else:
-                    w.powers.add(e)
-            w.save()
-
-            for resonance in resonance_data:
-                WonderResonanceRating.objects.create(
-                    wonder=w,
-                    resonance=resonance["resonance"],
-                    rating=resonance["rating"],
-                )
-        else:
-            w = form.cleaned_data["wonder_options"]
-            w.owned_by.add(obj)
-            w.save()
-
-        w.display = True
+        w.owned_by.add(obj)
+        w.owner = context["object"].owner
+        w.chronicle = context["object"].chronicle
+        w.status = "Sub"
         w.save()
+
         self.current_wonder.note = w.name
         self.current_wonder.url = w.get_absolute_url()
         self.current_wonder.complete = True
         self.current_wonder.save()
 
         if (
-            BackgroundRating.objects.filter(
-                char=obj,
-                bg=Background.objects.get(property_name="wonder"),
-                complete=False,
-            ).count()
+            context["object"]
+            .backgrounds.filter(bg__property_name="wonder", complete=False)
+            .count()
             == 0
         ):
-            obj.creation_status += 1
-            obj.save()
+            context["object"].creation_status += 1
+            context["object"].save()
             for step in self.potential_skip:
                 if (
-                    BackgroundRating.objects.filter(
-                        bg=Background.objects.get(property_name=step),
-                        char=obj,
-                        complete=False,
-                    ).count()
+                    context["object"]
+                    .backgrounds.filter(bg__property_name=step, complete=False)
+                    .count()
                     == 0
                 ):
-                    obj.creation_status += 1
+                    context["object"].creation_status += 1
                 else:
-                    obj.save()
+                    context["object"].save()
                     break
-            obj.save()
-        return HttpResponseRedirect(obj.get_absolute_url())
+            context["object"].save()
+        return HttpResponseRedirect(context["object"].get_absolute_url())
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
         obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        self.current_wonder = BackgroundRating.objects.filter(
-            char=obj, bg=Background.objects.get(property_name="wonder"), complete=False
+        self.current_wonder = obj.backgrounds.filter(
+            bg__property_name="wonder", complete=False
         ).first()
+        form = super().get_form(form_class)
+
         form.fields["name"].initial = self.current_wonder.note
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
+        form.fields["rank"].widget.attrs.update(
+            {
+                "min": self.current_wonder.rating,
+                "max": self.current_wonder.rating,
+                "initial": self.current_wonder.rating,
+            }
         )
         return form
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        obj_id = self.kwargs.get("pk")
-        obj = Human.objects.get(pk=obj_id)
-        kwargs["instance"] = obj
-        bgr = BackgroundRating.objects.filter(
-            char=obj, bg=Background.objects.get(property_name="wonder"), complete=False
-        ).first()
-        kwargs["rank"] = bgr.rating
-        return kwargs
 
 
 class MtAEnhancementView(SpecialUserMixin, FormView):

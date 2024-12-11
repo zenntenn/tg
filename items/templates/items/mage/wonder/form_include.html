@@ -1,0 +1,270 @@
+<div class="row">
+    <h2 class="col-sm mta_heading">Create Wonder</h2>
+</div>
+<div class="row">
+    <div class="col-sm">Create your Wonder. It may be built on up to {{ points }} points...</div>
+</div>
+<div id="wonder_creation">
+    <div class="row">
+        <div class="col-sm">{{ form.wonder_type }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">Rank</div>
+        <div class="col-sm">{{ form.rank }}</div>
+        <div class="col-sm"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">Arete</div>
+        <div class="col-sm">{{ form.arete }}</div>
+        <div class="col-sm"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+    <div class="col-sm">
+        <h2>Resonance</h2>
+    </div>
+    {{ form.resonance_formset.management_form }}
+    <div id="resonance_formset">
+        {% for subform in form.resonance_formset.forms %}
+            <div class="row">
+                <div class="col-sm">{{ subform.resonance }}</div>
+                <div class="col-sm">{{ subform.rating }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="empty_resonance_form" class="invisible">
+        <div class="row">
+            <div class="col-sm">{{ form.resonance_formset.empty_form.resonance }}</div>
+            <div class="col-sm">{{ form.resonance_formset.empty_form.rating }}</div>
+        </div>
+    </div>
+    <button type="button" id="add-resonance">Add Resonance</button>
+    <div class="col-sm">
+        <h2>Powers</h2>
+    </div>
+    {{ form.effect_formset.management_form }}
+    <div id="effects_formset">
+        {% for subform in form.effect_formset.forms %}
+            <div class="effect-subform" data-prefix="effects-{{ forloop.counter0 }}">
+                <div class="row form-row">
+                    <div class="col-sm">Create New Effect: {{ subform.select_or_create }}</div>
+                </div>
+                <div class="row form-row effect-select-row">
+                    <div class="col-sm">{{ subform.select }}</div>
+                </div>
+                <div class="effect-create-fields invisible">
+                    <div class="row form-row">
+                        <div class="col-sm">Name</div>
+                        <div class="col-sm">{{ subform.name }}</div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-sm">Correspondence</div>
+                        <div class="col-sm dots">{{ subform.correspondence }}</div>
+                        <div class="col-sm">Life</div>
+                        <div class="col-sm dots">{{ subform.life }}</div>
+                        <div class="col-sm">Prime</div>
+                        <div class="col-sm dots">{{ subform.prime }}</div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-sm">Entropy</div>
+                        <div class="col-sm dots">{{ subform.entropy }}</div>
+                        <div class="col-sm">Matter</div>
+                        <div class="col-sm dots">{{ subform.matter }}</div>
+                        <div class="col-sm">Spirit</div>
+                        <div class="col-sm dots">{{ subform.spirit }}</div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-sm">Forces</div>
+                        <div class="col-sm dots">{{ subform.forces }}</div>
+                        <div class="col-sm">Mind</div>
+                        <div class="col-sm dots">{{ subform.mind }}</div>
+                        <div class="col-sm">Time</div>
+                        <div class="col-sm dots">{{ subform.time }}</div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-sm">Description</div>
+                        <div class="col-sm">{{ subform.description }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- Empty form with updated prefix -->
+    <div id="empty_effects_form" class="invisible">
+        <div class="effect-subform" data-prefix="effects-__prefix__">
+            <div class="row form-row">
+                <div class="col-sm">Create New Effect: {{ form.effect_formset.empty_form.select_or_create }}</div>
+            </div>
+            <div class="row form-row effect-select-row">
+                <div class="col-sm">{{ form.effect_formset.empty_form.select }}</div>
+            </div>
+            <div class="effect-create-fields invisible">
+                <div class="row form-row">
+                    <div class="col-sm">Name</div>
+                    <div class="col-sm">{{ form.effect_formset.empty_form.name }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-sm">Correspondence</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.correspondence }}</div>
+                    <div class="col-sm">Life</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.life }}</div>
+                    <div class="col-sm">Prime</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.prime }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-sm">Entropy</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.entropy }}</div>
+                    <div class="col-sm">Matter</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.matter }}</div>
+                    <div class="col-sm">Spirit</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.spirit }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-sm">Forces</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.forces }}</div>
+                    <div class="col-sm">Mind</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.mind }}</div>
+                    <div class="col-sm">Time</div>
+                    <div class="col-sm dots">{{ form.effect_formset.empty_form.time }}</div>
+                </div>
+                <div class="row form-row">
+                    <div class="col-sm">Description</div>
+                    <div class="col-sm">{{ form.effect_formset.empty_form.description }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="invisible" id="add-power">Add Power</button>
+</div>
+<script>
+    function toggleEffectFields(prefix) {
+        console.log("toggleEffectFields called with prefix:", prefix);
+        const subform = document.querySelector(`[data-prefix="${prefix}"]`);
+        if (!subform) {
+            console.log("toggleEffectFields: No subform found for prefix:", prefix);
+            return;
+        }
+
+        const selectCreateCheckbox = subform.querySelector(`#id_${prefix}-select_or_create`);
+        const selectRow = subform.querySelector(`.effect-select-row`);
+        const createFields = subform.querySelector(`.effect-create-fields`);
+
+        if (!selectCreateCheckbox || !selectRow || !createFields) {
+            console.log("toggleEffectFields: Elements missing for prefix:", prefix);
+            return;
+        }
+
+        console.log("Checkbox checked?", selectCreateCheckbox.checked);
+        if (selectCreateCheckbox.checked) {
+            selectRow.classList.add('invisible');
+            createFields.classList.remove('invisible');
+        } else {
+            selectRow.classList.remove('invisible');
+            createFields.classList.add('invisible');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize existing forms
+        document.querySelectorAll('.effect-subform').forEach(function(el) {
+            const prefix = el.getAttribute('data-prefix');
+            toggleEffectFields(prefix);
+
+            const checkbox = el.querySelector(`#id_${prefix}-select_or_create`);
+            if (checkbox) {
+                checkbox.addEventListener('change', function() {
+                    toggleEffectFields(prefix);
+                });
+            } else {
+                console.log("No checkbox for existing form prefix:", prefix);
+            }
+        });
+
+        // Add resonance forms
+        document.getElementById('add-resonance').addEventListener('click', function() {
+            addForm('add-resonance', 'resonance');
+        });
+
+        // Add effect forms
+        document.getElementById('add-power').addEventListener('click', function() {
+            addForm('add-power', 'effects');
+        });
+
+        const wonder_type_select = document.getElementById('id_wonder_type');
+        const wonder_effect_add = document.getElementById('add-power');
+        if (wonder_type_select) {
+            wonder_type_select.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if(["artifact", "charm"].includes(selectedValue)){
+                    wonder_effect_add.classList.add("invisible");
+                    resetEffectsFormset();
+                } else {
+                    wonder_effect_add.classList.remove("invisible");
+                }
+            });
+        }
+    });
+
+    function addForm(btnId, formsetPrefix) {
+        const totalForms = document.getElementById(`id_${formsetPrefix}-TOTAL_FORMS`);
+        const currentFormCount = parseInt(totalForms.value, 10);
+        const emptyFormHtml = document.getElementById(`empty_${formsetPrefix}_form`).innerHTML;
+        
+        // Replace __prefix__ with the current form count
+        const formHtml = emptyFormHtml.replace(/__prefix__/g, currentFormCount);
+
+        totalForms.value = currentFormCount + 1;
+        const container = document.getElementById(`${formsetPrefix}_formset`);
+        container.insertAdjacentHTML('beforeend', formHtml);
+
+        // The new prefix is "effects-N"
+        const newPrefix = `${formsetPrefix}-${currentFormCount}`;
+        console.log("New form prefix:", newPrefix);
+
+        toggleEffectFields(newPrefix);
+
+        // Attach event listener for the new form
+        const newSubform = container.querySelector(`[data-prefix="${newPrefix}"]`);
+        if (newSubform) {
+            const checkbox = newSubform.querySelector(`#id_${newPrefix}-select_or_create`);
+            if (checkbox) {
+                checkbox.addEventListener('change', function() {
+                    toggleEffectFields(newPrefix);
+                });
+            } else {
+                console.log("No checkbox found for new form prefix:", newPrefix);
+            }
+        } else {
+            console.log("No subform found for new prefix:", newPrefix);
+        }
+    }
+
+    function resetEffectsFormset() {
+        const totalForms = document.getElementById('id_effects-TOTAL_FORMS');
+        const effectsContainer = document.getElementById('effects_formset');
+        const emptyFormHtml = document.getElementById('empty_effects_form').innerHTML;
+
+        effectsContainer.innerHTML = '';
+        const newFormHtml = emptyFormHtml.replace(/__prefix__/g, 0);
+        effectsContainer.insertAdjacentHTML('beforeend', newFormHtml);
+
+        totalForms.value = 1;
+
+        toggleEffectFields('effects-0');
+
+        const checkbox = document.getElementById('id_effects-0-select_or_create');
+        if (checkbox) {
+            checkbox.addEventListener('change', function() {
+                toggleEffectFields('effects-0');
+            });
+        } else {
+            console.log("No checkbox found for reset form");
+        }
+    }
+</script>
