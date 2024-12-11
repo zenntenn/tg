@@ -59,6 +59,7 @@ class LinearMagicRitual(Model):
 
 class Sorcerer(MtAHuman):
     type = "sorcerer"
+    freebie_step = 8
 
     allowed_backgrounds = [
         "allies",
