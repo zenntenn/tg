@@ -2,6 +2,7 @@ from typing import Any
 
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView
+from items.forms.mage.wonder import WonderForm
 from items.models.mage import Wonder, WonderResonanceRating
 
 
@@ -18,28 +19,10 @@ class WonderDetailView(DetailView):
 
 
 class WonderCreateView(CreateView):
-    model = Wonder
-    fields = ["name", "rank", "background_cost", "quintessence_max", "description"]
+    form_class = WonderForm
     template_name = "items/mage/wonder/form.html"
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
-        )
-        return form
 
 
 class WonderUpdateView(UpdateView):
-    model = Wonder
-    fields = ["name", "rank", "background_cost", "quintessence_max", "description"]
+    form_class = WonderForm
     template_name = "items/mage/wonder/form.html"
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
-        )
-        return form
