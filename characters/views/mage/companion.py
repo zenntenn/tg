@@ -108,8 +108,13 @@ class LoadExamplesView(View):
         elif category_choice == "MeritFlaw":
             companion = ObjectType.objects.get(name="companion")
             examples = MeritFlaw.objects.filter(allowed_types=companion)
+            max_flaws = 7
             if m.total_flaws() <= 0:
-                examples = examples.exclude(max_rating__lt=min(0, -7 - m.total_flaws()))
+                if m.companion_type == "familiar":
+                    max_flaws += 5
+                examples = examples.exclude(
+                    max_rating__lt=min(0, -max_flaws - m.total_flaws())
+                )
             examples = examples.exclude(min_rating__gt=m.freebies)
         elif category_choice == "Advantage":
             examples = Advantage.objects.filter(min_rating__lte=m.freebies)
