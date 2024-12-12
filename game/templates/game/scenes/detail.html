@@ -32,6 +32,12 @@
                     <div class="col-sm border">
                         <b>Date of Scene</b>
                     </div>
+                    <div class="col-sm border">
+                        <b>Last Post Character</b>
+                    </div>
+                    <div class="col-sm border">
+                        <b>Last Post Date</b>
+                    </div>
                 </div>
                 {% for scene in scenes %}
                     <div class="row border">
@@ -40,6 +46,13 @@
                         </a>
                         <a class="col-sm border" href="{{ scene.location.get_absolute_url }}">{{ scene.location }}</a>
                         <div class="col-sm border">{{ scene.date_of_scene|date:"F d, Y" }}</div>
+                        {% if not scene.finished %}
+                            <div class="col-sm border">{{ scene.most_recent_post.display_name }}</div>
+                            <div class="col-sm border">{{ scene.most_recent_post.datetime_created }}</div>
+                        {% else %}
+                            <div class="col-sm border"></div>
+                            <div class="col-sm border"></div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
