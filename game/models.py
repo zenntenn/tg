@@ -254,6 +254,9 @@ class Scene(models.Model):
                 raise ValueError("Command does not match the expected format.")
         return post
 
+    def most_recent_post(self):
+        return Post.objects.filter(scene=self).order_by("-datetime_created").first()
+
 
 class Post(models.Model):
     character = models.ForeignKey(

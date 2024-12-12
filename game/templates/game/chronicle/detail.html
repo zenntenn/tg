@@ -1,160 +1,174 @@
 {% extends "core/base.html" %}
 {% block title %}
-{{ object.name }}
+    {{ object.name }}
 {% endblock title %}
 {% block content %}
-{% load sanitize_text %}
-{% load location_tags %}
-<div class="container centertext">
-    <div class="row">
-        <h2 class="col-sm {{ object.headings }} centertext">{{ object.name }}</h2>
-    </div>
-    <div class="row centertext">
-        <div class="col-sm">Storytellers</div>
-        <div class="col-sm">
-            {% for st in object.storytellers.distinct %}
-            {% if not forloop.last %}
-            <a href="{{ st.profile.get_absolute_url }}">{{ st }}</a>,
-            {% else %}
-            <a href="{{ st.profile.get_absolute_url }}">{{ st }}</a>
-            {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="row centertext">
-        <div class="col-sm">Theme</div>
-        <div class="col-sm">{{ object.theme }}</div>
-    </div>
-    <div class="row centertext">
-        <div class="col-sm">Mood</div>
-        <div class="col-sm">{{ object.mood }}</div>
-    </div>
-    <div class="row centertext">
-        <div class="col-sm">Year</div>
-        <div class="col-sm">{{ object.year }}</div>
-    </div>
-    <div class="row centertext">
-        <div class="col-sm">Common Knowledge</div>
-        <div class="col-sm">
-            {% for se in object.common_knowledge_elements.all %}
-            <b>{{ se.name }}</b>
-            <br>
-            {{ se.description }}
-            <br>
-            {% endfor %}
-        </div>
-    </div>
-    {% for group in groups %}
-    {% if group.display %}
-    <h3 class="row {{ header }} border">
-        <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
-        <div class="col-sm border pointer" data-toggle="collapse" data-target="#group-{{ group.id }}Section"
-            aria-expanded="true" aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
-        <div class="col-sm border">{{ group.get_display_type }}</div>
-    </h3>
-    <div id="group-{{ group.id }}Section" class="collapse show">
-        {% for char in group.members.all %}
-        <div class="row border">
-            <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-            <a class="col-sm border" href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
-            <div class="col-sm border">{{ char.get_type }}</div>
-            <div class="col-sm border">
-                {% if not char.npc %}
-                {{ char.get_status_display }}
-                {% else %}
-                NPC
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endfor %}
-    <h3 class="row {{ header }} border">
-        <div class="col-sm border">Solo Characters</div>
-        <div class="col-sm border"></div>
-        <div class="col-sm border"></div>
-    </h3>
-    {% for char in characters %}
-    {% if char.display and char.group_set.count == 0 %}
-    <div class="row border">
-        <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-        <a class="col-sm border" href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
-        <div class="col-sm border">{{ char.get_type }}</div>
-        <div class="col-sm border">
-            {% if not char.npc %}
-            {{ char.get_status_display }}
-            {% else %}
-            NPC
-            {% endif %}
-        </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-    <div class="row">
-        <h3 class="col-sm {{ object.headings }} centertext">Locations</h3>
-    </div>
-    {% for loc in top_locations %}
-    {% show_location loc indent_level=0 %}
-    {% endfor %}
-    <div class="row centertext">
-        <h3 class="col-sm {{ object.headings }}">Items</h3>
-    </div>
-    {% for item in items %}
-    <div class="row border centertext">
-        <a class="col-sm border" href="{{ item.get_absolute_url }}">{{ item.name }}</a>
-        <div class="col-sm border">{{ item.type.title }}</div>
-    </div>
-    {% endfor %}
-    <div class="row centertext">
-        <h3 class="col-sm {{ object.headings }}">
-            <a href="{{ object.get_scenes_url }}">Scene List</a>
-        </h3>
-    </div>
-
-
-    <div class="row border">
-        <h3 class="col-sm border {{ chronicle.headings }} pointer" data-toggle="collapse" data-target="#scenes-Section"
-            aria-expanded="true" aria-controls="scenes-Section">Active Scenes</h3>
-    </div>
-    <div id="scenes-Section" class="collapse show">
-        <div class="row border">
-            <div class="col-sm border">
-                <b>Title</b>
-            </div>
-            <div class="col-sm border">
-                <b>Date Played</b>
-            </div>
-            <div class="col-sm border">
-                <b>Date of Scene</b>
-            </div>
-        </div>
-        {% for scene in active_scenes %}
-        <div class="row border">
-            <a class="col-sm border" href="{{ scene.get_absolute_url }}">{{ scene.name }}
-                {% if not scene.finished %}- <b>Ongoing</b>{% endif %}
-            </a>
-            <a class="col-sm border" href="{{ scene.location.get_absolute_url }}">{{ scene.location }}</a>
-            <div class="col-sm border">{{ scene.date_of_scene|date:"F d, Y" }}</div>
-        </div>
-        {% endfor %}
-    </div>
-    {% if request.user.is_authenticated %}
-    <div class="row centertext">
-        <h4 class="col-sm {{ object.headings }}">
-            <div>New Scene</div>
-        </h4>
-    </div>
-    <form method="post" action="">
-        {% csrf_token %}
+    {% load sanitize_text %}
+    {% load location_tags %}
+    <div class="container centertext">
         <div class="row">
-            <div class="col-sm">{{ form.name }}</div>
-            <div class="col-sm">{{ form.location }}</div>
-            <div class="col-sm">{{ form.date_of_scene }}</div>
+            <h2 class="col-sm {{ object.headings }} centertext">{{ object.name }}</h2>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Storytellers</div>
             <div class="col-sm">
-                <input type="submit" value="Create Scene" />
+                {% for st in object.storytellers.distinct %}
+                    {% if not forloop.last %}
+                        <a href="{{ st.profile.get_absolute_url }}">{{ st }}</a>,
+                    {% else %}
+                        <a href="{{ st.profile.get_absolute_url }}">{{ st }}</a>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
-    </form>
-    {% endif %}
+        <div class="row centertext">
+            <div class="col-sm">Theme</div>
+            <div class="col-sm">{{ object.theme }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Mood</div>
+            <div class="col-sm">{{ object.mood }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Year</div>
+            <div class="col-sm">{{ object.year }}</div>
+        </div>
+        <div class="row centertext">
+            <div class="col-sm">Common Knowledge</div>
+            <div class="col-sm">
+                {% for se in object.common_knowledge_elements.all %}
+                    <b>{{ se.name }}</b>
+                    <br>
+                    {{ se.description }}
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+        {% for group in groups %}
+            {% if group.display %}
+                <h3 class="row {{ header }} border">
+                    <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
+                    <div class="col-sm border pointer"
+                         data-toggle="collapse"
+                         data-target="#group-{{ group.id }}Section"
+                         aria-expanded="true"
+                         aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
+                    <div class="col-sm border">{{ group.get_display_type }}</div>
+                </h3>
+                <div id="group-{{ group.id }}Section" class="collapse show">
+                    {% for char in group.members.all %}
+                        <div class="row border">
+                            <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                            <a class="col-sm border"
+                               href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
+                            <div class="col-sm border">{{ char.get_type }}</div>
+                            <div class="col-sm border">
+                                {% if not char.npc %}
+                                    {{ char.get_status_display }}
+                                {% else %}
+                                    NPC
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <h3 class="row {{ header }} border">
+            <div class="col-sm border">Solo Characters</div>
+            <div class="col-sm border"></div>
+            <div class="col-sm border"></div>
+        </h3>
+        {% for char in characters %}
+            {% if char.display and char.group_set.count == 0 %}
+                <div class="row border">
+                    <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                    <a class="col-sm border"
+                       href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
+                    <div class="col-sm border">{{ char.get_type }}</div>
+                    <div class="col-sm border">
+                        {% if not char.npc %}
+                            {{ char.get_status_display }}
+                        {% else %}
+                            NPC
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="row">
+            <h3 class="col-sm {{ object.headings }} centertext">Locations</h3>
+        </div>
+        {% for loc in top_locations %}
+            {% show_location loc indent_level=0 %}
+        {% endfor %}
+        <div class="row centertext">
+            <h3 class="col-sm {{ object.headings }}">Items</h3>
+        </div>
+        {% for item in items %}
+            <div class="row border centertext">
+                <a class="col-sm border" href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                <div class="col-sm border">{{ item.type.title }}</div>
+            </div>
+        {% endfor %}
+        <div class="row centertext">
+            <h3 class="col-sm {{ object.headings }}">
+                <a href="{{ object.get_scenes_url }}">Scene List</a>
+            </h3>
+        </div>
+        <div class="row border">
+            <h3 class="col-sm border {{ chronicle.headings }} pointer"
+                data-toggle="collapse"
+                data-target="#scenes-Section"
+                aria-expanded="true"
+                aria-controls="scenes-Section">Active Scenes</h3>
+        </div>
+        <div id="scenes-Section" class="collapse show">
+            <div class="row border">
+                <div class="col-sm border">
+                    <b>Title</b>
+                </div>
+                <div class="col-sm border">
+                    <b>Date Played</b>
+                </div>
+                <div class="col-sm border">
+                    <b>Date of Scene</b>
+                </div>
+                <div class="col-sm border">
+                    <b>Last Post Character</b>
+                </div>
+                <div class="col-sm border">
+                    <b>Last Post Date</b>
+                </div>
+            </div>
+            {% for scene in active_scenes %}
+                <div class="row border">
+                    <a class="col-sm border" href="{{ scene.get_absolute_url }}">{{ scene.name }}
+                        {% if not scene.finished %}- <b>Ongoing</b>{% endif %}
+                    </a>
+                    <a class="col-sm border" href="{{ scene.location.get_absolute_url }}">{{ scene.location }}</a>
+                    <div class="col-sm border">{{ scene.date_of_scene|date:"F d, Y" }}</div>
+                    <div class="col-sm border">{{ scene.most_recent_post.display_name }}</div>
+                    <div class="col-sm border">{{ scene.most_recent_post.datetime_created }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="row centertext">
+                <h4 class="col-sm {{ object.headings }}">
+                    <div>New Scene</div>
+                </h4>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm">{{ form.name }}</div>
+                    <div class="col-sm">{{ form.location }}</div>
+                    <div class="col-sm">{{ form.date_of_scene }}</div>
+                    <div class="col-sm">
+                        <input type="submit" value="Create Scene" />
+                    </div>
+                </div>
+            </form>
+        {% endif %}
     {% endblock content %}
