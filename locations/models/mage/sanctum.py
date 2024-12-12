@@ -7,6 +7,7 @@ from locations.models.mage.reality_zone import RealityZone
 class Sanctum(LocationModel):
     type = "sanctum"
 
+    rank = models.IntegerField(default=0)
     reality_zone = models.ForeignKey(
         RealityZone, blank=True, null=True, on_delete=models.SET_NULL
     )

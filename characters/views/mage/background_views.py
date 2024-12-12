@@ -24,7 +24,7 @@ from items.models.mage.artifact import Artifact
 from items.models.mage.charm import Charm
 from items.models.mage.talisman import Talisman
 from items.models.mage.wonder import WonderResonanceRating
-from locations.forms.core.sanctum import SanctumForm
+from locations.forms.mage.sanctum import SanctumForm
 from locations.forms.mage.node import NodeForm, NodeResonanceRatingFormSet
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
 from locations.models.core.location import LocationModel
@@ -100,12 +100,11 @@ class MtANodeView(SpecialUserMixin, FormView):
             bg__property_name="node", complete=False
         ).first()
         form = super().get_form(form_class)
-
+        form.fields["rank"].initial = self.current_node.rating
         form.fields["rank"].widget.attrs.update(
             {
                 "min": self.current_node.rating,
                 "max": self.current_node.rating,
-                "initial": self.current_node.rating,
             }
         )
         return form
@@ -363,11 +362,11 @@ class MtAWonderView(SpecialUserMixin, FormView):
         form = super().get_form(form_class)
 
         form.fields["name"].initial = self.current_wonder.note
+        form.fields["rank"].initial = self.current_wonder.rating
         form.fields["rank"].widget.attrs.update(
             {
                 "min": self.current_wonder.rating,
                 "max": self.current_wonder.rating,
-                "initial": self.current_wonder.rating,
             }
         )
         return form
@@ -445,100 +444,74 @@ class MtAEnhancementView(SpecialUserMixin, FormView):
         return super().form_invalid(form)
 
 
-class MtASanctumView(SpecialUserMixin, MultipleFormsetsMixin, CreateView):
-    model = Sanctum
+class MtASanctumView(SpecialUserMixin, FormView):
     form_class = SanctumForm
     template_name = "characters/mage/mage/chargen.html"
     potential_skip = [
         "allies",
     ]
-    formsets = {
-        "rz_form": RealityZonePracticeRatingFormSet,
-    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        obj_id = self.kwargs.get("pk")
-        context["object"] = Human.objects.get(id=obj_id)
-        # context["rz_form"] = RealityZonePracticeRatingForm()
-        context["form"].fields["name"].initial = f"{context['object']}'s Sanctum"
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
-        context["current_sanctum"] = self.current_sanctum
+        context["current_sanctum"] = (
+            context["object"]
+            .backgrounds.filter(bg__property_name="sanctum", complete=False)
+            .first()
+        )
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
-        obj = context["object"]
-
-        rz_data = self.get_form_data("rz_form")
-        for res in rz_data:
-            res["practice"] = Practice.objects.get(id=res["practice"])
-            res["rating"] = int(res["rating"])
-        total_rz = sum([x["rating"] for x in rz_data])
-        total_positive = sum([x["rating"] for x in rz_data if x["rating"] > 0])
-        if total_rz != 0:
-            form.add_error(None, "Ratings must total 0")
-            return super().form_invalid(form)
-        if total_positive != self.current_sanctum.rating:
-            form.add_error(None, "Positive Ratings must equal Sanctum rating")
-            return super().form_invalid(form)
-
-        rzone = RealityZone.objects.create(name="{obj.name} Reality Zone")
-        obj.reality_zone = rzone
-        obj.save()
-        for rz in rz_data:
-            ZoneRating.objects.create(
-                zone=rzone, practice=rz["practice"], rating=rz["rating"]
-            )
-
-        s = form.save(obj, reality_zone=rzone)
+        s = form.save()
+        s.owned_by = context["object"]
+        s.owner = context["object"].owner
+        s.chronicle = context["object"].chronicle
+        s.status = "Sub"
+        s.save()
 
         self.current_sanctum.note = s.name
         self.current_sanctum.url = s.get_absolute_url()
         self.current_sanctum.complete = True
         self.current_sanctum.save()
-        if s:
-            if (
-                BackgroundRating.objects.filter(
-                    char=obj,
-                    bg=Background.objects.get(property_name="sanctum"),
-                    complete=False,
-                ).count()
-                == 0
-            ):
-                obj.creation_status += 1
-                obj.save()
-                for step in self.potential_skip:
-                    if (
-                        BackgroundRating.objects.filter(
-                            bg=Background.objects.get(property_name=step),
-                            char=obj,
-                            complete=False,
-                        ).count()
-                        == 0
-                    ):
-                        obj.creation_status += 1
-                    else:
-                        obj.save()
-                        break
-                obj.save()
-            return HttpResponseRedirect(obj.get_absolute_url())
-        return super().form_invalid(form)
+
+        if (
+            context["object"]
+            .backgrounds.filter(bg__property_name="sanctum", complete=False)
+            .count()
+            == 0
+        ):
+            context["object"].creation_status += 1
+            context["object"].save()
+            for step in self.potential_skip:
+                if (
+                    context["object"]
+                    .backgrounds.filter(bg__property_name=step, complete=False)
+                    .count()
+                    == 0
+                ):
+                    context["object"].creation_status += 1
+                else:
+                    context["object"].save()
+                    break
+            context["object"].save()
+        return HttpResponseRedirect(context["object"].get_absolute_url())
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
         obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        self.current_sanctum = BackgroundRating.objects.filter(
-            char=obj, bg=Background.objects.get(property_name="sanctum"), complete=False
+        self.current_sanctum = obj.backgrounds.filter(
+            bg__property_name="sanctum", complete=False
         ).first()
-        form.fields["name"].initial = self.current_sanctum.note
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
-        )
-        form.fields["parent"].queryset = LocationModel.objects.filter(
-            chronicle=obj.chronicle
+        form = super().get_form(form_class)
+        form.fields["rank"].initial = self.current_sanctum.rating
+        form.fields["rank"].widget.attrs.update(
+            {
+                "min": self.current_sanctum.rating,
+                "max": self.current_sanctum.rating,
+            }
         )
         return form
 
