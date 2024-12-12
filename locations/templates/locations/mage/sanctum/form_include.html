@@ -1,0 +1,54 @@
+<div class="row">
+    <h2 class="col-sm mta_heading">Create Sanctum</h2>
+</div>
+<div class="row">
+    <div class="col-sm">
+        Describe your character's Sanctum and define its Reality Zone. The Reality Zone should have a total positive Practice rating equal to {{ current_sanctum.rating }} and an equal total negative rating.
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">Name</div>
+    <div class="col-sm">{{ form.name }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Parent Location</div>
+    <div class="col-sm">{{ form.parent }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Rank</div>
+    <div class="col-sm">{{ form.rank }}</div>
+</div>
+<div class="row">
+    <div class="col-sm">Description</div>
+    <div class="col-sm">{{ form.description }}</div>
+</div>
+{{ form.reality_zone_formset.management_form }}
+<div id="reality_zone_formset">
+    {% for subform in form.reality_zone_formset.forms %}
+        <div class="row">
+            <div class="col-sm">{{ subform.practice }}</div>
+            <div class="col-sm">{{ subform.rating }}</div>
+        </div>
+    {% endfor %}
+</div>
+<div id="empty_reality_zone_form" class="invisible">
+    <div class="row">
+        <div class="col-sm">{{ form.reality_zone_formset.empty_form.practice }}</div>
+        <div class="col-sm">{{ form.reality_zone_formset.empty_form.rating }}</div>
+    </div>
+</div>
+<button type="button" id="add-reality-zone">Add Reality Zone Rating</button>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function addForm(btnId, formsetPrefix) {
+        const totalForms = $(`#id_${formsetPrefix}-TOTAL_FORMS`);
+        const currentFormCount = parseInt(totalForms.val());
+        const formHtml = $(`#empty_${formsetPrefix}_form`).html().replace(/__prefix__/g, currentFormCount);
+        totalForms.val(currentFormCount + 1);
+        $(`#${formsetPrefix}_formset`).append(formHtml);
+    }
+
+    $('#add-reality-zone').click(function() {
+        addForm('add-reality-zone', 'reality_zone');
+    });
+</script>
