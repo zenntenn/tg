@@ -34,7 +34,6 @@ from characters.views.mage.background_views import (
     MtAAlliesView,
     MtAEnhancementView,
     MtAFamiliarView,
-    MtALibraryView,
     MtASanctumView,
     MtAWonderView,
 )
@@ -54,6 +53,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
 from items.models.core.item import ItemModel
+from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
 
 
@@ -1290,9 +1290,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields["affinity_sphere"].queryset = (
-            self.object.get_affinity_sphere_options().order_by("name")
-        )
+        form.fields[
+            "affinity_sphere"
+        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
@@ -1808,8 +1808,29 @@ class MageFamiliarView(MtAFamiliarView):
     template_name = "characters/mage/mage/chargen.html"
 
 
-class MageLibraryView(MtALibraryView):
+class MageLibraryView(GenericBackgroundView):
+    primary_object_class = Mage
+    background_name = "library"
+    potential_skip = [
+        "familiar",
+        "wonder",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    form_class = LibraryForm
     template_name = "characters/mage/mage/chargen.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(self.primary_object_class, pk=self.kwargs.get("pk"))
+        form.fields["name"].initial = (
+            self.current_background.note or f"{obj.name}'s Library"
+        )
+        tmp = [obj.affiliation, obj.faction, obj.subfaction]
+        tmp = [x.pk for x in tmp if hasattr(x, "pk")]
+        form.fields["faction"].queryset = MageFaction.objects.filter(pk__in=tmp)
+        return form
 
 
 class MageNodeView(GenericBackgroundView):

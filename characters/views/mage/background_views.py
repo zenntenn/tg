@@ -6,9 +6,11 @@ from characters.forms.mage.familiar import FamiliarForm
 from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
 from characters.models.mage.companion import Companion
+from characters.models.mage.faction import MageFaction
 from characters.models.mage.mage import Mage
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.werewolf.spirit_character import SpiritCharacter
+from characters.views.core.generic_background import GenericBackgroundView
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -17,102 +19,9 @@ from items.forms.mage.wonder import WonderForm
 from items.models.mage.artifact import Artifact
 from items.models.mage.charm import Charm
 from items.models.mage.talisman import Talisman
+from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.sanctum import SanctumForm
 from locations.models.mage.library import Library
-
-
-class MtALibraryView(SpecialUserMixin, CreateView):
-    model = Library
-    fields = ["name", "description", "parent"]
-    template_name = "characters/mage/mage/chargen.html"
-    potential_skip = [
-        "familiar",
-        "wonder",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        context["is_approved_user"] = self.check_if_special_user(
-            context["object"], self.request.user
-        )
-        context["current_library"] = self.current_library
-        return context
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        obj = context["object"]
-        if hasattr(obj, "faction"):
-            l = Library(
-                **form.cleaned_data,
-                owned_by=obj,
-                owner=obj.owner,
-                chronicle=obj.chronicle,
-                faction=obj.faction,
-                rank=self.current_library.rating,
-                status="Sub",
-            )
-        else:
-            l = Library(
-                **form.cleaned_data,
-                owned_by=obj,
-                owner=obj.owner,
-                chronicle=obj.chronicle,
-                rank=self.current_library.rating,
-                status="Sub",
-            )
-        l.save()
-        for _ in range(l.rank):
-            l.random_book()
-
-        self.current_library.note = l.name
-        self.current_library.url = l.get_absolute_url()
-        self.current_library.complete = True
-        self.current_library.save()
-
-        if (
-            BackgroundRating.objects.filter(
-                char=obj,
-                bg=Background.objects.get(property_name="library"),
-                complete=False,
-            ).count()
-            == 0
-        ):
-            obj.creation_status += 1
-            obj.save()
-            for step in self.potential_skip:
-                if (
-                    BackgroundRating.objects.filter(
-                        bg=Background.objects.get(property_name=step),
-                        char=obj,
-                        complete=False,
-                    ).count()
-                    == 0
-                ):
-                    obj.creation_status += 1
-                else:
-                    obj.save()
-                    break
-            obj.save()
-        return HttpResponseRedirect(obj.get_absolute_url())
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        obj = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        self.current_library = BackgroundRating.objects.filter(
-            char=obj, bg=Background.objects.get(property_name="library"), complete=False
-        ).first()
-        form.fields["name"].initial = (
-            self.current_library.note or f"{obj.name}'s Library"
-        )
-        form.fields["parent"].empty_label = "Choose a Parent Location"
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
-        )
-        return form
 
 
 class MtAFamiliarView(SpecialUserMixin, FormView):
