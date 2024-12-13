@@ -24,6 +24,7 @@ from characters.models.mage.mage import Mage, PracticeRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
+from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
     HumanAttributeView,
     HumanCharacterCreationView,
@@ -34,7 +35,6 @@ from characters.views.mage.background_views import (
     MtAEnhancementView,
     MtAFamiliarView,
     MtALibraryView,
-    MtANodeView,
     MtASanctumView,
     MtAWonderView,
 )
@@ -54,6 +54,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
 from items.models.core.item import ItemModel
+from locations.forms.mage.node import NodeForm
 
 
 def load_factions(request):
@@ -1810,7 +1811,18 @@ class MageLibraryView(MtALibraryView):
     template_name = "characters/mage/mage/chargen.html"
 
 
-class MageNodeView(MtANodeView):
+class MageNodeView(GenericBackgroundView):
+    primary_object_class = Mage
+    background_name = "node"
+    potential_skip = [
+        "library",
+        "familiar",
+        "wonder",
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    form_class = NodeForm
     template_name = "characters/mage/mage/chargen.html"
 
 

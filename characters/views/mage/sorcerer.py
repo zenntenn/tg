@@ -27,6 +27,7 @@ from characters.models.mage.sorcerer import (
     PathRating,
     Sorcerer,
 )
+from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
     HumanAttributeView,
     HumanCharacterCreationView,
@@ -37,7 +38,6 @@ from characters.views.mage.background_views import (
     MtAEnhancementView,
     MtAFamiliarView,
     MtALibraryView,
-    MtANodeView,
     MtASanctumView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
@@ -58,6 +58,7 @@ from items.forms.mage.sorcerer_artifact import (
     SorcererArtifactForm,
 )
 from items.models.mage.sorcerer_artifact import SorcererArtifact
+from locations.forms.mage.node import NodeForm
 
 
 class SorcererBasicsView(LoginRequiredMixin, CreateView):
@@ -875,8 +876,9 @@ class SorcererLibraryView(MtALibraryView):
     ]
 
 
-class SorcererNodeView(MtANodeView):
-    template_name = "characters/mage/sorcerer/chargen.html"
+class SorcererNodeView(GenericBackgroundView):
+    primary_object_class = Sorcerer
+    background_name = "node"
     potential_skip = [
         "library",
         "familiar",
@@ -885,6 +887,8 @@ class SorcererNodeView(MtANodeView):
         "sanctum",
         "allies",
     ]
+    form_class = NodeForm
+    template_name = "characters/mage/sorcerer/chargen.html"
 
 
 class SorcererSanctumView(MtASanctumView):

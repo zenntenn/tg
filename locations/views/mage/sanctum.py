@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, DetailView, UpdateView, FormView
+from django.views.generic import CreateView, DetailView, FormView, UpdateView
 from locations.forms.mage.sanctum import SanctumForm
 from locations.models.mage.sanctum import Sanctum
 

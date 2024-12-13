@@ -12,6 +12,7 @@ from characters.models.mage.cabal import Cabal
 from characters.models.mage.companion import Advantage, Companion
 from characters.models.mage.faction import MageFaction
 from characters.models.werewolf.charm import SpiritCharm
+from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
     HumanAttributeView,
     HumanCharacterCreationView,
@@ -20,9 +21,7 @@ from characters.views.core.human import (
 from characters.views.mage.background_views import (
     MtAAlliesView,
     MtAEnhancementView,
-    MtAFamiliarView,
     MtALibraryView,
-    MtANodeView,
     MtASanctumView,
     MtAWonderView,
 )
@@ -38,6 +37,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
+from locations.forms.mage.node import NodeForm
 
 
 class CompanionDetailView(HumanDetailView):
@@ -661,7 +661,9 @@ class CompanionLibraryView(MtALibraryView):
     template_name = "characters/mage/companion/chargen.html"
 
 
-class CompanionNodeView(MtANodeView):
+class CompanionNodeView(GenericBackgroundView):
+    primary_object_class = Companion
+    background_name = "node"
     potential_skip = [
         "library",
         "wonder",
@@ -669,6 +671,7 @@ class CompanionNodeView(MtANodeView):
         "sanctum",
         "allies",
     ]
+    form_class = NodeForm
     template_name = "characters/mage/companion/chargen.html"
 
 
