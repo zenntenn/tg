@@ -461,7 +461,8 @@ class MageDetailView(HumanDetailView):
                     trait = "Rote Points"
                     trait_type = "rotes"
                     cost = self.object.xp_cost("rotes", 1)
-                    d = self.object.xp_spend_record(trait, trait_type, 3, cost=cost)
+                    value = self.object.total_effects() + self.object.rote_points + 3
+                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
                     self.object.xp -= cost
                     self.object.spent_xp.append(d)
                     self.object.save()
@@ -1289,9 +1290,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields[
-            "affinity_sphere"
-        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
+        form.fields["affinity_sphere"].queryset = (
+            self.object.get_affinity_sphere_options().order_by("name")
+        )
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
