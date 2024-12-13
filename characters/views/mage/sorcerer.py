@@ -37,7 +37,6 @@ from characters.views.mage.background_views import (
     MtAAlliesView,
     MtAEnhancementView,
     MtAFamiliarView,
-    MtALibraryView,
     MtASanctumView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
@@ -58,6 +57,7 @@ from items.forms.mage.sorcerer_artifact import (
     SorcererArtifactForm,
 )
 from items.models.mage.sorcerer_artifact import SorcererArtifact
+from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
 
 
@@ -865,8 +865,9 @@ class SorcererFamiliarView(MtAFamiliarView):
     ]
 
 
-class SorcererLibraryView(MtALibraryView):
-    template_name = "characters/mage/sorcerer/chargen.html"
+class SorcererLibraryView(GenericBackgroundView):
+    primary_object_class = Sorcerer
+    background_name = "library"
     potential_skip = [
         "familiar",
         "artifact",
@@ -874,6 +875,16 @@ class SorcererLibraryView(MtALibraryView):
         "sanctum",
         "allies",
     ]
+    form_class = LibraryForm
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(self.primary_object_class, pk=self.kwargs.get("pk"))
+        form.fields["name"].initial = (
+            self.current_background.note or f"{obj.name}'s Library"
+        )
+        return form
 
 
 class SorcererNodeView(GenericBackgroundView):

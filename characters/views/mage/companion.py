@@ -21,7 +21,6 @@ from characters.views.core.human import (
 from characters.views.mage.background_views import (
     MtAAlliesView,
     MtAEnhancementView,
-    MtALibraryView,
     MtASanctumView,
     MtAWonderView,
 )
@@ -37,6 +36,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
+from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
 
 
@@ -651,14 +651,28 @@ class CompanionEnhancementView(MtAEnhancementView):
         return form
 
 
-class CompanionLibraryView(MtALibraryView):
+class CompanionLibraryView(GenericBackgroundView):
+    primary_object_class = Companion
+    background_name = "library"
     potential_skip = [
         "wonder",
         "enhancement",
         "sanctum",
         "allies",
     ]
+    form_class = LibraryForm
     template_name = "characters/mage/companion/chargen.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(self.primary_object_class, pk=self.kwargs.get("pk"))
+        form.fields["name"].initial = (
+            self.current_background.note or f"{obj.name}'s Library"
+        )
+        tmp = [obj.affiliation, obj.faction, obj.subfaction]
+        tmp = [x.pk for x in tmp if hasattr(x, "pk")]
+        form.fields["faction"].queryset = MageFaction.objects.filter(pk__in=tmp)
+        return form
 
 
 class CompanionNodeView(GenericBackgroundView):

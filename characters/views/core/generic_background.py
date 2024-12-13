@@ -72,11 +72,12 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
             bg__property_name=self.background_name, complete=False
         ).first()
         form = super().get_form(form_class)
-        form.fields["rank"].initial = self.current_background.rating
-        form.fields["rank"].widget.attrs.update(
-            {
-                "min": self.current_background.rating,
-                "max": self.current_background.rating,
-            }
-        )
+        if "rank" in form.fields.keys():
+            form.fields["rank"].initial = self.current_background.rating
+            form.fields["rank"].widget.attrs.update(
+                {
+                    "min": self.current_background.rating,
+                    "max": self.current_background.rating,
+                }
+            )
         return form
