@@ -24,3 +24,10 @@ class FamiliarForm(forms.ModelForm):
             {"placeholder": "Enter concept here"}
         )
         self.fields["image"].required = False
+
+    def save(self, commit=True):
+        c = super().save(commit=commit)
+        c.npc = True
+        c.companion_type = "familiar"
+        c.save()
+        return c

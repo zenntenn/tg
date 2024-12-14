@@ -2,6 +2,7 @@ from typing import Any
 
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
+from characters.forms.mage.familiar import FamiliarForm
 from characters.forms.mage.freebies import SorcererFreebiesForm
 from characters.forms.mage.numina import (
     NuminaPathRatingFormSet,
@@ -30,11 +31,7 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
 )
-from characters.views.mage.background_views import (
-    MtAAlliesView,
-    MtAEnhancementView,
-    MtAFamiliarView,
-)
+from characters.views.mage.background_views import MtAAlliesView, MtAEnhancementView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
@@ -848,14 +845,23 @@ class SorcererEnhancementView(MtAEnhancementView):
         return form
 
 
-class SorcererFamiliarView(MtAFamiliarView):
-    template_name = "characters/mage/sorcerer/chargen.html"
+class SorcererFamiliarView(GenericBackgroundView):
+    primary_object_class = Sorcerer
+    background_name = "familiar"
     potential_skip = [
         "artifact",
         "enhancement",
         "sanctum",
         "allies",
     ]
+    form_class = FamiliarForm
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+    def special_valid_action(self, background_object):
+        background_object.freebies = 10 * self.current_background.rating
+        background_object.status = "Un"
+        background_object.save()
+        return background_object
 
 
 class SorcererLibraryView(GenericBackgroundView):
