@@ -17,7 +17,6 @@ from characters.models.core.background_block import (
 from characters.models.core.human import Human
 from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
-from characters.models.mage.cabal import Cabal
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Practice, SpecializedPractice, Tenet
 from characters.models.mage.mage import Mage, PracticeRating
@@ -34,8 +33,6 @@ from characters.views.mage.background_views import (
     MtAAlliesView,
     MtAEnhancementView,
     MtAFamiliarView,
-    MtASanctumView,
-    MtAWonderView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
@@ -52,9 +49,11 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
+from items.forms.mage.wonder import WonderForm
 from items.models.core.item import ItemModel
 from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
+from locations.forms.mage.sanctum import SanctumForm
 
 
 def load_factions(request):
@@ -1848,14 +1847,6 @@ class MageNodeView(GenericBackgroundView):
     template_name = "characters/mage/mage/chargen.html"
 
 
-class MageSanctumView(MtASanctumView):
-    template_name = "characters/mage/mage/chargen.html"
-
-
-class MageWonderView(MtAWonderView):
-    template_name = "characters/mage/mage/chargen.html"
-
-
 class MageSpecialtiesView(SpecialUserMixin, FormView):
     form_class = SpecialtiesForm
     template_name = "characters/mage/mage/chargen.html"
@@ -1884,6 +1875,29 @@ class MageSpecialtiesView(SpecialUserMixin, FormView):
         mage.status = "Sub"
         mage.save()
         return HttpResponseRedirect(mage.get_absolute_url())
+
+
+class MageWonderView(GenericBackgroundView):
+    primary_object_class = Mage
+    background_name = "wonder"
+    potential_skip = [
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    form_class = WonderForm
+    template_name = "characters/mage/mage/chargen.html"
+    multiple_ownership = True
+
+
+class MageSanctumView(GenericBackgroundView):
+    primary_object_class = Mage
+    background_name = "sanctum"
+    potential_skip = [
+        "allies",
+    ]
+    form_class = SanctumForm
+    template_name = "characters/mage/mage/chargen.html"
 
 
 class MageCharacterCreationView(HumanCharacterCreationView):

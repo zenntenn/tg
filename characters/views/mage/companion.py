@@ -18,12 +18,7 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
 )
-from characters.views.mage.background_views import (
-    MtAAlliesView,
-    MtAEnhancementView,
-    MtASanctumView,
-    MtAWonderView,
-)
+from characters.views.mage.background_views import MtAAlliesView, MtAEnhancementView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
@@ -36,8 +31,10 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
+from items.forms.mage.wonder import WonderForm
 from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
+from locations.forms.mage.sanctum import SanctumForm
 
 
 class CompanionDetailView(HumanDetailView):
@@ -689,11 +686,26 @@ class CompanionNodeView(GenericBackgroundView):
     template_name = "characters/mage/companion/chargen.html"
 
 
-class CompanionSanctumView(MtASanctumView):
+class CompanionWonderView(GenericBackgroundView):
+    primary_object_class = Companion
+    background_name = "wonder"
+    potential_skip = [
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    form_class = WonderForm
     template_name = "characters/mage/companion/chargen.html"
+    multiple_ownership = True
 
 
-class CompanionWonderView(MtAWonderView):
+class CompanionSanctumView(GenericBackgroundView):
+    primary_object_class = Companion
+    background_name = "sanctum"
+    potential_skip = [
+        "allies",
+    ]
+    form_class = SanctumForm
     template_name = "characters/mage/companion/chargen.html"
 
 

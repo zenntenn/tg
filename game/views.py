@@ -4,6 +4,7 @@ from characters.models.core import CharacterModel
 from characters.models.core.group import Group
 from core.utils import level_name, tree_sort
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.timezone import datetime, localtime
 from django.views import View
 from django.views.generic import TemplateView
@@ -11,7 +12,6 @@ from game.forms import AddCharForm, PostForm, SceneCreationForm
 from game.models import Chronicle, Post, Scene
 from items.models.core import ItemModel
 from locations.models.core import LocationModel
-from django.urls import reverse
 
 
 class ChronicleDetailView(View):

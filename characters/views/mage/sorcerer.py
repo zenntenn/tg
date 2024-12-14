@@ -4,7 +4,6 @@ from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.freebies import SorcererFreebiesForm
 from characters.forms.mage.numina import (
-    NuminaPathForm,
     NuminaPathRatingFormSet,
     NuminaRitualForm,
     PsychicPathRatingFormSet,
@@ -16,9 +15,7 @@ from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
 from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
-from characters.models.mage.cabal import Cabal
 from characters.models.mage.companion import Advantage
-from characters.models.mage.faction import MageFaction
 from characters.models.mage.fellowship import SorcererFellowship
 from characters.models.mage.focus import Practice
 from characters.models.mage.sorcerer import (
@@ -37,7 +34,6 @@ from characters.views.mage.background_views import (
     MtAAlliesView,
     MtAEnhancementView,
     MtAFamiliarView,
-    MtASanctumView,
 )
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
@@ -47,18 +43,15 @@ from core.views.generic import MultipleFormsetsMixin
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
-from items.forms.mage.sorcerer_artifact import (
-    ArtifactCreateOrSelectForm,
-    SorcererArtifactForm,
-)
-from items.models.mage.sorcerer_artifact import SorcererArtifact
+from items.forms.mage.sorcerer_artifact import ArtifactCreateOrSelectForm
 from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
+from locations.forms.mage.sanctum import SanctumForm
 
 
 class SorcererBasicsView(LoginRequiredMixin, CreateView):
@@ -902,10 +895,6 @@ class SorcererNodeView(GenericBackgroundView):
     template_name = "characters/mage/sorcerer/chargen.html"
 
 
-class SorcererSanctumView(MtASanctumView):
-    template_name = "characters/mage/sorcerer/chargen.html"
-
-
 class SorcererArtifactView(SpecialUserMixin, FormView):
     form_class = ArtifactCreateOrSelectForm
     template_name = "characters/mage/sorcerer/chargen.html"
@@ -982,6 +971,16 @@ class SorcererArtifactView(SpecialUserMixin, FormView):
             }
         )
         return form
+
+
+class SorcererSanctumView(GenericBackgroundView):
+    primary_object_class = Sorcerer
+    background_name = "sanctum"
+    potential_skip = [
+        "allies",
+    ]
+    form_class = SanctumForm
+    template_name = "characters/mage/sorcerer/chargen.html"
 
 
 class SorcererCharacterCreationView(HumanCharacterCreationView):
