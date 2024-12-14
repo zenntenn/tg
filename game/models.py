@@ -206,6 +206,38 @@ class Scene(models.Model):
         post = Post.objects.create(
             character=character, message=message, display_name=display, scene=self
         )
+
+        tmp_points = re.compile(r"#WP|#Q(-?\d+)|#P(-?\d+)|#(-?\d+)(B|L|A)")
+
+        for match in tmp_points.finditer(message):
+            full_match = match.group(0)
+            wp_spend = False
+            if full_match == "#WP":
+                character.temporary_willpower -= 1
+                wp_spend = True
+                character.save()
+
+            elif match.group(1):
+                if hasattr(character, "quintessence"):
+                    character.quintessence -= int(match.group(1))
+                    character.save()
+            elif match.group(2):
+                if hasattr(character, "paradox"):
+                    character.paradox += int(match.group(2))
+                    character.save()
+            elif match.group(3):
+                damage_type = match.group(4)
+                damage_amount = int(match.group(3))
+                if damage_type == "B":
+                    for _ in range(damage_amount):
+                        character.add_bashing()
+                if damage_type == "L":
+                    for _ in range(damage_amount):
+                        character.add_lethal()
+                if damage_type == "A":
+                    for _ in range(damage_amount):
+                        character.add_aggravated()
+                character.save()
         if "/rolls" in message:
             text, roll = message.split("/rolls")
             text = text.strip()
@@ -248,7 +280,13 @@ class Scene(models.Model):
                 )
                 specialty_str = match.group("specialty")
                 specialty = specialty_str.lower() == "true" if specialty_str else False
-                post.roll(text, num_dice, difficulty=difficulty, specialty=specialty)
+                post.roll(
+                    text,
+                    num_dice,
+                    difficulty=difficulty,
+                    specialty=specialty,
+                    willpower=wp_spend,
+                )
             else:
                 post.delete()
                 raise ValueError("Command does not match the expected format.")
@@ -276,10 +314,16 @@ class Post(models.Model):
             return self.display_name + ": " + self.message
         return self.character.name + ": " + self.message
 
-    def roll(self, message, number_of_dice, difficulty=6, specialty=False):
+    def roll(
+        self, message, number_of_dice, difficulty=6, specialty=False, willpower=False
+    ):
         roll, success_count = dice(
             number_of_dice, difficulty=difficulty, specialty=specialty
         )
+        if willpower:
+            success_count += 1
+            if success_count < 0:
+                success_count = 0
         roll = ", ".join(map(str, roll))
         self.message = f"{message}: {roll}: <b>{success_count}</b>"
         self.save()
