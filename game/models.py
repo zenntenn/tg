@@ -209,9 +209,9 @@ class Scene(models.Model):
 
         tmp_points = re.compile(r"#WP|#Q(-?\d+)|#P(-?\d+)|#(-?\d+)(B|L|A)")
 
+        wp_spend = False
         for match in tmp_points.finditer(message):
             full_match = match.group(0)
-            wp_spend = False
             if full_match == "#WP":
                 character.temporary_willpower -= 1
                 wp_spend = True
