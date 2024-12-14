@@ -11,6 +11,7 @@ from game.forms import AddCharForm, PostForm, SceneCreationForm
 from game.models import Chronicle, Post, Scene
 from items.models.core import ItemModel
 from locations.models.core import LocationModel
+from django.urls import reverse
 
 
 class ChronicleDetailView(View):
@@ -115,7 +116,8 @@ class SceneDetailView(View):
         context["post_form"] = context["post_form"](
             user=request.user, scene=context["object"]
         )
-        return render(request, "game/scene/detail.html", context)
+        # return render(request, "game/scene/detail.html", context)
+        return redirect(reverse("game:scene", kwargs={"pk": context["object"].pk}))
 
     @staticmethod
     def straighten_quotes(s):
