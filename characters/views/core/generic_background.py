@@ -11,6 +11,9 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
     potential_skip = []
     multiple_ownership = False
 
+    def special_valid_action(self, background_object):
+        return None
+
     def form_valid(self, form):
         content = self.get_context_data()
         primary_object = content["object"]
@@ -22,6 +25,7 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
         background_object.owner = primary_object.owner
         background_object.chronicle = primary_object.chronicle
         background_object.status = "Sub"
+        self.special_valid_action(background_object)
         background_object.save()
 
         self.current_background.note = background_object.name
