@@ -1,4 +1,5 @@
 from accounts.models import Profile
+from characters.models.core.human import Human
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -69,3 +70,59 @@ class SceneXP(forms.Form):
                 if key1.name in key2:
                     cleaned_data[key1] = True
         return cleaned_data
+
+
+class StoryXP(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.story = kwargs.pop("story")
+        super().__init__(*args, **kwargs)
+        self.char_list = Human.objects.filter(status="App")
+        for char in self.char_list:
+            for topic in ["success", "danger", "growth", "drama"]:
+                self.fields[f"{char.name}-{topic}"] = forms.BooleanField(required=False)
+            self.fields[f"{char.name}-duration"] = forms.IntegerField(
+                initial=0, required=False, widget=forms.NumberInput(attrs={"size": "5"})
+            )
+
+    def save(self, commit=True):
+        for char in self.cleaned_data.keys():
+            total_gain = self.cleaned_data[char]["duration"]
+            if self.cleaned_data[char]["success"]:
+                total_gain += 1
+            if self.cleaned_data[char]["danger"]:
+                total_gain += 1
+            if self.cleaned_data[char]["growth"]:
+                total_gain += 1
+            if self.cleaned_data[char]["drama"]:
+                total_gain += 1
+            char.xp += total_gain
+            char.save()
+        self.story.xp_given = True
+        self.story.save()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tmp = {}
+        for char in self.char_list:
+            relevant_data = {k: v for k, v in self.data.items() if char.name in k}
+            char_dict = {
+                "success": False,
+                "danger": False,
+                "growth": False,
+                "drama": False,
+                "duration": 0,
+            }
+            for item in relevant_data.keys():
+                keyname = item.split("-")[-1]
+                if keyname != "duration":
+                    char_dict[keyname] = (
+                        relevant_data[f"story_{self.story.pk}-{char.name}-{keyname}"]
+                        == "on"
+                    )
+                else:
+                    char_dict[keyname] = int(
+                        relevant_data[f"story_{self.story.pk}-{char.name}-{keyname}"]
+                    )
+
+            tmp[char] = char_dict
+        return tmp

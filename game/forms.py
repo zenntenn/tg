@@ -1,5 +1,6 @@
 from characters.models.core import CharacterModel
 from django import forms
+from game.models import Story
 from locations.models.core import LocationModel
 
 
@@ -71,3 +72,13 @@ class PostForm(forms.Form):
         if not message or len(message.strip()) == 0:
             raise forms.ValidationError("The message cannot be empty.")
         return cleaned_data
+
+
+class StoryForm(forms.ModelForm):
+    class Meta:
+        model = Story
+        fields = ("name",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({"placeholder": "Story Name"})

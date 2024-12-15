@@ -166,10 +166,24 @@
                     <div class="col-sm">{{ form.location }}</div>
                     <div class="col-sm">{{ form.date_of_scene }}</div>
                     <div class="col-sm">
-                        <input type="submit" value="Create Scene" />
+                        <input type="submit" name="create_scene" value="Create Scene" />
                     </div>
                 </div>
             </form>
+            {% if request.user.profile.is_st %}
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <h4 class="col-sm {{ object.headings }}">
+                        <div>New Story</div>
+                    </h4>
+                    <div class="row">
+                        <div class="col-sm">{{ story_form.name }}</div>
+                        <div class="col-sm">
+                            <input type="submit" name="create_story" value="Create Story" />
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock content %}

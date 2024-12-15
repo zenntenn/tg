@@ -141,6 +141,11 @@ class STRelationship(models.Model):
         ordering = ["gameline__id"]
 
 
+class Story(models.Model):
+    name = models.CharField(max_length=100, default="")
+    xp_given = models.BooleanField(default=False)
+
+
 class Scene(models.Model):
     name = models.CharField(max_length=100, default="")
     chronicle = models.ForeignKey(

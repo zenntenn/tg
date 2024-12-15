@@ -220,6 +220,63 @@
                         </div>
                     </form>
                 {% endif %}
+                {% if object.xp_story %}
+                    <div class="row">
+                        <h2 class="col-sm {{ user.profile.preferred_heading }}">Story XP</h2>
+                    </div>
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="row">
+                            {% for story_xp_form in story_xp_forms %}
+                                <div class="col-12">
+                                    <div class="card mb-3">
+                                        <div class="card-body text-center">
+                                            <h3>
+                                                <a class="col-sm {{ user.profile.preferred_heading }}"
+                                                   href="{{ story_xp_form.scene.get_absolute_url }}">{{ story_xp_form.story.name }}</a>
+                                            </h3>
+                                            <div class="row">
+                                                <div class="col-sm">Character</div>
+                                                <div class="col-sm">Success</div>
+                                                <div class="col-sm">Danger</div>
+                                                <div class="col-sm">Growth</div>
+                                                <div class="col-sm">Drama</div>
+                                                <div class="col-sm">Duration</div>
+                                            </div>
+                                            {% for char in story_xp_form.char_list %}
+                                                {% with success_field=char.name|add:"-success" %}
+                                                    {% with danger_field=char.name|add:"-danger" %}
+                                                        {% with growth_field=char.name|add:"-growth" %}
+                                                            {% with drama_field=char.name|add:"-drama" %}
+                                                                {% with duration_field=char.name|add:"-duration" %}
+                                                                    <div class="row">
+                                                                        <a class="col-sm" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                                                                        <div class="col-sm">{{ story_xp_form|field:success_field }}</div>
+                                                                        <div class="col-sm">{{ story_xp_form|field:danger_field }}</div>
+                                                                        <div class="col-sm">{{ story_xp_form|field:growth_field }}</div>
+                                                                        <div class="col-sm">{{ story_xp_form|field:drama_field }}</div>
+                                                                        <div class="col-sm">{{ story_xp_form|field:duration_field }}</div>
+                                                                    </div>
+                                                                {% endwith %}
+                                                            {% endwith %}
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                {% endwith %}
+                                            {% endfor %}
+                                            <div class="text-center mt-3">
+                                                <button type="submit"
+                                                        name="submit_story"
+                                                        value="{{ story_xp_form.story.pk }}">
+                                                    Submit {{ story_xp_form.story.name }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                {% endif %}
                 {% if object.freebies_to_approve %}
                     <div class="row">
                         <h2 class="col-sm {{ object.preferred_heading }}">Freebies To Approve</h2>
