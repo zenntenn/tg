@@ -7,6 +7,8 @@ from game.models import (
     Scene,
     SettingElement,
     STRelationship,
+    Story,
+    Week,
 )
 
 admin.site.register(Chronicle)
@@ -52,3 +54,6 @@ class STRelationshipAdmin(admin.ModelAdmin):
         "chronicle",
         "gameline",
     )
+
+admin.site.register(Story)
+admin.site.register(Week)
