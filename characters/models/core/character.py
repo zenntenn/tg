@@ -26,6 +26,8 @@ class Character(CharacterModel):
     creation_status = models.IntegerField(default=1)
 
     notes = models.TextField(default="", blank=True, null=True)
+    xp = models.IntegerField(default=0)
+    spent_xp = models.JSONField(default=list)
 
     class Meta:
         verbose_name = "Character"

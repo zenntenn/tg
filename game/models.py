@@ -1,10 +1,14 @@
 import re
+from datetime import timedelta
 
 from core.utils import dice
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Max, OuterRef, Subquery
 from django.urls import reverse
-from django.utils.timezone import now
+from django.utils.timezone import (  # ensure timezone-aware now if using TIME_ZONE settings
+    now,
+)
 
 
 class ObjectType(models.Model):
@@ -144,6 +148,47 @@ class STRelationship(models.Model):
 class Story(models.Model):
     name = models.CharField(max_length=100, default="")
     xp_given = models.BooleanField(default=False)
+
+
+class Week(models.Model):
+    end_date = models.DateField()
+    xp_given = models.BooleanField(default=False)
+
+    @property
+    def start_date(self):
+        return self.end_date - timedelta(days=7)
+
+    def finished_scenes(self):
+        # Subquery to get the most recent datetime_created for each Scene
+        recent_post_subquery = (
+            Post.objects.filter(scene=OuterRef("pk"))
+            .values("scene")
+            .annotate(latest_dt=Max("datetime_created"))
+            .values("latest_dt")
+        )
+
+        # Annotate each Scene with latest_post_date (datetime)
+        # and then filter by conditions:
+        # 1) Scene is finished
+        # 2) The date portion of latest_post_date is between start_date and end_date
+        return Scene.objects.annotate(
+            latest_post_date=Subquery(recent_post_subquery)
+        ).filter(
+            finished=True,
+            latest_post_date__date__gte=self.start_date,
+            latest_post_date__date__lte=self.end_date,
+        )
+
+    def weekly_characters(self):
+        from characters.models.core.human import Human
+
+        scenes = self.finished_scenes()
+        q = Human.objects.none()
+        for scene in scenes:
+            q |= scene.characters.filter(npc=False)
+        q = q.distinct()
+        q = q.order_by("name")
+        return q
 
 
 class Scene(models.Model):

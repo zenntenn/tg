@@ -277,6 +277,70 @@
                         </div>
                     </form>
                 {% endif %}
+                {% if object.xp_weekly %}
+                    <div class="row">
+                        <h2 class="col-sm {{ user.profile.preferred_heading }}">Weekly XP</h2>
+                    </div>
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="row">
+                            {% for weekly_xp_form in weekly_xp_forms %}
+                                <div class="col-12">
+                                    <div class="card mb-3">
+                                        <div class="card-body text-center">
+                                            <h3>
+                                                <div class="col-sm {{ user.profile.preferred_heading }}">
+                                                    {{ weekly_xp_form.week.start_date }} - {{ weekly_xp_form.week.end_date }}
+                                                </div>
+                                            </h3>
+                                            <h4>
+                                                <div class="col-sm {{ user.profile.preferred_heading }}">Scenes This Week</div>
+                                            </h4>
+                                            <div class="row">
+                                                {% for scene in weekly_xp_form.week.finished_scenes %}
+                                                    <a class="col-sm-3" href="{{ scene.get_absolute_url }}">{{ scene }}</a>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm">Character</div>
+                                                <div class="col-sm">Finishing</div>
+                                                <div class="col-sm">Learning</div>
+                                                <div class="col-sm">Role-Playing</div>
+                                                <div class="col-sm">Focus</div>
+                                                <div class="col-sm">Standing Out</div>
+                                            </div>
+                                            {% for char in weekly_xp_form.week.weekly_characters %}
+                                                {% with finishing_field=char.name|add:"-finishing" %}
+                                                    {% with learning_field=char.name|add:"-learning" %}
+                                                        {% with rp_field=char.name|add:"-rp" %}
+                                                            {% with focus_field=char.name|add:"-focus" %}
+                                                                {% with standingout_field=char.name|add:"-standingout" %}
+                                                                    <div class="row">
+                                                                        <a class="col-sm" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                                                                        <div class="col-sm">{{ weekly_xp_form|field:finishing_field }}</div>
+                                                                        <div class="col-sm">{{ weekly_xp_form|field:learning_field }}</div>
+                                                                        <div class="col-sm">{{ weekly_xp_form|field:rp_field }}</div>
+                                                                        <div class="col-sm">{{ weekly_xp_form|field:focus_field }}</div>
+                                                                        <div class="col-sm">{{ weekly_xp_form|field:standingout_field }}</div>
+                                                                    </div>
+                                                                {% endwith %}
+                                                            {% endwith %}
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                {% endwith %}
+                                            {% endfor %}
+                                            <div class="text-center mt-3">
+                                                <button type="submit" name="submit_week" value="{{ weekly_xp_form.week.pk }}">
+                                                    Submit {{ weekly_xp_form.week.end_date }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                {% endif %}
                 {% if object.freebies_to_approve %}
                     <div class="row">
                         <h2 class="col-sm {{ object.preferred_heading }}">Freebies To Approve</h2>

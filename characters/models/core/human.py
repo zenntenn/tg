@@ -96,9 +96,6 @@ class Human(
     history = models.TextField(default="", blank=True, null=True)
     goals = models.TextField(default="", blank=True, null=True)
 
-    xp = models.IntegerField(default=0)
-    spent_xp = models.JSONField(default=list)
-
     freebies = models.IntegerField(default=15)
     spent_freebies = models.JSONField(default=list)
     background_points = 5
