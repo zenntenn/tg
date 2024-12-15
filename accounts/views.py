@@ -1,11 +1,17 @@
-from accounts.forms import CustomUSerCreationForm, ProfileUpdateForm, SceneXP, StoryXP
+from accounts.forms import (
+    CustomUSerCreationForm,
+    ProfileUpdateForm,
+    SceneXP,
+    StoryXP,
+    WeeklyXP,
+)
 from accounts.models import Profile
 from characters.models.core import Character
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
-from game.models import Chronicle, Scene, Story
+from game.models import Chronicle, Scene, Story, Week
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
 
@@ -34,6 +40,10 @@ class ProfileView(DetailView):
             StoryXP(story=x, prefix=f"story_{x.pk}")
             for x in Story.objects.filter(xp_given=False)
         ]
+        context["weekly_xp_forms"] = [
+            WeeklyXP(week=x, prefix=f"week_{x.pk}")
+            for x in Week.objects.filter(xp_given=False)
+        ]
         return context
 
     def post(self, request, *args, **kwargs):
@@ -41,6 +51,7 @@ class ProfileView(DetailView):
         context = self.get_context_data()
         submitted_scene_id = request.POST.get("submit_scene")
         submitted_story_id = request.POST.get("submit_story")
+        submitted_week_id = request.POST.get("submit_week")
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
             form = SceneXP(request.POST, scene=scene)
@@ -49,6 +60,11 @@ class ProfileView(DetailView):
         if submitted_story_id is not None:
             story = Story.objects.get(pk=submitted_story_id)
             form = StoryXP(request.POST, story=story)
+            if form.is_valid():
+                form.save()
+        if submitted_week_id is not None:
+            week = Week.objects.get(pk=submitted_week_id)
+            form = WeeklyXP(request.POST, week=week)
             if form.is_valid():
                 form.save()
         elif any(x.startswith("image") for x in request.POST.keys()):

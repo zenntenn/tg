@@ -126,3 +126,57 @@ class StoryXP(forms.Form):
 
             tmp[char] = char_dict
         return tmp
+
+
+class WeeklyXP(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.week = kwargs.pop("week")
+        super().__init__(*args, **kwargs)
+        for char in self.week.weekly_characters():
+            for topic in ["finishing", "learning", "rp", "focus", "standingout"]:
+                if topic == "finishing":
+                    self.fields[f"{char.name}-{topic}"] = forms.BooleanField(
+                        required=False, initial=True
+                    )
+                else:
+                    self.fields[f"{char.name}-{topic}"] = forms.BooleanField(
+                        required=False
+                    )
+
+    def save(self, commit=True):
+        for char in self.cleaned_data.keys():
+            total_gain = 0
+            if self.cleaned_data[char]["finishing"]:
+                total_gain += 1
+            if self.cleaned_data[char]["learning"]:
+                total_gain += 1
+            if self.cleaned_data[char]["rp"]:
+                total_gain += 1
+            if self.cleaned_data[char]["focus"]:
+                total_gain += 1
+            if self.cleaned_data[char]["standingout"]:
+                total_gain += 1
+            char.xp += total_gain
+            char.save()
+        self.week.xp_given = True
+        self.week.save()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tmp = {}
+        for char in self.week.weekly_characters():
+            relevant_data = {k: v for k, v in self.data.items() if char.name in k}
+            char_dict = {
+                "finishing": False,
+                "learning": False,
+                "rp": False,
+                "focus": False,
+                "standingout": False,
+            }
+            for item in relevant_data.keys():
+                keyname = item.split("-")[-1]
+                char_dict[keyname] = (
+                    relevant_data[f"week_{self.week.pk}-{char.name}-{keyname}"] == "on"
+                )
+            tmp[char] = char_dict
+        return tmp

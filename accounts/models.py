@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-from game.models import Chronicle, Scene, Story, STRelationship
+from game.models import Chronicle, Scene, Story, STRelationship, Week
 from items.models.core.item import ItemModel
 from locations.models.core.location import LocationModel
 
@@ -87,6 +87,9 @@ class Profile(models.Model):
 
     def xp_story(self):
         return Story.objects.filter(xp_given=False)
+
+    def xp_weekly(self):
+        return Week.objects.filter(xp_given=False)
 
     def characters_to_approve(self):
         return Character.objects.filter(
