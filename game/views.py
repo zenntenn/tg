@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.utils.timezone import datetime, localtime
 from django.views import View
 from django.views.generic import TemplateView
-from game.forms import AddCharForm, PostForm, SceneCreationForm
-from game.models import Chronicle, Post, Scene
+from game.forms import AddCharForm, PostForm, SceneCreationForm, StoryForm
+from game.models import Chronicle, Post, Scene, Story
 from items.models.core import ItemModel
 from locations.models.core import LocationModel
 
@@ -31,6 +31,7 @@ class ChronicleDetailView(View):
             "form": SceneCreationForm(chronicle=chronicle),
             "top_locations": top_locations,
             "active_scenes": Scene.objects.filter(chronicle=chronicle, finished=False),
+            "story_form": StoryForm(),
         }
 
     def get(self, request, *args, **kwargs):
@@ -39,13 +40,19 @@ class ChronicleDetailView(View):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context(kwargs["pk"])
-        return redirect(
-            context["object"].add_scene(
-                request.POST["name"],
-                LocationModel.objects.get(pk=request.POST["location"]),
-                date_of_scene=request.POST["date_of_scene"],
+        create_story_flag = request.POST.get("create_story")
+        create_scene_flag = request.POST.get("create_scene")
+        if create_story_flag is not None:
+            Story.objects.create(name=request.POST["name"])
+        if create_scene_flag is not None:
+            return redirect(
+                context["object"].add_scene(
+                    request.POST["name"],
+                    LocationModel.objects.get(pk=request.POST["location"]),
+                    date_of_scene=request.POST["date_of_scene"],
+                )
             )
-        )
+        return render(request, "game/chronicle/detail.html", context)
 
 
 class SceneDetailView(View):

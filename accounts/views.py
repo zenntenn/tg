@@ -1,11 +1,11 @@
-from accounts.forms import CustomUSerCreationForm, ProfileUpdateForm, SceneXP
+from accounts.forms import CustomUSerCreationForm, ProfileUpdateForm, SceneXP, StoryXP
 from accounts.models import Profile
 from characters.models.core import Character
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
-from game.models import Chronicle, Scene
+from game.models import Chronicle, Scene, Story
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
 
@@ -30,15 +30,25 @@ class ProfileView(DetailView):
         context["scenexp_forms"] = [
             SceneXP(scene=s, prefix=f"scene_{s.pk}") for s in self.object.xp_requests()
         ]
+        context["story_xp_forms"] = [
+            StoryXP(story=x, prefix=f"story_{x.pk}")
+            for x in Story.objects.filter(xp_given=False)
+        ]
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data()
         submitted_scene_id = request.POST.get("submit_scene")
+        submitted_story_id = request.POST.get("submit_story")
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
             form = SceneXP(request.POST, scene=scene)
+            if form.is_valid():
+                form.save()
+        if submitted_story_id is not None:
+            story = Story.objects.get(pk=submitted_story_id)
+            form = StoryXP(request.POST, story=story)
             if form.is_valid():
                 form.save()
         elif any(x.startswith("image") for x in request.POST.keys()):
