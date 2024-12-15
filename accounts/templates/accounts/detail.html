@@ -39,11 +39,11 @@
                 </div>
             {% endif %}
             {% if user == object.user %}
-            <div class="row">
-                <div class="col-sm">
-                    <input type="submit" value="Edit Preferences" name="Edit Preferences" />
+                <div class="row">
+                    <div class="col-sm">
+                        <input type="submit" value="Edit Preferences" name="Edit Preferences" />
+                    </div>
                 </div>
-            </div>
             {% endif %}
         </form>
         {% if object.is_st %}
@@ -190,42 +190,32 @@
                     <form method="post" action="">
                         {% csrf_token %}
                         <div class="row">
-                            {% for scene in object.xp_requests %}
+                            {% for scenexp_form in scenexp_forms %}
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <div class="card mb-3">
                                         <div class="card-body text-center">
                                             <h3>
                                                 <a class="col-sm {{ user.profile.preferred_heading }}"
-                                                   href="{{ scene.get_absolute_url }}">{{ scene.name }}</a>
+                                                   href="{{ scenexp_form.scene.get_absolute_url }}">{{ scenexp_form.scene.name }}</a>
                                             </h3>
-                                            {% for character in scene.characters.all %}
-                                                {% if not character.npc %}
-                                                    <div class="row align-items-center mb-2">
-                                                        <!-- Name Column -->
-                                                        <div class="col-6 text-start">
-                                                            <a class="col-sm" href="{{ character.get_absolute_url }}">{{ character.name }}</a>
-                                                        </div>
-                                                        <!-- Number Input Column -->
-                                                        <div class="col-6 text-end">
-                                                            <label class="mb-0">
-                                                                <input type="number"
-                                                                       value="{{ scene.id }}-{{ character.name }}"
-                                                                       name="{{ scene.id }}-{{ character.name }}"
-                                                                       class="form-control" />
-                                                            </label>
-                                                        </div>
+                                            {% for field in scenexp_form %}
+                                                <div class="row align-items-center mb-2">
+                                                    <div class="col-6 text-start">
+                                                        <div class="col-sm" id="{{ field.id_for_label }}">{{ field.label }}</div>
                                                     </div>
-                                                {% endif %}
+                                                    <div class="col-6 text-end">
+                                                        <label class="mb-0">{{ field }}</label>
+                                                    </div>
+                                                </div>
                                             {% endfor %}
-                                            <input type="submit"
-                                                   value="XP for {{ scene.name }}"
-                                                   name="XP for {{ scene.name }}-{{ scene.id }}"
-                                                   class="mt-3" />
+                                            <div class="text-center mt-3">
+                                                <button type="submit" name="submit_scene" value="{{ scenexp_form.scene.pk }}">
+                                                    Submit {{ scenexp_form.scene.name }}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            {% empty %}
-                                <div class="col">No Characters.</div>
                             {% endfor %}
                         </div>
                     </form>

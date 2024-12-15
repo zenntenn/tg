@@ -42,3 +42,30 @@ class ProfileUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["discord_id"].required = False
+
+
+class SceneXP(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.scene = kwargs.pop("scene")
+        super().__init__(*args, **kwargs)
+        for character in self.scene.characters.filter(npc=False):
+            self.fields[f"{character.name}"] = forms.BooleanField(required=False)
+
+    def save(self):
+        self.scene.xp_given = True
+        self.scene.save()
+        for char in self.cleaned_data.keys():
+            if self.cleaned_data[char]:
+                char.xp += 1
+                char.save()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data = {
+            self.scene.characters.get(name=k): v for k, v in cleaned_data.items()
+        }
+        for key1 in cleaned_data.keys():
+            for key2 in self.data.keys():
+                if key1.name in key2:
+                    cleaned_data[key1] = True
+        return cleaned_data

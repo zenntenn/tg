@@ -1,4 +1,4 @@
-from accounts.forms import CustomUSerCreationForm, ProfileUpdateForm
+from accounts.forms import CustomUSerCreationForm, ProfileUpdateForm, SceneXP
 from accounts.models import Profile
 from characters.models.core import Character
 from django.shortcuts import redirect, render
@@ -27,28 +27,20 @@ class ProfileView(DetailView):
         context["scenes_waiting"] = []
         if self.object.is_st():
             context["scenes_waiting"] = Scene.objects.filter(waiting_for_st=True)
+        context["scenexp_forms"] = [
+            SceneXP(scene=s, prefix=f"scene_{s.pk}") for s in self.object.xp_requests()
+        ]
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data()
-        if any(x.startswith("XP for") for x in request.POST.keys()):
-            to_remove = [x for x in request.POST.keys() if x.startswith("XP for")][0]
-            new_dict = {
-                "-".join(k.split("-")[1:]): v
-                for k, v in request.POST.items()
-                if (k not in [to_remove, "csrfmiddlewaretoken"] and v != "")
-            }
-            scene_name = [x for x in request.POST.keys() if x.startswith("XP for")][
-                0
-            ].split("XP for ")[-1]
-            scene = Scene.objects.get(id=scene_name.split("-")[-1])
-            for char in scene.characters.all():
-                if char.name in new_dict.keys():
-                    char.xp += int(new_dict[char.name])
-                    char.save()
-            scene.xp_given = True
-            scene.save()
+        submitted_scene_id = request.POST.get("submit_scene")
+        if submitted_scene_id is not None:
+            scene = Scene.objects.get(pk=submitted_scene_id)
+            form = SceneXP(request.POST, scene=scene)
+            if form.is_valid():
+                form.save()
         elif any(x.startswith("image") for x in request.POST.keys()):
             char = [
                 x
