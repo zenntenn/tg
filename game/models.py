@@ -402,3 +402,33 @@ class Post(models.Model):
                 join_list[-1] = join_list[-1] + f": difficulty increased to {diff + 1}"
         self.message = message + "<br>".join(join_list)
         self.save()
+
+
+class JournalEntry(models.Model):
+    journal = models.ForeignKey("Journal", on_delete=models.SET_NULL, null=True)
+    message = models.TextField(default="")
+    st_message = models.TextField(default="")
+    date = models.DateTimeField()
+    datetime_created = models.DateTimeField(default=now)
+
+    class Meta:
+        ordering = ["-date"]
+
+
+class Journal(models.Model):
+    character = models.OneToOneField(
+        "characters.CharacterModel", on_delete=models.CASCADE
+    )
+
+    def add_post(self, date, message):
+        je = JournalEntry.objects.create(journal=self, message=message, date=date)
+        return je
+
+    def get_absolute_url(self):
+        return reverse("game:journal", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return f"{self.character.name}'s Journal"
+
+    def all_entries(self):
+        return JournalEntry.objects.filter(journal=self)

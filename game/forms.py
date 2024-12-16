@@ -1,6 +1,6 @@
 from characters.models.core import CharacterModel
 from django import forms
-from game.models import Story
+from game.models import Journal, JournalEntry, Story
 from locations.models.core import LocationModel
 
 
@@ -82,3 +82,35 @@ class StoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["name"].widget.attrs.update({"placeholder": "Story Name"})
+
+
+class JournalEntryForm(forms.Form):
+    date = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
+    message = forms.CharField(widget=forms.Textarea(attrs={"placeholder": "Message"}))
+
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop("instance")
+        super().__init__(*args, **kwargs)
+        self.fields["message"].widget.attrs.update({"placeholder": "Journal Entry"})
+
+    def save(self, commit=True):
+        return self.instance.add_post(
+            self.cleaned_data["date"], self.cleaned_data["message"]
+        )
+
+
+class STResponseForm(forms.Form):
+    st_message = forms.CharField(
+        widget=forms.Textarea(attrs={"placeholder": "Message"})
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.entry = kwargs.pop("entry")
+        super().__init__(*args, **kwargs)
+        self.fields["st_message"].widget.attrs.update(
+            {"placeholder": "Journal Response"}
+        )
+
+    def save(self, commit=True):
+        self.entry.st_message = self.cleaned_data["st_message"]
+        self.entry.save()

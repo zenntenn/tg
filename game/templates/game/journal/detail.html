@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ object }}
+{% endblock title %}
+{% block content %}
+    {% if is_approved_user %}
+        <div class="container centertext">
+            <div class="row">
+                <h2 class="col-sm {{ object.character.get_heading }}">{{ object }}</h2>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm">{{ new_entry_form.date }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">{{ new_entry_form.message }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <button type="submit"
+                                name="submit_entry"
+                                value="{{ st_response_forms.instance.pk }}">Submit Entry</button>
+                    </div>
+                </div>
+            </form>
+            {% for entry_form in st_response_forms %}
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="row">
+                        <h4 class="col-sm {{ object.character.get_heading }}">{{ entry_form.entry.date.date }}</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">{{ entry_form.entry.message }}</div>
+                    </div>
+                    {% if entry_form.entry.st_message %}
+                        <div class="row">
+                            <div class="col-sm st">{{ entry_form.entry.st_message }}</div>
+                        </div>
+                    {% else %}
+                        {% if request.user.profile.is_st %}
+                            <div class="row">
+                                <div class="col-sm st">{{ entry_form.st_message }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm">
+                                    <button type="submit"
+                                            name="submit_response"
+                                            value="{{ st_response_forms.entry.pk }}">Submit ST Response</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </form>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

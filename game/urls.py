@@ -11,4 +11,5 @@ urlpatterns = [
     ),
     path("scene/<pk>", views.SceneDetailView.as_view(), name="scene"),
     path("commands/", views.CommandsView.as_view(), name="commands"),
+    path("journal/<pk>", views.JournalDetailView.as_view(), name="journal"),
 ]
