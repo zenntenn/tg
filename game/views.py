@@ -3,13 +3,21 @@ import itertools
 from characters.models.core import CharacterModel
 from characters.models.core.group import Group
 from core.utils import level_name, tree_sort
+from core.views.approved_user_mixin import SpecialUserMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.timezone import datetime, localtime
 from django.views import View
-from django.views.generic import TemplateView
-from game.forms import AddCharForm, PostForm, SceneCreationForm, StoryForm
-from game.models import Chronicle, Post, Scene, Story
+from django.views.generic import DetailView, TemplateView
+from game.forms import (
+    AddCharForm,
+    JournalEntryForm,
+    PostForm,
+    SceneCreationForm,
+    StoryForm,
+    STResponseForm,
+)
+from game.models import Chronicle, Journal, JournalEntry, Post, Scene, Story
 from items.models.core import ItemModel
 from locations.models.core import LocationModel
 
@@ -191,3 +199,42 @@ class ChronicleScenesDetailView(View):
 
 class CommandsView(TemplateView):
     template_name = "game/scene/commands.html"
+
+
+class JournalDetailView(SpecialUserMixin, DetailView):
+    model = Journal
+    template_name = "game/journal/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["new_entry_form"] = JournalEntryForm(instance=self.object)
+        context["st_response_forms"] = [
+            STResponseForm(entry=e, prefix=f"entry-{e.pk}")
+            for e in self.object.all_entries()
+        ]
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object.character, self.request.user
+        )
+        print(self.object.character.owner, self.request.user)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        submit_entry = request.POST.get("submit_entry")
+        submit_response = request.POST.get("submit_response")
+        if submit_entry is not None:
+            f = JournalEntryForm(request.POST, instance=self.object)
+            if f.is_valid():
+                f.save()
+        if submit_response is not None:
+            tmp = [x for x in request.POST.keys() if "entry" in x][0]
+            tmp = tmp.split("-")[1]
+            f = STResponseForm(
+                {"st_message": request.POST[f"entry-{tmp}-st_message"]},
+                entry=JournalEntry.objects.get(pk=tmp),
+            )
+            if f.is_valid():
+                f.save()
+        return render(
+            request, "game/journal/detail.html", self.get_context_data(**kwargs)
+        )
