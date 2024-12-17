@@ -1,3 +1,4 @@
+from characters.forms.core.ally import AllyForm
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.freebies import CompanionFreebiesForm
@@ -18,7 +19,7 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
 )
-from characters.views.mage.background_views import MtAAlliesView, MtAEnhancementView
+from characters.views.mage.background_views import MtAEnhancementView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
@@ -635,7 +636,11 @@ class CompanionSpecialtiesView(SpecialUserMixin, FormView):
         return HttpResponseRedirect(companion.get_absolute_url())
 
 
-class CompanionAlliesView(MtAAlliesView):
+class CompanionAlliesView(GenericBackgroundView):
+    primary_object_class = Companion
+    background_name = "allies"
+    potential_skip = []
+    form_class = AllyForm
     template_name = "characters/mage/companion/chargen.html"
 
 
