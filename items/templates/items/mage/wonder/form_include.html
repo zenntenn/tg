@@ -38,7 +38,7 @@
             </div>
         {% endfor %}
     </div>
-    <div id="empty_resonance_form" class="invisible">
+    <div id="empty_resonance_form" class="d-none">
         <div class="row">
             <div class="col-sm">{{ form.resonance_formset.empty_form.resonance }}</div>
             <div class="col-sm">{{ form.resonance_formset.empty_form.rating }}</div>
@@ -58,7 +58,7 @@
                 <div class="row form-row effect-select-row">
                     <div class="col-sm">{{ subform.select }}</div>
                 </div>
-                <div class="effect-create-fields invisible">
+                <div class="effect-create-fields d-none">
                     <div class="row form-row">
                         <div class="col-sm">Name</div>
                         <div class="col-sm">{{ subform.name }}</div>
@@ -96,7 +96,7 @@
         {% endfor %}
     </div>
     <!-- Empty form with updated prefix -->
-    <div id="empty_effects_form" class="invisible">
+    <div id="empty_effects_form" class="d-none">
         <div class="effect-subform" data-prefix="effects-__prefix__">
             <div class="row form-row">
                 <div class="col-sm">Create New Effect: {{ form.effect_formset.empty_form.select_or_create }}</div>
@@ -104,7 +104,7 @@
             <div class="row form-row effect-select-row">
                 <div class="col-sm">{{ form.effect_formset.empty_form.select }}</div>
             </div>
-            <div class="effect-create-fields invisible">
+            <div class="effect-create-fields d-none">
                 <div class="row form-row">
                     <div class="col-sm">Name</div>
                     <div class="col-sm">{{ form.effect_formset.empty_form.name }}</div>
@@ -140,7 +140,7 @@
             </div>
         </div>
     </div>
-    <button type="button" class="invisible" id="add-power">Add Power</button>
+    <button type="button" class="d-none" id="add-power">Add Power</button>
 </div>
 <script>
     function toggleEffectFields(prefix) {
@@ -162,11 +162,11 @@
 
         console.log("Checkbox checked?", selectCreateCheckbox.checked);
         if (selectCreateCheckbox.checked) {
-            selectRow.classList.add('invisible');
-            createFields.classList.remove('invisible');
+            selectRow.classList.add('d-none');
+            createFields.classList.remove('d-none');
         } else {
-            selectRow.classList.remove('invisible');
-            createFields.classList.add('invisible');
+            selectRow.classList.remove('d-none');
+            createFields.classList.add('d-none');
         }
     }
 
@@ -202,10 +202,10 @@
             wonder_type_select.addEventListener('change', function() {
                 const selectedValue = this.value;
                 if(["artifact", "charm"].includes(selectedValue)){
-                    wonder_effect_add.classList.add("invisible");
+                    wonder_effect_add.classList.add("d-none");
                     resetEffectsFormset();
                 } else {
-                    wonder_effect_add.classList.remove("invisible");
+                    wonder_effect_add.classList.remove("d-none");
                 }
             });
         }

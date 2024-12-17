@@ -14,7 +14,7 @@
         <div class="col-sm">{{ form.select }}</div>
     </div>
 </div>
-<div id="artifact creation" class="invisible">
+<div id="artifact creation" class="d-none">
     <div class="row">
         <div class="col-sm">{{ form.artifact_form.name }}</div>
     </div>
@@ -38,11 +38,11 @@
             console.log("TEST")
 
             if ($(this).prop('checked')) {
-                artifact_selection.classList.add("invisible");
-                artifact_creation.classList.remove("invisible");
+                artifact_selection.classList.add("d-none");
+                artifact_creation.classList.remove("d-none");
             } else {
-                artifact_creation.classList.add("invisible")
-                artifact_selection.classList.remove("invisible")
+                artifact_creation.classList.add("d-none")
+                artifact_selection.classList.remove("d-none")
             }
         });
     });

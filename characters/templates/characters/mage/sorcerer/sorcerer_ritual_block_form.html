@@ -14,7 +14,7 @@
         <div class="col-sm">{{ form.select_ritual }}</div>
     </div>
 </div>
-<div id="ritual creation" class="invisible">
+<div id="ritual creation" class="d-none">
     <div class="row">
         <div class="col-sm">{{ form.name }}</div>
     </div>
@@ -37,11 +37,11 @@
         // Attach event listener to each toggle
         creation_toggle.addEventListener('change', function() {
             if ($(this).prop('checked')) {
-                ritual_selection.classList.add("invisible");
-                ritual_creation.classList.remove("invisible");
+                ritual_selection.classList.add("d-none");
+                ritual_creation.classList.remove("d-none");
             } else {
-                ritual_selection.classList.remove("invisible")
-                ritual_creation.classList.add("invisible")
+                ritual_selection.classList.remove("d-none")
+                ritual_creation.classList.add("d-none")
             }
         });
     });    

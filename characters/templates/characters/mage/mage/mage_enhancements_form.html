@@ -19,7 +19,7 @@
         {% endif %}
     {% endfor %}
 </div>
-<div class="form-group invisible" id="new_device">
+<div class="form-group d-none" id="new_device">
     <div class="row">
         <div class="col-sm">{{ form.new_device_wonder_type }}</div>
     </div>
@@ -43,7 +43,7 @@
     <div class="row">
         <div class="col-sm">{{ form.new_device_new_power_option }}</div>
     </div>
-    <div class="form-group invisible" id="new_device_power_select">
+    <div class="form-group d-none" id="new_device_power_select">
         <div class="row">
             <div class="col-sm">{{ form.new_device_effect }}</div>
         </div>
@@ -85,7 +85,7 @@
         </div>
     </div>
 </div>
-<div class="form-group invisible" id="device">
+<div class="form-group d-none" id="device">
     <div class="row">
         <div class="col-sm">{{ form.device }}</div>
     </div>
@@ -113,24 +113,24 @@
             const selectedValue = this.value;
             // Update the class of the element
             if(selectedValue == "Attributes"){
-                attributeElements.classList.remove("invisible");
+                attributeElements.classList.remove("d-none");
             }
             else {
-                attributeElements.classList.add("invisible");
+                attributeElements.classList.add("d-none");
             }
 
             if(selectedValue == "Existing Device"){
-                deviceElements.classList.remove("invisible");
+                deviceElements.classList.remove("d-none");
             }
             else {
-                deviceElements.classList.add("invisible");
+                deviceElements.classList.add("d-none");
             }
 
             if(selectedValue == "New Device"){
-                ndeviceElements.classList.remove("invisible");
+                ndeviceElements.classList.remove("d-none");
             }
             else {
-                ndeviceElements.classList.add("invisible");
+                ndeviceElements.classList.add("d-none");
             }
             
         });
@@ -139,12 +139,12 @@
             const selectedValue = this.value;
             // Update the class of the element
             if(selectedValue == "New Effect"){
-                newPowerElements.classList.remove("invisible");
-                powerSelectElements.classList.add("invisible");
+                newPowerElements.classList.remove("d-none");
+                powerSelectElements.classList.add("d-none");
             }
             else {
-                newPowerElements.classList.add("invisible");
-                powerSelectElements.classList.remove("invisible");
+                newPowerElements.classList.add("d-none");
+                powerSelectElements.classList.remove("d-none");
             }
             
         });

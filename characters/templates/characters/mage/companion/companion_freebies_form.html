@@ -72,9 +72,9 @@
 {% endif %}
 <div class="row">
     <div class="col-sm">{{ form.category }}</div>
-    <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
-    <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
-    <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
+    <div class="col-sm d-none" id="example_wrap">{{ form.example }}</div>
+    <div class="col-sm d-none" id="value_wrap">{{ form.value }}</div>
+    <div class="col-sm d-none" id="note_wrap">{{ form.note }}</div>
 </div>
 {% for item in object.spent_freebies %}
     <div class="row">
@@ -95,26 +95,26 @@
             
             // Update the class of the element
             if(["Willpower", "-----",].includes(this.value)){
-                exampleElement.classList.add("invisible");
-                valueElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
+                exampleElement.classList.add("d-none");
+                valueElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
             } else {
-                exampleElement.classList.remove("invisible");
-                valueElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
+                exampleElement.classList.remove("d-none");
+                valueElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
             }
             if(this.value == "MeritFlaw"){
-                valueElement.classList.remove("invisible");
-                noteElement.classList.add("invisible");
+                valueElement.classList.remove("d-none");
+                noteElement.classList.add("d-none");
             }
             if(this.value == "New Background"){
-                exampleElement.classList.remove("invisible");;
-                noteElement.classList.remove("invisible");
-                valueElement.classList.add("invisible");
+                exampleElement.classList.remove("d-none");;
+                noteElement.classList.remove("d-none");
+                valueElement.classList.add("d-none");
             }
             if(this.value == "Advantage"){
-                valueElement.classList.remove("invisible");
-                noteElement.classList.add("invisible");
+                valueElement.classList.remove("d-none");
+                noteElement.classList.add("d-none");
             }
             
             // Make the AJAX call

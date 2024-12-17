@@ -156,14 +156,14 @@
         {% endfor %}
         <div class="row">
             <div class="col-sm">{{ form.category }}</div>
-            <div class="col-sm invisible" id="example_wrap">{{ form.example }}</div>
-            <div class="col-sm invisible" id="resonance_wrap">{{ form.resonance }}</div>
-            <div class="col-sm invisible" id="value_wrap">{{ form.value }}</div>
-            <div class="col-sm invisible" id="note_wrap">{{ form.note }}</div>
-            <div class="col-sm invisible" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
-            <div class="col-sm invisible" id="image_field_wrap">{{ form.image_field }}</div>
+            <div class="col-sm d-none" id="example_wrap">{{ form.example }}</div>
+            <div class="col-sm d-none" id="resonance_wrap">{{ form.resonance }}</div>
+            <div class="col-sm d-none" id="value_wrap">{{ form.value }}</div>
+            <div class="col-sm d-none" id="note_wrap">{{ form.note }}</div>
+            <div class="col-sm d-none" id="pooled_wrap">Pooled? {{ form.pooled }}</div>
+            <div class="col-sm d-none" id="image_field_wrap">{{ form.image_field }}</div>
         </div>
-        <div class="invisible" id="rote_wrap">
+        <div class="d-none" id="rote_wrap">
             <div class="row">
                 <div class="col-sm">Create New Rote: {{ rote_form.select_or_create_rote }}</div>
             </div>
@@ -172,7 +172,7 @@
                     <div class="col-sm">{{ rote_form.rote_options }}</div>
                 </div>
             </div>
-            <div id="rote creation" class="invisible">
+            <div id="rote creation" class="d-none">
                 <div class="row">
                     <div class="col-sm">Name</div>
                     <div class="col-sm">{{ rote_form.name }}</div>
@@ -197,7 +197,7 @@
                         <div class="col-sm">{{ rote_form.effect_options }}</div>
                     </div>
                 </div>
-                <div id="effect creation" class="invisible">
+                <div id="effect creation" class="d-none">
                     <div class="row">
                         <div class="col-sm-2">Correspondence</div>
                         <div class="col-sm-2 dots">{{ rote_form.correspondence }}</div>
@@ -255,78 +255,78 @@
             
             // Update the class of the element
             if(["Willpower", "-----", "Rote Points", "Quintessence"].includes(this.value)){
-                exampleElement.classList.add("invisible");
-                valueElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
-                resElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.add("invisible")
-                rote_wrap.classList.add("invisible")
+                exampleElement.classList.add("d-none");
+                valueElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
+                resElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.add("d-none")
+                rote_wrap.classList.add("d-none")
             } else {
-                exampleElement.classList.remove("invisible");
-                valueElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
-                resElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.add("invisible")
-                rote_wrap.classList.add("invisible")
+                exampleElement.classList.remove("d-none");
+                valueElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
+                resElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.add("d-none")
+                rote_wrap.classList.add("d-none")
             }
             if(this.value == "Rote"){
-                exampleElement.classList.add("invisible")
-                valueElement.classList.add("invisible");
-                resElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.add("invisible")
-                rote_wrap.classList.remove("invisible")
+                exampleElement.classList.add("d-none")
+                valueElement.classList.add("d-none");
+                resElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.add("d-none")
+                rote_wrap.classList.remove("d-none")
             }
             if(this.value == "MeritFlaw"){
-                valueElement.classList.remove("invisible");
-                resElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.add("invisible")
-                rote_wrap.classList.add("invisible")
+                valueElement.classList.remove("d-none");
+                resElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.add("d-none")
+                rote_wrap.classList.add("d-none")
             }
             if(this.value == "Resonance"){
-                resElement.classList.remove("invisible");
-                exampleElement.classList.add("invisible");
-                noteElement.classList.add("invisible");
-                valueElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.add("invisible")
-                rote_wrap.classList.add("invisible")
+                resElement.classList.remove("d-none");
+                exampleElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
+                valueElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.add("d-none")
+                rote_wrap.classList.add("d-none")
             }
             if(this.value == "New Background"){
-                resElement.classList.add("invisible");
-                exampleElement.classList.remove("invisible");
-                noteElement.classList.remove("invisible");
-                valueElement.classList.add("invisible");
-                rote_wrap.classList.add("invisible")
+                resElement.classList.add("d-none");
+                exampleElement.classList.remove("d-none");
+                noteElement.classList.remove("d-none");
+                valueElement.classList.add("d-none");
+                rote_wrap.classList.add("d-none")
                 if (isGroupMember) {
-                    pooled_wrap.classList.remove("invisible");
+                    pooled_wrap.classList.remove("d-none");
                 } else {
-                    pooled_wrap.classList.add("invisible");
+                    pooled_wrap.classList.add("d-none");
                 }
-                image_field_wrap.classList.add("invisible")
+                image_field_wrap.classList.add("d-none")
             }
             if(this.value == "Arete"){
-                resElement.classList.add("invisible")
-                exampleElement.classList.add("invisible");;
-                noteElement.classList.add("invisible");
-                valueElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.add("invisible")
-                rote_wrap.classList.add("invisible")
+                resElement.classList.add("d-none")
+                exampleElement.classList.add("d-none");;
+                noteElement.classList.add("d-none");
+                valueElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.add("d-none")
+                rote_wrap.classList.add("d-none")
             }
             if(this.value == "Image"){
-                resElement.classList.add("invisible")
-                exampleElement.classList.add("invisible");;
-                noteElement.classList.add("invisible");
-                valueElement.classList.add("invisible");
-                pooled_wrap.classList.add("invisible");
-                image_field_wrap.classList.remove("invisible")
-                rote_wrap.classList.add("invisible")
+                resElement.classList.add("d-none")
+                exampleElement.classList.add("d-none");;
+                noteElement.classList.add("d-none");
+                valueElement.classList.add("d-none");
+                pooled_wrap.classList.add("d-none");
+                image_field_wrap.classList.remove("d-none")
+                rote_wrap.classList.add("d-none")
             }
             
             // Make the AJAX call
@@ -404,21 +404,21 @@
         // Attach event listener to each toggle
         rote_creation_toggle.addEventListener('change', function() {
             if ($(this).prop('checked')) {
-                rote_selection.classList.add("invisible");
-                rote_creation.classList.remove("invisible");
+                rote_selection.classList.add("d-none");
+                rote_creation.classList.remove("d-none");
             } else {
-                rote_creation.classList.add("invisible")
-                rote_selection.classList.remove("invisible")
+                rote_creation.classList.add("d-none")
+                rote_selection.classList.remove("d-none")
             }
         });
 
         effect_creation_toggle.addEventListener('change', function() {
             if ($(this).prop('checked')) {
-                effect_selection.classList.add("invisible");
-                effect_creation.classList.remove("invisible");
+                effect_selection.classList.add("d-none");
+                effect_creation.classList.remove("d-none");
             } else {
-                effect_selection.classList.add("invisible")
-                effect_creation.classList.remove("invisible")
+                effect_selection.classList.add("d-none")
+                effect_creation.classList.remove("d-none")
             }
         });
     });

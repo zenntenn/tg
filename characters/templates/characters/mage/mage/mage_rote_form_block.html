@@ -15,7 +15,7 @@
         <div class="col-sm">{{ form.rote_options }}</div>
     </div>
 </div>
-<div id="rote creation" class="invisible">
+<div id="rote creation" class="d-none">
     <div class="row">
         <h3 class="col-sm {{ object.get_heading }}">Rote Points Remaining</h3>
         <h3 class="col-sm {{ object.get_heading }}">{{ object.rote_points }}</h3>
@@ -44,7 +44,7 @@
             <div class="col-sm">{{ form.effect_options }}</div>
         </div>
     </div>
-    <div id="effect creation" class="invisible">
+    <div id="effect creation" class="d-none">
         {% include "characters/mage/spheres/form.html" %}
         <div class="row">
             <div class="col-sm">Systems</div>
@@ -97,21 +97,21 @@
         // Attach event listener to each toggle
         rote_creation_toggle.addEventListener('change', function() {
             if ($(this).prop('checked')) {
-                rote_selection.classList.add("invisible");
-                rote_creation.classList.remove("invisible");
+                rote_selection.classList.add("d-none");
+                rote_creation.classList.remove("d-none");
             } else {
-                rote_creation.classList.add("invisible")
-                rote_selection.classList.remove("invisible")
+                rote_creation.classList.add("d-none")
+                rote_selection.classList.remove("d-none")
             }
         });
 
         effect_creation_toggle.addEventListener('change', function() {
             if ($(this).prop('checked')) {
-                effect_selection.classList.add("invisible");
-                effect_creation.classList.remove("invisible");
+                effect_selection.classList.add("d-none");
+                effect_creation.classList.remove("d-none");
             } else {
-                effect_selection.classList.add("invisible")
-                effect_creation.classList.remove("invisible")
+                effect_selection.classList.add("d-none")
+                effect_creation.classList.remove("d-none")
             }
         });
     });
