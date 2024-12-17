@@ -10,6 +10,7 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
     background_name = ""
     potential_skip = []
     multiple_ownership = False
+    is_owned = True
 
     def special_valid_action(self, background_object):
         return None
@@ -18,10 +19,11 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
         content = self.get_context_data()
         primary_object = content["object"]
         background_object = form.save()
-        if self.multiple_ownership:
-            background_object.owned_by.add(primary_object)
-        else:
-            background_object.owned_by = primary_object
+        if self.is_owned:
+            if self.multiple_ownership:
+                background_object.owned_by.add(primary_object)
+            else:
+                background_object.owned_by = primary_object
         background_object.owner = primary_object.owner
         background_object.chronicle = primary_object.chronicle
         background_object.status = "Sub"

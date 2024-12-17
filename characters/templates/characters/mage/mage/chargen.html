@@ -124,9 +124,7 @@
         {% endblock sanctum %}
         {% block ally %}
             {% if object.creation_status == 16 %}
-                {% include "characters/core/human/ally_block_form.html" %}
-            {% elif object.creation_status > 16 %}
-                {% include "characters/core/human/ally_block_display.html" %}
+                {% include "characters/mage/ally/form_include.html" %}
             {% endif %}
         {% endblock ally %}
         {% block specialties_form %}

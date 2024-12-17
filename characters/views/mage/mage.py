@@ -1,5 +1,6 @@
 from typing import Any
 
+from characters.forms.core.ally import AllyForm
 from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.familiar import FamiliarForm
@@ -30,7 +31,7 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
 )
-from characters.views.mage.background_views import MtAAlliesView, MtAEnhancementView
+from characters.views.mage.background_views import MtAEnhancementView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
@@ -1792,7 +1793,11 @@ class MageRoteView(SpecialUserMixin, CreateView):
         return super().form_invalid(form)
 
 
-class MageAlliesView(MtAAlliesView):
+class MageAlliesView(GenericBackgroundView):
+    primary_object_class = Mage
+    background_name = "allies"
+    potential_skip = []
+    form_class = AllyForm
     template_name = "characters/mage/mage/chargen.html"
 
 
