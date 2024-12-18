@@ -6,7 +6,7 @@ from core.views.generic import DictView
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
-from locations.forms.mage.chantry import ChantryPointForm
+from locations.forms.mage.chantry import ChantryEffectsForm, ChantryPointForm
 from locations.forms.mage.sanctum import SanctumForm
 from locations.models.mage.chantry import Chantry, ChantryBackgroundRating
 
@@ -207,6 +207,28 @@ class ChantryPointsView(FormView):
         form.save()
         return super().form_valid(form)
 
+class ChantryIntegratedEffectsView(FormView):
+    form_class = ChantryEffectsForm
+    template_name = "locations/mage/chantry/locgen.html"
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["pk"] = self.kwargs.get("pk")
+        self.object = Chantry.objects.get(pk=self.kwargs["pk"])
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = self.object
+        return context
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
 
 class ChantryNodeView(GenericBackgroundView):
     primary_object_class = Chantry
@@ -238,10 +260,6 @@ class ChantrySanctumView(GenericBackgroundView):
     potential_skip = []
     form_class = SanctumForm
     template_name = "locations/mage/chantry/locgen.html"
-
-
-class ChantryIntegratedEffectsView(View):
-    pass
 
 
 class ChantryPersonnelView(View):
