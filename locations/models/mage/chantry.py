@@ -29,6 +29,20 @@ class Chantry(BackgroundBlock, LocationModel):
         "library",
     ]
 
+    INTEGRATED_EFFECTS_NUMBERS = {
+        0: 0,
+        1: 4,
+        2: 8,
+        3: 15,
+        4: 20,
+        5: 25,
+        6: 35,
+        7: 45,
+        8: 55,
+        9: 70,
+        10: 90,
+    }
+
     type = "chantry"
 
     faction = models.ForeignKey(
@@ -88,7 +102,7 @@ class Chantry(BackgroundBlock, LocationModel):
 
     total_points = models.IntegerField(default=0)
 
-    integrated_effects = models.IntegerField(default=0)
+    integrated_effects_score = models.IntegerField(default=0)
 
     members = models.ManyToManyField(Human, blank=True, related_name="member_of")
     cabals = models.ManyToManyField("characters.Cabal", blank=True)
@@ -167,6 +181,15 @@ class Chantry(BackgroundBlock, LocationModel):
         for bgr in self.backgrounds.all():
             tot += self.bg_cost(bgr)
         return tot
+
+    def integrated_effects_number(self):
+        return self.INTEGRATED_EFFECTS_NUMBERS[self.integrated_effects_score]
+
+    def spent_integrated_effect_points(self):
+        return 0
+
+    def current_ie_points(self):
+        return self.integrated_effects_number() - self.spent_integrated_effect_points()
 
     @property
     def rank(self):

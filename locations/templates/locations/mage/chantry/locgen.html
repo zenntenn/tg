@@ -1,0 +1,65 @@
+{% extends "core/form.html" %}
+{% block creation_title %}
+    Create Chantry
+{% endblock creation_title %}
+{% block contents %}
+    {% if is_approved_user %}
+        {% block name %}
+            <div class="row">
+                <div class="col-sm {{ object.get_heading }}">
+                    <h1>{{ object.name }}</h1>
+                </div>
+            </div>
+        {% endblock name %}
+        {% block basics %}
+            {% include "locations/mage/chantry/basics_block_display.html" %}
+        {% endblock basics %}
+        {% block points %}
+            {% if object.creation_status == 1 %}
+                {% include "locations/mage/chantry/point_spend_form.html" %}
+            {% elif object.creation_status > 1 %}
+                {% include "locations/mage/chantry/point_spend_display.html" %}
+            {% endif %}
+        {% endblock points %}
+        {% block effects %}
+            {% if object.creation_status == 2 %}
+                {% include "locations/mage/chantry/effects_form.html" %}
+            {% elif object.creation_status > 2 %}
+                {% include "locations/mage/chantry/effects_display.html" %}
+            {% endif %}
+        {% endblock effects %}
+        {% block node %}
+            {% if object.creation_status == 3 %}
+                {% include "locations/mage/node/form_include.html" %}
+            {% endif %}
+        {% endblock node %}
+        {% block library %}
+            {% if object.creation_status == 4 %}
+                {% include "locations/mage/library/form_include.html" %}
+            {% endif %}
+        {% endblock library %}
+        {% block allies %}
+            {% if object.creation_status == 5 %}
+                {% include "characters/mage/ally/form_include.html" %}
+            {% endif %}
+        {% endblock allies %}
+        {% block sanctum %}
+            {% if object.creation_status == 6 %}
+                {% include "locations/mage/sanctum/form_include.html" %}
+            {% endif %}
+        {% endblock sanctum %}
+        {% block personnel %}
+            {% if object.creation_status == 7 %}
+                {% include "locations/mage/chantry/personnel_form.html" %}
+            {% elif object.creation_status > 7 %}
+                {% include "locations/mage/chantry/personnel_display.html" %}
+            {% endif %}
+        {% endblock personnel %}
+    {% endif %}
+{% endblock contents %}
+{% block buttons %}
+    {% if not is_approved_user %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock buttons %}

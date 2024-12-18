@@ -7,7 +7,6 @@ from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import (
     Instrument,
-    Paradigm,
     Practice,
     SpecializedPractice,
     Tenet,
@@ -19,7 +18,6 @@ from characters.models.mage.sphere import Sphere
 from core.utils import add_dot, weighted_choice
 from django.db import models
 from django.db.models import Q
-from django.urls import reverse
 from items.models.core.item import ItemModel
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
