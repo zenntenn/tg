@@ -252,6 +252,7 @@ class ChantryNodeView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "node"
     form_class = NodeForm
+    is_owned = False
     template_name = "locations/mage/chantry/locgen.html"
 
 
@@ -259,6 +260,7 @@ class ChantryLibrarysView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "library"
     form_class = LibraryForm
+    is_owned = False
     template_name = "locations/mage/chantry/locgen.html"
 
 
@@ -266,6 +268,7 @@ class ChantryAlliesView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "allies"
     form_class = AllyForm
+    is_owned = False
     template_name = "locations/mage/chantry/locgen.html"
 
 
@@ -273,6 +276,7 @@ class ChantrySanctumView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "sanctum"
     form_class = SanctumForm
+    is_owned = False
     template_name = "locations/mage/chantry/locgen.html"
 
 
