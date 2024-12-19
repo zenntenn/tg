@@ -11,23 +11,33 @@
         {% for chron in chron_dict.keys %}
             <div class="row border">
                 {% if chron == None %}
-                    <h3 class="col-sm border centertext {{ header }}">No Chronicle</h3>
+                    <h3 class="col-sm border centertext {{ header }} pointer"
+                        data-toggle="collapse"
+                        data-target="#chron-{{ chron.id }}Section"
+                        aria-expanded="true"
+                        aria-controls="chron-{{ chron.id }}Section">No Chronicle</h3>
                 {% else %}
-                    <h3 class="col-sm border centertext {{ header }}">
-                        <a href={{ chron.get_absolute_url }}>{{ chron.name }}</a>
+                    <h3 class="col-sm border centertext {{ header }} pointer"
+                        data-toggle="collapse"
+                        data-target="#chron-{{ chron.id }}Section"
+                        aria-expanded="true"
+                        aria-controls="chron-{{ chron.id }}Section">
+                        <a href="{{ chron.get_absolute_url }}">{{ chron.name }}</a>
                     </h3>
                 {% endif %}
             </div>
-            {% for item in chron_dict|field:chron %}
-                {% if item.display %}
-                    <div class="row border">
-                        <a class="col-sm border" href="{{ item.get_absolute_url }}">{{ item.name }}</a>
-                        <a class="col-sm border"
-                           href="{{ item.owner.profile.get_absolute_url }}">{{ item.owner.username }}</a>
-                        <div class="col-sm border">{{ item.type.title }}</div>
-                    </div>
-                {% endif %}
-            {% endfor %}
+            <div id="chron-{{ chron.id }}Section" class="collapse show">
+                {% for item in chron_dict|field:chron %}
+                    {% if item.display %}
+                        <div class="row border">
+                            <a class="col-sm border" href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                            <a class="col-sm border"
+                               href="{{ item.owner.profile.get_absolute_url }}">{{ item.owner.username }}</a>
+                            <div class="col-sm border">{{ item.type.title }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
     <form id="itemForm" class="centertext container" method="post" novalidate>

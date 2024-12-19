@@ -8,26 +8,64 @@
         {% for chron in chron_char_dict.keys %}
             <div class="row border">
                 {% if chron == None %}
-                    <h2 class="col-sm border centertext {{ header }}">No Chronicle</h2>
+                    <h2 class="col-sm border centertext {{ header }} pointer"
+                        data-toggle="collapse"
+                        data-target="#chron-{{ chron.id }}Section"
+                        aria-expanded="true"
+                        aria-controls="chron-{{ chron.id }}Section">No Chronicle</h2>
                 {% else %}
-                    <h2 class="col-sm border centertext {{ header }}">
+                    <h2 class="col-sm border centertext {{ header }} pointer"
+                        data-toggle="collapse"
+                        data-target="#chron-{{ chron.id }}Section"
+                        aria-expanded="true"
+                        aria-controls="chron-{{ chron.id }}Section">
                         <a href="{{ chron.get_absolute_url }}">{{ chron.name }}</a>
                     </h2>
                 {% endif %}
             </div>
-            {% for group in chron_group_dict|field:chron %}
-                {% if group.display %}
-                    <h3 class="row {{ header }} border">
-                        <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
-                        <div class="col-sm border pointer"
-                             data-toggle="collapse"
-                             data-target="#group-{{ group.id }}Section"
-                             aria-expanded="true"
-                             aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
-                        <div class="col-sm border">{{ group.get_display_type }}</div>
-                    </h3>
-                    <div id="group-{{ group.id }}Section" class="collapse show">
-                        {% for char in group.members.all %}
+            <div id="chron-{{ chron.id }}Section" class="collapse show">
+                {% for group in chron_group_dict|field:chron %}
+                    {% if group.display %}
+                        <h3 class="row {{ header }} border">
+                            <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
+                            <div class="col-sm border pointer"
+                                 data-toggle="collapse"
+                                 data-target="#group-{{ group.id }}Section"
+                                 aria-expanded="true"
+                                 aria-controls="group-{{ group.id }}Section">{{ group.owner.username }}</div>
+                            <div class="col-sm border">{{ group.get_display_type }}</div>
+                        </h3>
+                        <div id="group-{{ group.id }}Section" class="collapse show">
+                            {% for char in group.members.all %}
+                                <div class="row border">
+                                    <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                                    <a class="col-sm border"
+                                       href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
+                                    <div class="col-sm border">{{ char.get_type }}</div>
+                                    <div class="col-sm border">
+                                        {% if not char.npc %}
+                                            {{ char.get_status_display }}
+                                        {% else %}
+                                            NPC
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <h3 class="row {{ header }} border">
+                    <div class="col-sm border">Solo Characters</div>
+                    <div class="col-sm border pointer"
+                         data-toggle="collapse"
+                         data-target="#solochron-{{ chron.id }}Section"
+                         aria-expanded="true"
+                         aria-controls="solochron-{{ chron.id }}Section"></div>
+                    <div class="col-sm border"></div>
+                </h3>
+                <div id="solochron-{{ chron.id }}Section" class="collapse show">
+                    {% for char in chron_char_dict|field:chron %}
+                        {% if char.display and char.group_set.count == 0 %}
                             <div class="row border">
                                 <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                                 <a class="col-sm border"
@@ -41,37 +79,9 @@
                                     {% endif %}
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-            <h3 class="row {{ header }} border">
-                <div class="col-sm border">Solo Characters</div>
-                <div class="col-sm border pointer"
-                     data-toggle="collapse"
-                     data-target="#chron-{{ chron.id }}Section"
-                     aria-expanded="true"
-                     aria-controls="chron-{{ chron.id }}Section"></div>
-                <div class="col-sm border"></div>
-            </h3>
-            <div id="chron-{{ chron.id }}Section" class="collapse show">
-                {% for char in chron_char_dict|field:chron %}
-                    {% if char.display and char.group_set.count == 0 %}
-                        <div class="row border">
-                            <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                            <a class="col-sm border"
-                               href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
-                            <div class="col-sm border">{{ char.get_type }}</div>
-                            <div class="col-sm border">
-                                {% if not char.npc %}
-                                    {{ char.get_status_display }}
-                                {% else %}
-                                    NPC
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
         {% endfor %}
     </div>

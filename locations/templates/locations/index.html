@@ -13,16 +13,26 @@
         {% for chron in chrondict.keys %}
             <div class="row border">
                 {% if chron == None %}
-                    <h3 class="col-sm border centertext {{ header }}">No Chronicle</h3>
+                    <h3 class="col-sm border centertext {{ header }} pointer"
+                        data-toggle="collapse"
+                        data-target="#chron-{{ chron.id }}Section"
+                        aria-expanded="true"
+                        aria-controls="chron-{{ chron.id }}Section">No Chronicle</h3>
                 {% else %}
-                    <h3 class="col-sm border centertext {{ header }}">
+                    <h3 class="col-sm border centertext {{ header }} pointer"
+                        data-toggle="collapse"
+                        data-target="#chron-{{ chron.id }}Section"
+                        aria-expanded="true"
+                        aria-controls="chron-{{ chron.id }}Section">
                         <a href="{{ chron.get_absolute_url }}">{{ chron.name }}</a>
                     </h3>
                 {% endif %}
             </div>
-            {% for loc in chrondict|field:chron %}
-                {% show_location loc indent_level=0 %}
-            {% endfor %}
+            <div id="chron-{{ chron.id }}Section" class="collapse show">
+                {% for loc in chrondict|field:chron %}
+                    {% show_location loc indent_level=0 %}
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
     <form id="locForm" class="centertext container" method="post" novalidate>
