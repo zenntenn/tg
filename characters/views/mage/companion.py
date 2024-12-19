@@ -639,7 +639,6 @@ class CompanionSpecialtiesView(SpecialUserMixin, FormView):
 class CompanionAlliesView(GenericBackgroundView):
     primary_object_class = Companion
     background_name = "allies"
-    potential_skip = []
     form_class = AllyForm
     template_name = "characters/mage/companion/chargen.html"
 
@@ -656,12 +655,6 @@ class CompanionEnhancementView(MtAEnhancementView):
 class CompanionLibraryView(GenericBackgroundView):
     primary_object_class = Companion
     background_name = "library"
-    potential_skip = [
-        "wonder",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = LibraryForm
     template_name = "characters/mage/companion/chargen.html"
 
@@ -680,13 +673,6 @@ class CompanionLibraryView(GenericBackgroundView):
 class CompanionNodeView(GenericBackgroundView):
     primary_object_class = Companion
     background_name = "node"
-    potential_skip = [
-        "library",
-        "wonder",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = NodeForm
     template_name = "characters/mage/companion/chargen.html"
 
@@ -694,11 +680,6 @@ class CompanionNodeView(GenericBackgroundView):
 class CompanionWonderView(GenericBackgroundView):
     primary_object_class = Companion
     background_name = "wonder"
-    potential_skip = [
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = WonderForm
     template_name = "characters/mage/companion/chargen.html"
     multiple_ownership = True
@@ -707,9 +688,6 @@ class CompanionWonderView(GenericBackgroundView):
 class CompanionSanctumView(GenericBackgroundView):
     primary_object_class = Companion
     background_name = "sanctum"
-    potential_skip = [
-        "allies",
-    ]
     form_class = SanctumForm
     template_name = "characters/mage/companion/chargen.html"
 

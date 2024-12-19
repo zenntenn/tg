@@ -1,0 +1,41 @@
+{% include "locations/mage/chantry/effects_display.html" %}
+<div class="row">
+    <div class="col-sm">Create New Effect: {{ form.select_or_create }}</div>
+</div>
+<div id="effect selection">
+    <div class="row">
+        <div class="col-sm">{{ form.select }}</div>
+    </div>
+</div>
+<div id="effect creation" class="d-none">
+    <div class="row">
+        <div class="col-sm">Name</div>
+        <div class="col-sm">{{ form.name }}</div>
+    </div>
+    {% include "characters/mage/spheres/form.html" %}
+    <div class="row">
+        <div class="col-sm">Systems</div>
+        <div class="col-sm">{{ form.description }}</div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all elements with data-toggle="toggle"
+        const effect_creation_toggle = document.getElementById('id_select_or_create');
+        const effect_creation = document.getElementById('effect creation');
+        const effect_selection = document.getElementById('effect selection');
+        
+        effect_creation_toggle.addEventListener('change', function() {
+            if ($(this).prop('checked')) {
+                effect_selection.classList.add("d-none");
+                effect_creation.classList.remove("d-none");
+            } else {
+                effect_selection.classList.add("d-none")
+                effect_creation.classList.remove("d-none")
+            }
+        });
+    });
+
+    
+</script>

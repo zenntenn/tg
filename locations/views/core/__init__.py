@@ -31,7 +31,7 @@ class GenericLocationDetailView(DictView):
         "horizon_realm": mage.RealmDetailView,
         "caern": werewolf.CaernDetailView,
         "sanctum": mage.SanctumDetailView,
-        "chantry": mage.ChantryDetailView,
+        "chantry": mage.ChantryCreationView,
     }
 
     model_class = LocationModel

@@ -836,7 +836,6 @@ class SorcererSpecialtiesView(SpecialUserMixin, FormView):
 class SorcererAlliesView(GenericBackgroundView):
     primary_object_class = Sorcerer
     background_name = "allies"
-    potential_skip = []
     form_class = AllyForm
     template_name = "characters/mage/sorcerer/chargen.html"
 
@@ -853,12 +852,6 @@ class SorcererEnhancementView(MtAEnhancementView):
 class SorcererFamiliarView(GenericBackgroundView):
     primary_object_class = Sorcerer
     background_name = "familiar"
-    potential_skip = [
-        "artifact",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = FamiliarForm
     template_name = "characters/mage/sorcerer/chargen.html"
 
@@ -872,13 +865,6 @@ class SorcererFamiliarView(GenericBackgroundView):
 class SorcererLibraryView(GenericBackgroundView):
     primary_object_class = Sorcerer
     background_name = "library"
-    potential_skip = [
-        "familiar",
-        "artifact",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = LibraryForm
     template_name = "characters/mage/sorcerer/chargen.html"
 
@@ -894,14 +880,6 @@ class SorcererLibraryView(GenericBackgroundView):
 class SorcererNodeView(GenericBackgroundView):
     primary_object_class = Sorcerer
     background_name = "node"
-    potential_skip = [
-        "library",
-        "familiar",
-        "artifact",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = NodeForm
     template_name = "characters/mage/sorcerer/chargen.html"
 
@@ -987,9 +965,6 @@ class SorcererArtifactView(SpecialUserMixin, FormView):
 class SorcererSanctumView(GenericBackgroundView):
     primary_object_class = Sorcerer
     background_name = "sanctum"
-    potential_skip = [
-        "allies",
-    ]
     form_class = SanctumForm
     template_name = "characters/mage/sorcerer/chargen.html"
 

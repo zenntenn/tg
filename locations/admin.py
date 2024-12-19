@@ -52,4 +52,6 @@ class ChantryAdmin(admin.ModelAdmin):
     list_display = ("name", "rank", "parent", "faction")
 
 
-admin.site.register(ChantryBackgroundRating)
+@admin.register(ChantryBackgroundRating)
+class ChantryBackgroundRatingAdmin(admin.ModelAdmin):
+    list_display = ("chantry", "bg", "note", "rating", "url", "complete")

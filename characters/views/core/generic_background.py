@@ -8,7 +8,6 @@ from django.views.generic import FormView
 class GenericBackgroundView(SpecialUserMixin, FormView):
     primary_object_class = Human
     background_name = ""
-    potential_skip = []
     multiple_ownership = False
     is_owned = True
 
@@ -34,27 +33,6 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
         self.current_background.url = background_object.get_absolute_url()
         self.current_background.complete = True
         self.current_background.save()
-
-        if (
-            primary_object.backgrounds.filter(
-                bg__property_name=self.background_name, complete=False
-            ).count()
-            == 0
-        ):
-            primary_object.creation_status += 1
-            primary_object.save()
-            for step in self.potential_skip:
-                if (
-                    primary_object.backgrounds.filter(
-                        bg__property_name=step, complete=False
-                    ).count()
-                    == 0
-                ):
-                    primary_object.creation_status += 1
-                else:
-                    primary_object.save()
-                    break
-            primary_object.save()
         return HttpResponseRedirect(primary_object.get_absolute_url())
 
     def get_context_data(self, **kwargs):
@@ -65,7 +43,7 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
         context["is_approved_user"] = self.check_if_special_user(
             context["object"], self.request.user
         )
-        context["curreng_background"] = (
+        context["current_background"] = (
             context["object"]
             .backgrounds.filter(bg__property_name=self.background_name, complete=False)
             .first()
@@ -87,3 +65,11 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
                 }
             )
         return form
+    
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(self.primary_object_class, pk=kwargs.get("pk"))
+        if not obj.backgrounds.filter(bg__property_name=self.background_name, complete=False).exists():
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)

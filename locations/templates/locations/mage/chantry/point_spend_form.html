@@ -1,0 +1,69 @@
+{% include "locations/mage/chantry/point_spend_display.html" %}
+{% include "locations/mage/chantry/effects_display.html" %}
+<div class="row centertext">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3 border">Allies, Arcane, Backup, Cult, Elders, Integrated Effects, Library, Retainers, Spies</div>
+    <div class="col-sm-3 border">2</div>
+    <div class="col-sm-3"></div>
+</div>
+<div class="row centertext">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3 border">Node, Resources</div>
+    <div class="col-sm-3 border">3</div>
+    <div class="col-sm-3"></div>
+</div>
+<div class="row centertext">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3 border">Enhancement, Requisitions</div>
+    <div class="col-sm-3 border">4</div>
+    <div class="col-sm-3"></div>
+</div>
+<div class="row centertext">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3 border">Sanctum</div>
+    <div class="col-sm-3 border">5</div>
+    <div class="col-sm-3"></div>
+</div>
+<div class="row">
+    <div class="col-sm">{{ form.category }}</div>
+    <div class="col-sm d-none" id="example_wrap">{{ form.example }}</div>
+    <div class="col-sm d-none" id="note_wrap">{{ form.note }}</div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelectMenu = document.getElementById("id_category");
+        const exampleElement = document.getElementById("example_wrap");
+        const noteElement = document.getElementById("note_wrap");
+
+        categorySelectMenu.addEventListener("change", function() {
+            const selectedValue = this.value;
+            
+            // Update the class of the element
+            if(["-----", "Integrated Effects"].includes(this.value)){
+                exampleElement.classList.add("d-none");
+                noteElement.classList.add("d-none");
+            } else {
+                exampleElement.classList.remove("d-none");
+                noteElement.classList.add("d-none");
+            }
+            if(this.value == "New Background"){
+                exampleElement.classList.remove("d-none");
+                noteElement.classList.remove("d-none");
+            }
+            
+            // Make the AJAX call
+            $.ajax({                       // initialize an AJAX request
+                url: '{% url 'locations:mage:ajax:load_chantry_examples' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-character-type/)
+                data: {
+                'category': this.value,       // add the gameline id to the GET parameters
+                'object': {{object.id}}
+                },
+                success: function (data) {   // `data` is the return of the `load_character_type` view function
+                $("#id_example").html(data);  // replace the contents of the character_type input with the data that came from the server
+                $("#id_value").html('<option value="">---</option>');
+                }
+            });
+        });
+    });
+    
+</script>

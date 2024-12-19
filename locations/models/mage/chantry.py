@@ -2,6 +2,7 @@ import random
 
 from characters.models.core.background_block import Background, BackgroundBlock
 from characters.models.core.human import Human
+from characters.models.mage.effect import Effect
 from characters.models.mage.resonance import Resonance
 from core.utils import add_dot, weighted_choice
 from django.db import models
@@ -28,6 +29,20 @@ class Chantry(BackgroundBlock, LocationModel):
         "node",
         "library",
     ]
+
+    INTEGRATED_EFFECTS_NUMBERS = {
+        0: 0,
+        1: 4,
+        2: 8,
+        3: 15,
+        4: 20,
+        5: 25,
+        6: 35,
+        7: 45,
+        8: 55,
+        9: 70,
+        10: 90,
+    }
 
     type = "chantry"
 
@@ -88,7 +103,8 @@ class Chantry(BackgroundBlock, LocationModel):
 
     total_points = models.IntegerField(default=0)
 
-    integrated_effects = models.IntegerField(default=0)
+    integrated_effects = models.ManyToManyField(Effect, blank=True)
+    integrated_effects_score = models.IntegerField(default=0)
 
     members = models.ManyToManyField(Human, blank=True, related_name="member_of")
     cabals = models.ManyToManyField("characters.Cabal", blank=True)
@@ -166,7 +182,17 @@ class Chantry(BackgroundBlock, LocationModel):
         tot = 0
         for bgr in self.backgrounds.all():
             tot += self.bg_cost(bgr)
+        tot += self.integrated_effects_score * 2
         return tot
+
+    def integrated_effects_number(self):
+        return self.INTEGRATED_EFFECTS_NUMBERS[self.integrated_effects_score]
+
+    def spent_integrated_effect_points(self):
+        return sum([x.rote_cost for x in self.integrated_effects.all()])
+
+    def current_ie_points(self):
+        return self.integrated_effects_number() - self.spent_integrated_effect_points()
 
     @property
     def rank(self):

@@ -1796,7 +1796,6 @@ class MageRoteView(SpecialUserMixin, CreateView):
 class MageAlliesView(GenericBackgroundView):
     primary_object_class = Mage
     background_name = "allies"
-    potential_skip = []
     form_class = AllyForm
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1808,13 +1807,6 @@ class MageEnhancementView(MtAEnhancementView):
 class MageFamiliarView(GenericBackgroundView):
     primary_object_class = Mage
     background_name = "familiar"
-    potential_skip = [
-        "wonder",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
-
     form_class = FamiliarForm
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1828,13 +1820,6 @@ class MageFamiliarView(GenericBackgroundView):
 class MageLibraryView(GenericBackgroundView):
     primary_object_class = Mage
     background_name = "library"
-    potential_skip = [
-        "familiar",
-        "wonder",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = LibraryForm
     template_name = "characters/mage/mage/chargen.html"
 
@@ -1853,14 +1838,6 @@ class MageLibraryView(GenericBackgroundView):
 class MageNodeView(GenericBackgroundView):
     primary_object_class = Mage
     background_name = "node"
-    potential_skip = [
-        "library",
-        "familiar",
-        "wonder",
-        "enhancement",
-        "sanctum",
-        "allies",
-    ]
     form_class = NodeForm
     template_name = "characters/mage/mage/chargen.html"
 
