@@ -76,26 +76,32 @@
         {% endfor %}
         <h3 class="row {{ header }} border">
             <div class="col-sm border">Solo Characters</div>
-            <div class="col-sm border"></div>
+            <div class="col-sm border pointer"
+                 data-toggle="collapse"
+                 data-target="#group-0Section"
+                 aria-expanded="true"
+                 aria-controls="group-0Section"></div>
             <div class="col-sm border"></div>
         </h3>
-        {% for char in characters %}
-            {% if char.display and char.group_set.count == 0 %}
-                <div class="row border">
-                    <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
-                    <a class="col-sm border"
-                       href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
-                    <div class="col-sm border">{{ char.get_type }}</div>
-                    <div class="col-sm border">
-                        {% if not char.npc %}
-                            {{ char.get_status_display }}
-                        {% else %}
-                            NPC
-                        {% endif %}
+        <div id="group-0Section" class="collapse show">
+            {% for char in characters %}
+                {% if char.display and char.group_set.count == 0 %}
+                    <div class="row border">
+                        <a class="col-sm border" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                        <a class="col-sm border"
+                           href="{{ char.owner.profile.get_absolute_url }}">{{ char.owner.username }}</a>
+                        <div class="col-sm border">{{ char.get_type }}</div>
+                        <div class="col-sm border">
+                            {% if not char.npc %}
+                                {{ char.get_status_display }}
+                            {% else %}
+                                NPC
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
         <div class="row">
             <h3 class="col-sm {{ object.headings }} centertext">Locations</h3>
         </div>
