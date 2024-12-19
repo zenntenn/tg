@@ -46,7 +46,7 @@
         </div>
         {% for group in groups %}
             {% if group.display %}
-                <h3 class="row {{ header }} border">
+                <h3 class="row {{ group.get_heading }} border">
                     <a class="col-sm border" href="{{ group.get_absolute_url }}">{{ group.name }}</a>
                     <div class="col-sm border pointer"
                          data-toggle="collapse"
@@ -74,7 +74,7 @@
                 </div>
             {% endif %}
         {% endfor %}
-        <h3 class="row {{ header }} border">
+        <h3 class="row {{ object.headings }} border">
             <div class="col-sm border">Solo Characters</div>
             <div class="col-sm border pointer"
                  data-toggle="collapse"
