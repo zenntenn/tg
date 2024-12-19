@@ -182,6 +182,7 @@ class Chantry(BackgroundBlock, LocationModel):
         tot = 0
         for bgr in self.backgrounds.all():
             tot += self.bg_cost(bgr)
+        tot += self.integrated_effects_score * 2
         return tot
 
     def integrated_effects_number(self):

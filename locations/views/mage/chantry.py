@@ -1,12 +1,17 @@
 from typing import Any
 
+from django.http import HttpResponseRedirect
+
+from characters.forms.core.ally import AllyForm
 from characters.models.core.background_block import Background, BackgroundRating
 from characters.views.core.generic_background import GenericBackgroundView
 from core.views.generic import DictView
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
 from locations.forms.mage.chantry import ChantryEffectsForm, ChantryPointForm
+from locations.forms.mage.library import LibraryForm
+from locations.forms.mage.node import NodeForm
 from locations.forms.mage.sanctum import SanctumForm
 from locations.models.mage.chantry import Chantry, ChantryBackgroundRating
 
@@ -206,6 +211,14 @@ class ChantryPointsView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+    
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Chantry, pk=kwargs.get("pk"))
+        if obj.points < 2:
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
 class ChantryIntegratedEffectsView(FormView):
     form_class = ChantryEffectsForm
@@ -228,42 +241,42 @@ class ChantryIntegratedEffectsView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+    
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Chantry, pk=kwargs.get("pk"))
+        if obj.current_ie_points() == 0:
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ChantryNodeView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "node"
-    potential_skip = ["library", "allies", "sanctum"]
-    form_class = SanctumForm
+    form_class = NodeForm
     template_name = "locations/mage/chantry/locgen.html"
 
 
 class ChantryLibrarysView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "library"
-    potential_skip = ["allies", "sanctum"]
-    form_class = SanctumForm
+    form_class = LibraryForm
     template_name = "locations/mage/chantry/locgen.html"
 
 
 class ChantryAlliesView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "allies"
-    potential_skip = ["sanctum"]
-    form_class = SanctumForm
+    form_class = AllyForm
     template_name = "locations/mage/chantry/locgen.html"
 
 
 class ChantrySanctumView(GenericBackgroundView):
     primary_object_class = Chantry
     background_name = "sanctum"
-    potential_skip = []
     form_class = SanctumForm
     template_name = "locations/mage/chantry/locgen.html"
-
-
-class ChantryPersonnelView(View):
-    pass
 
 
 class ChantryCreationView(DictView):
@@ -274,7 +287,6 @@ class ChantryCreationView(DictView):
         4: ChantryLibrarysView,  # Libraries
         5: ChantryAlliesView,  # allies
         6: ChantrySanctumView,  # sanctum
-        7: ChantryPersonnelView,  # personnel?
     }
     model_class = Chantry
     key_property = "creation_status"

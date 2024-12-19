@@ -85,9 +85,6 @@ class ChantryPointForm(forms.Form):
             x.save()
         else:
             pass
-        if self.object.points < 2:
-            self.object.creation_status += 1
-            self.object.save()
 
 
 # Form for choosing effects
@@ -104,8 +101,3 @@ class ChantryEffectsForm(EffectCreateOrSelectForm):
     def save(self, commit=True):
         effect = super().save(commit=commit)
         self.object.integrated_effects.add(effect)
-        if self.object.current_ie_points() == 0:
-            self.object.creation_status += 1
-            self.object.save()
-
-# Form for personnel
