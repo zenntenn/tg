@@ -133,10 +133,7 @@ class LoadExamplesView(View):
                     ]
                 )
         elif category_choice == "Existing Background":
-            examples = [
-                x
-                for x in ChantryBackgroundRating.objects.filter(chantry=m, rating__lt=5)
-            ]
+            examples = ChantryBackgroundRating.objects.filter(chantry=m, rating__lt=5)
             if m.points < 5:
                 examples = examples.exclude(bg__property_name__in=["sanctum"])
             if m.points < 4:
