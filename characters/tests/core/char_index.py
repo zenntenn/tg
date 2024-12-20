@@ -16,7 +16,7 @@ class TestCharacterIndexView(TestCase):
 
     def test_index_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, "characters/index.html")
+        self.assertTemplateUsed(response, "characters/charlist.html")
 
     def test_index_content(self):
         player = User.objects.create_user(username="User1", password="12345")

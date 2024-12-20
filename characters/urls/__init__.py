@@ -17,5 +17,8 @@ urlpatterns = [
     path("update/", include((update.urls, "characters_update"), namespace="update")),
     path("list/", include((index.urls, "characters_list"), namespace="list")),
     path("index/", views.core.CharacterIndexView.as_view(), name="index"),
+    path("retired/", views.core.RetiredCharacterIndex.as_view(), name="retired"),
+    path("deceased/", views.core.DeceasedCharacterIndex.as_view(), name="deceased"),
+    path("npc/", views.core.NPCCharacterIndex.as_view(), name="npc"),
     path("", include(detail.urls)),
 ]
