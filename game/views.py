@@ -2,8 +2,10 @@ import itertools
 
 from characters.models.core import CharacterModel
 from characters.models.core.group import Group
+from characters.models.core.human import Human
 from core.utils import level_name, tree_sort
 from core.views.approved_user_mixin import SpecialUserMixin
+from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.timezone import datetime, localtime
@@ -28,12 +30,29 @@ class ChronicleDetailView(View):
         top_locations = LocationModel.objects.filter(
             chronicle=chronicle, parent=None
         ).order_by("name")
+        CharacterGroup = Human.group_set.through
+
+        # Subquery to get the first group id for each character
+        first_group_id = Subquery(
+            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            .order_by(
+                "group_id"
+            )  # Assuming ordering by 'group_id', adjust if different
+            .values("group_id")[:1]
+        )
+
+        # Annotating the queryset with the first group id
+        characters = (
+            Human.objects.exclude(status__in=["Dec", "Ret"])
+            .exclude(npc=True)
+            .annotate(first_group_id=first_group_id)
+            .select_related("chronicle")
+            .order_by("chronicle__id", "-first_group_id", "name")
+        )
 
         return {
             "object": chronicle,
-            "character_list": CharacterModel.objects.filter(
-                chronicle=chronicle
-            ).order_by("name"),
+            "character_list": characters.filter(chronicle=chronicle),
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
             "form": SceneCreationForm(chronicle=chronicle),
             "top_locations": top_locations,
