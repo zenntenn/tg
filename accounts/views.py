@@ -7,6 +7,7 @@ from accounts.forms import (
 )
 from accounts.models import Profile
 from characters.models.core import Character
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -127,3 +128,8 @@ class ProfileUpdateView(UpdateView):
     model = Profile
     form_class = ProfileUpdateForm
     template_name = "accounts/form.html"
+
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        return self.request.user.profile.get_absolute_url()

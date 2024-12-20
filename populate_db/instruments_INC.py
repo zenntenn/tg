@@ -99,6 +99,12 @@ sacred_ground = Instrument.objects.get_or_create(name="Sacred Ground")[0]
 social_media = Instrument.objects.get_or_create(name="Social Media")[0]
 
 
-qi_tools = Instrument.objects.get_or_create(name="Qi Tools")[0].add_source("Lore of the Traditions", 34)
-mantras = Instrument.objects.get_or_create(name="Mantras")[0].add_source("Lore of the Traditions", 34)
-memories = Instrument.objects.get_or_create(name="Memories")[0].add_source("Lore of the Traditions", 34)
+qi_tools = Instrument.objects.get_or_create(name="Qi Tools")[0].add_source(
+    "Lore of the Traditions", 34
+)
+mantras = Instrument.objects.get_or_create(name="Mantras")[0].add_source(
+    "Lore of the Traditions", 34
+)
+memories = Instrument.objects.get_or_create(name="Memories")[0].add_source(
+    "Lore of the Traditions", 34
+)

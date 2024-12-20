@@ -55,7 +55,9 @@ Background.objects.get_or_create(name="Rituals", property_name="rituals")[0]
 Background.objects.get_or_create(name="Herd", property_name="herd")[0]
 Background.objects.get_or_create(name="Generation", property_name="generation")[0]
 Background.objects.get_or_create(name="Domain", property_name="domain")[0]
-Background.objects.get_or_create(name="Black Hand Membership", property_name="black_hand_membership")[0]
+Background.objects.get_or_create(
+    name="Black Hand Membership", property_name="black_hand_membership"
+)[0]
 
 Background.objects.get_or_create(name="Ancestors", property_name="ancestors")[0]
 Background.objects.get_or_create(name="Fate", property_name="fate")[0]
@@ -63,7 +65,9 @@ Background.objects.get_or_create(name="Fetish", property_name="fetish")[0]
 Background.objects.get_or_create(name="Kinfolk", property_name="kinfolk_rating")[0]
 Background.objects.get_or_create(name="Pure Breed", property_name="pure_breed")[0]
 Background.objects.get_or_create(name="Rites", property_name="rites")[0]
-Background.objects.get_or_create(name="Spirit Heritage", property_name="spirit_heritage")[0]
+Background.objects.get_or_create(
+    name="Spirit Heritage", property_name="spirit_heritage"
+)[0]
 
 
 Background.objects.get_or_create(name="Eidolon", property_name="eidolon")[0]

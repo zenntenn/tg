@@ -2498,8 +2498,12 @@ Talisman.objects.get_or_create(
 Artifact.objects.get_or_create(display=False, name="Zulu Warshield", background_cost=2)
 
 
-Artifact.objects.get_or_create(display=False, name="Dragon Pearls", background_cost=6)[0].add_source("Lore of the Traditions", 35)
-Artifact.objects.get_or_create(display=False, name="Angel Tear Daggers", quintessence_max=10, background_cost=7)[0].add_source("Lore of the Traditions", 49)
+Artifact.objects.get_or_create(display=False, name="Dragon Pearls", background_cost=6)[
+    0
+].add_source("Lore of the Traditions", 35)
+Artifact.objects.get_or_create(
+    display=False, name="Angel Tear Daggers", quintessence_max=10, background_cost=7
+)[0].add_source("Lore of the Traditions", 49)
 
 for a in Artifact.objects.all():
     if a.rank == 0:

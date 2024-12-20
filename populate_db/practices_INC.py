@@ -1532,6 +1532,8 @@ yoga.common_resonance_traits.add(
 )
 yoga.save()
 
-qi_manipulation = Practice.objects.get_or_create(name="Qi Manipulation")[0].add_source("Lore of the Traditions", 33)
+qi_manipulation = Practice.objects.get_or_create(name="Qi Manipulation")[0].add_source(
+    "Lore of the Traditions", 33
+)
 
 qi_manipulation.instruments.add(qi_tools, mantras, memories)
