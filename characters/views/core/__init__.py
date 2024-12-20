@@ -27,10 +27,11 @@ from characters.models.werewolf.totem import Totem
 from characters.views import changeling, mage, vampire, werewolf, wraith
 from core.utils import get_gameline_name
 from core.views.generic import DictView
+from django.db.models import OuterRef, Subquery
 from django.forms import BaseModelForm
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, UpdateView, View
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, View
 from game.models import Chronicle, ObjectType
 
 from .archetype import (
@@ -104,7 +105,10 @@ class GenericGroupDetailView(DictView):
     default_redirect = "characters:index wod"
 
 
-class CharacterIndexView(View):
+class CharacterIndexView(ListView):
+    model = Human
+    template_name = "characters/charlist.html"
+
     chars = {
         "human": Human,
         "statistic": Statistic,
@@ -134,9 +138,28 @@ class CharacterIndexView(View):
         "mta_human": MtAHuman,
     }
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context()
-        return render(request, "characters/index.html", context)
+    def get_queryset(self):
+        CharacterGroup = Human.group_set.through
+
+        # Subquery to get the first group id for each character
+        first_group_id = Subquery(
+            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            .order_by(
+                "group_id"
+            )  # Assuming ordering by 'group_id', adjust if different
+            .values("group_id")[:1]
+        )
+
+        # Annotating the queryset with the first group id
+        characters = (
+            Human.objects.exclude(status__in=["Dec", "Ret"])
+            .exclude(npc=True)
+            .annotate(first_group_id=first_group_id)
+            .select_related("chronicle")
+            .order_by("chronicle__id", "-first_group_id", "name")
+        )
+
+        return characters
 
     def post(self, request, *args, **kwargs):
         context = self.get_context()
@@ -158,70 +181,107 @@ class CharacterIndexView(View):
             elif gameline == "ctd":
                 redi = f"characters:changeling:create:{char_type}"
             return redirect(redi)
-        if action == "index":
-            if gameline == "wod":
-                redi = f"characters:list:{char_type}"
-            elif gameline == "vtm":
-                redi = f"characters:vampire:list:{char_type}"
-            elif gameline == "wta":
-                redi = f"characters:werewolf:list:{char_type}"
-            elif gameline == "mta":
-                redi = f"characters:mage:list:{char_type}"
-            elif gameline == "wto":
-                redi = f"characters:wraith:list:{char_type}"
-            elif gameline == "ctd":
-                redi = f"characters:changeling:list:{char_type}"
-            return redirect(redi)
-        elif action == "random":
-            if request.user.is_authenticated:
-                user = request.user
-            else:
-                user = None
-            try:
-                char = self.chars[request.POST["char_type"]].objects.create(
-                    name=request.POST["name"], owner=user
-                )
-            except KeyError:
-                print("KEYERROR")
-                raise Http404
-            try:
-                char.random()
-            except Exception as e:
-                raise Http404
-            char.save()
-            return redirect(char.get_absolute_url())
-        return render(request, "characters/index.html", context)
+        return render(request, "characters/charlist.html", context)
 
-    def get_context(self):
-        game_characters = ObjectType.objects.filter(type="char")
-        game_character_types = [x.name for x in game_characters]
-        context = {
-            "objects": game_characters,
-        }
-
-        chron_char_dict = {}
-        chron_group_dict = {}
-        for chron in list(Chronicle.objects.all()) + [None]:
-            c = Character.objects.filter(chronicle=chron).order_by("name")
-            g = Group.objects.filter(chronicle=chron).order_by("name")
-            characters = [x for x in c if x.type in game_character_types]
-            groups = [x for x in g if x.type in game_character_types]
-
-            c = Character.objects.filter(
-                id__in=[x.id for x in characters], chronicle=chron
-            ).order_by("name")
-            g = Group.objects.filter(
-                id__in=[x.id for x in groups], chronicle=chron
-            ).order_by("name")
-            chron_char_dict[chron] = c
-            chron_group_dict[chron] = g
-
-        context["chron_char_dict"] = chron_char_dict
-        context["chron_group_dict"] = chron_group_dict
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Characters"
+        context["button_include"] = True
         context["form"] = CharacterCreationForm(user=self.request.user)
-        if self.request.user.is_authenticated:
-            context["header"] = self.request.user.profile.preferred_heading
-        else:
-            context["header"] = "wod_heading"
+        return context
 
+
+class RetiredCharacterIndex(ListView):
+    model = Character
+    template_name = "characters/charlist.html"
+
+    def get_queryset(self):
+        CharacterGroup = Human.group_set.through
+
+        # Subquery to get the first group id for each character
+        first_group_id = Subquery(
+            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            .order_by(
+                "group_id"
+            )  # Assuming ordering by 'group_id', adjust if different
+            .values("group_id")[:1]
+        )
+
+        # Annotating the queryset with the first group id
+        characters = (
+            Human.objects.filter(status="Ret")
+            .annotate(first_group_id=first_group_id)
+            .select_related("chronicle")
+            .order_by("chronicle__id", "-first_group_id", "name")
+        )
+
+        return characters
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Retired Characters"
+        return context
+
+
+class DeceasedCharacterIndex(ListView):
+    model = Character
+    template_name = "characters/charlist.html"
+
+    def get_queryset(self):
+        CharacterGroup = Human.group_set.through
+
+        # Subquery to get the first group id for each character
+        first_group_id = Subquery(
+            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            .order_by(
+                "group_id"
+            )  # Assuming ordering by 'group_id', adjust if different
+            .values("group_id")[:1]
+        )
+
+        # Annotating the queryset with the first group id
+        characters = (
+            Human.objects.filter(status="Dec")
+            .annotate(first_group_id=first_group_id)
+            .select_related("chronicle")
+            .order_by("chronicle__id", "-first_group_id", "name")
+        )
+
+        return characters
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Deceased Characters"
+        return context
+
+
+class NPCCharacterIndex(ListView):
+    model = Character
+    template_name = "characters/charlist.html"
+
+    def get_queryset(self):
+        CharacterGroup = Human.group_set.through
+
+        # Subquery to get the first group id for each character
+        first_group_id = Subquery(
+            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            .order_by(
+                "group_id"
+            )  # Assuming ordering by 'group_id', adjust if different
+            .values("group_id")[:1]
+        )
+
+        # Annotating the queryset with the first group id
+        characters = (
+            Human.objects.filter(npc=True)
+            .annotate(first_group_id=first_group_id)
+            .select_related("chronicle")
+            .order_by("chronicle__id", "-first_group_id", "name")
+        )
+
+        return characters
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Deceased Characters"
         return context

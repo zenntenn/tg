@@ -31,15 +31,15 @@ class ChronicleDetailView(View):
 
         return {
             "object": chronicle,
-            "characters": CharacterModel.objects.filter(chronicle=chronicle).order_by(
-                "name"
-            ),
-            "groups": Group.objects.filter(chronicle=chronicle).order_by("name"),
+            "character_list": CharacterModel.objects.filter(
+                chronicle=chronicle
+            ).order_by("name"),
             "items": ItemModel.objects.filter(chronicle=chronicle).order_by("name"),
             "form": SceneCreationForm(chronicle=chronicle),
             "top_locations": top_locations,
             "active_scenes": Scene.objects.filter(chronicle=chronicle, finished=False),
             "story_form": StoryForm(),
+            "hide_chronicle": True,
         }
 
     def get(self, request, *args, **kwargs):

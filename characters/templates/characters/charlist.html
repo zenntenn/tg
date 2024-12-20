@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {{ title }}
+{% endblock title %}
+{% block content %}
+    {% load field %}
+    <div class="centertext container">
+        {% include "characters/charlist_include.html" %}
+        {% if button_include %}
+            <form id="charForm" class="centertext container" method="post" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm">
+                        {{ form.char_type }}
+                        <button type="submit" name="action" value="create">Create</button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock content %}
