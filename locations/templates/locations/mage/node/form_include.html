@@ -44,7 +44,7 @@
 </div>
 {% if merits_and_flaws.count != 0 %}
     <div class="col-sm {{ form.get_heading }}">
-        <h2>Merits and Flaws</h2>
+        <h2 class="mta_heading">Merits and Flaws</h2>
     </div>
     {{ form.merit_flaw_formset.management_form }}
     <div id="merit_flaw_formset">
@@ -64,7 +64,7 @@
     <button type="button" id="add-merit-flaw">Add Merit/Flaw</button>
 {% endif %}
 <div class="col-sm {{ form.get_heading }}">
-    <h2>Resonance</h2>
+    <h2 class="mta_heading">Resonance</h2>
 </div>
 {{ form.resonance_formset.management_form }}
 <div id="resonance_formset">
@@ -83,7 +83,7 @@
 </div>
 <button type="button" id="add-resonance">Add Resonance</button>
 <div class="col-sm {{ form.get_heading }}">
-    <h2>Reality Zone</h2>
+    <h2 class="mta_heading">Reality Zone</h2>
 </div>
 {{ form.reality_zone_formset.management_form }}
 <div id="reality_zone_formset">
