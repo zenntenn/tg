@@ -13342,5 +13342,9 @@ Effect.objects.get_or_create(
     prime=0,
 )[0]
 
-Effect.objects.get_or_create(name="Palimpsest", matter=3, time=2, prime=2)[0].add_source("Lore of the Traditions", 45)
-Effect.objects.get_or_create(name="Dismiss the Discordant", mind=2, correspondence=2, entropy=2, prime=2)[0].add_source("Lore of the Traditions", 45)
+Effect.objects.get_or_create(name="Palimpsest", matter=3, time=2, prime=2)[
+    0
+].add_source("Lore of the Traditions", 45)
+Effect.objects.get_or_create(
+    name="Dismiss the Discordant", mind=2, correspondence=2, entropy=2, prime=2
+)[0].add_source("Lore of the Traditions", 45)

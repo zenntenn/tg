@@ -1,11 +1,10 @@
 from typing import Any
 
-from django.http import HttpResponseRedirect
-
 from characters.forms.core.ally import AllyForm
 from characters.models.core.background_block import Background, BackgroundRating
 from characters.views.core.generic_background import GenericBackgroundView
 from core.views.generic import DictView
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
@@ -208,7 +207,7 @@ class ChantryPointsView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-    
+
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(Chantry, pk=kwargs.get("pk"))
         if obj.points < 2:
@@ -217,10 +216,11 @@ class ChantryPointsView(FormView):
             return HttpResponseRedirect(obj.get_absolute_url())
         return super().dispatch(request, *args, **kwargs)
 
+
 class ChantryIntegratedEffectsView(FormView):
     form_class = ChantryEffectsForm
     template_name = "locations/mage/chantry/locgen.html"
-    
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["pk"] = self.kwargs.get("pk")
@@ -238,7 +238,7 @@ class ChantryIntegratedEffectsView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-    
+
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(Chantry, pk=kwargs.get("pk"))
         if obj.current_ie_points() == 0:

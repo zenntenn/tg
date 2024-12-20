@@ -28,7 +28,9 @@ ObjectType.objects.get_or_create(name="location", type="loc", gameline="wod")
 ObjectType.objects.get_or_create(name="vtm_human", type="char", gameline="vtm")
 
 # WtA Character Objects
-werewolf = ObjectType.objects.get_or_create(name="werewolf", type="char", gameline="wta")[0]
+werewolf = ObjectType.objects.get_or_create(
+    name="werewolf", type="char", gameline="wta"
+)[0]
 kinfolk = ObjectType.objects.get_or_create(name="kinfolk", type="char", gameline="wta")[
     0
 ]

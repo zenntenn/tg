@@ -1,7 +1,7 @@
 from characters.forms.mage.effect import EffectCreateOrSelectForm
 from characters.models.core.background_block import Background
-from django import forms
 from characters.models.mage.effect import Effect
+from django import forms
 from locations.models.mage import Chantry
 from locations.models.mage.chantry import ChantryBackgroundRating
 
@@ -96,8 +96,8 @@ class ChantryEffectsForm(EffectCreateOrSelectForm):
         q = Effect.objects.filter(max_sphere__lte=self.object.rank)
         q = q.exclude(pk__in=self.object.integrated_effects.all())
         q = q.exclude(rote_cost__gt=self.object.current_ie_points())
-        self.fields['select'].queryset = q
-        
+        self.fields["select"].queryset = q
+
     def save(self, commit=True):
         effect = super().save(commit=commit)
         self.object.integrated_effects.add(effect)

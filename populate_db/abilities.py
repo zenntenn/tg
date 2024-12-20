@@ -212,4 +212,6 @@ Ability.objects.get_or_create(name="Primal Urge", property_name="primal_urge")
 Ability.objects.get_or_create(name="Rituals", property_name="rituals")
 
 Ability.objects.get_or_create(name="Enochian", property_name="enochian")
-Ability.objects.get_or_create(name="Umbrood Protocols", property_name="umbrood_protocols")
+Ability.objects.get_or_create(
+    name="Umbrood Protocols", property_name="umbrood_protocols"
+)

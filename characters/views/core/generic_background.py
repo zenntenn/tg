@@ -65,10 +65,12 @@ class GenericBackgroundView(SpecialUserMixin, FormView):
                 }
             )
         return form
-    
+
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(self.primary_object_class, pk=kwargs.get("pk"))
-        if not obj.backgrounds.filter(bg__property_name=self.background_name, complete=False).exists():
+        if not obj.backgrounds.filter(
+            bg__property_name=self.background_name, complete=False
+        ).exists():
             obj.creation_status += 1
             obj.save()
             return HttpResponseRedirect(obj.get_absolute_url())

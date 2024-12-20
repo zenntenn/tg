@@ -105,7 +105,9 @@ ab.paradigms.add(
     bring_back_the_golden_age, everything_is_an_illusion, have_faith, might_is_right
 )
 ab.affinities.add(life, mind)
-ab.practices.add(alchemy, craftwork, faith, yoga, dominion, martialarts, qi_manipulation)
+ab.practices.add(
+    alchemy, craftwork, faith, yoga, dominion, martialarts, qi_manipulation
+)
 ab.languages.add(chinese, japanese, korean, vietnamese, thai)
 ab.materials.add(paper, vellum, parchment, leather, cloth, wood, steel)
 ab.media.add(book, scrolls)
