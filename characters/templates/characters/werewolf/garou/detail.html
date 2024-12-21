@@ -172,7 +172,7 @@
     </div>
     <div class="row">
         <div class="col-sm">Description</div>
-        <div class="col-sm">{{ object.description }}</div>
+        <div class="col-sm">{{ object.description|linebreaks }}</div>
     </div>
 {% endblock appearance %}
 {% block history %}
@@ -181,13 +181,15 @@
     </div>
     <div class="row">
         <div class="col-sm">Childhood</div>
-        <div class="col-sm">{{ object.childhood }}</div>
+        <div class="col-sm">{{ object.childhood|linebreaks }}</div>
+    </div>
+    <div class="row">
         <div class="col-sm">History</div>
-        <div class="col-sm">{{ object.history }}</div>
+        <div class="col-sm">{{ object.history|linebreaks }}</div>
     </div>
     <div class="row">
         <div class="col-sm">First Change</div>
-        <div class="col-sm">{{ object.first_change }}</div>
+        <div class="col-sm">{{ object.first_change|linebreaks }}</div>
         <div class="col-sm">Battle Scars</div>
         <div class="col-sm">
             {% for scar in object.battle_scars.all %}<a href="{{ scar.get_absolute_url }}">{{ scar.name }},</a>{% endfor %}
@@ -195,9 +197,9 @@
     </div>
     <div class="row">
         <div class="col-sm">Goals</div>
-        <div class="col-sm">{{ object.goals }}</div>
+        <div class="col-sm">{{ object.goals|linebreaks }}</div>
         <div class="col-sm">Notes</div>
-        <div class="col-sm">{{ object.notes }}</div>
+        <div class="col-sm">{{ object.notes|linebreaks }}</div>
     </div>
 {% endblock history %}
 {% block xp %}

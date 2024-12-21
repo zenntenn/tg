@@ -11,7 +11,7 @@
     {% block description %}
         <div class="row">
             <div class="col-sm">Description</div>
-            <div class="col-sm">{{ object.description }}</div>
+            <div class="col-sm">{{ object.description|linebreaks }}</div>
         </div>
     {% endblock description %}
 {% endblock contents %}
