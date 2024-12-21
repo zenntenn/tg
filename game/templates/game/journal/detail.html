@@ -3,6 +3,7 @@
     {{ object }}
 {% endblock title %}
 {% block content %}
+    {% load sanitize_text %}
     {% if is_approved_user %}
         <div class="container centertext">
             <div class="row">
@@ -31,11 +32,11 @@
                         <h4 class="col-sm {{ object.character.get_heading }}">{{ entry_form.entry.date.date }}</h4>
                     </div>
                     <div class="row">
-                        <div class="col-sm">{{ entry_form.entry.message }}</div>
+                        <div class="col-sm">{{ entry_form.entry.message|quote_tag|sanitize_html }}</div>
                     </div>
                     {% if entry_form.entry.st_message %}
                         <div class="row">
-                            <div class="col-sm st">{{ entry_form.entry.st_message }}</div>
+                            <div class="col-sm st">{{ entry_form.entry.st_message|quote_tag|sanitize_html }}</div>
                         </div>
                     {% else %}
                         {% if request.user.profile.is_st %}

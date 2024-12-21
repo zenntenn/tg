@@ -253,93 +253,14 @@ class Scene(models.Model):
         if self.waiting_for_st and character.owner.profile.is_st():
             self.waiting_for_st = False
             self.save()
+        try:
+            message = message_processing(character, message)
+        except ValueError:
+            return
         post = Post.objects.create(
             character=character, message=message, display_name=display, scene=self
         )
 
-        tmp_points = re.compile(r"#WP|#Q(-?\d+)|#P(-?\d+)|#(-?\d+)(B|L|A)")
-
-        wp_spend = False
-        for match in tmp_points.finditer(message):
-            full_match = match.group(0)
-            if full_match == "#WP":
-                character.temporary_willpower -= 1
-                wp_spend = True
-                character.save()
-
-            elif match.group(1):
-                if hasattr(character, "quintessence"):
-                    character.quintessence -= int(match.group(1))
-                    character.save()
-            elif match.group(2):
-                if hasattr(character, "paradox"):
-                    character.paradox += int(match.group(2))
-                    character.save()
-            elif match.group(3):
-                damage_type = match.group(4)
-                damage_amount = int(match.group(3))
-                if damage_type == "B":
-                    for _ in range(damage_amount):
-                        character.add_bashing()
-                if damage_type == "L":
-                    for _ in range(damage_amount):
-                        character.add_lethal()
-                if damage_type == "A":
-                    for _ in range(damage_amount):
-                        character.add_aggravated()
-                character.save()
-        if "/rolls" in message:
-            text, roll = message.split("/rolls")
-            text = text.strip()
-            roll = roll.strip()
-            if match := re.match(
-                r"^(?P<num_rolls>\d+)\s+rolls\s+@\s+(?P<num_dice>\d+)(?:\s+difficulty\s+(?P<difficulty>\d+))?(?:\s+(?P<specialty>\S+))?$",
-                roll,
-                re.IGNORECASE,
-            ):
-                num_rolls = int(match.group("num_rolls"))
-                num_dice = int(match.group("num_dice"))
-                difficulty = (
-                    int(match.group("difficulty")) if match.group("difficulty") else 6
-                )
-                specialty_str = match.group("specialty")
-                specialty = specialty_str.lower() == "true" if specialty_str else False
-                post.rolls(
-                    text,
-                    num_rolls,
-                    num_dice,
-                    difficulty=difficulty,
-                    specialty=specialty,
-                )
-            else:
-                post.delete()
-                raise ValueError("Command does not match the expected format.")
-        elif "/roll" in message:
-            text, roll = message.split("/roll")
-            text = text.strip()
-            roll = roll.strip()
-            # Full Pattern
-            if match := re.match(
-                r"^(?P<num_dice>\d+)(?:\s+difficulty\s+(?P<difficulty>\d+))?(?:\s+(?P<specialty>\S+))?$",
-                roll,
-                re.IGNORECASE,
-            ):
-                num_dice = int(match.group("num_dice"))
-                difficulty = (
-                    int(match.group("difficulty")) if match.group("difficulty") else 6
-                )
-                specialty_str = match.group("specialty")
-                specialty = specialty_str.lower() == "true" if specialty_str else False
-                post.roll(
-                    text,
-                    num_dice,
-                    difficulty=difficulty,
-                    specialty=specialty,
-                    willpower=wp_spend,
-                )
-            else:
-                post.delete()
-                raise ValueError("Command does not match the expected format.")
         return post
 
     def most_recent_post(self):
@@ -364,45 +285,6 @@ class Post(models.Model):
             return self.display_name + ": " + self.message
         return self.character.name + ": " + self.message
 
-    def roll(
-        self, message, number_of_dice, difficulty=6, specialty=False, willpower=False
-    ):
-        roll, success_count = dice(
-            number_of_dice, difficulty=difficulty, specialty=specialty
-        )
-        if willpower:
-            success_count += 1
-            if success_count < 0:
-                success_count = 0
-        roll = ", ".join(map(str, roll))
-        self.message = f"{message}: {roll}: <b>{success_count}</b>"
-        self.save()
-
-    def rolls(self, message, num_rolls, num_dice, difficulty, specialty):
-        roll_list = []
-        successes = []
-        difficulties = []
-        for _ in range(num_rolls):
-            difficulties.append(difficulty)
-            roll, success_count = dice(
-                num_dice, difficulty=difficulty, specialty=specialty
-            )
-            roll = ", ".join(map(str, roll))
-            roll_list.append(roll)
-            successes.append(success_count)
-            if success_count == 0:
-                difficulty += 1
-            if success_count < 0:
-                break
-        message = f"{message}: Rolls:<br>"
-        join_list = []
-        for roll, suxx, diff in zip(roll_list, successes, difficulties):
-            join_list.append(f"{roll}: <b>{suxx}</b>")
-            if suxx == 0:
-                join_list[-1] = join_list[-1] + f": difficulty increased to {diff + 1}"
-        self.message = message + "<br>".join(join_list)
-        self.save()
-
 
 class JournalEntry(models.Model):
     journal = models.ForeignKey("Journal", on_delete=models.SET_NULL, null=True)
@@ -421,6 +303,10 @@ class Journal(models.Model):
     )
 
     def add_post(self, date, message):
+        try:
+            message = message_processing(self.character, message)
+        except ValueError:
+            return
         je = JournalEntry.objects.create(journal=self, message=message, date=date)
         return je
 
@@ -432,3 +318,149 @@ class Journal(models.Model):
 
     def all_entries(self):
         return JournalEntry.objects.filter(journal=self)
+
+
+def message_processing(character, message):
+    temporary_point_regex = re.compile(r"#WP|#Q(-?\d+)|#P(-?\d+)|#(-?\d+)(B|L|A)")
+    wp_spend = False
+    expenditures = []
+
+    for match in temporary_point_regex.finditer(message):
+        full_match = match.group(0)
+        if full_match == "#WP":
+            character.temporary_willpower -= 1
+            wp_spend = True
+            expenditures.append("WP")
+            character.save()
+        elif match.group(1):
+            if hasattr(character, "quintessence"):
+                character.quintessence -= int(match.group(1))
+                expenditures.append(f"{int(match.group(1))}Q")
+                character.save()
+        elif match.group(2):
+            if hasattr(character, "paradox"):
+                character.paradox += int(match.group(2))
+                expenditures.append(f"{int(match.group(2))}P")
+                character.save()
+        elif match.group(3):
+            damage_type = match.group(4)
+            damage_amount = int(match.group(3))
+            expenditures.append(f"{damage_amount}{damage_type}")
+            if damage_type == "B":
+                for _ in range(damage_amount):
+                    character.add_bashing()
+            if damage_type == "L":
+                for _ in range(damage_amount):
+                    character.add_lethal()
+            if damage_type == "A":
+                for _ in range(damage_amount):
+                    character.add_aggravated()
+            character.save()
+
+    expenditures = ", ".join(["#" + x for x in expenditures])
+    if "/rolls" in message:
+        text, roll = message.split("/rolls")
+        text = text.strip()
+        roll = roll.strip()
+        if match := re.match(
+            r"^(?P<num_rolls>\d+)\s+rolls\s+@\s+(?P<num_dice>\d+)(?:\s+difficulty\s+(?P<difficulty>\d+))?(?:\s+(?P<specialty>\S+))?",
+            roll,
+            re.IGNORECASE,
+        ):
+            num_rolls = int(match.group("num_rolls"))
+            num_dice = int(match.group("num_dice"))
+            difficulty = (
+                int(match.group("difficulty")) if match.group("difficulty") else 6
+            )
+            specialty_str = match.group("specialty")
+            specialty = specialty_str.lower() == "true" if specialty_str else False
+            r = rolls(
+                num_rolls,
+                num_dice,
+                difficulty=difficulty,
+                specialty=specialty,
+            )
+            roll_description = (
+                f"{num_rolls} rolls of {num_dice} dice at difficulty {difficulty}"
+            )
+            if specialty:
+                roll_description += " with relevant specialty"
+            m = ""
+            if text:
+                m += text + ": "
+            if expenditures:
+                m += expenditures + ": "
+            m += roll_description + ": " + r
+            message = m
+        else:
+            raise ValueError("Command does not match the expected format.")
+    elif "/roll" in message:
+        text, roll = message.split("/roll")
+        text = text.strip()
+        roll = roll.strip()
+        print(roll)
+        # Full Pattern
+        if match := re.match(
+            r"^(?P<num_dice>\d+)(?:\s+difficulty\s+(?P<difficulty>\d+))?(?:\s+(?P<specialty>\S+))?",
+            roll,
+            re.IGNORECASE,
+        ):
+            num_dice = int(match.group("num_dice"))
+            difficulty = (
+                int(match.group("difficulty")) if match.group("difficulty") else 6
+            )
+            specialty_str = match.group("specialty")
+            specialty = specialty_str.lower() == "true" if specialty_str else False
+            r = roll_once(
+                num_dice,
+                difficulty=difficulty,
+                specialty=specialty,
+                willpower=wp_spend,
+            )
+            roll_description = f"roll of {num_dice} dice at difficulty {difficulty}"
+            if specialty:
+                roll_description += " with relevant specialty"
+            m = ""
+            if text:
+                m += text + ": "
+            if expenditures:
+                m += expenditures + ": "
+            m += roll_description + ": " + r
+            message = m
+        else:
+            raise ValueError("Command does not match the expected format.")
+    return message
+
+
+def roll_once(number_of_dice, difficulty=6, specialty=False, willpower=False):
+    roll, success_count = dice(
+        number_of_dice, difficulty=difficulty, specialty=specialty
+    )
+    if willpower:
+        success_count += 1
+        if success_count < 0:
+            success_count = 0
+    roll = ", ".join(map(str, roll))
+    return f"{roll}: <b>{success_count}</b>"
+
+
+def rolls(num_rolls, num_dice, difficulty, specialty):
+    roll_list = []
+    successes = []
+    difficulties = []
+    for _ in range(num_rolls):
+        difficulties.append(difficulty)
+        roll, success_count = dice(num_dice, difficulty=difficulty, specialty=specialty)
+        roll = ", ".join(map(str, roll))
+        roll_list.append(roll)
+        successes.append(success_count)
+        if success_count == 0:
+            difficulty += 1
+        if success_count < 0:
+            break
+    join_list = []
+    for roll, suxx, diff in zip(roll_list, successes, difficulties):
+        join_list.append(f"{roll}: <b>{suxx}</b>")
+        if suxx == 0:
+            join_list[-1] = join_list[-1] + f": difficulty increased to {diff + 1}"
+    return "Rolls:<br>" + f"<br>".join(join_list)
