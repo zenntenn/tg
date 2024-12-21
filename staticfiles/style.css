@@ -217,3 +217,8 @@ a.text-link {
         width: auto;
     }
 }
+
+p {
+    text-align: justify;
+    text-indent: 1em;
+}
