@@ -82,6 +82,10 @@
         {% block freebies %}
             {% if object.creation_status == 8 and object.freebies_approved %}
                 {% include "characters/mage/sorcerer/sorcerer_freebies_form.html" %}
+            {% elif object.creation_status == 8 %}
+                <div class="row">
+                    <h2 class="col-sm {{ object.get_heading }}">Waiting on ST to Assign Freebie Total</h2>
+                </div>
             {% endif %}
         {% endblock freebies %}
         {% block node %}
