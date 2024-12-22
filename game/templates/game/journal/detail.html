@@ -35,9 +35,11 @@
                         <div class="col-sm">{{ entry_form.entry.message|quote_tag|sanitize_html }}</div>
                     </div>
                     {% if entry_form.entry.st_message %}
-                        <div class="row">
-                            <div class="col-sm st">{{ entry_form.entry.st_message|quote_tag|sanitize_html }}</div>
-                        </div>
+                        {% if entry_form.entry.st_message != 'Read' %}
+                            <div class="row">
+                                <div class="col-sm st">{{ entry_form.entry.st_message|quote_tag|sanitize_html }}</div>
+                            </div>
+                        {% endif %}
                     {% else %}
                         {% if request.user.profile.is_st %}
                             <div class="row">

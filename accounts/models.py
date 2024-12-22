@@ -6,7 +6,15 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-from game.models import Chronicle, Scene, Story, STRelationship, Week
+from game.models import (
+    Chronicle,
+    Journal,
+    JournalEntry,
+    Scene,
+    Story,
+    STRelationship,
+    Week,
+)
 from items.models.core.item import ItemModel
 from locations.models.core.location import LocationModel
 
@@ -152,6 +160,9 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse("profile", kwargs={"pk": self.pk})
+
+    def get_updated_journals(self):
+        return Journal.objects.filter(journalentry__st_message="").distinct()
 
 
 @receiver(post_save, sender=User)
