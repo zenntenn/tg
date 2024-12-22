@@ -58,6 +58,9 @@ class ProfileView(DetailView):
         approve_location_id = request.POST.get("approve_location")
         approve_item_id = request.POST.get("approve_item")
         approve_rote_id = request.POST.get("approve_rote")
+        approve_character_image_id = request.POST.get("approve_character_image")
+        approve_location_image_id = request.POST.get("approve_location_image")
+        approve_item_image_id = request.POST.get("approve_item_image")
         print(request.POST)
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
@@ -93,14 +96,21 @@ class ProfileView(DetailView):
             rote = Rote.objects.get(pk=approve_rote_id)
             rote.status = "App"
             rote.save()
-        elif any(x.startswith("image") for x in request.POST.keys()):
-            char = [
-                x
-                for x in self.object.image_to_approve()
-                if "image " + x.name in request.POST.keys()
-            ][0]
-            char.image_status = "app"
+        if approve_character_image_id is not None:
+            approve_character_image_id = approve_character_image_id.split("-")[-1]
+            char = Character.objects.get(pk=approve_character_image_id)
+            char.image_status = "App"
             char.save()
+        if approve_item_image_id is not None:
+            approve_item_image_id = approve_item_image_id.split("-")[-1]
+            loc = LocationModel.objects.get(pk=approve_location_image_id)
+            loc.image_status = "App"
+            loc.save()
+        if approve_item_image_id is not None:
+            approve_item_image_id = approve_item_image_id.split("-")[-1]
+            item = ItemModel.objects.get(pk=approve_item_image_id)
+            item.image_status = "App"
+            item.save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
         elif len([x for x in request.POST.keys() if x.endswith("_freebies")]):

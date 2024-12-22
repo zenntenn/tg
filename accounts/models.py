@@ -132,26 +132,20 @@ class Profile(models.Model):
         f = [x for x in f if x.creation_status == x.freebie_step]
         return f
 
-    def image_to_approve(self):
-        to_approve_images = (
-            list(
-                Character.objects.filter(
+    def character_images_to_approve(self):
+        return Character.objects.filter(
                     chronicle__in=self.user.chronicle_set.all(), image_status="sub"
                 ).exclude(image="")
-            )
-            + list(
-                LocationModel.objects.filter(
+
+    def location_images_to_approve(self):
+        return LocationModel.objects.filter(
                     chronicle__in=self.user.chronicle_set.all(), image_status="sub"
                 ).exclude(image="")
-            )
-            + list(
-                ItemModel.objects.filter(
+
+    def item_images_to_approve(self):
+        return ItemModel.objects.filter(
                     chronicle__in=self.user.chronicle_set.all(), image_status="sub"
                 ).exclude(image="")
-            )
-        )
-        to_approve_images.sort(key=lambda x: x.name)
-        return to_approve_images
 
     def __str__(self):
         return self.user.username
