@@ -12,6 +12,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
+from characters.models.mage.rote import Rote
 from game.models import Chronicle, Scene, Story, Week
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
@@ -53,6 +54,11 @@ class ProfileView(DetailView):
         submitted_scene_id = request.POST.get("submit_scene")
         submitted_story_id = request.POST.get("submit_story")
         submitted_week_id = request.POST.get("submit_week")
+        approve_character_id = request.POST.get("approve_character")
+        approve_location_id = request.POST.get("approve_location")
+        approve_item_id = request.POST.get("approve_item")
+        approve_rote_id = request.POST.get("approve_rote")
+        print(request.POST)
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
             form = SceneXP(request.POST, scene=scene)
@@ -68,6 +74,25 @@ class ProfileView(DetailView):
             form = WeeklyXP(request.POST, week=week)
             if form.is_valid():
                 form.save()
+        if approve_character_id is not None:
+            char = Character.objects.get(pk=approve_character_id)
+            char.status = "App"
+            char.save()
+            if hasattr(char, "group_set"):
+                for g in char.group_set.all():
+                    g.update_pooled_backgrounds()
+        if approve_location_id is not None:
+            loc = LocationModel.objects.get(pk=approve_location_id)
+            loc.status = "App"
+            loc.save()
+        if approve_item_id is not None:
+            item = ItemModel.objects.get(pk=approve_item_id)
+            item.status = "App"
+            item.save()
+        if approve_rote_id is not None:
+            rote = Rote.objects.get(pk=approve_rote_id)
+            rote.status = "App"
+            rote.save()
         elif any(x.startswith("image") for x in request.POST.keys()):
             char = [
                 x
@@ -78,30 +103,6 @@ class ProfileView(DetailView):
             char.save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
-        elif len([x for x in request.POST.keys() if x.endswith("_approve")]):
-            approved = [
-                x.replace("_approve", "")
-                for x in request.POST.keys()
-                if x.endswith("_approve")
-            ][0]
-            approved = [
-                x for x in self.object.objects_to_approve() if x.name == approved
-            ][0]
-            approved.status = "App"
-            approved.save()
-            if hasattr(approved, "group_set"):
-                for g in approved.group_set.all():
-                    g.update_pooled_backgrounds()
-        elif len([x for x in request.POST.keys() if x.endswith("_edit")]):
-            to_edit = [
-                x.replace("_edit", "")
-                for x in request.POST.keys()
-                if x.endswith("_edit")
-            ][0]
-            to_edit = [
-                x for x in self.object.objects_to_approve() if x.name == to_edit
-            ][0]
-            return redirect(to_edit.get_update_url())
         elif len([x for x in request.POST.keys() if x.endswith("_freebies")]):
             to_approve = [
                 x.replace("_freebies", "")
