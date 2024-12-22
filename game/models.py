@@ -398,7 +398,6 @@ def message_processing(character, message):
         text, roll = message.split("/roll")
         text = text.strip()
         roll = roll.strip()
-        print(roll)
         # Full Pattern
         if match := re.match(
             r"^(?P<num_dice>\d+)(?:\s+difficulty\s+(?P<difficulty>\d+))?(?:\s+(?P<specialty>\S+))?",

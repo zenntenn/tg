@@ -234,7 +234,6 @@ class JournalDetailView(SpecialUserMixin, DetailView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object.character, self.request.user
         )
-        print(self.object.character.owner, self.request.user)
         return context
 
     def post(self, request, *args, **kwargs):

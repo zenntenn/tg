@@ -279,7 +279,8 @@ class ChantrySanctumView(GenericBackgroundView):
     form_class = SanctumForm
     is_owned = False
     template_name = "locations/mage/chantry/locgen.html"
-    
+
+
 class ChantryCreationView(DictView):
     view_mapping = {
         1: ChantryPointsView,  # Backgrounds

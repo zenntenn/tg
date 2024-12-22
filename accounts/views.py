@@ -1,5 +1,6 @@
 from accounts.forms import (
     CustomUSerCreationForm,
+    FreebieAwardForm,
     ProfileUpdateForm,
     SceneXP,
     StoryXP,
@@ -7,12 +8,12 @@ from accounts.forms import (
 )
 from accounts.models import Profile
 from characters.models.core import Character
+from characters.models.mage.rote import Rote
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
-from characters.models.mage.rote import Rote
 from game.models import Chronicle, Scene, Story, Week
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
@@ -46,14 +47,18 @@ class ProfileView(DetailView):
             WeeklyXP(week=x, prefix=f"week_{x.pk}")
             for x in Week.objects.filter(xp_given=False)
         ]
+        context["freebie_forms"] = [
+            FreebieAwardForm(character=character)
+            for character in self.object.freebies_to_approve()
+        ]
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        context = self.get_context_data()
         submitted_scene_id = request.POST.get("submit_scene")
         submitted_story_id = request.POST.get("submit_story")
         submitted_week_id = request.POST.get("submit_week")
+        submitted_freebies_id = request.POST.get("submit_freebies")
         approve_character_id = request.POST.get("approve_character")
         approve_location_id = request.POST.get("approve_location")
         approve_item_id = request.POST.get("approve_item")
@@ -61,7 +66,6 @@ class ProfileView(DetailView):
         approve_character_image_id = request.POST.get("approve_character_image")
         approve_location_image_id = request.POST.get("approve_location_image")
         approve_item_image_id = request.POST.get("approve_item_image")
-        print(request.POST)
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
             form = SceneXP(request.POST, scene=scene)
@@ -111,23 +115,13 @@ class ProfileView(DetailView):
             item = ItemModel.objects.get(pk=approve_item_image_id)
             item.image_status = "App"
             item.save()
+        if submitted_freebies_id is not None:
+            char = Character.objects.get(pk=submitted_freebies_id)
+            form = FreebieAwardForm(request.POST, character=char)
+            if form.is_valid():
+                form.save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
-        elif len([x for x in request.POST.keys() if x.endswith("_freebies")]):
-            to_approve = [
-                x.replace("_freebies", "")
-                for x in request.POST.keys()
-                if x.endswith("_freebies")
-            ][0]
-            to_approve = [
-                x for x in self.object.freebies_to_approve() if x.name == to_approve
-            ][0]
-            num_to_add = int(request.POST[f"{ to_approve.name }_freebiesField"])
-            to_approve.freebies += num_to_add
-            if f"{to_approve.name}_checkbox" in request.POST.keys():
-                to_approve.freebies += 15
-            to_approve.freebies_approved = True
-            to_approve.save()
         return render(
             request,
             "accounts/detail.html",
