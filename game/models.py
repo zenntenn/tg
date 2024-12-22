@@ -294,7 +294,7 @@ class JournalEntry(models.Model):
     datetime_created = models.DateTimeField(default=now)
 
     class Meta:
-        ordering = ["-date"]
+        ordering = ["-date", "-datetime_created"]
 
 
 class Journal(models.Model):
