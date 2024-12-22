@@ -162,11 +162,11 @@ class CharacterIndexView(ListView):
         return characters
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context()
         action = request.POST.get("action")
         char_type = request.POST["char_type"]
         obj = ObjectType.objects.get(name=char_type)
         gameline = obj.gameline
+        print(action)
         if action == "create":
             if gameline == "wod":
                 redi = f"characters:create:{char_type}"
@@ -181,6 +181,7 @@ class CharacterIndexView(ListView):
             elif gameline == "ctd":
                 redi = f"characters:changeling:create:{char_type}"
             return redirect(redi)
+        context = self.get_context_data()
         return render(request, "characters/charlist.html", context)
 
     def get_context_data(self, **kwargs):
