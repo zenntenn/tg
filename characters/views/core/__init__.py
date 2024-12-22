@@ -166,7 +166,6 @@ class CharacterIndexView(ListView):
         char_type = request.POST["char_type"]
         obj = ObjectType.objects.get(name=char_type)
         gameline = obj.gameline
-        print(action)
         if action == "create":
             if gameline == "wod":
                 redi = f"characters:create:{char_type}"
