@@ -23,7 +23,7 @@ class MtAEnhancementView(SpecialUserMixin, FormView):
         "sanctum",
         "allies",
     ]
-    
+
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(Human, pk=kwargs.get("pk"))
         if not obj.backgrounds.filter(
@@ -33,7 +33,6 @@ class MtAEnhancementView(SpecialUserMixin, FormView):
             obj.save()
             return HttpResponseRedirect(obj.get_absolute_url())
         return super().dispatch(request, *args, **kwargs)
-
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

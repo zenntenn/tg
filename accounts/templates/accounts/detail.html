@@ -345,58 +345,48 @@
                     <div class="row">
                         <h2 class="col-sm {{ object.preferred_heading }}">Freebies To Approve</h2>
                     </div>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for obj in object.freebies_to_approve %}
-                                <div class="col-sm-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
-                                        <div class="card-body text-center">
+                    <div class="row">
+                        {% for freebie_form in freebie_forms %}
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center">
+                                        <div>
+                                            <a href="{{ freebie_form.character.get_absolute_url }}">{{ freebie_form.character.name }}</a>
+                                        </div>
+                                        <div>
+                                            {% if obj.owner is not None %}
+                                                <a href="{{ freebie_form.character.owner.profile.get_absolute_url }}">{{ freebie_form.character.owner }}</a>
+                                            {% else %}
+                                                <div>No Owner</div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div>{{ freebie_form.character.get_status_display }}</div>
+                                        </div>
+                                        <div>
+                                            {% if freebie_form.character.get_type %}
+                                                <div>{{ freebie_form.character.get_type }}</div>
+                                            {% else %}
+                                                <div>{{ freebie_form.character.type.title }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <div>{{ freebie_form.backstory_freebies }}</div>
+                                            <div>Cabal: {{ freebie_form.cabal_freebies }}</div>
                                             <div>
-                                                <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
-                                            </div>
-                                            <div>
-                                                {% if obj.owner is not None %}
-                                                    <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
-                                                {% else %}
-                                                    <div>No Owner</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <div>{{ obj.get_status_display }}</div>
-                                            </div>
-                                            <div>
-                                                {% if obj.get_type %}
-                                                    <div>{{ obj.get_type }}</div>
-                                                {% else %}
-                                                    <div>{{ obj.type.title }}</div>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <input type="number"
-                                                       step="1"
-                                                       name="{{ obj.name }}_freebiesField"
-                                                       min="0"
-                                                       max="15"
-                                                       value="0">
-                                            </div>
-                                            <div>
-                                                Cabal:
-                                                <input type="checkbox"
-                                                       name="{{ obj.name }}_checkbox"
-                                                       id="{{ obj.name }}_checkbox">
-                                            </div>
-                                            <div>
-                                                <input type="submit" name="{{ obj.name }}_freebies" value="Add Freebies" />
-                                            </div>
+                                                <button type="submit"
+                                                        name="submit_freebies"
+                                                        value="{{ freebie_form.character.pk }}">Add Freebies</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            {% empty %}
-                                <div class="col">No Characters.</div>
-                            {% endfor %}
-                        </div>
-                    </form>
+                            </div>
+                        {% empty %}
+                            <div class="col">No Characters.</div>
+                        {% endfor %}
+                    </div>
                 {% endif %}
                 {% if object.characters_to_approve %}
                     <div class="row">
@@ -567,7 +557,8 @@
                     <h2 class="col-sm {{ user.profile.preferred_heading }}">Images To Approve</h2>
                     {% for char in object.character_images_to_approve %}
                         <div class="row border">
-                            <a class="col-sm border d-flex justify-content-center align-items-center" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                            <a class="col-sm border d-flex justify-content-center align-items-center"
+                               href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                             <div class="col-sm border d-flex justify-content-center align-items-center">
                                 {% if char.owner is not None %}{{ char.owner }}{% endif %}
                             </div>
@@ -589,7 +580,8 @@
                     {% endfor %}
                     {% for char in object.location_images_to_approve %}
                         <div class="row border">
-                            <a class="col-sm-3 border d-flex justify-content-center align-items-center" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                            <a class="col-sm-3 border d-flex justify-content-center align-items-center"
+                               href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                             <div class="col-sm-3 border d-flex justify-content-center align-items-center">
                                 {% if char.owner is not None %}{{ char.owner }}{% endif %}
                             </div>
@@ -611,7 +603,8 @@
                     {% endfor %}
                     {% for char in object.item_images_to_approve %}
                         <div class="row border">
-                            <a class="col-sm-3 border d-flex justify-content-center align-items-center" href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                            <a class="col-sm-3 border d-flex justify-content-center align-items-center"
+                               href="{{ char.get_absolute_url }}">{{ char.name }}</a>
                             <div class="col-sm-3 border d-flex justify-content-center align-items-center">
                                 {% if char.owner is not None %}{{ char.owner }}{% endif %}
                             </div>

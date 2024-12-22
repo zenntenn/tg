@@ -134,18 +134,18 @@ class Profile(models.Model):
 
     def character_images_to_approve(self):
         return Character.objects.filter(
-                    chronicle__in=self.user.chronicle_set.all(), image_status="sub"
-                ).exclude(image="")
+            chronicle__in=self.user.chronicle_set.all(), image_status="sub"
+        ).exclude(image="")
 
     def location_images_to_approve(self):
         return LocationModel.objects.filter(
-                    chronicle__in=self.user.chronicle_set.all(), image_status="sub"
-                ).exclude(image="")
+            chronicle__in=self.user.chronicle_set.all(), image_status="sub"
+        ).exclude(image="")
 
     def item_images_to_approve(self):
         return ItemModel.objects.filter(
-                    chronicle__in=self.user.chronicle_set.all(), image_status="sub"
-                ).exclude(image="")
+            chronicle__in=self.user.chronicle_set.all(), image_status="sub"
+        ).exclude(image="")
 
     def __str__(self):
         return self.user.username

@@ -180,3 +180,20 @@ class WeeklyXP(forms.Form):
                 )
             tmp[char] = char_dict
         return tmp
+
+
+class FreebieAwardForm(forms.Form):
+    backstory_freebies = forms.IntegerField(min_value=0, max_value=15, initial=0)
+    cabal_freebies = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.character = kwargs.pop("character")
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        if self.cleaned_data["cabal_freebies"]:
+            self.character.freebies += 15
+        self.character.freebies += self.cleaned_data["backstory_freebies"]
+        self.character.freebies_approved = True
+        self.character.save()
+        return self.character
