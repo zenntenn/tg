@@ -69,6 +69,11 @@ urls = [
         name="mage_full",
     ),
     path(
+        "sorcerer/full/<pk>/",
+        views.mage.SorcererUpdateView.as_view(),
+        name="sorcerer_full",
+    ),
+    path(
         "mage/<pk>/",
         views.mage.MageCharacterCreationView.as_view(),
         name="mage",
