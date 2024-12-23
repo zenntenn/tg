@@ -72,4 +72,5 @@ from .sorcerer import (
     SorcererBasicsView,
     SorcererCharacterCreationView,
     SorcererDetailView,
+    SorcererUpdateView,
 )
