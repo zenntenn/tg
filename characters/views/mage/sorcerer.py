@@ -132,6 +132,18 @@ def load_affinities(request):
         {"affinities": sf.favored_paths.all()},
     )
 
+class SorcererUpdateView(SpecialUserMixin, UpdateView):
+    model = Sorcerer
+    fields = "__all__"
+    template_name = "characters/mage/mage/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
 
 class SorcererDetailView(HumanDetailView):
     model = Sorcerer
