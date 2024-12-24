@@ -1,0 +1,38 @@
+<form method="post" action="">
+    {% csrf_token %}
+    {% if user == object.user %}
+        <div class="row">
+            <div class="col-sm">Heading</div>
+            <div class="col-sm">{{ object.get_preferred_heading_display }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm">Theme</div>
+            <div class="col-sm">{{ object.get_theme_display }}</div>
+        </div>
+    {% endif %}
+    {% if user == object.user or user.profile.is_st or object.discord_toggle %}
+        <div class="row">
+            <div class="col-sm">Discord</div>
+            <div class="col-sm">{{ object.discord_id }}</div>
+        </div>
+    {% endif %}
+    {% if user == object.user or user.profile.is_st or object.veils_toggle %}
+        <div class="row">
+            <div class="col-sm">Veils (Prefer not to have on screen)</div>
+            <div class="col-sm">{{ object.veils }}</div>
+        </div>
+    {% endif %}
+    {% if user == object.user or user.profile.is_st or object.lines_toggle %}
+        <div class="row">
+            <div class="col-sm">Lines (Prefer not to interact with at all)</div>
+            <div class="col-sm">{{ object.lines }}</div>
+        </div>
+    {% endif %}
+    {% if user == object.user %}
+        <div class="row">
+            <div class="col-sm">
+                <input type="submit" value="Edit Preferences" name="Edit Preferences" />
+            </div>
+        </div>
+    {% endif %}
+</form>

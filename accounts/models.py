@@ -1,3 +1,5 @@
+from itertools import product
+
 from characters.models.core.character import Character
 from characters.models.mage.mage import Mage
 from characters.models.mage.rote import Rote
@@ -14,6 +16,7 @@ from game.models import (
     Story,
     STRelationship,
     Week,
+    WeeklyXPRequest,
 )
 from items.models.core.item import ItemModel
 from locations.models.core.location import LocationModel
@@ -163,6 +166,36 @@ class Profile(models.Model):
 
     def get_updated_journals(self):
         return Journal.objects.filter(journalentry__st_message="").distinct()
+
+    def get_unfulfilled_weekly_xp_requests(self):
+        char_list = self.my_characters()
+        weeks = Week.objects.all()
+        char_week = product(char_list, weeks)
+        pairs = []
+        for char, week in char_week:
+            if char in week.weekly_characters():
+                if (
+                    WeeklyXPRequest.objects.filter(week=week, character=char).count()
+                    == 0
+                ):
+                    pairs.append((char, week))
+        return pairs
+
+    def get_unfulfilled_weekly_xp_requests_to_approve(self):
+        char_list = self.my_characters()
+        weeks = Week.objects.all()
+        char_week = product(char_list, weeks)
+        pairs = []
+        for char, week in char_week:
+            if char in week.weekly_characters():
+                if (
+                    WeeklyXPRequest.objects.filter(
+                        week=week, character=char, approved=False
+                    ).count()
+                    != 0
+                ):
+                    pairs.append((char, week))
+        return pairs
 
 
 @receiver(post_save, sender=User)

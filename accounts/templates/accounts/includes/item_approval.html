@@ -1,0 +1,43 @@
+{% if object.items_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Items To Approve</h2>
+    </div>
+    <div class="row">
+        {% for obj in object.items_to_approve %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+                        </div>
+                        <div>
+                            {% if obj.owner is not None %}
+                                <a href="{{ obj.owner.profile.get_absolute_url }}">{{ obj.owner }}</a>
+                            {% else %}
+                                <div>No Owner</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>{{ obj.get_status_display }}</div>
+                        </div>
+                        <div>
+                            {% if obj.get_type %}
+                                <div>{{ obj.get_type }}</div>
+                            {% else %}
+                                <div>{{ obj.type.title }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <button type="submit" name="approve_item" value="{{ obj.pk }}">Approve</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">No Items.</div>
+        {% endfor %}
+    </div>
+{% endif %}

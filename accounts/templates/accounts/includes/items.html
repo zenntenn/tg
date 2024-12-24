@@ -1,0 +1,27 @@
+{% if object.my_items %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Items</h2>
+    </div>
+    <div class="row">
+        {% for item in object.my_items %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ item.get_absolute_url }}">{{ item.name }}</a>
+                        </div>
+                        <div>
+                            <div>{{ item.get_status_display }}</div>
+                        </div>
+                        <div>
+                            <div>{{ item.get_full_gameline }}</div>
+                        </div>
+                        <div>
+                            <div>{{ item.type.title }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
