@@ -678,6 +678,7 @@ class MageDetailView(HumanDetailView):
                     self.object.other_tenets.remove(replacement)
                     self.object.save()
             elif trait_type == "practice":
+                trait = trait.replace("-", " ")
                 practice = Practice.objects.get(name=trait)
                 self.object.add_practice(practice)
                 self.object.save()
