@@ -223,7 +223,24 @@ class WeeklyXPRequestForm(forms.ModelForm):
         self.week = kwargs.pop("week", None)
         super().__init__(*args, **kwargs)
         self.fields["learning_scene"].queryset = (
-            self.week.finished_scenes() if self.week else None
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["rp_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["focus_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["standingout_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
         )
         self.fields["finishing"].required = False
         self.fields["learning_scene"].required = False
