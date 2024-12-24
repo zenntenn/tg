@@ -182,7 +182,7 @@ class Profile(models.Model):
         return pairs
 
     def get_unfulfilled_weekly_xp_requests_to_approve(self):
-        char_list = self.my_characters()
+        char_list = Character.objects.all()
         weeks = Week.objects.all()
         char_week = product(char_list, weeks)
         pairs = []
