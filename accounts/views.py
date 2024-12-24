@@ -150,11 +150,8 @@ class ProfileView(DetailView):
                 form.st_save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
-        return render(
-            request,
-            "accounts/detail.html",
-            self.get_context_data(),
-        )
+        context = self.get_context_data()
+        return redirect(reverse("profile", kwargs={"pk": context["object"].pk}))
 
 
 class ProfileUpdateView(UpdateView):
