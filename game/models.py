@@ -151,6 +151,9 @@ class Story(models.Model):
 
 class Week(models.Model):
     end_date = models.DateField()
+    
+    class Meta:
+        ordering = ["-end_date"]
 
     @property
     def start_date(self):
