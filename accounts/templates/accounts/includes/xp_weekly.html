@@ -1,0 +1,54 @@
+{% if weekly_xp_request_forms %}
+    <div class="row">
+        <h2 class="col-sm {{ user.profile.preferred_heading }}">Weekly XP Requests</h2>
+    </div>
+    <div class="row">
+        {% for weekly_xp_request_form in weekly_xp_request_forms %}
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <div>
+                                <h3 class="{{ weekly_xp_request_form.character.gameline }}_heading">{{ weekly_xp_request_form.week }}</h3>
+                                <h3>
+                                    <a class="{{ weekly_xp_request_form.character.gameline }}_heading"
+                                       href="{{ weekly_xp_request_form.character.get_absolute_url }}">{{ weekly_xp_request_form.character }}</a>
+                                </h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">Learning</div>
+                                <div class="col-4">{{ weekly_xp_request_form.learning }}</div>
+                                <div class="col-4">{{ weekly_xp_request_form.learning_scene }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">Role-Playing</div>
+                                <div class="col-4">{{ weekly_xp_request_form.rp }}</div>
+                                <div class="col-4">{{ weekly_xp_request_form.rp_scene }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">Focus</div>
+                                <div class="col-4">{{ weekly_xp_request_form.focus }}</div>
+                                <div class="col-4">{{ weekly_xp_request_form.focus_scene }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">Standing-Out</div>
+                                <div class="col-4">{{ weekly_xp_request_form.standingout }}</div>
+                                <div class="col-4">{{ weekly_xp_request_form.standingout_scene }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit"
+                                            name="submit_weekly_request"
+                                            value="week-{{ weekly_xp_request_form.week.pk }}-character-{{ weekly_xp_request_form.character.pk }}">
+                                        Submit {{ weekly_xp_request_form.week.end_date }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

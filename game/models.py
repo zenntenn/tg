@@ -147,16 +147,17 @@ class STRelationship(models.Model):
 
 class Story(models.Model):
     name = models.CharField(max_length=100, default="")
-    xp_given = models.BooleanField(default=False)
 
 
 class Week(models.Model):
     end_date = models.DateField()
-    xp_given = models.BooleanField(default=False)
 
     @property
     def start_date(self):
         return self.end_date - timedelta(days=7)
+
+    def __str__(self):
+        return f"{self.start_date } - { self.end_date }"
 
     def finished_scenes(self):
         # Subquery to get the most recent datetime_created for each Scene
@@ -287,6 +288,7 @@ class Post(models.Model):
 
 
 class JournalEntry(models.Model):
+
     journal = models.ForeignKey("Journal", on_delete=models.SET_NULL, null=True)
     message = models.TextField(default="")
     st_message = models.TextField(default="")
@@ -463,3 +465,40 @@ def rolls(num_rolls, num_dice, difficulty, specialty):
         if suxx == 0:
             join_list[-1] = join_list[-1] + f": difficulty increased to {diff + 1}"
     return "Rolls:<br>" + f"<br>".join(join_list)
+
+
+class WeeklyXPRequest(models.Model):
+    week = models.ForeignKey(Week, on_delete=models.SET_NULL, null=True)
+    character = models.ForeignKey(
+        "characters.CharacterModel", on_delete=models.SET_NULL, null=True
+    )
+    finishing = models.BooleanField(default=True)
+    learning = models.BooleanField(default=False)
+    rp = models.BooleanField(default=False)
+    focus = models.BooleanField(default=False)
+    standingout = models.BooleanField(default=False)
+    learning_scene = models.ForeignKey(
+        Scene, on_delete=models.SET_NULL, null=True, related_name="learning_requests"
+    )
+    rp_scene = models.ForeignKey(
+        Scene, on_delete=models.SET_NULL, null=True, related_name="rp_requests"
+    )
+    focus_scene = models.ForeignKey(
+        Scene, on_delete=models.SET_NULL, null=True, related_name="focus_requests"
+    )
+    standingout_scene = models.ForeignKey(
+        Scene, on_delete=models.SET_NULL, null=True, related_name="standingout_requests"
+    )
+    approved = models.BooleanField(default=False)
+
+
+class StoryXPRequest(models.Model):
+    story = models.ForeignKey(Story, on_delete=models.SET_NULL, null=True)
+    character = models.ForeignKey(
+        "characters.CharacterModel", on_delete=models.SET_NULL, null=True
+    )
+    success = models.BooleanField(default=False)
+    danger = models.BooleanField(default=False)
+    growth = models.BooleanField(default=False)
+    drama = models.BooleanField(default=False)
+    duration = models.IntegerField(default=0)

@@ -1,0 +1,37 @@
+{% if object.xp_requests %}
+    <div class="row">
+        <h2 class="col-sm {{ user.profile.preferred_heading }}">XP Requests</h2>
+    </div>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="row">
+            {% for scenexp_form in scenexp_forms %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <h3>
+                                <a class="col-sm {{ user.profile.preferred_heading }}"
+                                   href="{{ scenexp_form.scene.get_absolute_url }}">{{ scenexp_form.scene.name }}</a>
+                            </h3>
+                            {% for field in scenexp_form %}
+                                <div class="row align-items-center mb-2">
+                                    <div class="col-6 text-start">
+                                        <div class="col-sm" id="{{ field.id_for_label }}">{{ field.label }}</div>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <label class="mb-0">{{ field }}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="text-center mt-3">
+                                <button type="submit" name="submit_scene" value="{{ scenexp_form.scene.pk }}">
+                                    Submit {{ scenexp_form.scene.name }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+{% endif %}

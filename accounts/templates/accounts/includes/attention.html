@@ -1,0 +1,19 @@
+{% if scenes_waiting %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Scenes Needing Attention</h2>
+    </div>
+    <div class="row">
+        {% for scene in scenes_waiting %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ scene.get_absolute_url }}">{{ scene.name }}</a>
+                        </div>
+                        <div>{{ scene.st_message }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

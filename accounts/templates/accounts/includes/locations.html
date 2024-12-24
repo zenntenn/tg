@@ -1,0 +1,27 @@
+{% if object.my_locations %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Locations</h2>
+    </div>
+    <div class="row">
+        {% for loc in object.my_locations %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ loc.get_absolute_url }}">{{ loc.name }}</a>
+                        </div>
+                        <div>
+                            <div>{{ loc.get_status_display }}</div>
+                        </div>
+                        <div>
+                            <div>{{ loc.get_full_gameline }}</div>
+                        </div>
+                        <div>
+                            <div>{{ loc.type.title }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

@@ -5,6 +5,7 @@ from accounts.forms import (
     SceneXP,
     StoryXP,
     WeeklyXP,
+    WeeklyXPRequestForm,
 )
 from accounts.models import Profile
 from characters.models.core import Character
@@ -14,7 +15,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
-from game.models import Chronicle, Scene, Story, Week
+from game.models import Chronicle, Scene, Story, Week, WeeklyXPRequest
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
 
@@ -39,46 +40,54 @@ class ProfileView(DetailView):
         context["scenexp_forms"] = [
             SceneXP(scene=s, prefix=f"scene_{s.pk}") for s in self.object.xp_requests()
         ]
-        context["story_xp_forms"] = [
-            StoryXP(story=x, prefix=f"story_{x.pk}")
-            for x in Story.objects.filter(xp_given=False)
-        ]
-        context["weekly_xp_forms"] = [
-            WeeklyXP(week=x, prefix=f"week_{x.pk}")
-            for x in Week.objects.filter(xp_given=False)
-        ]
         context["freebie_forms"] = [
             FreebieAwardForm(character=character)
             for character in self.object.freebies_to_approve()
         ]
+        context["weekly_xp_request_forms"] = [
+            WeeklyXPRequestForm(character=c, week=w)
+            for c, w in self.object.get_unfulfilled_weekly_xp_requests()
+        ]
+        context["weekly_xp_request_forms_to_approve"] = [
+            WeeklyXPRequestForm(
+                character=c,
+                week=w,
+                instance=WeeklyXPRequest.objects.get(character=c, week=w),
+            )
+            for c, w in self.object.get_unfulfilled_weekly_xp_requests_to_approve()
+        ]
+        # story_xp_request_forms
+        # story_xp_request_forms_to_approve
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         submitted_scene_id = request.POST.get("submit_scene")
-        submitted_story_id = request.POST.get("submit_story")
-        submitted_week_id = request.POST.get("submit_week")
+        # Freebies
         submitted_freebies_id = request.POST.get("submit_freebies")
+
+        # Object Approval
         approve_character_id = request.POST.get("approve_character")
         approve_location_id = request.POST.get("approve_location")
         approve_item_id = request.POST.get("approve_item")
         approve_rote_id = request.POST.get("approve_rote")
+
+        # Image Approval
         approve_character_image_id = request.POST.get("approve_character_image")
         approve_location_image_id = request.POST.get("approve_location_image")
         approve_item_image_id = request.POST.get("approve_item_image")
+
+        # Weekly XP
+        submit_weekly_request_id = request.POST.get("submit_weekly_request")
+        submit_weekly_approval_id = request.POST.get("submit_weekly_approval")
+
+        # Story XP
+        submit_story_request_id = request.POST.get("submit_story_request")
+        submit_story_approval_id = request.POST.get("submit_story_approval")
+
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
             form = SceneXP(request.POST, scene=scene)
-            if form.is_valid():
-                form.save()
-        if submitted_story_id is not None:
-            story = Story.objects.get(pk=submitted_story_id)
-            form = StoryXP(request.POST, story=story)
-            if form.is_valid():
-                form.save()
-        if submitted_week_id is not None:
-            week = Week.objects.get(pk=submitted_week_id)
-            form = WeeklyXP(request.POST, week=week)
             if form.is_valid():
                 form.save()
         if approve_character_id is not None:
@@ -120,6 +129,25 @@ class ProfileView(DetailView):
             form = FreebieAwardForm(request.POST, character=char)
             if form.is_valid():
                 form.save()
+        if submit_weekly_request_id is not None:
+            _, week_pk, _, char_pk = submit_weekly_request_id.split("-")
+            week = Week.objects.get(pk=week_pk)
+            char = Character.objects.get(pk=char_pk)
+            form = WeeklyXPRequestForm(request.POST, week=week, character=char)
+            if form.is_valid():
+                form.player_save()
+        if submit_weekly_approval_id is not None:
+            _, week_pk, _, char_pk = submit_weekly_approval_id.split("-")
+            week = Week.objects.get(pk=week_pk)
+            char = Character.objects.get(pk=char_pk)
+            form = WeeklyXPRequestForm(
+                request.POST,
+                week=week,
+                character=char,
+                instance=WeeklyXPRequest.objects.get(character=char, week=week),
+            )
+            if form.is_valid():
+                form.st_save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
         return render(

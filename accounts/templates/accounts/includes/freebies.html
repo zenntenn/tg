@@ -1,0 +1,47 @@
+{% if object.freebies_to_approve %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">Freebies To Approve</h2>
+    </div>
+    <div class="row">
+        {% for freebie_form in freebie_forms %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ freebie_form.character.get_absolute_url }}">{{ freebie_form.character.name }}</a>
+                        </div>
+                        <div>
+                            {% if obj.owner is not None %}
+                                <a href="{{ freebie_form.character.owner.profile.get_absolute_url }}">{{ freebie_form.character.owner }}</a>
+                            {% else %}
+                                <div>No Owner</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div>{{ freebie_form.character.get_status_display }}</div>
+                        </div>
+                        <div>
+                            {% if freebie_form.character.get_type %}
+                                <div>{{ freebie_form.character.get_type }}</div>
+                            {% else %}
+                                <div>{{ freebie_form.character.type.title }}</div>
+                            {% endif %}
+                        </div>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div>{{ freebie_form.backstory_freebies }}</div>
+                            <div>Cabal: {{ freebie_form.cabal_freebies }}</div>
+                            <div>
+                                <button type="submit"
+                                        name="submit_freebies"
+                                        value="{{ freebie_form.character.pk }}">Add Freebies</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">No Characters.</div>
+        {% endfor %}
+    </div>
+{% endif %}
