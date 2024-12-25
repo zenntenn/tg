@@ -244,6 +244,9 @@ class HouseRule(models.Model):
         default="wod",
     )
 
+    def __str__(self):
+        return self.name
+
     def display_sources(self):
         return ", ".join([str(x) for x in self.sources.all()])
 

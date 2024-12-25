@@ -132,6 +132,7 @@ def load_affinities(request):
         {"affinities": sf.favored_paths.all()},
     )
 
+
 class SorcererUpdateView(SpecialUserMixin, UpdateView):
     model = Sorcerer
     fields = "__all__"
