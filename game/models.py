@@ -151,7 +151,7 @@ class Story(models.Model):
 
 class Week(models.Model):
     end_date = models.DateField()
-    
+
     class Meta:
         ordering = ["-end_date"]
 
@@ -299,7 +299,7 @@ class JournalEntry(models.Model):
     datetime_created = models.DateTimeField(default=now)
 
     class Meta:
-        ordering = ["-date", "-datetime_created"]
+        ordering = ["-date", "datetime_created"]
 
 
 class Journal(models.Model):
