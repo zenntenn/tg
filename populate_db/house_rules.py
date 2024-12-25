@@ -2,7 +2,7 @@ from core.models import HouseRule
 
 HouseRule.objects.get_or_create(
     name="Weekly XP",
-    description="""Weekly XP is awarded as follows: 1 XP for finishing a scene (scenes are only considered complete if marked as such.), 1 XP if your character learned something significant, 1 XP for quality Role-Playing (nomination only), 1 XP for portraying Focus, and 1 XP for standing out in a scene involving NPCs (May be awarded multiple times per week)""",
+    description="""Weekly XP is awarded as follows: 1 XP for finishing a scene (scenes are only considered complete if marked as such.), 1 XP if your character learned something significant, 1 XP for quality Role-Playing, 1 XP for portraying Focus, and 1 XP for standing out in a scene involving NPCs (May be awarded multiple times per week)""",
     chronicle=None,
     gameline="wod",
 )[0]
@@ -85,3 +85,33 @@ HouseRule.objects.get_or_create(
     chronicle=None,
     gameline="mta",
 )[0]
+HouseRule.objects.get_or_create(
+    name="Wonder Creation",
+    description="""Following some rules mentioned in earlier editions, creation with quintessence stream (like a node): Charms are Prime 3, Artifacts, Talismans, and Living Charms are Prime 4, Living Artifacts and Living Talismans at Prime 5...but with the right flavor of Tass, those can be dropped by one.""",
+    chronicle=None,
+    gameline="mta",
+)[0]
+HouseRule.objects.get_or_create(
+    name="Chantry Creation",
+    description="""Chantry Creation follows The Operative's Dossier with two changes: the first is that Chantry rank is considered to be the number of points in the chantry, divided by ten, rounded up. So 1-10 points is a Rank 1 chantry. The other change is that the caps on traits for Chantry are removed except for integrated effects, which are capped by functional Arete equal to rank.""",
+    chronicle=None,
+    gameline="mta",
+)[0]
+HouseRule.objects.get_or_create(
+    name="Difficulty Above 9 and Below 3",
+    description="""For difficulties above 9 and below 3, we use a threshold system. For above 9, it's as written: any difficulty modifier above 9 converts to additional required successes at difficulty 9. So difficulty 8 with a +3 modifier becomes difficulty 9 and requires 2 more successes than it otherwise would. Similarly, difficulty modifiers below 3 reduce the number of successes required. So a difficulty 4 roll that requires 3 successes with a -3 modifier becomes a difficulty 3 roll with only a single success needed. Difficulty 3 with one success needed is the minimum possible difficulty.""",
+    chronicle=None,
+    gameline="wod",
+)[0]
+HouseRule.objects.get_or_create(
+    name="Paradox",
+    description="""For this game, Paradox largely follows Revised Edition rules for how much Paradox accrues at a time. Backlashes tend to occur when a mage accumulates 5 or more paradox <i>in a single scene</i>, though not necessarily in the moment that the Paradox is aquired. It can also occur randomly if the character is carrying at least 5 points of Paradox. In any case, an ST must always adjudicate Paradox backlashes, so when enough Paradox is gained to risk a backlash, post "@storyteller <character> backlash" and await an ST response.""",
+    chronicle=None,
+    gameline="mta",
+)[0].add_source("Mage: the Ascension 20th Anniversary Edition", 550)
+HouseRule.objects.get_or_create(
+    name="Limits on Magickal Success",
+    description="""An individual mage can never accumulate more successes on an effect than Arete x Willpower. To go beyond that they must work with others.""",
+    chronicle=None,
+    gameline="mta",
+)[0].add_source("Mage: the Ascension Revised Edition", 150)

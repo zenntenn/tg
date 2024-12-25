@@ -7,8 +7,8 @@ from game.models import (
     Scene,
     SettingElement,
     Story,
-    STRelationship,
     StoryXPRequest,
+    STRelationship,
     Week,
     WeeklyXPRequest,
 )
