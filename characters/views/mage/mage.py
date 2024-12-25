@@ -43,7 +43,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.forms import ValidationError
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
@@ -715,11 +716,7 @@ class MageDetailView(HumanDetailView):
                 self.object.specialties.add(spec)
             self.object.save()
         context = self.get_context_data()
-        return render(
-            request,
-            self.template_name,
-            context,
-        )
+        return redirect(reverse("characters:character", kwargs={"pk": self.object.pk}))
 
 
 class MageCreateView(CreateView):
