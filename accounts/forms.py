@@ -3,7 +3,6 @@ from characters.models.core.human import Human
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from game.models import Scene, WeeklyXPRequest
 
 
 class CustomUSerCreationForm(UserCreationForm):
@@ -129,60 +128,6 @@ class StoryXP(forms.Form):
         return tmp
 
 
-class WeeklyXP(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.week = kwargs.pop("week")
-        super().__init__(*args, **kwargs)
-        for char in self.week.weekly_characters():
-            for topic in ["finishing", "learning", "rp", "focus", "standingout"]:
-                if topic == "finishing":
-                    self.fields[f"{char.name}-{topic}"] = forms.BooleanField(
-                        required=False, initial=True
-                    )
-                else:
-                    self.fields[f"{char.name}-{topic}"] = forms.BooleanField(
-                        required=False
-                    )
-
-    def save(self, commit=True):
-        for char in self.cleaned_data.keys():
-            total_gain = 0
-            if self.cleaned_data[char]["finishing"]:
-                total_gain += 1
-            if self.cleaned_data[char]["learning"]:
-                total_gain += 1
-            if self.cleaned_data[char]["rp"]:
-                total_gain += 1
-            if self.cleaned_data[char]["focus"]:
-                total_gain += 1
-            if self.cleaned_data[char]["standingout"]:
-                total_gain += 1
-            char.xp += total_gain
-            char.save()
-        self.week.xp_given = True
-        self.week.save()
-
-    def clean(self):
-        cleaned_data = super().clean()
-        tmp = {}
-        for char in self.week.weekly_characters():
-            relevant_data = {k: v for k, v in self.data.items() if char.name in k}
-            char_dict = {
-                "finishing": False,
-                "learning": False,
-                "rp": False,
-                "focus": False,
-                "standingout": False,
-            }
-            for item in relevant_data.keys():
-                keyname = item.split("-")[-1]
-                char_dict[keyname] = (
-                    relevant_data[f"week_{self.week.pk}-{char.name}-{keyname}"] == "on"
-                )
-            tmp[char] = char_dict
-        return tmp
-
-
 class FreebieAwardForm(forms.Form):
     backstory_freebies = forms.IntegerField(min_value=0, max_value=15, initial=0)
     cabal_freebies = forms.BooleanField(required=False)
@@ -198,88 +143,3 @@ class FreebieAwardForm(forms.Form):
         self.character.freebies_approved = True
         self.character.save()
         return self.character
-
-
-from django import forms
-
-
-class WeeklyXPRequestForm(forms.ModelForm):
-    class Meta:
-        model = WeeklyXPRequest
-        fields = [
-            "finishing",
-            "learning",
-            "rp",
-            "focus",
-            "standingout",
-            "learning_scene",
-            "rp_scene",
-            "focus_scene",
-            "standingout_scene",
-        ]
-
-    def __init__(self, *args, **kwargs):
-        self.character = kwargs.pop("character", None)
-        self.week = kwargs.pop("week", None)
-        super().__init__(*args, **kwargs)
-        self.fields["learning_scene"].queryset = (
-            self.week.finished_scenes().filter(characters=self.character)
-            if self.week
-            else None
-        )
-        self.fields["rp_scene"].queryset = (
-            self.week.finished_scenes().filter(characters=self.character)
-            if self.week
-            else None
-        )
-        self.fields["focus_scene"].queryset = (
-            self.week.finished_scenes().filter(characters=self.character)
-            if self.week
-            else None
-        )
-        self.fields["standingout_scene"].queryset = (
-            self.week.finished_scenes().filter(characters=self.character)
-            if self.week
-            else None
-        )
-        self.fields["finishing"].required = False
-        self.fields["learning_scene"].required = False
-        self.fields["rp_scene"].required = False
-        self.fields["focus_scene"].required = False
-        self.fields["standingout_scene"].required = False
-
-    def player_save(self, commit=True):
-        if not self.instance.pk:
-            self.instance = super().save(commit=False)
-        self.instance.finishing = True
-        self.instance.week = self.week
-        self.instance.character = self.character
-        if commit:
-            self.instance.save()
-        return self.instance
-
-    def st_save(self, commit=True):
-        # Directly modify the instance bound to the form
-        self.instance.approved = True
-        self.instance.finishing = self.cleaned_data["finishing"]
-        self.instance.learning = self.cleaned_data["learning"]
-        self.instance.rp = self.cleaned_data["rp"]
-        self.instance.focus = self.cleaned_data["focus"]
-        self.instance.standingout = self.cleaned_data["standingout"]
-
-        # Update character XP based on the form fields
-        xp_increase = sum(
-            [
-                self.instance.finishing,
-                self.instance.learning,
-                self.instance.rp,
-                self.instance.focus,
-                self.instance.standingout,
-            ]
-        )
-        self.character.xp += xp_increase
-        self.character.save()
-
-        if commit:
-            self.instance.save()
-        return self.instance

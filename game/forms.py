@@ -1,6 +1,6 @@
 from characters.models.core import CharacterModel
 from django import forms
-from game.models import Journal, JournalEntry, Story
+from game.models import Journal, JournalEntry, Story, WeeklyXPRequest
 from locations.models.core import LocationModel
 
 
@@ -114,3 +114,101 @@ class STResponseForm(forms.Form):
     def save(self, commit=True):
         self.entry.st_message = self.cleaned_data["st_message"]
         self.entry.save()
+
+
+class WeeklyXPRequestForm(forms.ModelForm):
+    class Meta:
+        model = WeeklyXPRequest
+        fields = [
+            "finishing",
+            "learning",
+            "rp",
+            "focus",
+            "standingout",
+            "learning_scene",
+            "rp_scene",
+            "focus_scene",
+            "standingout_scene",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.character = kwargs.pop("character", None)
+        self.week = kwargs.pop("week", None)
+        super().__init__(*args, **kwargs)
+        self.fields["learning_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["rp_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["focus_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["standingout_scene"].queryset = (
+            self.week.finished_scenes().filter(characters=self.character)
+            if self.week
+            else None
+        )
+        self.fields["finishing"].required = False
+        self.fields["learning_scene"].required = False
+        self.fields["rp_scene"].required = False
+        self.fields["focus_scene"].required = False
+        self.fields["standingout_scene"].required = False
+
+    def player_save(self, commit=True):
+        if not self.instance.pk:
+            self.instance = super().save(commit=False)
+        self.instance.finishing = True
+        self.instance.week = self.week
+        self.instance.character = self.character
+        if commit:
+            self.instance.save()
+        return self.instance
+
+    def st_save(self, commit=True):
+        # Directly modify the instance bound to the form
+        self.instance.approved = True
+        self.instance.finishing = self.cleaned_data["finishing"]
+        self.instance.learning = self.cleaned_data["learning"]
+        self.instance.rp = self.cleaned_data["rp"]
+        self.instance.focus = self.cleaned_data["focus"]
+        self.instance.standingout = self.cleaned_data["standingout"]
+
+        # Update character XP based on the form fields
+        xp_increase = sum(
+            [
+                self.instance.finishing,
+                self.instance.learning,
+                self.instance.rp,
+                self.instance.focus,
+                self.instance.standingout,
+            ]
+        )
+        self.character.xp += xp_increase
+        self.character.save()
+
+        if commit:
+            self.instance.save()
+        return self.instance
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data["learning"]:
+            if cleaned_data["learning_scene"] is None:
+                raise forms.ValidationError("Must include scene for any XP claimed")
+        if cleaned_data["rp"]:
+            if cleaned_data["rp_scene"] is None:
+                raise forms.ValidationError("Must include scene for any XP claimed")
+        if cleaned_data["focus"]:
+            if cleaned_data["focus_scene"] is None:
+                raise forms.ValidationError("Must include scene for any XP claimed")
+        if cleaned_data["standingout"]:
+            if cleaned_data["standingout_scene"] is None:
+                raise forms.ValidationError("Must include scene for any XP claimed")
+        return cleaned_data

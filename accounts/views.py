@@ -3,19 +3,16 @@ from accounts.forms import (
     FreebieAwardForm,
     ProfileUpdateForm,
     SceneXP,
-    StoryXP,
-    WeeklyXP,
-    WeeklyXPRequestForm,
 )
 from accounts.models import Profile
 from characters.models.core import Character
 from characters.models.mage.rote import Rote
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
-from game.models import Chronicle, Scene, Story, Week, WeeklyXPRequest
+from game.forms import WeeklyXPRequestForm
+from game.models import Scene, Week, WeeklyXPRequest
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
 
