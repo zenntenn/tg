@@ -100,7 +100,7 @@ class MageXPForm(XPForm):
         return len(filtered_for_xp_cost) > 0
 
     def rote_points_valid(self):
-        return True
+        return self.character.xp > 0
 
     def resonance_valid(self):
         return self.character.xp >= 3
