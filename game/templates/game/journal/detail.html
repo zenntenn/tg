@@ -55,6 +55,9 @@
                     </form>
                 {% endfor %}
             {% endfor %}
+            <div class="row">
+                <a class="col-sm" href="{% url 'game:commands' %}">List of Commands</a>
+            </div>
         </div>
     {% endif %}
 {% endblock content %}
