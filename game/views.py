@@ -1,6 +1,7 @@
 import itertools
 
 from characters.models.core import CharacterModel
+from characters.models.core.character import Character
 from characters.models.core.group import Group
 from characters.models.core.human import Human
 from core.utils import level_name, tree_sort
@@ -30,11 +31,11 @@ class ChronicleDetailView(View):
         top_locations = LocationModel.objects.filter(
             chronicle=chronicle, parent=None
         ).order_by("name")
-        CharacterGroup = Human.group_set.through
+        CharacterGroup = Character.group_set.through
 
         # Subquery to get the first group id for each character
         first_group_id = Subquery(
-            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            CharacterGroup.objects.filter(character_id=OuterRef("pk"))
             .order_by(
                 "group_id"
             )  # Assuming ordering by 'group_id', adjust if different
@@ -43,7 +44,7 @@ class ChronicleDetailView(View):
 
         # Annotating the queryset with the first group id
         characters = (
-            Human.objects.exclude(status__in=["Dec", "Ret"])
+            Character.objects.exclude(status__in=["Dec", "Ret"])
             .exclude(npc=True)
             .annotate(first_group_id=first_group_id)
             .select_related("chronicle")

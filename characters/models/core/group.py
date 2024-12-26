@@ -5,6 +5,7 @@ from characters.models.core.background_block import (
     BackgroundRating,
     PooledBackgroundRating,
 )
+from characters.models.core.character import Character
 from characters.models.core.human import Human
 from core.models import Model
 from django.contrib.auth.models import User
@@ -15,9 +16,9 @@ from django.urls import reverse
 class Group(Model):
     type = "group"
 
-    members = models.ManyToManyField(Human, blank=True)
+    members = models.ManyToManyField(Character, blank=True)
     leader = models.ForeignKey(
-        Human,
+        Character,
         blank=True,
         related_name="leads_group",
         on_delete=models.SET_NULL,

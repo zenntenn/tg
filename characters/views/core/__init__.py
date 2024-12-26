@@ -106,7 +106,7 @@ class GenericGroupDetailView(DictView):
 
 
 class CharacterIndexView(ListView):
-    model = Human
+    model = Character
     template_name = "characters/charlist.html"
 
     chars = {
@@ -139,11 +139,11 @@ class CharacterIndexView(ListView):
     }
 
     def get_queryset(self):
-        CharacterGroup = Human.group_set.through
+        CharacterGroup = Character.group_set.through
 
         # Subquery to get the first group id for each character
         first_group_id = Subquery(
-            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            CharacterGroup.objects.filter(character_id=OuterRef("pk"))
             .order_by(
                 "group_id"
             )  # Assuming ordering by 'group_id', adjust if different
@@ -152,7 +152,7 @@ class CharacterIndexView(ListView):
 
         # Annotating the queryset with the first group id
         characters = (
-            Human.objects.exclude(status__in=["Dec", "Ret"])
+            Character.objects.exclude(status__in=["Dec", "Ret"])
             .exclude(npc=True)
             .annotate(first_group_id=first_group_id)
             .select_related("chronicle")
@@ -197,11 +197,11 @@ class RetiredCharacterIndex(ListView):
     template_name = "characters/charlist.html"
 
     def get_queryset(self):
-        CharacterGroup = Human.group_set.through
+        CharacterGroup = Character.group_set.through
 
         # Subquery to get the first group id for each character
         first_group_id = Subquery(
-            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            CharacterGroup.objects.filter(character_id=OuterRef("pk"))
             .order_by(
                 "group_id"
             )  # Assuming ordering by 'group_id', adjust if different
@@ -229,11 +229,11 @@ class DeceasedCharacterIndex(ListView):
     template_name = "characters/charlist.html"
 
     def get_queryset(self):
-        CharacterGroup = Human.group_set.through
+        CharacterGroup = Character.group_set.through
 
         # Subquery to get the first group id for each character
         first_group_id = Subquery(
-            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            CharacterGroup.objects.filter(character_id=OuterRef("pk"))
             .order_by(
                 "group_id"
             )  # Assuming ordering by 'group_id', adjust if different
@@ -261,11 +261,11 @@ class NPCCharacterIndex(ListView):
     template_name = "characters/charlist.html"
 
     def get_queryset(self):
-        CharacterGroup = Human.group_set.through
+        CharacterGroup = Character.group_set.through
 
         # Subquery to get the first group id for each character
         first_group_id = Subquery(
-            CharacterGroup.objects.filter(human_id=OuterRef("pk"))
+            CharacterGroup.objects.filter(character_id=OuterRef("pk"))
             .order_by(
                 "group_id"
             )  # Assuming ordering by 'group_id', adjust if different
