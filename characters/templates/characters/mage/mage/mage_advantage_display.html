@@ -10,7 +10,13 @@
     <div class="row">
         <div class="col-sm">Willpower</div>
         <div class="col-sm dots">{{ object.willpower|dots:10 }}</div>
-        <div class="col-sm">Arete</div>
+        <div class="col-sm">
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Enlightenment
+            {% else %}
+                Arete
+            {% endif %}
+        </div>
         <div class="col-sm dots">{{ object.arete|dots:10 }}</div>
         <div class="col-sm">Affinity Sphere</div>
         <div class="col-sm">{{ object.get_affinity_sphere_name }}</div>

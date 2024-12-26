@@ -31,7 +31,13 @@
             data-toggle="collapse"
             data-target="#rotesSection"
             aria-expanded="true"
-            aria-controls="rotesSection">Rotes</h2>
+            aria-controls="rotesSection">
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Procedures
+            {% else %}
+                Rotes
+            {% endif %}
+        </h2>
     </div>
     <div id="rotesSection" class="collapse show multi-collapse">
         <div class="row">

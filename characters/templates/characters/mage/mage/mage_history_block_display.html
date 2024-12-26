@@ -11,7 +11,14 @@
         <div class="col-sm">{{ object.history|linebreaks }}</div>
     </div>
     <div class="row">
-        <div class="col-sm">Avatar Description</div>
+        <div class="col-sm">
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Genius
+            {% else %}
+                Avatar
+            {% endif %}
+            Description
+        </div>
         <div class="col-sm">{{ object.avatar_description|linebreaks }}</div>
     </div>
     <div class="row">

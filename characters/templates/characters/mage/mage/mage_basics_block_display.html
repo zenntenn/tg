@@ -23,7 +23,13 @@
         <a class="col-sm" href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
     </div>
     <div class="row">
-        <div class="col-sm">Essence</div>
+        <div class="col-sm">
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Eidolon
+            {% else %}
+                Essence
+            {% endif %}
+        </div>
         <div class="col-sm">{{ object.get_essence_display }}</div>
         <div class="col-sm">Concept</div>
         <div class="col-sm">{{ object.concept }}</div>
