@@ -19,7 +19,13 @@
         <a class="col-sm" href="{{ object.owner.profile.get_absolute_url }}">{{ object.owner }}</a>
         <div class="col-sm">Demeanor</div>
         <a class="col-sm" href="{{ object.demeanor.get_absolute_url }}">{{ object.demeanor }}</a>
-        <div class="col-sm">Sect</div>
+        <div class="col-sm">
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Convention
+            {% else %}
+                Sect
+            {% endif %}
+        </div>
         <a class="col-sm" href="{{ object.faction.get_absolute_url }}">{{ object.faction }}</a>
     </div>
     <div class="row">
@@ -33,7 +39,13 @@
         <div class="col-sm">{{ object.get_essence_display }}</div>
         <div class="col-sm">Concept</div>
         <div class="col-sm">{{ object.concept }}</div>
-        <div class="col-sm">Subfaction</div>
+        <div class="col-sm">
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Methodology
+            {% else %}
+                Subfaction
+            {% endif %}
+        </div>
         {% if object.subfaction %}
             <a class="col-sm" href="{{ object.subfaction.get_absolute_url }}">{{ object.subfaction }}</a>
         {% else %}
