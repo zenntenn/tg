@@ -197,6 +197,10 @@ class Profile(models.Model):
                     pairs.append((char, week))
         return pairs
 
+    def xp_spend_requests(self):
+        chars = Character.objects.all()
+        return [x for x in chars if x.waiting_for_xp_spend()]
+
 
 @receiver(post_save, sender=User)
 def update_profile_signal(sender, instance, created, **kwargs):

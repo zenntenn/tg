@@ -1,0 +1,24 @@
+{% if object.xp_spend_requests %}
+    <div class="row">
+        <h2 class="col-sm {{ object.preferred_heading }}">XP Spend Requests</h2>
+    </div>
+    <div class="row">
+        {% for char in object.xp_spend_requests %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <div>
+                            <a href="{{ char.get_absolute_url }}">{{ char.name }}</a>
+                        </div>
+                        <div>
+                            <div>{{ char.get_full_gameline }}</div>
+                        </div>
+                        <div>
+                            <div>{{ char.get_type }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
