@@ -388,14 +388,3 @@ class Human(
         if trait_type == "ability" and trait_value == 0:
             return costs["new_ability"]
         return costs[trait_type] * trait_value
-
-    def xp_spend_record(self, trait, trait_type, value, cost=None):
-        if cost is None:
-            cost = self.xp_cost(trait_type, value)
-        return {
-            "index": f"{self.id}_{trait_type}_{trait}_{value}".replace(" ", "-"),
-            "trait": trait,
-            "value": value,
-            "cost": cost,
-            "approved": "Pending",
-        }

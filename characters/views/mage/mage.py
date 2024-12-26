@@ -617,13 +617,15 @@ class MageDetailView(HumanDetailView):
                 bgr.save()
                 self.object.save()
             elif trait_type == "new-background":
-                trait = trait.split("-")
-                if len(trait) == 1:
+                trait = trait.replace("-", " ")
+                if "(" not in trait:
                     note = ""
-                    trait = trait[0]
+                    trait = trait
                 else:
-                    note = trait[1][1:-1]
-                    trait = trait[0]
+                    trait, note = trait.split("(")
+                    note = note[:-1]
+                trait = trait.strip()
+                note = note.strip()
                 BackgroundRating.objects.create(
                     bg=Background.objects.get(name=trait),
                     rating=1,

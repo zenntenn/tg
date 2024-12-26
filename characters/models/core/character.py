@@ -73,3 +73,20 @@ class Character(CharacterModel):
     @classmethod
     def get_creation_url(cls):
         return reverse("characters:create:character")
+
+    def xp_spend_record(self, trait, trait_type, value, cost=None):
+        if cost is None:
+            cost = self.xp_cost(trait_type, value)
+        return {
+            "index": f"{self.id}_{trait_type}_{trait}_{value}".replace(" ", "-"),
+            "trait": trait,
+            "value": value,
+            "cost": cost,
+            "approved": "Pending",
+        }
+
+    def waiting_for_xp_spend(self):
+        for d in self.spent_xp:
+            if d["approved"] == "Pending":
+                return True
+        return False
