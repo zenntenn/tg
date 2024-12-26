@@ -711,28 +711,28 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
             ):
                 self.object.creation_status += 1
                 self.object.languages.add(Language.objects.get(name="English"))
-            for step in [
-                "node",
-                "library",
-                "familiar",
-                "artifact",
-                "enhancement",
-                "sanctum",
-                "allies",
-            ]:
-                if (
-                    BackgroundRating.objects.filter(
-                        bg=Background.objects.get(property_name=step),
-                        char=self.object,
-                        complete=False,
-                    ).count()
-                    == 0
-                ):
-                    self.object.creation_status += 1
-                else:
+                for step in [
+                    "node",
+                    "library",
+                    "familiar",
+                    "artifact",
+                    "enhancement",
+                    "sanctum",
+                    "allies",
+                ]:
+                    if (
+                        BackgroundRating.objects.filter(
+                            bg=Background.objects.get(property_name=step),
+                            char=self.object,
+                            complete=False,
+                        ).count()
+                        == 0
+                    ):
+                        self.object.creation_status += 1
+                    else:
+                        self.object.save()
+                        break
                     self.object.save()
-                    break
-                self.object.save()
         self.object.save()
         return super().form_valid(form)
 
@@ -756,7 +756,7 @@ class SorcererFreebiesView(SpecialUserMixin, UpdateView):
 
 class SorcererLanguagesView(SpecialUserMixin, FormView):
     form_class = HumanLanguageForm
-    template_name = "characters/mage/companion/chargen.html"
+    template_name = "characters/mage/sorcerer/chargen.html"
 
     # Overriding `get_form_kwargs` to pass custom arguments to the form
     def get_form_kwargs(self):
@@ -772,12 +772,12 @@ class SorcererLanguagesView(SpecialUserMixin, FormView):
         human_pk = self.kwargs.get("pk")
         human = get_object_or_404(Human, pk=human_pk)
 
-        num_languages = form.cleaned_data.get("num_languages", 1)
-        for i in range(num_languages):
-            language_name = form.cleaned_data.get(f"language_{i}")
-            if language_name:
-                language, created = Language.objects.get_or_create(name=language_name)
-                human.languages.add(language)
+        for key, value in form.cleaned_data.items():
+            if key.startswith("language_"):
+                language_name = value
+                if language_name:
+                    language, _ = Language.objects.get_or_create(name=language_name)
+                    human.languages.add(language)
         human.creation_status += 1
         human.save()
         return HttpResponseRedirect(human.get_absolute_url())
@@ -906,6 +906,16 @@ class SorcererArtifactView(SpecialUserMixin, FormView):
         "sanctum",
         "allies",
     ]
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Sorcerer, pk=kwargs.get("pk"))
+        if not obj.backgrounds.filter(
+            bg__property_name="artifact", complete=False
+        ).exists():
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
