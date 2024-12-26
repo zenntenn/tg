@@ -14,7 +14,7 @@ class CharacterDetailView(SpecialUserMixin, DetailView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["scenes"] = Scene.objects.filter(characters=context["object"]).order_by(
-            "date_of_scene"
+            "-date_of_scene"
         )
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
