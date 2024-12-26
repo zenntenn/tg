@@ -41,10 +41,11 @@ class ProfileView(DetailView):
             FreebieAwardForm(character=character)
             for character in self.object.freebies_to_approve()
         ]
-        context["weekly_xp_request_forms"] = [
-            WeeklyXPRequestForm(character=c, week=w)
-            for c, w in self.object.get_unfulfilled_weekly_xp_requests()
-        ]
+        if "weekly_xp_request_forms" not in context:
+            context["weekly_xp_request_forms"] = [
+                WeeklyXPRequestForm(character=c, week=w)
+                for c, w in self.object.get_unfulfilled_weekly_xp_requests()
+            ]
         context["weekly_xp_request_forms_to_approve"] = [
             WeeklyXPRequestForm(
                 character=c,
@@ -59,6 +60,7 @@ class ProfileView(DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        context = self.get_context_data()
         submitted_scene_id = request.POST.get("submit_scene")
         # Freebies
         submitted_freebies_id = request.POST.get("submit_freebies")
@@ -133,6 +135,11 @@ class ProfileView(DetailView):
             form = WeeklyXPRequestForm(request.POST, week=week, character=char)
             if form.is_valid():
                 form.player_save()
+            else:
+                context["weekly_xp_request_forms"] = [
+                    form
+                ]  # Replace the list with the invalid form
+                form_errors = True
         if submit_weekly_approval_id is not None:
             _, week_pk, _, char_pk = submit_weekly_approval_id.split("-")
             week = Week.objects.get(pk=week_pk)
@@ -147,7 +154,8 @@ class ProfileView(DetailView):
                 form.st_save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
-        context = self.get_context_data()
+        if form_errors:
+            return self.render_to_response(context)
         return redirect(reverse("profile", kwargs={"pk": context["object"].pk}))
 
 

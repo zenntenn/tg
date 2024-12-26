@@ -48,6 +48,11 @@
                         </form>
                     </div>
                 </div>
+                {% for form in weekly_xp_request_forms %}
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}<p class="alert centertext">{{ error }}</p>{% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
