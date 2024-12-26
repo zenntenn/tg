@@ -13348,3 +13348,61 @@ Effect.objects.get_or_create(name="Palimpsest", matter=3, time=2, prime=2)[
 Effect.objects.get_or_create(
     name="Dismiss the Discordant", mind=2, correspondence=2, entropy=2, prime=2
 )[0].add_source("Lore of the Traditions", 45)
+
+Effect.objects.get_or_create(
+    name="Bullet-Rider's Blessing", entropy=1, matter=3, spirit=3
+)[0].add_source("Lore of the Traditions", 82)
+Effect.objects.get_or_create(name="Dwennimmen", mind=4, spirit=4)[0].add_source(
+    "Lore of the Traditions", 82
+)
+Effect.objects.get_or_create(name="Blood for the Ghosts", entropy=2, prime=2, spirit=2)[
+    0
+].add_source("Lore of the Traditions", 97)
+Effect.objects.get_or_create(name="The Last Sacrifice", entropy=4, spirit=2)[
+    0
+].add_source("Lore of the Traditions", 97)
+Effect.objects.get_or_create(
+    name="NFTs (Non-Fungible Tass/Talismans)", mind=3, prime=2
+)[0].add_source("Lore of the Traditions", 162)
+Effect.objects.get_or_create(
+    name="NFTs (Non-Fungible Tass/Talismans) (Time Tamper Protection)",
+    mind=3,
+    prime=2,
+    time=4,
+)[0].add_source("Lore of the Traditions", 162)
+Effect.objects.get_or_create(
+    name="NFTs (Non-Fungible Tass/Talismans) (Entropy Tamper Protection)",
+    mind=3,
+    prime=2,
+    entropy=3,
+)[0].add_source("Lore of the Traditions", 162)
+Effect.objects.get_or_create(
+    name="NFTs (Non-Fungible Tass/Talismans) (Tracking)",
+    correspondence=2,
+    mind=3,
+    prime=2,
+)[0].add_source("Lore of the Traditions", 162)
+Effect.objects.get_or_create(
+    name="NFTs (Non-Fungible Tass/Talismans) (Time Tamper Protection, Tracking)",
+    correspondence=2,
+    mind=3,
+    prime=2,
+    time=4,
+)[0].add_source("Lore of the Traditions", 162)
+Effect.objects.get_or_create(
+    name="NFTs (Non-Fungible Tass/Talismans) (Entropy Tamper Protection, Tracking)",
+    correspondence=2,
+    mind=3,
+    prime=2,
+    entropy=3,
+)[0].add_source("Lore of the Traditions", 162)
+Effect.objects.get_or_create(name="Save State", mind=3, time=2, prime=2)[0].add_source(
+    "Lore of the Traditions", 162
+)
+Effect.objects.get_or_create(
+    name="Locate Geospatial Nodal Point",
+    forces=4,
+    entropy=3,
+    correspondence=3,
+    matter=3,
+)[0].add_source("Lore of the Traditions", 162)

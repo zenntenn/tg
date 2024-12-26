@@ -1,5 +1,6 @@
 from items.models.mage.artifact import Artifact
 from items.models.mage.charm import Charm
+from items.models.mage.grimoire import Grimoire
 from items.models.mage.talisman import Talisman
 
 Artifact.objects.get_or_create(display=False, name="'O'ole Tatu", background_cost=6)
@@ -2504,6 +2505,129 @@ Artifact.objects.get_or_create(display=False, name="Dragon Pearls", background_c
 Artifact.objects.get_or_create(
     display=False, name="Angel Tear Daggers", quintessence_max=10, background_cost=7
 )[0].add_source("Lore of the Traditions", 49)
+Talisman.objects.get_or_create(
+    display=False, name="Antaratma", arete=4, quintessence_max=10, background_cost=8
+)[0].add_source("Lore of the Traditions", 98)
+
+Artifact.objects.get_or_create(display=False, name="Game of Senet", background_cost=2)[
+    0
+].add_source("Lore of the Traditions", 115)
+Artifact.objects.get_or_create(
+    display=False, name="Imphepho Wierook", quintessence_max=15, background_cost=3
+)[0].add_source("Lore of the Traditions", 115)
+Artifact.objects.get_or_create(
+    display=False, name="Waidan Ding", quintessence_max=10, background_cost=5
+)[0].add_source("Lore of the Traditions", 115)
+
+Talisman.objects.get_or_create(
+    display=False, name="Dümerang Blade (2)", arete=2, background_cost=4
+)[0].add_source("Lore of the Traditions", 130)
+Talisman.objects.get_or_create(
+    display=False, name="Dümerang Blade (3)", arete=3, background_cost=8
+)[0].add_source("Lore of the Traditions", 130)
+Talisman.objects.get_or_create(
+    display=False, name="Dümerang Blade (4)", arete=4, background_cost=12
+)[0].add_source("Lore of the Traditions", 130)
+
+Grimoire.objects.get_or_create(
+    display=False, name="Kitab al-Alacir", rank=5, is_primer=True
+)[0].add_source("Lore of the Traditions", 131)
+
+Talisman.objects.get_or_create(
+    display=False, name="The Last Caer", arete=5, quintessence_max=25
+)[0].add_source("Lore of the Traditions", 131)
+
+Talisman.objects.get_or_create(
+    display=False,
+    name="Candle of Communion (1)",
+    arete=1,
+    background_cost=2,
+    quintessence_max=5,
+)[0].add_source("Lore of the Traditions", 146)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Candle of Communion (2)",
+    arete=2,
+    background_cost=2,
+    quintessence_max=10,
+)[0].add_source("Lore of the Traditions", 146)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Candle of Communion (3)",
+    arete=3,
+    background_cost=2,
+    quintessence_max=15,
+)[0].add_source("Lore of the Traditions", 146)
+
+Talisman.objects.get_or_create(
+    display=False,
+    name="Mama Cybele's Tea Collection (2)",
+    arete=2,
+    background_cost=4,
+    quintessence_max=10,
+)[0].add_source("Lore of the Traditions", 146)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Mama Cybele's Tea Collection (3)",
+    arete=3,
+    background_cost=4,
+    quintessence_max=15,
+)[0].add_source("Lore of the Traditions", 146)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Mama Cybele's Tea Collection (4)",
+    arete=4,
+    background_cost=4,
+    quintessence_max=20,
+)[0].add_source("Lore of the Traditions", 146)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Mama Cybele's Tea Collection (5)",
+    arete=5,
+    background_cost=4,
+    quintessence_max=25,
+)[0].add_source("Lore of the Traditions", 146)
+
+Talisman.objects.get_or_create(
+    display=False,
+    name="Grand Book of Shadows (4)",
+    arete=4,
+    quintessence_max=10,
+    background_cost=8,
+)[0].add_source("Lore of the Traditions", 131)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Grand Book of Shadows (5)",
+    arete=5,
+    quintessence_max=15,
+    background_cost=8,
+)[0].add_source("Lore of the Traditions", 131)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Grand Book of Shadows (6)",
+    arete=6,
+    quintessence_max=20,
+    background_cost=8,
+)[0].add_source("Lore of the Traditions", 131)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Grand Book of Shadows (7)",
+    arete=7,
+    quintessence_max=25,
+    background_cost=8,
+)[0].add_source("Lore of the Traditions", 131)
+Talisman.objects.get_or_create(
+    display=False,
+    name="Grand Book of Shadows (8)",
+    arete=8,
+    quintessence_max=25,
+    background_cost=8,
+)[0].add_source("Lore of the Traditions", 131)
+
+Artifact.objects.get_or_create(
+    display=False, name="Rod Logic Computer", quintessence_max=10, background_cost=3
+)[0].add_source("Lore of the Traditions", 161)
+
 
 for a in Artifact.objects.all():
     if a.rank == 0:
