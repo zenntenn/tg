@@ -61,6 +61,7 @@ class ProfileView(DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data()
+        form_errors = False
         submitted_scene_id = request.POST.get("submit_scene")
         # Freebies
         submitted_freebies_id = request.POST.get("submit_freebies")
