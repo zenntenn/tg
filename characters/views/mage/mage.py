@@ -354,7 +354,8 @@ class MageDetailView(HumanDetailView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
-        context["form"] = MageXPForm(character=self.object)
+        if "form" not in context:
+            context["form"] = MageXPForm(character=self.object)
         context["rote_form"] = RoteCreationForm(instance=self.object)
         context["spec_form"] = SpecialtiesForm(
             object=self.object, specialties_needed=self.object.needed_specialties()
@@ -366,6 +367,7 @@ class MageDetailView(HumanDetailView):
         context = self.get_context_data()
         form = MageXPForm(request.POST, request.FILES, character=self.object)
         rote_form = RoteCreationForm(request.POST, instance=self.object)
+        form_errors = False
         if "spend_xp" in form.data.keys():
             if form.is_valid():
                 category = form.cleaned_data["category"]
@@ -378,144 +380,133 @@ class MageDetailView(HumanDetailView):
                 if category == "Image":
                     self.object.image = image_field
                     self.object.save()
-                elif category == "Attribute":
-                    trait = example.name
-                    trait_type = "attribute"
-                    value = getattr(self.object, example.property_name)
-                    cost = self.object.xp_cost("attribute", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Ability":
-                    trait = example.name
-                    trait_type = "ability"
-                    value = getattr(self.object, example.property_name)
-                    cost = self.object.xp_cost("ability", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "New Background":
-                    if note:
-                        trait = example.name + f" ({note})"
-                    else:
+                if category not in ["Image", "Rote"]:
+                    if category == "Attribute":
                         trait = example.name
-                    trait_type = "new background"
-                    value = 1
-                    cost = self.object.xp_cost("new background", value)
-                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Existing Background":
-                    trait = example.bg.name + f" ({example.note})"
-                    trait_type = "background"
-                    value = example.rating
-                    cost = self.object.xp_cost("background", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Willpower":
-                    trait = "Willpower"
-                    trait_type = "willpower"
-                    value = self.object.willpower
-                    cost = self.object.xp_cost("willpower", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "MeritFlaw":
-                    current_rating = self.object.mf_rating(example)
-                    trait = example.name
-                    trait_type = "meritflaw"
-                    cost = self.object.xp_cost("meritflaw", value - current_rating)
-                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Sphere":
-                    trait = example.name
-                    trait_type = "sphere"
-                    value = getattr(self.object, example.property_name) + 1
-                    cost = self.object.xp_cost(
-                        self.object.sphere_to_trait_type(example.property_name),
-                        getattr(self.object, example.property_name),
-                    )
-                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Rote Points":
-                    trait = "Rote Points"
-                    trait_type = "rotes"
-                    cost = self.object.xp_cost("rotes", 1)
-                    value = self.object.total_effects() + self.object.rote_points + 3
-                    d = self.object.xp_spend_record(trait, trait_type, value, cost=cost)
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Resonance":
-                    trait = f"Resonance ({resonance})"
-                    r = Resonance.objects.get_or_create(name=resonance)[0]
-                    trait_type = "resonance"
-                    value = self.object.resonance_rating(r)
-                    cost = self.object.xp_cost("resonance", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Tenet":
-                    trait = example.name
-                    trait_type = "tenet"
-                    cost = self.object.xp_cost("tenet", 1)
-                    d = self.object.xp_spend_record(trait, trait_type, None, cost=cost)
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Remove Tenet":
-                    trait = "Remove " + example.name
-                    trait_type = "remove tenet"
-                    cost = self.object.xp_cost(
-                        "remove tenet", self.object.other_tenets.count() + 3
-                    )
-                    d = self.object.xp_spend_record(trait, trait_type, None, cost=cost)
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Practice":
-                    trait = example.name
-                    trait_type = "practice"
-                    value = self.object.practice_rating(example)
-                    cost = self.object.xp_cost("practice", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
-                elif category == "Arete":
-                    trait = "Arete"
-                    trait_type = "arete"
-                    value = self.object.arete
-                    cost = self.object.xp_cost("arete", value)
-                    d = self.object.xp_spend_record(
-                        trait, trait_type, value + 1, cost=cost
-                    )
-                    self.object.xp -= cost
-                    self.object.spent_xp.append(d)
-                    self.object.save()
+                        trait_type = "attribute"
+                        value = getattr(self.object, example.property_name)
+                        cost = self.object.xp_cost("attribute", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                    elif category == "Ability":
+                        trait = example.name
+                        trait_type = "ability"
+                        value = getattr(self.object, example.property_name)
+                        cost = self.object.xp_cost("ability", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                    elif category == "New Background":
+                        if note:
+                            trait = example.name + f" ({note})"
+                        else:
+                            trait = example.name
+                        trait_type = "new background"
+                        value = 1
+                        cost = self.object.xp_cost("new background", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value, cost=cost
+                        )
+                    elif category == "Existing Background":
+                        trait = example.bg.name + f" ({example.note})"
+                        trait_type = "background"
+                        value = example.rating
+                        cost = self.object.xp_cost("background", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                    elif category == "Willpower":
+                        trait = "Willpower"
+                        trait_type = "willpower"
+                        value = self.object.willpower
+                        cost = self.object.xp_cost("willpower", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                    elif category == "MeritFlaw":
+                        current_rating = self.object.mf_rating(example)
+                        trait = example.name
+                        trait_type = "meritflaw"
+                        cost = self.object.xp_cost("meritflaw", value - current_rating)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value, cost=cost
+                        )
+                    elif category == "Sphere":
+                        trait = example.name
+                        trait_type = "sphere"
+                        value = getattr(self.object, example.property_name) + 1
+                        cost = self.object.xp_cost(
+                            self.object.sphere_to_trait_type(example.property_name),
+                            getattr(self.object, example.property_name),
+                        )
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value, cost=cost
+                        )
+                    elif category == "Rote Points":
+                        trait = "Rote Points"
+                        trait_type = "rotes"
+                        cost = self.object.xp_cost("rotes", 1)
+                        value = (
+                            self.object.total_effects() + self.object.rote_points + 3
+                        )
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value, cost=cost
+                        )
+                    elif category == "Resonance":
+                        trait = f"Resonance ({resonance})"
+                        r = Resonance.objects.get_or_create(name=resonance)[0]
+                        trait_type = "resonance"
+                        value = self.object.resonance_rating(r)
+                        cost = self.object.xp_cost("resonance", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                        self.object.xp -= cost
+                        self.object.spent_xp.append(d)
+                        self.object.save()
+                    elif category == "Tenet":
+                        trait = example.name
+                        trait_type = "tenet"
+                        cost = self.object.xp_cost("tenet", 1)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, None, cost=cost
+                        )
+                    elif category == "Remove Tenet":
+                        trait = "Remove " + example.name
+                        trait_type = "remove tenet"
+                        cost = self.object.xp_cost(
+                            "remove tenet", self.object.other_tenets.count() + 3
+                        )
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, None, cost=cost
+                        )
+                    elif category == "Practice":
+                        trait = example.name
+                        trait_type = "practice"
+                        value = self.object.practice_rating(example)
+                        cost = self.object.xp_cost("practice", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                    elif category == "Arete":
+                        trait = "Arete"
+                        trait_type = "arete"
+                        value = self.object.arete
+                        cost = self.object.xp_cost("arete", value)
+                        d = self.object.xp_spend_record(
+                            trait, trait_type, value + 1, cost=cost
+                        )
+                    if d not in self.object.spent_xp:
+                        self.object.xp -= cost
+                        self.object.spent_xp.append(d)
+                        self.object.save()
+                    else:
+                        form.add_error(
+                            None, "Wait for trait to be approved before buying again!"
+                        )
+                        context["form"] = form
+                        form_errors = True
                 elif category == "Rote":
                     if rote_form.is_valid():
                         if (
@@ -715,7 +706,8 @@ class MageDetailView(HumanDetailView):
                 spec = Specialty.objects.get_or_create(name=spec, stat=stat)[0]
                 self.object.specialties.add(spec)
             self.object.save()
-        context = self.get_context_data()
+        if form_errors:
+            return self.render_to_response(context)
         return redirect(reverse("characters:character", kwargs={"pk": self.object.pk}))
 
 

@@ -10,7 +10,6 @@
         <div class="col-sm">XP Remaining</div>
         <div class="col-sm">{{ object.xp }}</div>
     </div>
-
     <div class="row">
         <div class="col-sm">Spend Freebie points. The costs are as follows:</div>
     </div>
@@ -234,6 +233,9 @@
                 <input type="submit" name="spend_xp" value="Spend XP/Rote Points" />
             </div>
         </div>
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}<p class="alert centertext">{{ error }}</p>{% endfor %}
+        {% endif %}
     </form>
 </div>
 <script>
