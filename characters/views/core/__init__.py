@@ -188,6 +188,7 @@ class CharacterIndexView(ListView):
         context["title"] = "Characters"
         context["button_include"] = True
         context["form"] = CharacterCreationForm(user=self.request.user)
+        context["header"] = "wod_heading"
         return context
 
 
