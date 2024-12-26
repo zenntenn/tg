@@ -2,14 +2,23 @@
     <h2 class="col-sm {{ object.get_heading }}">History</h2>
 </div>
 <div class="row">
-    <div class="col-sm">Write your character's history and background details. Anything publicly known, such as the Fame Background, should be represented in the Public Information field.</div>
+    <div class="col-sm">
+        Write your character's history and background details. Anything publicly known, such as the Fame Background, should be represented in the Public Information field.
+    </div>
 </div>
 <div class="row">
     <div class="col-sm">History</div>
     <div class="col-sm">{{ form.history }}</div>
 </div>
 <div class="row">
-    <div class="col-sm">Avatar Description</div>
+    <div class="col-sm">
+        {% if object.affiliation.name == "Technocratic Union" %}
+            Genius
+        {% else %}
+            Avatar
+        {% endif %}
+        Description
+    </div>
     <div class="col-sm">{{ form.avatar_description }}</div>
 </div>
 <div class="row">

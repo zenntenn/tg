@@ -8,7 +8,13 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-sm">Arete</div>
+    <div class="col-sm">
+        {% if object.affiliation.name == "Technocratic Union" %}
+            Enlightenment
+        {% else %}
+            Arete
+        {% endif %}
+    </div>
     <div class="col-sm dots">{{ form.arete }}</div>
     <div class="col-sm">Affinity</div>
     <div class="col-sm dots">{{ form.affinity_sphere }}</div>

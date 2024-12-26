@@ -9,7 +9,14 @@
     <div class="row">
         <div class="col-sm">Date of Birth</div>
         <div class="col-sm">{{ object.date_of_birth }}</div>
-        <div class="col-sm">Age of Awakening</div>
+        <div class="col-sm">
+            Age of
+            {% if object.affiliation.name == "Technocratic Union" %}
+                Empowerment
+            {% else %}
+                Awakening
+            {% endif %}
+        </div>
         <div class="col-sm">{{ object.age_of_awakening }}</div>
     </div>
     <div class="row">
