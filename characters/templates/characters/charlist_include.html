@@ -48,17 +48,17 @@
 {% endfor %}
 <div class="row centertext">
     {% if not hide_chronicle %}
-        <h4 class="col-sm">
+        <h4 class="col-sm {{ header }}">
             <a href="{% url 'characters:index' %}">Active</a>
         </h4>
     {% endif %}
-    <h4 class="col-sm">
+    <h4 class="col-sm {{ header }}">
         <a href="{% url 'characters:retired' %}">Retired</a>
     </h4>
-    <h4 class="col-sm">
+    <h4 class="col-sm {{ header }}">
         <a href="{% url 'characters:deceased' %}">Deceased</a>
     </h4>
-    <h4 class="col-sm">
+    <h4 class="col-sm {{ header }}  ">
         <a href="{% url 'characters:npc' %}">NPC</a>
     </h4>
 </div>

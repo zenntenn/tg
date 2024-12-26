@@ -59,6 +59,7 @@ class ChronicleDetailView(View):
             "active_scenes": Scene.objects.filter(chronicle=chronicle, finished=False),
             "story_form": StoryForm(),
             "hide_chronicle": True,
+            "header": chronicle.headings,
         }
 
     def get(self, request, *args, **kwargs):
