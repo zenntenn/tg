@@ -1146,7 +1146,11 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
                     pbgr.save()
                 else:
                     BackgroundRating.objects.create(
-                        bg=bg["bg"], rating=bg["rating"], char=mage, note=bg["note"], display_alt_name=bg['display_alt_name']
+                        bg=bg["bg"],
+                        rating=bg["rating"],
+                        char=mage,
+                        note=bg["note"],
+                        display_alt_name=bg["display_alt_name"],
                     )
 
         self.object.creation_status += 1
