@@ -470,7 +470,7 @@ class MageDetailView(HumanDetailView):
                         trait_type = "tenet"
                         cost = self.object.xp_cost("tenet", 1)
                         d = self.object.xp_spend_record(
-                            trait, trait_type, None, cost=cost
+                            trait, trait_type, 0, cost=cost
                         )
                     elif category == "Remove Tenet":
                         trait = "Remove " + example.name
