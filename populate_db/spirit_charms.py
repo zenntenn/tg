@@ -13,11 +13,6 @@ SpiritCharm.objects.get_or_create(name="Tracking", point_cost=0)[0].add_source(
 SpiritCharm.objects.get_or_create(name="Incite Frenzy", point_cost=0)[0].add_source(
     "Werewolf: the Apocalypse 20th Anniversary Edition", 367
 )
-
-for g in Gift.objects.all():
-    SpiritCharm.objects.get_or_create(name=g.name)[0]
-
-
 SpiritCharm.objects.get_or_create(name="Airt Sense", point_cost=0)[0].add_source(
     "Werewolf: the Apocalypse 20th Anniversary Edition", 366
 ).add_source("Mage: the Ascension 20th Anniversary Edition", 490)
@@ -76,9 +71,11 @@ SpiritCharm.objects.get_or_create(name="Digital Disruption", point_cost=5)[
 SpiritCharm.objects.get_or_create(name="Disable", point_cost=5)[0].add_source(
     "Mage: the Ascension 20th Anniversary Edition", 491
 )
-SpiritCharm.objects.get_or_create(name="Disorient", point_cost=5)[0].add_source(
+SpiritCharm.objects.get_or_create(name="Disorient (5 pt)", point_cost=5)[0].add_source(
     "Werewolf: the Apocalypse 20th Anniversary Edition", 367
-).add_source("Mage: the Ascension 20th Anniversary Edition", 492)
+).add_source("Mage: the Ascension 20th Anniversary Edition", 492).add_source(
+    "Gods and Monsters", 216
+)
 SpiritCharm.objects.get_or_create(name="Dream Journey", point_cost=15)[0].add_source(
     "Mage: the Ascension 20th Anniversary Edition", 492
 )
@@ -203,7 +200,7 @@ SpiritCharm.objects.get_or_create(name="Create Water", point_cost=5)[0].add_sour
 SpiritCharm.objects.get_or_create(name="Deflect Harm", point_cost=5)[0].add_source(
     "Gods and Monsters", 216
 )
-SpiritCharm.objects.get_or_create(name="Disorient", point_cost=1)[0].add_source(
+SpiritCharm.objects.get_or_create(name="Disorient (1 pt)", point_cost=1)[0].add_source(
     "Gods and Monsters", 216
 )
 SpiritCharm.objects.get_or_create(name="False Wealth", point_cost=5)[0].add_source(
@@ -248,3 +245,6 @@ SpiritCharm.objects.get_or_create(name="Teleport (With Other)", point_cost=20)[
 SpiritCharm.objects.get_or_create(name="Wish Fulfillment", point_cost=0)[0].add_source(
     "Gods and Monsters", 219
 )
+
+for g in Gift.objects.all():
+    SpiritCharm.objects.get_or_create(name=g.name)[0]

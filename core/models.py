@@ -2,6 +2,7 @@ from core.utils import filepath
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.timezone import now
 from game.models import Chronicle
 from polymorphic.models import PolymorphicModel
@@ -165,7 +166,7 @@ class Model(PolymorphicModel):
 class NewsItem(models.Model):
     title = models.CharField(default="", max_length=100)
     content = models.TextField(default="")
-    date = models.DateField(auto_now=True)
+    date = models.DateField(default=timezone.now)
 
     class Meta:
         verbose_name = "News Item"

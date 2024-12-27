@@ -7,4 +7,4 @@ week = timedelta(7)
 base_date = date(2024, 11, 24)
 
 for i in range(520):
-    Week.objects.get_or_create(end_date=base_date + i*week)
+    Week.objects.get_or_create(end_date=base_date + i * week)
