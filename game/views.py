@@ -59,7 +59,6 @@ class ChronicleDetailView(View):
             "top_locations": top_locations,
             "active_scenes": Scene.objects.filter(chronicle=chronicle, finished=False),
             "story_form": StoryForm(),
-            "hide_chronicle": True,
             "header": chronicle.headings,
         }
 

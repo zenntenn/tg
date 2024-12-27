@@ -46,6 +46,17 @@
         </div>
         {% include "characters/charlist_include.html" with object_list=character_list %}
         <div class="row">
+            <h4 class="col-sm {{ header }}">
+                <a href="{{ object.get_retired_character_url }}">Retired</a>
+            </h4>
+            <h4 class="col-sm {{ header }}">
+                <a href="{{ object.get_deceased_character_url }}">Deceased</a>
+            </h4>
+            <h4 class="col-sm {{ header }}  ">
+                <a href="{{ object.get_npc_url }}">NPC</a>
+            </h4>
+        </div>
+        <div class="row">
             <h3 class="col-sm {{ object.headings }} centertext">Locations</h3>
         </div>
         {% for loc in top_locations %}
