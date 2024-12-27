@@ -188,7 +188,8 @@ class Profile(models.Model):
         char_map = {c.pk: c for c in char_list}
         all_weeks = {w.pk: w for w in Week.objects.all()}
 
-        return [(char_map[c], all_weeks[w]) for (c, w) in missing_pairs]
+        results = [(char_map[c], all_weeks[w]) for (c, w) in missing_pairs]
+        return [pair for pair in results if not pair[0].npc]
 
     def get_unfulfilled_weekly_xp_requests_to_approve(self):
         char_list = Character.objects.all()
