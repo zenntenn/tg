@@ -13,6 +13,7 @@
             <div class="col-sm">{{ f.bg }}</div>
             <div class="col-sm">{{ f.rating }}</div>
             <div class="col-sm">{{ f.note }}</div>
+            <div class="col-sm">Alternate Name? {{ f.display_alt_name }}</div>
             {% if object.is_group_member %}<div class="col-sm">Pooled? {{ f.pooled }}</div>{% endif %}
         </div>
     {% endfor %}
@@ -23,8 +24,47 @@
         <div class="col-sm">{{ bg_form_context.empty_form.bg }}</div>
         <div class="col-sm">{{ bg_form_context.empty_form.rating }}</div>
         <div class="col-sm">{{ bg_form_context.empty_form.note }}</div>
+        <div class="col-sm">Alternate Name? {{ bg_form_context.empty_form.display_alt_name }}</div>
         {% if object.is_group_member %}<div class="col-sm">Pooled? {{ bg_form_context.empty_form.pooled }}</div>{% endif %}
     </div>
 </div>
 <button type="button" id="{{ bg_form_context.add_button_id }}">Add Background</button>
 {{ bg_form_js|safe }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const validBgs = ["Arcane", "Avatar", "Chantry", "Familiar", "Sanctum"];
+  
+      function toggleAltNameVisibility(bgSelect) {
+        // 1. Extract the form index from e.g. "id_bg_form-0-bg" -> "0"
+        const match = bgSelect.id.match(/id_bg_form-(\d+)-bg/);
+        if (!match) return;
+  
+        const formIndex = match[1];
+        // 2. Get the actual input
+        const altNameElem = document.getElementById(`id_bg_form-${formIndex}-display_alt_name`);
+        if (!altNameElem) return;
+  
+        // 3. Grab the parent <div class="col-sm"> (or any suitable ancestor)
+        const altNameContainer = altNameElem.closest('div.col-sm');
+        if (!altNameContainer) return;
+  
+        // 4. Compare the displayed text of the selected option to your list
+        const selectedText = bgSelect.options[bgSelect.selectedIndex].text;
+  
+        // 5. Toggle the entire container
+        if (validBgs.includes(selectedText)) {
+          altNameContainer.classList.remove('d-none');
+        } else {
+          altNameContainer.classList.add('d-none');
+        }
+      }
+  
+      // Attach event listeners for all the "bg" selects (i.e. id_bg_form-0-bg, -1-bg, etc.)
+      const bgSelects = document.querySelectorAll('[id^="id_bg_form-"][id$="-bg"]');
+      bgSelects.forEach(bgSelect => {
+        bgSelect.addEventListener('change', () => toggleAltNameVisibility(bgSelect));
+        // Also handle the default state on page load
+        toggleAltNameVisibility(bgSelect);
+      });
+    });
+</script>
