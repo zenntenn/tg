@@ -6,22 +6,34 @@ Background.objects.get_or_create(name="Allies", property_name="allies")[0]
 Background.objects.get_or_create(
     name="Alternate Identity", property_name="alternate_identity"
 )[0]
-Background.objects.get_or_create(name="Arcane", property_name="arcane")[0]
+arcane = Background.objects.get_or_create(name="Arcane", property_name="arcane")[0]
+arcane.alternate_name = "Cloaking"
+arcane.save()
 Background.objects.get_or_create(name="Artifact", property_name="artifact")[0]
-Background.objects.get_or_create(name="Avatar", property_name="avatar")[0]
+avatar = Background.objects.get_or_create(name="Avatar", property_name="avatar")[0]
+avatar.alternate_name = "Genius"
+avatar.save()
 Background.objects.get_or_create(name="Backup", property_name="backup")[0]
 Background.objects.get_or_create(name="Blessing", property_name="blessing")[0]
 Background.objects.get_or_create(name="Certification", property_name="certification")[0]
-Background.objects.get_or_create(name="Chantry", property_name="chantry")[0]
+chantry = Background.objects.get_or_create(name="Chantry", property_name="chantry")[0]
+chantry.alternate_name = "Construct"
+chantry.save()
 Background.objects.get_or_create(name="Cult", property_name="cult")[0]
 Background.objects.get_or_create(name="Demesne", property_name="demesne")[0]
 Background.objects.get_or_create(name="Destiny", property_name="destiny")[0]
-Background.objects.get_or_create(name="Dream", property_name="dream")[0]
+dream = Background.objects.get_or_create(name="Dream", property_name="dream")[0]
+dream.alternate_name = "Hypercram"
+dream.save()
 Background.objects.get_or_create(
     name="Enhancement", property_name="enhancement", multiplier=2
 )[0]
 Background.objects.get_or_create(name="Fame", property_name="fame")[0]
-Background.objects.get_or_create(name="Familiar", property_name="familiar")[0]
+familiar = Background.objects.get_or_create(name="Familiar", property_name="familiar")[
+    0
+]
+familiar.alternate_name = "Companion"
+familiar.save()
 Background.objects.get_or_create(name="Influence", property_name="influence")[0]
 Background.objects.get_or_create(name="Legend", property_name="legend")[0]
 Background.objects.get_or_create(name="Library", property_name="library")[0]
@@ -32,9 +44,11 @@ Background.objects.get_or_create(name="Rank", property_name="rank")[0]
 Background.objects.get_or_create(name="Requisitions", property_name="requisitions")[0]
 Background.objects.get_or_create(name="Resources", property_name="resources")[0]
 Background.objects.get_or_create(name="Retainers", property_name="retainers")[0]
-Background.objects.get_or_create(name="Sanctum", property_name="sanctum", multiplier=2)[
-    0
-]
+sanctum = Background.objects.get_or_create(
+    name="Sanctum", property_name="sanctum", multiplier=2
+)[0]
+sanctum.alterantive_name = "Laboratory"
+sanctum.save()
 Background.objects.get_or_create(name="Secret weapons", property_name="secret_weapons")[
     0
 ]

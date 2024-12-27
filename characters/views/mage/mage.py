@@ -469,9 +469,7 @@ class MageDetailView(HumanDetailView):
                         trait = example.name
                         trait_type = "tenet"
                         cost = self.object.xp_cost("tenet", 1)
-                        d = self.object.xp_spend_record(
-                            trait, trait_type, 0, cost=cost
-                        )
+                        d = self.object.xp_spend_record(trait, trait_type, 0, cost=cost)
                     elif category == "Remove Tenet":
                         trait = "Remove " + example.name
                         trait_type = "remove tenet"
@@ -1122,6 +1120,7 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
             res["bg"] = Background.objects.get(id=res["bg"])
             res["rating"] = int(res["rating"])
             res["pooled"] = res.get("pooled", False) == "on"
+            res["display_alt_name"] = res.get("display_alt_name", False) == "on"
         total_bg = sum([x["rating"] * x["bg"].multiplier for x in bg_data])
         if total_bg != self.object.background_points:
             form.add_error(
@@ -1137,6 +1136,7 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
                         char=mage,
                         note=bg["note"],
                         pooled=bg["pooled"],
+                        display_alt_name=bg["display_alt_name"],
                         complete=True,
                     )
                     pbgr = PooledBackgroundRating.objects.get_or_create(
@@ -1146,7 +1146,11 @@ class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
                     pbgr.save()
                 else:
                     BackgroundRating.objects.create(
-                        bg=bg["bg"], rating=bg["rating"], char=mage, note=bg["note"]
+                        bg=bg["bg"],
+                        rating=bg["rating"],
+                        char=mage,
+                        note=bg["note"],
+                        display_alt_name=bg["display_alt_name"],
                     )
 
         self.object.creation_status += 1
