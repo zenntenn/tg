@@ -7,6 +7,7 @@ class Background(Statistic):
     type = "background"
 
     multiplier = models.IntegerField(default=1)
+    alternate_name = models.CharField(default="", max_length=100)
 
     class Meta:
         ordering = ["name"]
@@ -25,6 +26,7 @@ class BackgroundRating(models.Model):
     url = models.CharField(default="", max_length=500)
     complete = models.BooleanField(default=False)
     pooled = models.BooleanField(default=False)
+    display_alt_name = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["bg__name"]
