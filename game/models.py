@@ -1,5 +1,5 @@
 import re
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from core.utils import dice
 from django.contrib.auth.models import User
@@ -151,6 +151,7 @@ class Story(models.Model):
 
 class Week(models.Model):
     end_date = models.DateField()
+    characters = models.ManyToManyField("characters.CharacterModel", blank=True)
 
     class Meta:
         ordering = ["-end_date"]
@@ -228,6 +229,19 @@ class Scene(models.Model):
 
     def close(self):
         self.finished = True
+        latest_post = (
+            Post.objects.filter(scene=self).order_by("-datetime_created").first()
+        )
+        if latest_post is None:
+            from_date = datetime.date.today()
+        else:
+            from_date = latest_post.datetime_created.date()
+
+        sunday_date = get_next_sunday(from_date)
+
+        week, created = Week.objects.get_or_create(end_date=sunday_date)
+        week.characters.add(*self.characters.all())
+
         self.save()
 
     def total_characters(self):
@@ -505,3 +519,13 @@ class StoryXPRequest(models.Model):
     growth = models.BooleanField(default=False)
     drama = models.BooleanField(default=False)
     duration = models.IntegerField(default=0)
+
+
+def get_next_sunday(from_date):
+    """
+    Given a date, returns a date object representing the upcoming Sunday
+    (including the given date if it's already a Sunday).
+    """
+    # weekday(): Monday=0, Sunday=6
+    offset = (6 - from_date.weekday()) % 7
+    return from_date + timedelta(days=offset)
