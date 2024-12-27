@@ -516,6 +516,9 @@ class WeeklyXPRequest(models.Model):
         Scene, on_delete=models.SET_NULL, null=True, related_name="standingout_requests"
     )
     approved = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.character.name} request for {self.week}"
 
 
 class StoryXPRequest(models.Model):
