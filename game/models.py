@@ -104,6 +104,15 @@ class Chronicle(models.Model):
     def get_absolute_url(self):
         return reverse("game:chronicle", kwargs={"pk": self.pk})
 
+    def get_deceased_character_url(self):
+        return reverse("game:deceased", kwargs={"pk": self.pk})
+
+    def get_retired_character_url(self):
+        return reverse("game:retired", kwargs={"pk": self.pk})
+
+    def get_npc_url(self):
+        return reverse("game:npc", kwargs={"pk": self.pk})
+
     def storyteller_list(self):
         return ", ".join([x.username for x in self.storytellers.all()])
 

@@ -216,11 +216,16 @@ class RetiredCharacterIndex(ListView):
             .order_by("chronicle__id", "-first_group_id", "name")
         )
 
+        chron_pk = self.kwargs.get("pk")
+        if chron_pk is not None:
+            characters = characters.filter(chronicle__id=chron_pk)
+
         return characters
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Retired Characters"
+        context["header"] = "wod_heading"
         return context
 
 
@@ -248,11 +253,16 @@ class DeceasedCharacterIndex(ListView):
             .order_by("chronicle__id", "-first_group_id", "name")
         )
 
+        chron_pk = self.kwargs.get("pk")
+        if chron_pk is not None:
+            characters = characters.filter(chronicle__id=chron_pk)
+
         return characters
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Deceased Characters"
+        context["header"] = "wod_heading"
         return context
 
 
@@ -280,9 +290,14 @@ class NPCCharacterIndex(ListView):
             .order_by("chronicle__id", "-first_group_id", "name")
         )
 
+        chron_pk = self.kwargs.get("pk")
+        if chron_pk is not None:
+            characters = characters.filter(chronicle__id=chron_pk)
+
         return characters
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Deceased Characters"
+        context["title"] = "NPCs"
+        context["header"] = "wod_heading"
         return context
