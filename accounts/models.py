@@ -169,33 +169,46 @@ class Profile(models.Model):
 
     def get_unfulfilled_weekly_xp_requests(self):
         char_list = self.my_characters()
-        weeks = Week.objects.all()
-        char_week = product(char_list, weeks)
-        pairs = []
-        for char, week in char_week:
-            if char in week.weekly_characters():
-                if (
-                    WeeklyXPRequest.objects.filter(week=week, character=char).count()
-                    == 0
-                ):
-                    pairs.append((char, week))
-        return pairs
+        char_week_pairs = Week.characters.through.objects.filter(
+            charactermodel_id__in=char_list
+        ).values_list("charactermodel_id", "week_id")
+
+        existing_requests = set(
+            WeeklyXPRequest.objects.filter(
+                character_id__in=[c for (c, w) in char_week_pairs],
+                week_id__in=[w for (c, w) in char_week_pairs],
+            ).values_list("character_id", "week_id")
+        )
+
+        missing_pairs = []
+        for char_id, week_id in char_week_pairs:
+            if (char_id, week_id) not in existing_requests:
+                missing_pairs.append((char_id, week_id))
+
+        char_map = {c.pk: c for c in char_list}
+        all_weeks = {w.pk: w for w in Week.objects.all()}
+
+        return [(char_map[c], all_weeks[w]) for (c, w) in missing_pairs]
 
     def get_unfulfilled_weekly_xp_requests_to_approve(self):
         char_list = Character.objects.all()
-        weeks = Week.objects.all()
-        char_week = product(char_list, weeks)
-        pairs = []
-        for char, week in char_week:
-            if char in week.weekly_characters():
-                if (
-                    WeeklyXPRequest.objects.filter(
-                        week=week, character=char, approved=False
-                    ).count()
-                    != 0
-                ):
-                    pairs.append((char, week))
-        return pairs
+
+        char_week_pairs = Week.characters.through.objects.filter(
+            charactermodel_id__in=char_list
+        ).values_list("charactermodel_id", "week_id")
+
+        unapproved_reqs = set(
+            WeeklyXPRequest.objects.filter(
+                approved=False,
+                character_id__in=[c for (c, w) in char_week_pairs],
+                week_id__in=[w for (c, w) in char_week_pairs],
+            ).values_list("character_id", "week_id")
+        )
+
+        result_pairs = list(unapproved_reqs)
+        char_map = {c.pk: c for c in char_list}
+        all_weeks = {w.pk: w for w in Week.objects.all()}
+        return [(char_map[c], all_weeks[w]) for (c, w) in result_pairs]
 
     def xp_spend_requests(self):
         chars = Character.objects.all()
