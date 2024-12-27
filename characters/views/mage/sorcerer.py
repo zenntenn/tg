@@ -136,7 +136,7 @@ def load_affinities(request):
 class SorcererUpdateView(SpecialUserMixin, UpdateView):
     model = Sorcerer
     fields = "__all__"
-    template_name = "characters/mage/mage/detail.html"
+    template_name = "characters/mage/sorcerer/form.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
