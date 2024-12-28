@@ -5,6 +5,7 @@ from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.familiar import FamiliarForm
 from characters.forms.mage.freebies import MageFreebiesForm
+from characters.forms.mage.mage import MageCreationForm
 from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.forms.mage.xp import MageXPForm
@@ -1001,22 +1002,14 @@ class MageUpdateView(SpecialUserMixin, UpdateView):
         return context
 
 
-class MageBasicsView(LoginRequiredMixin, CreateView):
-    model = Mage
-    fields = [
-        "name",
-        "nature",
-        "demeanor",
-        "concept",
-        "affiliation",
-        "faction",
-        "subfaction",
-        "essence",
-        "chronicle",
-        "image",
-        "npc",
-    ]
+class MageBasicsView(LoginRequiredMixin, FormView):
+    form_class = MageCreationForm
     template_name = "characters/mage/mage/magebasics.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1025,45 +1018,12 @@ class MageBasicsView(LoginRequiredMixin, CreateView):
             context["storyteller"] = True
         return context
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["nature"].queryset = Archetype.objects.all().order_by("name")
-        form.fields["demeanor"].queryset = Archetype.objects.all().order_by("name")
-        form.fields["affiliation"].queryset = MageFaction.objects.filter(parent=None)
-        form.fields["faction"].queryset = MageFaction.objects.none()
-        form.fields["subfaction"].queryset = MageFaction.objects.none()
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
-        form.fields["concept"].widget.attrs.update(
-            {"placeholder": "Enter concept here"}
-        )
-        form.fields["image"].required = False
-        if not self.request.user.profile.is_st():
-            form.fields["affiliation"].queryset = form.fields[
-                "affiliation"
-            ].queryset.exclude(name__in=["Nephandi", "Marauders"])
-        return form
-
-    def form_invalid(self, form):
-        errors = form.errors
-        if "faction" in errors:
-            del errors["faction"]
-        if "subfaction" in errors:
-            del errors["subfaction"]
-
-        if not errors:
-            return self.form_valid(form)
-        return super().form_invalid(form)
-
     def form_valid(self, form):
-        if form.data["faction"]:
-            form.instance.faction = MageFaction.objects.get(pk=form.data["faction"])
-        if form.data["subfaction"]:
-            form.instance.subfaction = MageFaction.objects.get(
-                pk=form.data["subfaction"]
-            )
-        form.instance.owner = self.request.user
         self.object = form.save()
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
 
 
 class MageAttributeView(HumanAttributeView):
