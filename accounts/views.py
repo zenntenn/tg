@@ -112,17 +112,17 @@ class ProfileView(DetailView):
         if approve_character_image_id is not None:
             approve_character_image_id = approve_character_image_id.split("-")[-1]
             char = Character.objects.get(pk=approve_character_image_id)
-            char.image_status = "App"
+            char.image_status = "app"
             char.save()
         if approve_item_image_id is not None:
             approve_item_image_id = approve_item_image_id.split("-")[-1]
             loc = LocationModel.objects.get(pk=approve_location_image_id)
-            loc.image_status = "App"
+            loc.image_status = "app"
             loc.save()
         if approve_item_image_id is not None:
             approve_item_image_id = approve_item_image_id.split("-")[-1]
             item = ItemModel.objects.get(pk=approve_item_image_id)
-            item.image_status = "App"
+            item.image_status = "app"
             item.save()
         if submitted_freebies_id is not None:
             char = Character.objects.get(pk=submitted_freebies_id)
