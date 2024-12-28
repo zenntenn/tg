@@ -1,5 +1,3 @@
-from itertools import product
-
 from characters.models.core.character import Character
 from characters.models.mage.mage import Mage
 from characters.models.mage.rote import Rote
@@ -11,7 +9,6 @@ from django.urls import reverse
 from game.models import (
     Chronicle,
     Journal,
-    JournalEntry,
     Scene,
     Story,
     STRelationship,
