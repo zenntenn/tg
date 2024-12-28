@@ -130,9 +130,11 @@ cc.languages.add(arabic, hebrew, aramaic, latin, koine_greek)
 cc.materials.add(paper, vellum, parchment, leather, cloth, wood, steel)
 cc.media.add(book, tablets, scrolls)
 cc.save()
-MageFaction.objects.get_or_create(name="The Guardian Orders", parent=cc)[0]
-MageFaction.objects.get_or_create(name="The Theological Orders", parent=cc)[0]
-MageFaction.objects.get_or_create(name="Other Factions", parent=cc)[0]
+MageFaction.objects.get_or_create(name="Latitudinarians", parent=cc)[0]
+MageFaction.objects.get_or_create(name="Monists", parent=cc)[0]
+MageFaction.objects.get_or_create(name="Anchorites", parent=cc)[0]
+MageFaction.objects.get_or_create(name="The Alexandrian Society", parent=cc)[0]
+
 cox = MageFaction.objects.get_or_create(
     name="Cult of Ecstasy",
     parent=traditions,
@@ -147,10 +149,23 @@ cox.languages.add(farsi, hindi, afghan, french)
 cox.materials.add(paper, vellum, parchment, leather, cloth, wood, steel)
 cox.media.add(book, scrolls)
 cox.save()
-MageFaction.objects.get_or_create(name="Historical Factions", parent=cox)[0]
-MageFaction.objects.get_or_create(name="Dissidents Against Ananda", parent=cox)[0]
-MageFaction.objects.get_or_create(name="Progressivists", parent=cox)[0]
-MageFaction.objects.get_or_create(name="Political Factions", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Children's Crusade", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Cult of Acceptance", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Dissonance Society", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Erzuli Jingo", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Fellowship of Pan", parent=cox)[0]
+MageFaction.objects.get_or_create(name="The Joybringers", parent=cox)[0]
+MageFaction.objects.get_or_create(name="K'an Lu", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Los Sabios Locos", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Los Sangradores", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Silver Bridges", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Vratyas", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Hagalaz", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Ka'a Klubwerks", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Khlysty Flagellants", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Studiosi", parent=cox)[0]
+MageFaction.objects.get_or_create(name="Umilyenye", parent=cox)[0]
+
 ds = MageFaction.objects.get_or_create(
     name="Dreamspeakers",
     parent=traditions,
@@ -183,8 +198,6 @@ MageFaction.objects.get_or_create(name="Ghost Wheel Society", parent=ds)[0]
 MageFaction.objects.get_or_create(name="Keepers of the Sacred Flame", parent=ds)[0]
 MageFaction.objects.get_or_create(name="Red Spear Society", parent=ds)[0]
 MageFaction.objects.get_or_create(name="Spirit Smiths", parent=ds)[0]
-MageFaction.objects.get_or_create(name="Solitaries", parent=ds)[0]
-MageFaction.objects.get_or_create(name="Independents", parent=ds)[0]
 eu = MageFaction.objects.get_or_create(
     name="Euthanatos",
     parent=traditions,
@@ -285,8 +298,10 @@ MageFaction.objects.get_or_create(name="The Royal Ethernautical Society", parent
 MageFaction.objects.get_or_create(name="The Cybernetic Research Institute", parent=soe)[
     0
 ]
+MageFaction.objects.get_or_create(name="Progressivists", parent=soe)[0]
 MageFaction.objects.get_or_create(name="Utopians", parent=soe)[0]
 MageFaction.objects.get_or_create(name="Adventurers", parent=soe)[0]
+MageFaction.objects.get_or_create(name="Aquanauts", parent=soe)[0]
 MageFaction.objects.get_or_create(name="Dissidents", parent=soe)[0]
 verb = MageFaction.objects.get_or_create(
     name="Verbena", parent=traditions, founded=-2000
@@ -370,6 +385,14 @@ orphans.affinities.add(*list(Sphere.objects.all()))
 orphans.paradigms.add(*list(Paradigm.objects.all()))
 orphans.practices.add(*list(Practice.objects.all()))
 orphans.save()
+
+
+MageFaction.objects.get_or_create(name="Chevra Kedisha", parent=da)[0]
+MageFaction.objects.get_or_create(
+    name="Knights of St. George and the Dragon", parent=da
+)[0]
+
+
 kopa_loei = MageFaction.objects.get_or_create(
     name="Kopa Loei",
     parent=da,
@@ -462,6 +485,12 @@ templars.affinities.add(forces, life, mind, prime)
 templars.paradigms.add(gods_and_monsters, divine_order_earthly_chaos, might_is_right)
 templars.practices.add(faith, martialarts, dominion, craftwork, hypertech)
 templars.save()
+
+MageFaction.objects.get_or_create(
+    name="The Brothers of St. Christopher", parent=templars
+)[0]
+MageFaction.objects.get_or_create(name="The Order of St. Michael", parent=templars)[0]
+MageFaction.objects.get_or_create(name="Sisters of Gabrielle", parent=templars)[0]
 
 tu = MageFaction.objects.get_or_create(
     name="Technocratic Union",
