@@ -4,11 +4,7 @@ from unittest.mock import Mock
 from characters.models.core import MeritFlaw
 from characters.models.mage import Resonance
 from characters.tests.utils import mage_setup
-from core.models import Noun
-from django.contrib.auth.models import User
 from django.test import TestCase
-from django.urls import reverse
-from game.models import ObjectType
 from locations.models.mage import Node, NodeMeritFlawRating, NodeResonanceRating
 
 

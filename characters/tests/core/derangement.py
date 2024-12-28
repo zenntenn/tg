@@ -1,7 +1,5 @@
 from characters.models.core import Derangement
 from django.test import TestCase
-from django.urls import reverse
-from django.utils.timezone import now
 
 
 class TestDerangementDetailView(TestCase):

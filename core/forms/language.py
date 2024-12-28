@@ -1,4 +1,3 @@
-from characters.models.core.human import Human
 from core.models import Language
 from core.widgets import AutocompleteTextInput
 from django import forms

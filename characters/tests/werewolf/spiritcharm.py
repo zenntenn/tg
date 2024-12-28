@@ -1,6 +1,5 @@
 from characters.models.werewolf import SpiritCharm
 from django.test import TestCase
-from django.urls import reverse
 
 
 class TestSpiritCharmDetailView(TestCase):

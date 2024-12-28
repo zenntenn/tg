@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, DetailView, FormView, UpdateView
+from django.views.generic import DetailView, FormView, UpdateView
 from locations.forms.mage.library import LibraryForm
 from locations.models.mage.library import Library
 

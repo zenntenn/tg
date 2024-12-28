@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 from items.models.werewolf.fetish import Fetish
 
 

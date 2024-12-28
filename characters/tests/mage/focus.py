@@ -8,7 +8,6 @@ from characters.models.mage.focus import (
     Tenet,
 )
 from django.test import TestCase
-from django.urls import reverse
 
 
 class TestPractice(TestCase):

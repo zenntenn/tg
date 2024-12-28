@@ -1,8 +1,5 @@
-from collections import defaultdict
 
 from characters.models.core.human import Human
-from characters.models.mage.faction import MageFaction
-from characters.models.mage.mage import Mage
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.werewolf.charm import SpiritCharm
 from core.models import Model, Number

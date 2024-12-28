@@ -1,6 +1,5 @@
 from typing import Any
 
-from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView
 from items.forms.mage.wonder import WonderForm
 from items.models.mage import Wonder, WonderResonanceRating

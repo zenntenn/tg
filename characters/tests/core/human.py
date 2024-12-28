@@ -13,7 +13,6 @@ from characters.tests.utils import human_setup
 from core.models import Language, Number
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.urls import reverse
 from django.utils.timezone import now
 from game.models import ObjectType
 

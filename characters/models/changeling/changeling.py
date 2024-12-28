@@ -1,5 +1,4 @@
 import random
-from collections import defaultdict
 
 from characters.models.changeling.ctdhuman import CtDHuman
 from characters.models.changeling.house import House
@@ -7,7 +6,6 @@ from characters.models.changeling.kith import Kith
 from characters.models.changeling.legacy import Legacy
 from core.utils import add_dot, weighted_choice
 from django.db import models
-from django.urls import reverse
 from django.utils.timezone import now
 
 

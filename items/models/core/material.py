@@ -1,8 +1,5 @@
-from characters.models.core import CharacterModel
-from core.models import Model
 from django.db import models
 from django.urls import reverse
-from locations.models.core import LocationModel
 
 
 class Material(models.Model):

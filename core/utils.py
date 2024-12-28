@@ -1,8 +1,4 @@
-import cProfile
-import pstats
 import random
-from pstats import SortKey
-from time import time
 
 
 def add_dot(character, trait, maximum):

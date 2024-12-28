@@ -1,9 +1,7 @@
 from typing import Any
 
 from core.models import HouseRule
-from core.utils import get_gameline_name
 from django.views.generic import ListView
-from game.models import Chronicle
 
 
 class HouseRulesIndexView(ListView):

@@ -1,6 +1,4 @@
 from characters.models.mage.rote import Rote
-from django.forms import BaseModelForm
-from django.http import HttpResponse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 

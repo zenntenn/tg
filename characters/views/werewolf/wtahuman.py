@@ -1,7 +1,7 @@
 from characters.models.werewolf.wtahuman import WtAHuman
 from characters.views.core.human import HumanDetailView
 from core.views.approved_user_mixin import SpecialUserMixin
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, UpdateView
 
 
 class WtAHumanDetailView(HumanDetailView):

@@ -2,10 +2,8 @@ from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
 from characters.models.core.background_block import Background
 from characters.models.core.merit_flaw_block import MeritFlaw
-from characters.models.core.statistic import Statistic
 from core.models import Number
 from django import forms
-from game.models import ObjectType
 
 CATEGORY_CHOICES = [
     ("-----", "-----"),

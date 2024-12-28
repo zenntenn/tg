@@ -1,6 +1,5 @@
 from characters.models.core.archetype import Archetype
 from characters.models.mage.companion import Companion
-from characters.models.mage.faction import MageFaction
 from django import forms
 
 

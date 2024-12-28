@@ -2,7 +2,6 @@ from typing import Any
 
 from characters.models.core import Character
 from core.views.approved_user_mixin import SpecialUserMixin
-from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
 from game.models import Scene
 

@@ -1,5 +1,4 @@
 from characters.forms.core.xp import CATEGORY_CHOICES, XPForm
-from characters.models.core.ability_block import Ability
 from characters.models.mage.focus import Practice, SpecializedPractice, Tenet
 from characters.models.mage.mage import PracticeRating
 from characters.models.mage.resonance import Resonance

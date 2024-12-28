@@ -10,7 +10,6 @@ from django.urls import reverse
 from locations.models.core.location import LocationModel
 from locations.models.mage.library import Library
 from locations.models.mage.node import Node
-from locations.models.mage.reality_zone import RealityZone
 
 
 class Chantry(BackgroundBlock, LocationModel):

@@ -1,5 +1,3 @@
-from characters.models.mage.resonance import Resonance
-from core.widgets import AutocompleteTextInput
 from django import forms
 from items.models.mage import SorcererArtifact
 

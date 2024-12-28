@@ -1,6 +1,6 @@
 from characters.models.core import CharacterModel
 from django import forms
-from game.models import Journal, JournalEntry, Story, WeeklyXPRequest
+from game.models import Story, WeeklyXPRequest
 from locations.models.core import LocationModel
 
 

@@ -2,14 +2,11 @@ import itertools
 
 from characters.models.core import CharacterModel
 from characters.models.core.character import Character
-from characters.models.core.group import Group
-from characters.models.core.human import Human
-from core.utils import level_name, tree_sort
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils.timezone import datetime, localtime
+from django.utils.timezone import datetime
 from django.views import View
 from django.views.generic import DetailView, TemplateView
 from game.forms import (

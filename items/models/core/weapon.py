@@ -1,9 +1,6 @@
-from characters.models.core import CharacterModel
-from core.models import Model
 from django.db import models
 from django.urls import reverse
 from items.models.core.item import ItemModel
-from locations.models.core import LocationModel
 
 
 class Weapon(ItemModel):

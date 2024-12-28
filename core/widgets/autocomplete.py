@@ -1,7 +1,6 @@
 import json
 
 from django.forms.widgets import TextInput
-from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
 

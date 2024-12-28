@@ -1,7 +1,6 @@
 from characters.models.mage.mtahuman import MtAHuman
 from characters.views.core.human import HumanDetailView
 from core.views.approved_user_mixin import SpecialUserMixin
-from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
 
 

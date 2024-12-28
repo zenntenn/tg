@@ -1,16 +1,7 @@
-from characters.models.core.ability_block import Ability
-from characters.models.mage.effect import Effect
 from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Instrument, Practice
-from characters.models.mage.resonance import Resonance
-from characters.models.mage.sphere import Sphere
 from characters.tests.utils import mage_setup
-from core.models import Language, Noun
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.urls import reverse
-from items.models.core.material import Material
-from items.models.core.medium import Medium
 from items.models.mage.grimoire import Grimoire
 from locations.models.mage.library import Library
 

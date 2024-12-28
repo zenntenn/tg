@@ -10,11 +10,9 @@ from core.templatetags.dots import dots
 from core.utils import dice, filepath
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase, TestCase
-from django.urls import reverse
 from django.utils.timezone import now
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
 os.environ["MOZ_HEADLESS"] = "1"
 

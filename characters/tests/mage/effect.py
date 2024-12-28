@@ -2,7 +2,6 @@ from collections import namedtuple
 
 from characters.models.mage import Effect
 from django.test import TestCase
-from django.urls import reverse
 
 
 class TestEffect(TestCase):

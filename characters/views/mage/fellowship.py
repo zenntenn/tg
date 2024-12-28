@@ -1,4 +1,3 @@
-from typing import Any
 
 from characters.models.mage.fellowship import SorcererFellowship
 from django.views.generic import CreateView, DetailView, ListView, UpdateView

@@ -1,4 +1,3 @@
-import random
 
 from characters.models.changeling.changeling import Changeling
 from characters.models.changeling.house import House

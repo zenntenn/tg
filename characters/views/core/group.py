@@ -1,5 +1,4 @@
 from characters.models.core import Group
-from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, UpdateView
 
 

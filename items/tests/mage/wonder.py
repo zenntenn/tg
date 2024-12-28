@@ -1,7 +1,6 @@
-from characters.models.mage import Effect, Resonance
+from characters.models.mage import Resonance
 from django.test import TestCase
-from django.urls import reverse
-from items.models.mage import Charm, Wonder
+from items.models.mage import Wonder
 
 
 class TestWonder(TestCase):

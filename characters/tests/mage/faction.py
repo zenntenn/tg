@@ -2,7 +2,6 @@ from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Paradigm, Practice
 from characters.models.mage.sphere import Sphere
 from django.test import TestCase
-from django.urls import reverse
 
 
 class TestMageFaction(TestCase):

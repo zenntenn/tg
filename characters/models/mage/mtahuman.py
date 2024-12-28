@@ -1,7 +1,6 @@
 from characters.models.core.character import Character
 from characters.models.core.human import Human
 from django.db import models
-from django.urls import reverse
 from items.models.mage.wonder import Wonder
 
 

@@ -1,12 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse
 from items.models.core import (
-    ItemModel,
-    Material,
-    Medium,
-    MeleeWeapon,
-    RangedWeapon,
-    ThrownWeapon,
     Weapon,
 )
 

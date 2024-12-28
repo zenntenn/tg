@@ -1,6 +1,5 @@
 from characters.models.mage import Resonance
 from django.test import TestCase
-from django.urls import reverse
 
 
 class TestResonanceDetailView(TestCase):

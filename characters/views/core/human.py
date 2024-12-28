@@ -6,9 +6,8 @@ from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.views.core.character import CharacterDetailView
 from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
-from django.shortcuts import redirect, render
-from django.views import View
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.shortcuts import render
+from django.views.generic import CreateView, UpdateView
 
 
 class HumanDetailView(CharacterDetailView):

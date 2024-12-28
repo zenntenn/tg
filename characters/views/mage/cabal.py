@@ -2,7 +2,6 @@ from characters.forms.mage.cabal import CabalForm
 from characters.models.core.human import Human
 from characters.models.mage.cabal import Cabal
 from django import forms
-from django.http import JsonResponse
 from django.views.generic import CreateView, DetailView, UpdateView
 
 

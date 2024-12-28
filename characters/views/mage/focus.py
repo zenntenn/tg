@@ -8,7 +8,6 @@ from characters.models.mage.focus import (
     SpecializedPractice,
     Tenet,
 )
-from characters.models.mage.rote import Rote
 from core.utils import display_queryset
 from core.views.generic import DictView
 from django.views.generic import CreateView, DetailView, ListView, UpdateView

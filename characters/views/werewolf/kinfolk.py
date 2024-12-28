@@ -1,7 +1,6 @@
 from characters.models.core.merit_flaw_block import MeritFlawRating
 from characters.models.werewolf.kinfolk import Kinfolk
 from core.views.approved_user_mixin import SpecialUserMixin
-from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView
 
 

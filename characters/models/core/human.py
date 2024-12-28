@@ -11,11 +11,10 @@ from characters.models.core.health_block import HealthBlock
 from characters.models.core.human_url_block import HumanUrlBlock
 from characters.models.core.merit_flaw_block import MeritFlawBlock
 from characters.models.core.specialty import Specialty
-from characters.utils import random_ethnicity, random_height, random_name, random_weight
+from characters.utils import random_ethnicity, random_name
 from core.models import Language
-from core.utils import add_dot, get_short_gameline_name, weighted_choice
+from core.utils import add_dot, weighted_choice
 from django.db import models
-from django.urls import reverse
 
 
 class Human(

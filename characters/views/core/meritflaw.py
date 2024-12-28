@@ -1,7 +1,6 @@
 from typing import Any
 
 from characters.models.core import MeritFlaw
-from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 

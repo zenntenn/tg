@@ -1,5 +1,3 @@
-from django.shortcuts import redirect, render
-from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 from locations.models import LocationModel
 

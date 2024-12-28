@@ -1,13 +1,10 @@
 import random
-from collections import defaultdict
 
 from characters.models.core.merit_flaw_block import MeritFlaw, MeritFlawRating
 from characters.models.werewolf.gift import Gift, GiftPermission
 from characters.models.werewolf.tribe import Tribe
 from characters.models.werewolf.wtahuman import WtAHuman
-from core.utils import add_dot
 from django.db import models
-from django.urls import reverse
 from items.models.werewolf.fetish import Fetish
 
 

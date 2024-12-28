@@ -1,6 +1,5 @@
 from django import forms
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
-from locations.models.core.location import LocationModel
 from locations.models.mage.reality_zone import RealityZone
 from locations.models.mage.sanctum import Sanctum
 

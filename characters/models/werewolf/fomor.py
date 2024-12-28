@@ -3,7 +3,6 @@ import random
 from characters.models.werewolf.fomoripower import FomoriPower
 from characters.models.werewolf.wtahuman import WtAHuman
 from django.db import models
-from django.urls import reverse
 
 
 class Fomor(WtAHuman):

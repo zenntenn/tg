@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 from locations.models.mage.reality_zone import RealityZone
 
 

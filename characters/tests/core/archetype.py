@@ -1,7 +1,5 @@
 from characters.models.core import Archetype
 from django.test import TestCase
-from django.urls import reverse
-from django.utils.timezone import now
 
 
 class TestArchetypeDetailView(TestCase):

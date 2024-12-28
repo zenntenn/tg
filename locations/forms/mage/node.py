@@ -7,7 +7,7 @@ from game.models import ObjectType
 from locations.forms.mage.reality_zone import RealityZonePracticeRatingFormSet
 from locations.models.mage import Node
 from locations.models.mage.node import NodeMeritFlawRating, NodeResonanceRating
-from locations.models.mage.reality_zone import RealityZone, ZoneRating
+from locations.models.mage.reality_zone import RealityZone
 
 
 class NodeResonanceRatingForm(forms.ModelForm):

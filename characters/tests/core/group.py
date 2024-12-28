@@ -4,8 +4,6 @@ from characters.models.core.specialty import Specialty
 from characters.tests.utils import human_setup
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.urls import reverse
-from django.utils.timezone import now
 
 
 class TestGroupDetailView(TestCase):

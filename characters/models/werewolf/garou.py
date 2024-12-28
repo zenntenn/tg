@@ -1,5 +1,4 @@
 import random
-from collections import defaultdict
 
 from characters.models.werewolf.battlescar import BattleScar
 from characters.models.werewolf.camp import Camp
@@ -11,7 +10,6 @@ from characters.models.werewolf.wtahuman import WtAHuman
 from core.utils import add_dot, weighted_choice
 from django.db import models
 from django.db.models import Q
-from django.urls import reverse
 from items.models.werewolf.fetish import Fetish
 
 

@@ -20,7 +20,6 @@ from populate_db.linear_magic_path import (
     shapeshifting,
     starlight,
     summoning,
-    weather_control,
 )
 
 LinearMagicRitual.objects.get_or_create(

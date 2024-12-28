@@ -1,5 +1,4 @@
 from items.models.mage.artifact import Artifact
-from items.models.mage.charm import Charm
 from items.models.mage.grimoire import Grimoire
 from items.models.mage.talisman import Talisman
 

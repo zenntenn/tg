@@ -10,7 +10,6 @@ from characters.forms.mage.practiceform import PracticeRatingFormSet
 from characters.forms.mage.rote import RoteCreationForm
 from characters.forms.mage.xp import MageXPForm
 from characters.models.core.ability_block import Ability
-from characters.models.core.archetype import Archetype
 from characters.models.core.attribute_block import Attribute
 from characters.models.core.background_block import (
     Background,

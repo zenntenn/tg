@@ -3,7 +3,7 @@ import random
 from characters.models.core import MeritFlaw
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.sphere import Sphere
-from core.models import Model, Noun
+from core.models import Noun
 from core.utils import weighted_choice
 from django.db import models
 from django.db.models import F, Q

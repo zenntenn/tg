@@ -1,19 +1,9 @@
-import random
 
-from characters.models.core.ability_block import Ability
-from characters.models.core.archetype import Archetype
 from characters.models.core.background_block import Background, BackgroundRating
-from characters.models.core.merit_flaw_block import MeritFlaw
-from characters.models.core.specialty import Specialty
-from characters.models.mage.effect import Effect
-from characters.models.mage.faction import MageFaction
-from characters.models.mage.focus import Instrument, Paradigm, Practice
 from characters.models.mage.mtahuman import MtAHuman
 from characters.tests.utils import mage_setup
-from core.models import Language, Noun
 from django.contrib.auth.models import User
 from django.test import TestCase
-from game.models import ObjectType
 
 
 class TestMtAHuman(TestCase):

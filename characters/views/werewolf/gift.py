@@ -1,5 +1,4 @@
 from characters.models.werewolf.gift import Gift
-from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 

@@ -1,7 +1,7 @@
 from typing import Any
 
 from characters.forms.core.ally import AllyForm
-from characters.models.core.background_block import Background, BackgroundRating
+from characters.models.core.background_block import Background
 from characters.views.core.generic_background import GenericBackgroundView
 from core.views.generic import DictView
 from django.http import HttpResponseRedirect

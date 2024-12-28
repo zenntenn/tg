@@ -3,7 +3,6 @@ from characters.models.core.specialty import Specialty
 from characters.models.werewolf.fomor import Fomor
 from characters.models.werewolf.fomoripower import FomoriPower
 from characters.tests.utils import werewolf_setup
-from django.contrib.auth.models import User
 from django.test import TestCase
 
 

@@ -1,6 +1,5 @@
 from characters.models.mage.sphere import Sphere
 from core.models import Language, Model
-from core.utils import weighted_choice
 from django.db import models
 from django.urls import reverse
 from items.models.core.material import Material

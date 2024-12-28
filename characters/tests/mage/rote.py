@@ -4,7 +4,6 @@ from characters.models.mage.effect import Effect
 from characters.models.mage.focus import Practice
 from characters.models.mage.rote import Rote
 from django.test import TestCase
-from django.urls import reverse
 
 
 class TestRoteDetailView(TestCase):
