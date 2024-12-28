@@ -47,7 +47,7 @@ Background.objects.get_or_create(name="Retainers", property_name="retainers")[0]
 sanctum = Background.objects.get_or_create(
     name="Sanctum", property_name="sanctum", multiplier=2
 )[0]
-sanctum.alterantive_name = "Laboratory"
+sanctum.alternate_name = "Laboratory"
 sanctum.save()
 Background.objects.get_or_create(name="Secret weapons", property_name="secret_weapons")[
     0

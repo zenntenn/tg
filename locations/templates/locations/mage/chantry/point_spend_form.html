@@ -28,12 +28,14 @@
     <div class="col-sm">{{ form.category }}</div>
     <div class="col-sm d-none" id="example_wrap">{{ form.example }}</div>
     <div class="col-sm d-none" id="note_wrap">{{ form.note }}</div>
+    <div class="col-sm d-none" id="alt_name_wrap">Alternate Name? {{ form.display_alt_name }}</div>
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const categorySelectMenu = document.getElementById("id_category");
         const exampleElement = document.getElementById("example_wrap");
         const noteElement = document.getElementById("note_wrap");
+        const altNameElement = document.getElementById("alt_name_wrap");
 
         categorySelectMenu.addEventListener("change", function() {
             const selectedValue = this.value;
@@ -42,13 +44,16 @@
             if(["-----", "Integrated Effects"].includes(this.value)){
                 exampleElement.classList.add("d-none");
                 noteElement.classList.add("d-none");
+                altNameElement.classList.add("d-none")
             } else {
                 exampleElement.classList.remove("d-none");
                 noteElement.classList.add("d-none");
+                altNameElement.classList.add("d-none")
             }
             if(this.value == "New Background"){
                 exampleElement.classList.remove("d-none");
                 noteElement.classList.remove("d-none");
+                altNameElement.classList.remove("d-none")
             }
             
             // Make the AJAX call

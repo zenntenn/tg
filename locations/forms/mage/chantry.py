@@ -31,6 +31,7 @@ class ChantryPointForm(forms.Form):
     )
     example = forms.ModelChoiceField(queryset=Background.objects.none(), required=False)
     note = forms.CharField(max_length=300, required=False)
+    display_alt_name = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         pk = kwargs.pop("pk")
@@ -77,6 +78,7 @@ class ChantryPointForm(forms.Form):
                 bg=self.cleaned_data["example"],
                 note=self.cleaned_data["note"],
                 chantry=self.object,
+                display_alt_name=self.cleaned_data["display_alt_name"],
                 rating=1,
             )
         elif "Existing Background" == category:

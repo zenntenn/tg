@@ -512,9 +512,17 @@ class ChantryBackgroundRating(models.Model):
     note = models.CharField(default="", max_length=100)
     url = models.CharField(default="", max_length=500)
     complete = models.BooleanField(default=False)
+    display_alt_name = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["bg__name"]
 
     def __str__(self):
         return f"{self.bg} ({self.note})"
+
+    def display_name(self):
+        if self.bg.alternate_name == "":
+            return self.bg.name
+        elif self.display_alt_name:
+            return self.bg.alternate_name
+        return self.bg.name
