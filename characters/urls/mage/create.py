@@ -60,7 +60,7 @@ urls = [
     ),
     path(
         "mtahuman/",
-        views.mage.MtAHumanCreateView.as_view(),
+        views.mage.MtAHumanBasicsView.as_view(),
         name="mta_human",
     ),
     path(

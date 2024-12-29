@@ -1,7 +1,9 @@
+from characters.forms.mage.mtahuman import MtAHumanCreationForm
 from characters.models.mage.mtahuman import MtAHuman
 from characters.views.core.human import HumanDetailView
 from core.views.approved_user_mixin import SpecialUserMixin
-from django.views.generic import CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, FormView, UpdateView
 
 
 class MtAHumanDetailView(HumanDetailView):
@@ -416,3 +418,27 @@ class MtAHumanAbilityView(UpdateView):
         self.object.creation_status += 1
         self.object.save()
         return super().form_valid(form)
+
+
+class MtAHumanBasicsView(LoginRequiredMixin, FormView):
+    form_class = MtAHumanCreationForm
+    template_name = "characters/mage/mtahuman/basics.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["storyteller"] = False
+        if self.request.user.profile.is_st():
+            context["storyteller"] = True
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()

@@ -1,1 +1,6 @@
-from .vtmhuman import VtMHumanCreateView, VtMHumanDetailView, VtMHumanUpdateView
+from .vtmhuman import (
+    VtMHumanBasicsView,
+    VtMHumanCreateView,
+    VtMHumanDetailView,
+    VtMHumanUpdateView,
+)

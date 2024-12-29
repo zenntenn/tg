@@ -4,7 +4,7 @@ from django.urls import path
 urls = [
     path(
         "changeling/",
-        views.changeling.ChangelingCreateView.as_view(),
+        views.changeling.ChangelingBasicsView.as_view(),
         name="changeling",
     ),
     path(
@@ -29,7 +29,7 @@ urls = [
     ),
     path(
         "ctdhuman/",
-        views.changeling.CtDHumanCreateView.as_view(),
+        views.changeling.CtDHumanBasicsView.as_view(),
         name="ctd_human",
     ),
 ]

@@ -1,1 +1,6 @@
-from .wtohuman import WtOHumanCreateView, WtOHumanDetailView, WtOHumanUpdateView
+from .wtohuman import (
+    WtOHumanBasicsView,
+    WtOHumanCreateView,
+    WtOHumanDetailView,
+    WtOHumanUpdateView,
+)

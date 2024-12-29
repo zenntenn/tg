@@ -4,7 +4,7 @@ from django.urls import path
 urls = [
     path(
         "wtohuman/",
-        views.wraith.WtOHumanCreateView.as_view(),
+        views.wraith.WtOHumanBasicsView.as_view(),
         name="wto_human",
     ),
 ]

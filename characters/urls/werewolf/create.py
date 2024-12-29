@@ -19,7 +19,7 @@ urls = [
     ),
     path(
         "wtahuman/",
-        views.werewolf.WtAHumanCreateView.as_view(),
+        views.werewolf.WtAHumanBasicsView.as_view(),
         name="wta_human",
     ),
     path(
@@ -54,17 +54,17 @@ urls = [
     ),
     path(
         "fomor/",
-        views.werewolf.FomorCreateView.as_view(),
+        views.werewolf.FomorBasicsView.as_view(),
         name="fomor",
     ),
     path(
         "werewolf/",
-        views.werewolf.WerewolfCreateView.as_view(),
+        views.werewolf.WerewolfBasicsView.as_view(),
         name="werewolf",
     ),
     path(
         "kinfolk/",
-        views.werewolf.KinfolkCreateView.as_view(),
+        views.werewolf.KinfolkBasicsView.as_view(),
         name="kinfolk",
     ),
     path(

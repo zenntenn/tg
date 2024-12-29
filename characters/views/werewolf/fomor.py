@@ -1,6 +1,8 @@
+from characters.forms.werewolf.fomor import FomorCreationForm
 from characters.models.werewolf.fomor import Fomor
 from core.views.approved_user_mixin import SpecialUserMixin
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, DetailView, FormView, UpdateView
 
 
 class FomorDetailView(SpecialUserMixin, DetailView):
@@ -150,3 +152,27 @@ class FomorUpdateView(SpecialUserMixin, UpdateView):
             self.object, self.request.user
         )
         return context
+
+
+class FomorBasicsView(LoginRequiredMixin, FormView):
+    form_class = FomorCreationForm
+    template_name = "characters/werewolf/fomor/basics.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["storyteller"] = False
+        if self.request.user.profile.is_st():
+            context["storyteller"] = True
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
