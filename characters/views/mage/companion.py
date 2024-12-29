@@ -147,9 +147,6 @@ class CompanionBasicsView(LoginRequiredMixin, CreateView):
         "nature",
         "demeanor",
         "concept",
-        "affiliation",
-        "faction",
-        "subfaction",
         "companion_type",
         "chronicle",
         "image",
@@ -169,38 +166,14 @@ class CompanionBasicsView(LoginRequiredMixin, CreateView):
         form = super().get_form(form_class)
         form.fields["nature"].queryset = Archetype.objects.all().order_by("name")
         form.fields["demeanor"].queryset = Archetype.objects.all().order_by("name")
-        form.fields["affiliation"].queryset = MageFaction.objects.filter(parent=None)
-        form.fields["faction"].queryset = MageFaction.objects.none()
-        form.fields["subfaction"].queryset = MageFaction.objects.none()
         form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
         form.fields["concept"].widget.attrs.update(
             {"placeholder": "Enter concept here"}
         )
         form.fields["image"].required = False
-        form.fields["cabal"] = forms.ModelChoiceField(
-            queryset=Cabal.objects.filter(permitted_users=self.request.user),
-            required=False,
-        )
         return form
 
-    def form_invalid(self, form):
-        errors = form.errors
-        if "faction" in errors:
-            del errors["faction"]
-        if "subfaction" in errors:
-            del errors["subfaction"]
-
-        if not errors:
-            return self.form_valid(form)
-        return super().form_invalid(form)
-
     def form_valid(self, form):
-        if form.data["faction"]:
-            form.instance.faction = MageFaction.objects.get(pk=form.data["faction"])
-        if form.data["subfaction"]:
-            form.instance.subfaction = MageFaction.objects.get(
-                pk=form.data["subfaction"]
-            )
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
