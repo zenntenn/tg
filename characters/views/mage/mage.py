@@ -1,7 +1,10 @@
 from typing import Any
 
 from characters.forms.core.ally import AllyForm
-from characters.forms.core.backgroundform import BackgroundRatingFormSet
+from characters.forms.core.backgroundform import (
+    BackgroundRatingForm,
+    BackgroundRatingFormSet,
+)
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.familiar import FamiliarForm
 from characters.forms.mage.freebies import MageFreebiesForm
@@ -25,6 +28,7 @@ from characters.models.mage.mage import Mage, PracticeRating
 from characters.models.mage.resonance import Resonance
 from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
     HumanAttributeView,
@@ -1048,61 +1052,8 @@ class MageAbilityView(SpecialUserMixin, MtAHumanAbilityView):
         return context
 
 
-class MageBackgroundsView(SpecialUserMixin, FormView):
-    form_class = BackgroundRatingFormSet
+class MageBackgroundsView(HumanBackgroundsView):
     template_name = "characters/mage/mage/chargen.html"
-
-    def get_success_url(self):
-        return Mage.objects.get(pk=self.kwargs["pk"]).get_absolute_url()
-
-    def form_valid(self, form):
-        self.get_context_data()
-        total_bg = sum(
-            [
-                f.cleaned_data["rating"] * f.cleaned_data["bg"].multiplier
-                for f in form
-                if "rating" in f.cleaned_data.keys() and "bg" in f.cleaned_data.keys()
-            ]
-        )
-        if total_bg != self.object.background_points:
-            for f in form:
-                f.add_error(
-                    None,
-                    f"Backgrounds must total {self.object.background_points} points",
-                )
-            return super().form_invalid(form)
-        form.save()
-        self.object.creation_status += 1
-        self.object.save()
-        return super().form_valid(form)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["character"] = Mage.objects.get(pk=self.kwargs["pk"])
-        return kwargs
-
-    def get_form(self, form_class=None):
-        form_class = self.get_form_class()
-        return form_class(**self.get_form_kwargs())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        self.object = Mage.objects.get(pk=self.kwargs["pk"])
-        context["object"] = self.object
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        for form in context["form"]:
-            form.fields["bg"].queryset = Background.objects.filter(
-                property_name__in=self.object.allowed_backgrounds
-            )
-
-        empty_form = context["form"].empty_form
-        empty_form.fields["bg"].queryset = Background.objects.filter(
-            property_name__in=self.object.allowed_backgrounds
-        )
-        context["empty_form"] = empty_form
-        return context
 
 
 class MageFocusView(SpecialUserMixin, UpdateView):

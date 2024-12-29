@@ -40,6 +40,7 @@ from .archetype import (
     ArchetypeListView,
     ArchetypeUpdateView,
 )
+from .backgrounds import HumanBackgroundsView
 from .character import CharacterCreateView, CharacterDetailView, CharacterUpdateView
 from .derangement import (
     DerangementCreateView,

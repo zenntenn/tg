@@ -26,6 +26,7 @@ from characters.models.mage.sorcerer import (
     PathRating,
     Sorcerer,
 )
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
     HumanAttributeView,
@@ -276,62 +277,8 @@ class SorcererAbilityView(SpecialUserMixin, MtAHumanAbilityView):
         return context
 
 
-class SorcererBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
-    model = Sorcerer
-    fields = []
+class SorcererBackgroundsView(HumanBackgroundsView):
     template_name = "characters/mage/sorcerer/chargen.html"
-    formsets = {
-        "bg_form": BackgroundRatingFormSet,
-    }
-
-    def get_formset_context(self, formset_class, formset_prefix):
-        context, js_code = super().get_formset_context(formset_class, formset_prefix)
-        formset = context["formset"]
-        empty_form = context["empty_form"]
-        for form in formset:
-            form.fields["bg"].queryset = Background.objects.filter(
-                property_name__in=self.object.allowed_backgrounds
-            )
-        empty_form.fields["bg"].queryset = Background.objects.filter(
-            property_name__in=self.object.allowed_backgrounds
-        )
-        return context, js_code
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        companion = context["object"]
-
-        bg_data = self.get_form_data("bg_form", blankable=["note"])
-        for res in bg_data:
-            res["bg"] = Background.objects.get(id=res["bg"])
-            res["rating"] = int(res["rating"])
-        total_bg = sum([x["rating"] * x["bg"].multiplier for x in bg_data])
-        if total_bg != self.object.background_points:
-            form.add_error(
-                None, f"Backgrounds must total {self.object.background_points} points"
-            )
-            return super().form_invalid(form)
-
-        for bg in bg_data:
-            if bg["rating"] != 0:
-                BackgroundRating.objects.create(
-                    bg=bg["bg"], rating=bg["rating"], char=companion, note=bg["note"]
-                )
-        if context["object"].sorcerer_type == "hedge_mage":
-            self.object.creation_status += 2
-        else:
-            self.object.creation_status += 1
-        self.object.willpower = 5
-        self.object.save()
-        return HttpResponseRedirect(companion.get_absolute_url())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        context["points"] = self.object.background_points
-        return context
 
 
 def get_abilities(request):

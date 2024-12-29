@@ -1,5 +1,4 @@
 from characters.forms.core.ally import AllyForm
-from characters.forms.core.backgroundform import BackgroundRatingFormSet
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.freebies import CompanionFreebiesForm
 from characters.models.core.ability_block import Ability
@@ -13,6 +12,7 @@ from characters.models.mage.cabal import Cabal
 from characters.models.mage.companion import Advantage, Companion
 from characters.models.mage.faction import MageFaction
 from characters.models.werewolf.charm import SpiritCharm
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
     HumanAttributeView,
@@ -24,7 +24,6 @@ from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
 from core.views.approved_user_mixin import SpecialUserMixin
-from core.views.generic import MultipleFormsetsMixin
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
@@ -238,68 +237,8 @@ class CompanionAbilityView(SpecialUserMixin, MtAHumanAbilityView):
         return context
 
 
-class CompanionBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
-    model = Companion
-    fields = []
+class CompanionBackgroundsView(HumanBackgroundsView):
     template_name = "characters/mage/companion/chargen.html"
-    formsets = {
-        "bg_form": BackgroundRatingFormSet,
-    }
-
-    def get_formset_context(self, formset_class, formset_prefix):
-        context, js_code = super().get_formset_context(formset_class, formset_prefix)
-        formset = context["formset"]
-        empty_form = context["empty_form"]
-        for form in formset:
-            form.fields["bg"].queryset = Background.objects.filter(
-                property_name__in=self.object.allowed_backgrounds
-            )
-        empty_form.fields["bg"].queryset = Background.objects.filter(
-            property_name__in=self.object.allowed_backgrounds
-        )
-        return context, js_code
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        companion = context["object"]
-
-        bg_data = self.get_form_data("bg_form", blankable=["note"])
-        for res in bg_data:
-            res["bg"] = Background.objects.get(id=res["bg"])
-            res["rating"] = int(res["rating"])
-        total_bg = sum([x["rating"] * x["bg"].multiplier for x in bg_data])
-        if total_bg != self.object.background_points:
-            form.add_error(
-                None, f"Backgrounds must total {self.object.background_points} points"
-            )
-            return super().form_invalid(form)
-
-        if (
-            companion.companion_type == "consor"
-            and len(
-                [x for x in bg_data if x["bg"].name == "Mentor" and x["rating"] > 0]
-            )
-            == 0
-        ):
-            form.add_error(None, f"Consors must have at least one dot of Mentor")
-            return super().form_invalid(form)
-        for bg in bg_data:
-            if bg["rating"] != 0:
-                BackgroundRating.objects.create(
-                    bg=bg["bg"], rating=bg["rating"], char=companion, note=bg["note"]
-                )
-        self.object.creation_status += 1
-        self.object.willpower = 3
-        self.object.save()
-        return HttpResponseRedirect(companion.get_absolute_url())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        context["points"] = self.object.background_points
-        return context
 
 
 class CompanionExtrasView(SpecialUserMixin, UpdateView):
