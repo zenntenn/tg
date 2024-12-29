@@ -39,7 +39,7 @@ children_of_gaia = GiftPermission.objects.get_or_create(
 )[0]
 fianna = GiftPermission.objects.get_or_create(shifter="werewolf", condition="Fianna")[0]
 glass_walker = GiftPermission.objects.get_or_create(
-    shifter="werewolf", condition="Glass Walker"
+    shifter="werewolf", condition="Glass Walkers"
 )[0]
 red_talons = GiftPermission.objects.get_or_create(
     shifter="werewolf", condition="Red Talons"
