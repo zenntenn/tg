@@ -1,4 +1,3 @@
-
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from locations.models.mage.reality_zone import RealityZone, ZoneRating
 

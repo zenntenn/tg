@@ -36,7 +36,6 @@ from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.forms.language import HumanLanguageForm
 from core.models import Language
 from core.views.approved_user_mixin import SpecialUserMixin
-from core.views.generic import MultipleFormsetsMixin
 from core.widgets import AutocompleteTextInput
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -1049,81 +1048,60 @@ class MageAbilityView(SpecialUserMixin, MtAHumanAbilityView):
         return context
 
 
-class MageBackgroundsView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
-    model = Mage
-    fields = []
+class MageBackgroundsView(SpecialUserMixin, FormView):
+    form_class = BackgroundRatingFormSet
     template_name = "characters/mage/mage/chargen.html"
-    formsets = {
-        "bg_form": BackgroundRatingFormSet,
-    }
 
-    def get_formset_context(self, formset_class, formset_prefix):
-        context, js_code = super().get_formset_context(formset_class, formset_prefix)
-        formset = context["formset"]
-        empty_form = context["empty_form"]
-        for form in formset:
-            form.fields["bg"].queryset = Background.objects.filter(
-                property_name__in=self.object.allowed_backgrounds
-            )
-        empty_form.fields["bg"].queryset = Background.objects.filter(
-            property_name__in=self.object.allowed_backgrounds
-        )
-        return context, js_code
+    def get_success_url(self):
+        return Mage.objects.get(pk=self.kwargs["pk"]).get_absolute_url()
 
     def form_valid(self, form):
-        context = self.get_context_data()
-        mage = context["object"]
-
-        bg_data = self.get_form_data("bg_form", blankable=["note"])
-        for res in bg_data:
-            res["bg"] = Background.objects.get(id=res["bg"])
-            res["rating"] = int(res["rating"])
-            res["pooled"] = res.get("pooled", False) == "on"
-            res["display_alt_name"] = res.get("display_alt_name", False) == "on"
-        total_bg = sum([x["rating"] * x["bg"].multiplier for x in bg_data])
+        self.get_context_data()
+        total_bg = sum(
+            [
+                f.cleaned_data["rating"] * f.cleaned_data["bg"].multiplier
+                for f in form
+                if "rating" in f.cleaned_data.keys() and "bg" in f.cleaned_data.keys()
+            ]
+        )
         if total_bg != self.object.background_points:
-            form.add_error(
-                None, f"Backgrounds must total {self.object.background_points} points"
-            )
+            for f in form:
+                f.add_error(
+                    None,
+                    f"Backgrounds must total {self.object.background_points} points",
+                )
             return super().form_invalid(form)
-        for bg in bg_data:
-            if bg["rating"] != 0:
-                if bg["pooled"] and mage.is_group_member():
-                    BackgroundRating.objects.create(
-                        bg=bg["bg"],
-                        rating=bg["rating"],
-                        char=mage,
-                        note=bg["note"],
-                        pooled=bg["pooled"],
-                        display_alt_name=bg["display_alt_name"],
-                        complete=True,
-                    )
-                    pbgr = PooledBackgroundRating.objects.get_or_create(
-                        bg=bg["bg"], note=bg["note"], group=mage.get_group()
-                    )[0]
-                    pbgr.rating += bg["rating"]
-                    pbgr.save()
-                else:
-                    BackgroundRating.objects.create(
-                        bg=bg["bg"],
-                        rating=bg["rating"],
-                        char=mage,
-                        note=bg["note"],
-                        display_alt_name=bg["display_alt_name"],
-                    )
-
+        form.save()
         self.object.creation_status += 1
-        self.object.quintessence = self.object.total_background_rating("avatar")
         self.object.save()
-        self.object.willpower = 5
-        self.object.save()
-        return HttpResponseRedirect(mage.get_absolute_url())
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["character"] = Mage.objects.get(pk=self.kwargs["pk"])
+        return kwargs
+
+    def get_form(self, form_class=None):
+        form_class = self.get_form_class()
+        return form_class(**self.get_form_kwargs())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        self.object = Mage.objects.get(pk=self.kwargs["pk"])
+        context["object"] = self.object
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
+        for form in context["form"]:
+            form.fields["bg"].queryset = Background.objects.filter(
+                property_name__in=self.object.allowed_backgrounds
+            )
+
+        empty_form = context["form"].empty_form
+        empty_form.fields["bg"].queryset = Background.objects.filter(
+            property_name__in=self.object.allowed_backgrounds
+        )
+        context["empty_form"] = empty_form
         return context
 
 

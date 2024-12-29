@@ -1,4 +1,3 @@
-
 from characters.models.changeling.changeling import Changeling
 from characters.models.changeling.house import House
 from characters.models.changeling.kith import Kith

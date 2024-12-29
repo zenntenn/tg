@@ -7,8 +7,8 @@
     </div>
 </div>
 <div id="bg_form_container">
-    {{ bg_form_context.formset.management_form }}
-    {% for f in bg_form_context.formset %}
+    {{ form.management_form }}
+    {% for f in form %}
         <div class="row form-row">
             <div class="col-sm">{{ f.bg }}</div>
             <div class="col-sm">{{ f.rating }}</div>
@@ -21,12 +21,28 @@
 <!-- Hidden empty form to clone -->
 <div id="bg_form_empty_form" class="d-none">
     <div class="row form-row">
-        <div class="col-sm">{{ bg_form_context.empty_form.bg }}</div>
-        <div class="col-sm">{{ bg_form_context.empty_form.rating }}</div>
-        <div class="col-sm">{{ bg_form_context.empty_form.note }}</div>
-        <div class="col-sm">Alternate Name? {{ bg_form_context.empty_form.display_alt_name }}</div>
-        {% if object.is_group_member %}<div class="col-sm">Pooled? {{ bg_form_context.empty_form.pooled }}</div>{% endif %}
+        <div class="col-sm">{{ empty_form.bg }}</div>
+        <div class="col-sm">{{ empty_form.rating }}</div>
+        <div class="col-sm">{{ empty_form.note }}</div>
+        <div class="col-sm">Alternate Name? {{ empty_form.display_alt_name }}</div>
+        {% if object.is_group_member %}<div class="col-sm">Pooled? {{ empty_form.pooled }}</div>{% endif %}
     </div>
 </div>
-<button type="button" id="{{ bg_form_context.add_button_id }}">Add Background</button>
-{{ bg_form_js|safe }}
+{% for f in form %}
+    {% if f.non_field_errors and forloop.first %}
+        {% for error in f.non_field_errors %}<p class="alert centertext">{{ error }}</p>{% endfor %}
+    {% endif %}
+{% endfor %}
+<button type="button" id="add-background-button">Add Background</button>
+<script>
+    document.getElementById('add-background-button').addEventListener('click', function(e) {{
+        e.preventDefault();  // Prevent form submission
+
+        var totalForms = document.getElementById('id_backgrounds-TOTAL_FORMS');
+        var formCount = parseInt(totalForms.value);
+        var emptyForm = document.getElementById('bg_form_empty_form').innerHTML;
+        var newForm = emptyForm.replace(/__prefix__/g, formCount);  // Replace prefix
+        document.getElementById('bg_form_container').insertAdjacentHTML('beforeend', newForm);
+        totalForms.value = formCount + 1;
+    }});
+</script>

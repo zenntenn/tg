@@ -1,4 +1,3 @@
-
 from characters.models.mage.cabal import Cabal
 from characters.models.mage.mage import Mage
 from characters.tests.utils import mage_setup

@@ -1,7 +1,5 @@
 from django.test import TestCase
-from items.models.core import (
-    Weapon,
-)
+from items.models.core import Weapon
 
 
 class TestWeaponDetailView(TestCase):

@@ -1,4 +1,3 @@
-
 from characters.models.core.human import Human
 from characters.models.mage.mtahuman import MtAHuman
 from characters.models.werewolf.charm import SpiritCharm

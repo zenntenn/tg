@@ -1,4 +1,3 @@
-
 from characters.models.core.human import Human
 from characters.models.mage.cabal import Cabal
 from characters.models.mage.faction import MageFaction
