@@ -12,7 +12,15 @@
     </div>
     <div class="row">
         <div class="col-sm">Camps</div>
-        <div class="col-sm">{{ object.camp_list|sanitize_html }}</div>
+        <div class="col-sm">
+            {% for camp in object.get_camps %}
+                {% if forloop.last %}
+                    <a href="{{ camp.get_absolute_url }}">{{ camp.name }}</a>
+                {% else %}
+                    <a href="{{ camp.get_absolute_url }}">{{ camp.name }}, </a>
+                {% endif %}
+            {% endfor % %}
+        </div>
     </div>
     <div class="row">
         <div class="col-sm">Description</div>
