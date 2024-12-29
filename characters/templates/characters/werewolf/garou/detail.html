@@ -1,37 +1,9 @@
 {% extends "characters/werewolf/wtahuman/detail.html" %}
 {% load dots %}
 {% block basics %}
-    <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">Basics</h2>
-    </div>
-    <div class="row">
-        <div class="col-sm">Name</div>
-        <div class="col-sm">{{ object.name }}</div>
-        <div class="col-sm">Nature</div>
-        <a class="col-sm" href="{{ object.nature.get_absolute_url }}">{{ object.nature }}</a>
-        <div class="col-sm">Tribe</div>
-        <div class="col-sm">
-            <a href="{{ object.tribe.get_absolute_url }}">{{ object.tribe.name }}</a>
-            {% for camp in object.camps.all %}- <a href="{{ camp.get_absolute_url }}">{{ camp.name }}</a>{% endfor %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Player</div>
-        <div class="col-sm">{{ object.owner }}</div>
-        <div class="col-sm">Demeanor</div>
-        <a class="col-sm" href="{{ object.demeanor.get_absolute_url }}">{{ object.demeanor }}</a>
-        <div class="col-sm">Auspice</div>
-        <div class="col-sm">{{ object.get_auspice_display }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Rank</div>
-        <div class="col-sm">{{ rank_name }}</div>
-        <div class="col-sm">Concept</div>
-        <div class="col-sm">{{ object.concept }}</div>
-        <div class="col-sm">Breed</div>
-        <div class="col-sm">{{ object.get_breed_display }}</div>
-    </div>
+    {% include "characters/werewolf/garou/basics_display_include.html" %}
 {% endblock basics %}
+
 {% block advantages %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Advantages</h2>

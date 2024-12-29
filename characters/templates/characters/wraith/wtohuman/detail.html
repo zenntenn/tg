@@ -1,6 +1,9 @@
 {% extends "characters/core/human/detail.html" %}
 {% load dots %}
 {% load get_specialty %}
+{% block basics %}
+    {% include "characters/wraith/wtohuman/basics_display_include.html" %}
+{% endblock basics %}
 {% block abilities %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Abilities</h2>
@@ -139,134 +142,101 @@
             Research
             {% if research_spec %}({{ research_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.research|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.research|dots }}</div>
         <div class="col-sm">
             Medicine
             {% if medicine_spec %}({{ medicine_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.medicine|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.medicine|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Leadership
             {% if leadership_spec %}({{ leadership_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.leadership|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.leadership|dots }}</div>
         <div class="col-sm">
             Stealth
             {% if stealth_spec %}({{ stealth_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.stealth|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.stealth|dots }}</div>
         <div class="col-sm">
             Occult
             {% if occult_spec %}({{ occult_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.occult|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.occult|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Streetwise
             {% if streetwise_spec %}({{ streetwise_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.streetwise|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.streetwise|dots }}</div>
         <div class="col-sm">
             Survival
             {% if survival_spec %}({{ survival_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.survival|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.survival|dots }}</div>
         <div class="col-sm">
             Politics
             {% if politics_spec %}({{ politics_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.politics|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.politics|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
             Subterfuge
             {% if subterfuge_spec %}({{ subterfuge_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.subterfuge|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.subterfuge|dots }}</div>
         <div class="col-sm">
             Technology
             {% if technology_spec %}({{ technology_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.technology|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.technology|dots }}</div>
         <div class="col-sm">
             Science
             {% if science_spec %}({{ science_spec }}){% endif %}
         </div>
-        <div class="col-sm dots">
-            {{ object.science|dots }}
-        </div>
+        <div class="col-sm dots">{{ object.science|dots }}</div>
     </div>
     <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">
-            Secondary Abilities
-        </h2>
+        <h2 class="col-sm {{ object.get_heading }}">Secondary Abilities</h2>
     </div>
     {% for tal, ski, kno in object.get_secondaries_for_display %}
         <div class="row">
             <div class="col-sm">
                 {{ tal|first }}
                 {% with talname=tal|last %}
-                {% if object|get_specialty:talname %}({{ object|get_specialty:talname }}){% endif %}
+                    {% if object|get_specialty:talname %}({{ object|get_specialty:talname }}){% endif %}
                 {% endwith %}
             </div>
             {% if tal|slice:"1:"|first != 0 %}
-                <div class="col-sm dots">
-                    {{ tal|slice:"1:"|first|dots }}
-                </div>
+                <div class="col-sm dots">{{ tal|slice:"1:"|first|dots }}</div>
             {% else %}
-                <div class="col-sm dots">
-                </div>
+                <div class="col-sm dots"></div>
             {% endif %}
             <div class="col-sm">
                 {{ ski|first }}
                 {% with skiname=ski|last %}
-                {% if object|get_specialty:skiname %}({{ object|get_specialty:skiname }}){% endif %}
+                    {% if object|get_specialty:skiname %}({{ object|get_specialty:skiname }}){% endif %}
                 {% endwith %}
             </div>
             {% if ski|slice:"1:"|first != 0 %}
-                <div class="col-sm dots">
-                    {{ ski|slice:"1:"|first|dots }}
-                </div>
+                <div class="col-sm dots">{{ ski|slice:"1:"|first|dots }}</div>
             {% else %}
-                <div class="col-sm dots">
-                </div>
+                <div class="col-sm dots"></div>
             {% endif %}
             <div class="col-sm">
                 {{ kno|first }}
                 {% with knoname=kno|last %}
-                {% if object|get_specialty:knoname %}({{ object|get_specialty:knoname }}){% endif %}
+                    {% if object|get_specialty:knoname %}({{ object|get_specialty:knoname }}){% endif %}
                 {% endwith %}
             </div>
             {% if kno|slice:"1:"|first != 0 %}
-                <div class="col-sm dots">
-                    {{ kno|slice:"1:"|first|dots }}
-                </div>
+                <div class="col-sm dots">{{ kno|slice:"1:"|first|dots }}</div>
             {% else %}
-                <div class="col-sm dots">
-                </div>
+                <div class="col-sm dots"></div>
             {% endif %}
         </div>
     {% endfor %}
@@ -276,17 +246,11 @@
                 Do
                 {% if do_spec %}({{ do_spec }}){% endif %}
             </div>
-            <div class="col-sm dots">
-                {{ object.do|dots }}
-            </div>
-            <div class="col-sm">
-            </div>
-            <div class="col-sm">
-            </div>
-            <div class="col-sm">
-            </div>
-            <div class="col-sm">
-            </div>
+            <div class="col-sm dots">{{ object.do|dots }}</div>
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
         </div>
     {% endif %}
 {% endblock abilities %}

@@ -1,5 +1,11 @@
 {% extends "characters/core/human/detail.html" %}
 {% load dots %}
+{% block basics %}
+    {% include "characters/changeling/ctdhuman/basics_display_include.html" %}
+{% endblock basics %}
+{% block attributes %}
+    {% include "characters/core/attribute_block/detail.html" %}
+{% endblock attributes %}
 {% block abilities %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Abilities</h2>

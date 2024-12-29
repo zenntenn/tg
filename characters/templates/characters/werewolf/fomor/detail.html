@@ -1,4 +1,7 @@
 {% extends "characters/werewolf/wtahuman/detail.html" %}
+{% block basics %}
+    {% include "characters/werewolf/fomor/basics_display_include.html" %}
+{% endblock basics %}
 {% block powers %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Powers</h2>

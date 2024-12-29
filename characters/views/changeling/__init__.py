@@ -1,11 +1,13 @@
 from .changeling import (
     ChangelingBasicsView,
+    ChangelingCharacterCreationView,
     ChangelingCreateView,
     ChangelingDetailView,
     ChangelingUpdateView,
 )
 from .ctdhuman import (
     CtDHumanBasicsView,
+    CtDHumanCharacterCreationView,
     CtDHumanCreateView,
     CtDHumanDetailView,
     CtDHumanUpdateView,

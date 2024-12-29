@@ -58,6 +58,7 @@ from .mage import (
 from .mtahuman import (
     MtAHumanAbilityView,
     MtAHumanBasicsView,
+    MtAHumanCharacterCreationView,
     MtAHumanCreateView,
     MtAHumanDetailView,
     MtAHumanUpdateView,

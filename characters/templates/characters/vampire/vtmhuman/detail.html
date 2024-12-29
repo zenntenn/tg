@@ -1,6 +1,10 @@
 {% extends "characters/core/human/detail.html" %}
 {% load dots %}
 {% load get_specialty %}
+{% block basics %}
+    {% include "characters/vampire/vtmhuman/basics_display_include.html" %}
+{% endblock basics %}
+
 {% block abilities %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Abilities</h2>

@@ -11,7 +11,13 @@ from .charm import (
     SpiritCharmListView,
     SpiritCharmUpdateView,
 )
-from .fomor import FomorBasicsView, FomorCreateView, FomorDetailView, FomorUpdateView
+from .fomor import (
+    FomorBasicsView,
+    FomorCharacterCreationView,
+    FomorCreateView,
+    FomorDetailView,
+    FomorUpdateView,
+)
 from .fomoripower import (
     FomoriPowerCreateView,
     FomoriPowerDetailView,
@@ -20,6 +26,7 @@ from .fomoripower import (
 )
 from .garou import (
     WerewolfBasicsView,
+    WerewolfCharacterCreationView,
     WerewolfCreateView,
     WerewolfDetailView,
     WerewolfUpdateView,
@@ -27,6 +34,7 @@ from .garou import (
 from .gift import GiftCreateView, GiftDetailView, GiftListView, GiftUpdateView
 from .kinfolk import (
     KinfolkBasicsView,
+    KinfolkCharacterCreationView,
     KinfolkCreateView,
     KinfolkDetailView,
     KinfolkUpdateView,
@@ -44,6 +52,7 @@ from .totem import TotemCreateView, TotemDetailView, TotemListView, TotemUpdateV
 from .tribe import TribeCreateView, TribeDetailView, TribeListView, TribeUpdateView
 from .wtahuman import (
     WtAHumanBasicsView,
+    WtAHumanCharacterCreationView,
     WtAHumanCreateView,
     WtAHumanDetailView,
     WtAHumanUpdateView,

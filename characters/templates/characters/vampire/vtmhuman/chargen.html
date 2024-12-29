@@ -1,0 +1,27 @@
+{% extends "core/form.html" %}
+{% block creation_title %}
+    Create Human (Vampire)
+{% endblock creation_title %}
+{% block contents %}
+    {% if is_approved_user %}
+        {% block name %}
+            <div class="row">
+                <div class="col-sm {{ object.get_heading }}">
+                    <h1>{{ object.name }}</h1>
+                </div>
+            </div>
+        {% endblock name %}
+        {% block basics %}
+            {% include "characters/vampire/vtmhuman/basics_display_include.html" %}
+        {% endblock basics %}
+        {% block attributes %}
+            {% if object.creation_status == 1 %}
+                {% include "characters/core/attribute_block/form.html" %}
+            {% elif object.creation_status > 1 %}
+                {% include "characters/core/attribute_block/detail.html" %}
+            {% endif %}
+        {% endblock attributes %}
+    {% else %}
+        {% include "characters/core/character/not_owner.html" %}
+    {% endif %}
+{% endblock contents %}

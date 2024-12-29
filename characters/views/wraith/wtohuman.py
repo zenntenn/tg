@@ -1,6 +1,10 @@
 from characters.forms.wraith.wtohuman import WtOHumanCreationForm
 from characters.models.wraith.wtohuman import WtOHuman
-from characters.views.core.human import HumanDetailView
+from characters.views.core.human import (
+    HumanAttributeView,
+    HumanCharacterCreationView,
+    HumanDetailView,
+)
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, FormView, UpdateView
@@ -169,3 +173,28 @@ class WtOHumanBasicsView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
+
+class WtOHumanAttributeView(HumanAttributeView):
+    model = WtOHuman
+    template_name = "characters/wraith/wtohuman/chargen.html"
+
+    primary = 6
+    secondary = 4
+    tertiary = 3
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+
+class WtOHumanCharacterCreationView(HumanCharacterCreationView):
+    view_mapping = {
+        1: WtOHumanAttributeView,
+    }
+    model_class = WtOHuman
+    key_property = "creation_status"
+    default_redirect = WtOHumanDetailView

@@ -1,5 +1,6 @@
 from characters.forms.werewolf.garou import WerewolfCreationForm
 from characters.models.werewolf.garou import Werewolf
+from characters.views.core.human import HumanAttributeView, HumanCharacterCreationView
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
@@ -208,3 +209,24 @@ class WerewolfBasicsView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return self.object.get_absolute_url()
+
+
+class WerewolfAttributeView(HumanAttributeView):
+    model = Werewolf
+    template_name = "characters/werewolf/garou/chargen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+
+class WerewolfCharacterCreationView(HumanCharacterCreationView):
+    view_mapping = {
+        1: WerewolfAttributeView,
+    }
+    model_class = Werewolf
+    key_property = "creation_status"
+    default_redirect = WerewolfDetailView

@@ -117,6 +117,9 @@ class Werewolf(WtAHuman):
         verbose_name = "Werewolf"
         verbose_name_plural = "Werewolves"
 
+    def get_rank_name(self):
+        return self.rank_names[self.rank]
+
     def has_breed(self):
         return self.breed != ""
 
