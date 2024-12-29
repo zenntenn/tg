@@ -176,6 +176,13 @@ class CtDHumanAttributeView(HumanAttributeView):
 class CtDHumanCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: CtDHumanAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = CtDHuman
     key_property = "creation_status"

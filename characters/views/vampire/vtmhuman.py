@@ -216,6 +216,13 @@ class VtMHumanAttributeView(HumanAttributeView):
 class VtMHumanCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: VtMHumanAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = VtMHuman
     key_property = "creation_status"

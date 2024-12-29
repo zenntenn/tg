@@ -260,6 +260,14 @@ class ChangelingAttributeView(HumanAttributeView):
 class ChangelingCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: ChangelingAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Powers
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = Changeling
     key_property = "creation_status"

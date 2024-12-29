@@ -238,6 +238,14 @@ class KinfolkAttributeView(HumanAttributeView):
 class KinfolkCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: KinfolkAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Powers
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = Kinfolk
     key_property = "creation_status"

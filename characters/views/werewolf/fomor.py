@@ -198,6 +198,14 @@ class FomorAttributeView(HumanAttributeView):
 class FomorCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: FomorAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Powers
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = Fomor
     key_property = "creation_status"

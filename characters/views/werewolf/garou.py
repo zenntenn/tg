@@ -226,6 +226,14 @@ class WerewolfAttributeView(HumanAttributeView):
 class WerewolfCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: WerewolfAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Powers
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = Werewolf
     key_property = "creation_status"

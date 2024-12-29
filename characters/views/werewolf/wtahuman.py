@@ -196,6 +196,13 @@ class WtAHumanAttributeView(HumanAttributeView):
 class WtAHumanCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: WtAHumanAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = WtAHuman
     key_property = "creation_status"

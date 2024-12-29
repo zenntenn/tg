@@ -467,6 +467,13 @@ class MtAHumanAttributeView(HumanAttributeView):
 class MtAHumanCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MtAHumanAttributeView,
+        # TODO: Abilities
+        # TODO: Backgrounds
+        # TODO: Backstory
+        # TODO: Freebies
+        # TODO: Languages
+        # TODO: Expanded Backgrounds
+        # TODO: Specialties
     }
     model_class = MtAHuman
     key_property = "creation_status"
