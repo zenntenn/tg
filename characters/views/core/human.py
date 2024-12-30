@@ -1,18 +1,22 @@
 from typing import Any
 
 from characters.forms.core.freebies import HumanFreebiesForm
+from characters.forms.core.specialty import SpecialtiesForm
 from characters.models.core import Human
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
 from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.merit_flaw_block import MeritFlaw
+from characters.models.core.specialty import Specialty
 from characters.views.core.character import CharacterDetailView
+from core.forms.language import HumanLanguageForm
+from core.models import Language
 from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
 
 
@@ -205,16 +209,6 @@ class HumanBiographicalInformation(SpecialUserMixin, UpdateView):
         return context
 
 
-class HumanCharacterCreationView(DictView):
-    view_mapping = {1: HumanAttributeView, 2: HumanBiographicalInformation}
-    model_class = Human
-    key_property = "creation_status"
-    default_redirect = HumanDetailView
-
-    def is_valid_key(self, obj, key):
-        return key in self.view_mapping and obj.status == "Un"
-
-
 def load_examples(request):
     category_choice = request.GET.get("category")
     if category_choice == "Attribute":
@@ -236,9 +230,8 @@ def load_examples(request):
 
 def load_values(request):
     mf = MeritFlaw.objects.get(pk=request.GET.get("example"))
-    # ratings = [x.value for x in mf.ratings.all()]
-    # ratings.sort()
-    ratings = mf.ratings.all()
+    ratings = [x.value for x in mf.ratings.all()]
+    ratings.sort()
     return render(
         request,
         "characters/core/human/load_values_dropdown_list.html",
@@ -296,7 +289,10 @@ class HuamnFreebieFormPopulationView(View):
         ]
 
     def meritflaw_options(self):
-        chartype = ObjectType.objects.get(name=self.primary_class.type)
+        char_type = self.primary_class.type
+        if "human" in char_type:
+            char_type = "human"
+        chartype = ObjectType.objects.get(name=char_type)
         examples = MeritFlaw.objects.filter(allowed_types=chartype)
         if self.character.total_flaws() <= 0:
             examples = examples.exclude(
@@ -342,7 +338,7 @@ class HumanFreebiesView(SpecialUserMixin, UpdateView):
             d = self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
             self.object.spent_freebies.append(d)
             self.object.save()
-            return super().form_valid(form)
+            return HttpResponseRedirect(self.get_success_url())
         return super().form_invalid(form)
 
     def form_invalid(self, form):
@@ -357,3 +353,89 @@ class HumanFreebiesView(SpecialUserMixin, UpdateView):
             obj.save()
             return HttpResponseRedirect(obj.get_absolute_url())
         return super().dispatch(request, *args, **kwargs)
+
+
+class HumanLanguagesView(SpecialUserMixin, FormView):
+    form_class = HumanLanguageForm
+    template_name = "characters/core/human/chargen.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
+        if "Language" not in obj.merits_and_flaws.values_list("name", flat=True):
+            obj.languages.add(Language.objects.get(name="English"))
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
+
+    # Overriding `get_form_kwargs` to pass custom arguments to the form
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        human_pk = self.kwargs.get("pk")
+        num_languages = Human.objects.get(pk=human_pk).num_languages()
+        kwargs.update({"pk": human_pk, "num_languages": int(num_languages)})
+        return kwargs
+
+    # Overriding `form_valid` to handle saving the data
+    def form_valid(self, form):
+        # Get the human instance from the pased `pk`
+        human_pk = self.kwargs.get("pk")
+        human = get_object_or_404(Human, pk=human_pk)
+        num_languages = human.num_languages()
+        human.languages.add(Language.objects.get(name="English"))
+        for i in range(num_languages):
+            language_name = form.cleaned_data.get(f"language_{i+1}")
+            if language_name:
+                language, created = Language.objects.get_or_create(name=language_name)
+                human.languages.add(language)
+        human.creation_status += 1
+        human.save()
+        return HttpResponseRedirect(human.get_absolute_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        return context
+
+
+class HumanSpecialtiesView(SpecialUserMixin, FormView):
+    form_class = SpecialtiesForm
+    template_name = "characters/core/human/chargen.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["object"] = Human.objects.get(id=self.kwargs["pk"])
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        obj = Human.objects.get(id=self.kwargs["pk"])
+        kwargs["object"] = obj
+        kwargs["specialties_needed"] = obj.needed_specialties()
+        return kwargs
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        for field in form.fields:
+            spec = Specialty.objects.get_or_create(name=form.data[field], stat=field)[0]
+            mage.specialties.add(spec)
+        mage.status = "Sub"
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
+
+
+class HumanCharacterCreationView(DictView):
+    view_mapping = {1: HumanAttributeView, 2: HumanBiographicalInformation}
+    model_class = Human
+    key_property = "creation_status"
+    default_redirect = HumanDetailView
+
+    def is_valid_key(self, obj, key):
+        return key in self.view_mapping and obj.status == "Un"

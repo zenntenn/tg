@@ -1,9 +1,9 @@
 import random
 from datetime import date, timedelta
 
-from characters.models.core.ability_block import AbilityBlock
+from characters.models.core.ability_block import Ability, AbilityBlock
 from characters.models.core.archetype import Archetype
-from characters.models.core.attribute_block import AttributeBlock
+from characters.models.core.attribute_block import Attribute, AttributeBlock
 from characters.models.core.background_block import BackgroundBlock
 from characters.models.core.character import Character
 from characters.models.core.derangement import Derangement
@@ -397,3 +397,37 @@ class Human(
         self.add_willpower()
         self.freebies -= cost
         return trait, value, cost
+
+    def needed_specialties(self):
+        stats = list(Attribute.objects.all()) + list(
+            Ability.objects.filter(
+                property_name__in=self.talents + self.skills + self.knowledges
+            )
+        )
+
+        stats4 = [x for x in stats if getattr(self, x.property_name, 0) >= 4]
+        stats1 = [
+            x
+            for x in stats
+            if getattr(self, x.property_name, 0) >= 1
+            and x.property_name
+            in [
+                "arts",
+                "athletics",
+                "crafts",
+                "firearms",
+                "larceny",
+                "melee",
+                "academics",
+                "esoterica",
+                "lore",
+                "politics",
+                "science",
+            ]
+        ]
+
+        stats = stats1 + stats4
+
+        existing_specialties = [x.stat for x in self.specialties.all()]
+        stats = [x.property_name for x in stats]
+        return [x for x in stats if x not in existing_specialties]

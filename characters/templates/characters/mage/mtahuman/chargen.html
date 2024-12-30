@@ -42,18 +42,18 @@
                 {% include "characters/mage/mtahuman/appearance_block_display.html" %}
             {% endif %}
         {% endblock appearance %}
-        {% comment %} {% block mfs %}
-            {% if object.creation_status >= 5 %}
+        {% block mfs %}
+            {% if object.creation_status >= 4 %}
                 {% include "characters/core/human/mf_display_block.html" %}
             {% endif %}
-        {% endblock mfs %} {% endcomment %}
-        {% comment %} {% block languages %}
+        {% endblock mfs %}
+        {% block languages %}
             {% if object.creation_status > 6 %}
                 {% include "characters/core/human/language_display_block.html" %}
             {% elif object.creation_status == 6 %}
                 {% include "characters/core/human/human_language_block_form.html" %}
             {% endif %}
-        {% endblock languages %} {% endcomment %}
+        {% endblock languages %}
         {% block history %}
             {% if object.creation_status == 4 %}
                 {% include "characters/mage/mtahuman/history_block_form.html" %}
@@ -70,48 +70,43 @@
                 </div>
             {% endif %}
         {% endblock freebies %}
-        {% comment %} {% block node %}
-            {% if object.creation_status == 10 %}
+        {% block node %}
+            {% if object.creation_status == 7 %}
                 {% include "locations/mage/node/form_include.html" %}
             {% endif %}
         {% endblock node %}
         {% block library %}
-            {% if object.creation_status == 11 %}
+            {% if object.creation_status == 8 %}
                 {% include "locations/mage/library/form_include.html" %}
             {% endif %}
         {% endblock library %}
-        {% block familiar %}
-            {% if object.creation_status == 12 %}
-                {% include "characters/mage/mage/familiar_form.html" %}
-            {% endif %}
-        {% endblock familiar %}
         {% block wonder %}
-            {% if object.creation_status == 13 %}
+            {% if object.creation_status == 9 %}
                 {% include "items/mage/wonder/form_include.html" %}
-            {% elif object.creation_status > 13 %}
+            {% elif object.creation_status > 9 %}
                 {% include "characters/core/human/equipment_block.html" %}
             {% endif %}
         {% endblock wonder %}
         {% block enhancements %}
-            {% if object.creation_status == 14 %}
+            {% if object.creation_status == 10 %}
                 {% include "characters/mage/mage/mage_enhancements_form.html" %}
             {% endif %}
         {% endblock enhancements %}
         {% block sanctum %}
-            {% if object.creation_status == 15 %}
+            {% if object.creation_status == 11 %}
                 {% include "locations/mage/sanctum/form_include.html" %}
             {% endif %}
         {% endblock sanctum %}
         {% block ally %}
-            {% if object.creation_status == 16 %}
+            {% if object.creation_status == 12 %}
                 {% include "characters/mage/ally/form_include.html" %}
             {% endif %}
-        {% endblock ally %} {% endcomment %}
-        {% comment %} {% block specialties_form %}
-            {% if object.creation_status == 17 %}
-                {% include "characters/mage/mage/mage_specialties_block_form.html" %}
+        {% endblock ally %}
+        {% block specialties_form %}
+            {% if object.creation_status == 13 %}
+                {% include "characters/mage/mtahuman/specialties_block_form.html" %}
             {% endif %}
-        {% endblock specialties_form %} {% endcomment %}
+        {% endblock specialties_form %}
     {% else %}
         {% include "characters/core/character/not_owner.html" %}
     {% endif %}

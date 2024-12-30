@@ -28,6 +28,8 @@ from characters.views.core.human import (
     HumanCharacterCreationView,
     HumanDetailView,
     HumanFreebiesView,
+    HumanLanguagesView,
+    HumanSpecialtiesView,
 )
 from characters.views.mage.background_views import MtAEnhancementView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
@@ -1334,50 +1336,8 @@ class MageFreebiesView(HumanFreebiesView):
         return d
 
 
-class MageLanguagesView(SpecialUserMixin, FormView):
-    form_class = HumanLanguageForm
+class MageLanguagesView(HumanLanguagesView):
     template_name = "characters/mage/mage/chargen.html"
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
-        if "Language" not in obj.merits_and_flaws.values_list("name", flat=True):
-            obj.languages.add(Language.objects.get(name="English"))
-            obj.creation_status += 1
-            obj.save()
-            return HttpResponseRedirect(obj.get_absolute_url())
-        return super().dispatch(request, *args, **kwargs)
-
-    # Overriding `get_form_kwargs` to pass custom arguments to the form
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        human_pk = self.kwargs.get("pk")
-        num_languages = Human.objects.get(pk=human_pk).num_languages()
-        kwargs.update({"pk": human_pk, "num_languages": int(num_languages)})
-        return kwargs
-
-    # Overriding `form_valid` to handle saving the data
-    def form_valid(self, form):
-        # Get the human instance from the pased `pk`
-        human_pk = self.kwargs.get("pk")
-        human = get_object_or_404(Human, pk=human_pk)
-        num_languages = human.num_languages()
-        human.languages.add(Language.objects.get(name="English"))
-        for i in range(num_languages):
-            language_name = form.cleaned_data.get(f"language_{i+1}")
-            if language_name:
-                language, created = Language.objects.get_or_create(name=language_name)
-                human.languages.add(language)
-        human.creation_status += 1
-        human.save()
-        return HttpResponseRedirect(human.get_absolute_url())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
-        context["is_approved_user"] = self.check_if_special_user(
-            context["object"], self.request.user
-        )
-        return context
 
 
 class MageRoteView(SpecialUserMixin, CreateView):
@@ -1539,34 +1499,8 @@ class MageNodeView(GenericBackgroundView):
     template_name = "characters/mage/mage/chargen.html"
 
 
-class MageSpecialtiesView(SpecialUserMixin, FormView):
-    form_class = SpecialtiesForm
+class MageSpecialtiesView(HumanSpecialtiesView):
     template_name = "characters/mage/mage/chargen.html"
-
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["object"] = Mage.objects.get(id=self.kwargs["pk"])
-        context["is_approved_user"] = self.check_if_special_user(
-            context["object"], self.request.user
-        )
-        return context
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        mage = Mage.objects.get(id=self.kwargs["pk"])
-        kwargs["object"] = mage
-        kwargs["specialties_needed"] = mage.needed_specialties()
-        return kwargs
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        mage = context["object"]
-        for field in form.fields:
-            spec = Specialty.objects.get_or_create(name=form.data[field], stat=field)[0]
-            mage.specialties.add(spec)
-        mage.status = "Sub"
-        mage.save()
-        return HttpResponseRedirect(mage.get_absolute_url())
 
 
 class MageWonderView(GenericBackgroundView):

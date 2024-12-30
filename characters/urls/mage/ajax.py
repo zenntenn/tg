@@ -19,14 +19,19 @@ urls = [
         name="load_mf_ratings",
     ),
     path(
-        "load_examples/",
-        views.mage.mage.MageFreebieFormPopulationView.as_view(),
-        name="load_examples",
-    ),
-    path(
         "load_xp_examples/",
         views.mage.mage.LoadXPExamplesView.as_view(),
         name="load_xp_examples",
+    ),
+    path(
+        "load_mage_examples/",
+        views.mage.mage.MageFreebieFormPopulationView.as_view(),
+        name="load_mage_examples",
+    ),
+    path(
+        "load_mtahuman_examples/",
+        views.mage.mtahuman.MtAHumanFreebieFormPopulationView.as_view(),
+        name="load_mtahuman_examples",
     ),
     path(
         "load_companion_examples/",

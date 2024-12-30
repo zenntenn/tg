@@ -84,6 +84,11 @@ urls = [
         name="companion_full",
     ),
     path(
+        "mta_human/full/<pk>/",
+        views.mage.MtAHumanUpdateView.as_view(),
+        name="mta_human_full",
+    ),
+    path(
         "cabal/<pk>/",
         views.mage.CabalUpdateView.as_view(),
         name="cabal",

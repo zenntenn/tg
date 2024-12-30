@@ -1,4 +1,8 @@
+from typing import Any
+
+from characters.forms.core.ally import AllyForm
 from characters.forms.core.freebies import HumanFreebiesForm
+from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.mtahuman import MtAHumanCreationForm
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
@@ -7,19 +11,33 @@ from characters.models.core.background_block import (
     BackgroundRating,
     PooledBackgroundRating,
 )
+from characters.models.core.human import Human
 from characters.models.core.merit_flaw_block import MeritFlaw
+from characters.models.core.specialty import Specialty
+from characters.models.mage.faction import MageFaction
 from characters.models.mage.mtahuman import MtAHuman
 from characters.views.core.backgrounds import HumanBackgroundsView
+from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
+    HuamnFreebieFormPopulationView,
     HumanAttributeView,
     HumanCharacterCreationView,
     HumanDetailView,
+    HumanFreebiesView,
 )
+from characters.views.mage.background_views import MtAEnhancementView
+from core.forms.language import HumanLanguageForm
 from core.models import Language
 from core.views.approved_user_mixin import SpecialUserMixin
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, FormView, UpdateView
+from items.forms.mage.wonder import WonderForm
+from locations.forms.mage.library import LibraryForm
+from locations.forms.mage.node import NodeForm
+from locations.forms.mage.sanctum import SanctumForm
 
 
 class MtAHumanDetailView(HumanDetailView):
@@ -536,159 +554,148 @@ class MtAHumanExtrasView(SpecialUserMixin, UpdateView):
         return form
 
 
-class MtAHumanFreebiesView(SpecialUserMixin, UpdateView):
+class MtAHumanFreebiesView(HumanFreebiesView):
     model = MtAHuman
     form_class = HumanFreebiesForm
     template_name = "characters/mage/mtahuman/chargen.html"
 
+
+class MtAHumanFreebieFormPopulationView(HuamnFreebieFormPopulationView):
+    primary_class = MtAHuman
+    template_name = "characters/core/human/load_examples_dropdown_list.html"
+
+
+class MtAHumanLanguagesView(SpecialUserMixin, FormView):
+    form_class = HumanLanguageForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
+        if "Language" not in obj.merits_and_flaws.values_list("name", flat=True):
+            obj.languages.add(Language.objects.get(name="English"))
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
+
+    # Overriding `get_form_kwargs` to pass custom arguments to the form
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        human_pk = self.kwargs.get("pk")
+        num_languages = Human.objects.get(pk=human_pk).num_languages()
+        kwargs.update({"pk": human_pk, "num_languages": int(num_languages)})
+        return kwargs
+
+    # Overriding `form_valid` to handle saving the data
+    def form_valid(self, form):
+        # Get the human instance from the pased `pk`
+        human_pk = self.kwargs.get("pk")
+        human = get_object_or_404(Human, pk=human_pk)
+        num_languages = human.num_languages()
+        human.languages.add(Language.objects.get(name="English"))
+        for i in range(num_languages):
+            language_name = form.cleaned_data.get(f"language_{i+1}")
+            if language_name:
+                language, created = Language.objects.get_or_create(name=language_name)
+                human.languages.add(language)
+        human.creation_status += 1
+        human.save()
+        return HttpResponseRedirect(human.get_absolute_url())
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["object"] = get_object_or_404(Human, pk=self.kwargs.get("pk"))
         context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
+            context["object"], self.request.user
         )
         return context
 
-    def form_valid(self, form):
-        if form.data["category"] == "-----":
-            form.add_error(None, "Must Choose Freebie Expenditure Type")
-            return super().form_invalid(form)
-        elif form.data["category"] == "MeritFlaw" and (
-            form.data["example"] == "" or form.data["value"] == ""
-        ):
-            form.add_error(None, "Must Choose Merit/Flaw and rating")
-            return super().form_invalid(form)
-        elif (
-            form.data["category"]
-            in [
-                "Attribute",
-                "Ability",
-                "New Background",
-                "Existing Background",
-                "Sphere",
-                "Tenet",
-                "Practice",
-            ]
-            and form.data["example"] == ""
-        ):
-            form.add_error(None, "Must Choose Trait")
-            return super().form_invalid(form)
-        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
-            form.add_error(None, "Must Choose Resonance")
-            return super().form_invalid(form)
-        trait_type = form.data["category"].lower()
-        if "background" in trait_type:
-            trait_type = "background"
-        cost = self.object.freebie_cost(trait_type)
-        if cost == "rating":
-            cost = int(form.data["value"])
-        if cost > self.object.freebies:
-            form.add_error(None, "Not Enough Freebies!")
-            return super().form_invalid(form)
-        if form.data["category"] == "Attribute":
-            trait = Attribute.objects.get(pk=form.data["example"])
-            value = getattr(self.object, trait.property_name) + 1
-            self.object.add_attribute(trait.property_name)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Ability":
-            trait = Ability.objects.get(pk=form.data["example"])
-            value = getattr(self.object, trait.property_name) + 1
-            self.object.add_ability(trait.property_name)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "New Background":
-            trait = Background.objects.get(pk=form.data["example"])
-            cost *= trait.multiplier
-            value = 1
-            if "pooled" in form.data.keys():
-                pbgr = PooledBackgroundRating.objects.get_or_create(
-                    bg=trait, group=self.object.get_group(), note=form.data["note"]
-                )[0]
-                pbgr.rating += 1
-                pbgr.save()
-                BackgroundRating.objects.create(
-                    bg=trait,
-                    rating=1,
-                    char=self.object,
-                    note=form.data["note"],
-                    complete=True,
-                    pooled=True,
-                )
-            else:
-                BackgroundRating.objects.create(
-                    bg=trait,
-                    rating=1,
-                    char=self.object,
-                    note=form.data["note"],
-                    pooled=False,
-                )
-            self.object.freebies -= cost
-            trait = str(trait)
-            if form.data["note"]:
-                trait += f" ({form.data['note']})"
-        elif form.data["category"] == "Existing Background":
-            trait = BackgroundRating.objects.get(pk=form.data["example"])
-            if trait.pooled:
-                pbgr = PooledBackgroundRating.objects.get(
-                    bg=trait.bg, group=self.object.get_group(), note=trait.note
-                )
-                pbgr.rating += 1
-                pbgr.save()
-            cost *= trait.bg.multiplier
-            value = trait.rating + 1
-            trait.rating += 1
-            trait.save()
-            self.object.freebies -= cost
-            trait = str(trait)
-        elif form.data["category"] == "Willpower":
-            trait = "Willpower"
-            value = self.object.willpower + 1
-            self.object.add_willpower()
-            self.object.freebies -= cost
-        elif form.data["category"] == "MeritFlaw":
-            trait = MeritFlaw.objects.get(pk=form.data["example"])
-            value = int(form.data["value"])
-            self.object.add_mf(trait, value)
-            self.object.freebies -= cost
-            trait = trait.name
-        if form.data["category"] != "MeritFlaw":
-            self.object.spent_freebies.append(
-                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
-            )
-        else:
-            self.object.spent_freebies.append(
-                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
-            )
-        if self.object.freebies == 0:
-            self.object.creation_status += 1
-            if "Language" not in self.object.merits_and_flaws.values_list(
-                "name", flat=True
-            ):
-                self.object.creation_status += 1
-                self.object.languages.add(Language.objects.get(name="English"))
-        self.object.save()
-        return super().form_valid(form)
 
-    def form_invalid(self, form):
-        if form.data["category"] == "-----":
-            form.add_error(None, "Must Choose Freebie Expenditure Type")
-            return super().form_invalid(form)
-        elif form.data["category"] == "MeritFlaw" and (
-            form.data["example"] == "" or form.data["value"] == ""
-        ):
-            form.add_error(None, "Must Choose Merit/Flaw and rating")
-            return super().form_invalid(form)
-        elif (
-            form.data["category"]
-            in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
-            and form.data["example"] == ""
-        ):
-            form.add_error(None, "Must Choose Trait")
-            return super().form_invalid(form)
-        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
-            form.add_error(None, "Must Choose Resonance")
-            return super().form_invalid(form)
-        return self.form_valid(form)
+class MtAHumanAlliesView(GenericBackgroundView):
+    primary_object_class = MtAHuman
+    background_name = "allies"
+    form_class = AllyForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+
+class MtAHumanEnhancementView(MtAEnhancementView):
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+
+class MtAHumanLibraryView(GenericBackgroundView):
+    primary_object_class = MtAHuman
+    background_name = "library"
+    form_class = LibraryForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        obj = get_object_or_404(self.primary_object_class, pk=self.kwargs.get("pk"))
+        form.fields["name"].initial = (
+            self.current_background.note or f"{obj.name}'s Library"
+        )
+        form.fields["faction"].queryset = MageFaction.objects.all()
+        return form
+
+
+class MtAHumanNodeView(GenericBackgroundView):
+    primary_object_class = MtAHuman
+    background_name = "node"
+    form_class = NodeForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+
+class MtAHumanSpecialtiesView(SpecialUserMixin, FormView):
+    form_class = SpecialtiesForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["object"] = MtAHuman.objects.get(id=self.kwargs["pk"])
+        context["is_approved_user"] = self.check_if_special_user(
+            context["object"], self.request.user
+        )
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        mage = MtAHuman.objects.get(id=self.kwargs["pk"])
+        kwargs["object"] = mage
+        kwargs["specialties_needed"] = mage.needed_specialties()
+        return kwargs
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        mage = context["object"]
+        for field in form.fields:
+            spec = Specialty.objects.get_or_create(name=form.data[field], stat=field)[0]
+            mage.specialties.add(spec)
+        mage.status = "Sub"
+        mage.save()
+        return HttpResponseRedirect(mage.get_absolute_url())
+
+
+class MtAHumanWonderView(GenericBackgroundView):
+    primary_object_class = MtAHuman
+    background_name = "wonder"
+    potential_skip = [
+        "enhancement",
+        "sanctum",
+        "allies",
+    ]
+    form_class = WonderForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+    multiple_ownership = True
+
+
+class MtAHumanSanctumView(GenericBackgroundView):
+    primary_object_class = MtAHuman
+    background_name = "sanctum"
+    potential_skip = [
+        "allies",
+    ]
+    form_class = SanctumForm
+    template_name = "characters/mage/mtahuman/chargen.html"
 
 
 class MtAHumanCharacterCreationView(HumanCharacterCreationView):
@@ -698,9 +705,14 @@ class MtAHumanCharacterCreationView(HumanCharacterCreationView):
         3: MtAHumanBackgroundsView,
         4: MtAHumanExtrasView,
         5: MtAHumanFreebiesView,
-        # TODO: Languages
-        # TODO: Expanded Backgrounds
-        # TODO: Specialties
+        6: MtAHumanLanguagesView,
+        7: MtAHumanNodeView,
+        8: MtAHumanLibraryView,
+        9: MtAHumanWonderView,
+        10: MtAHumanEnhancementView,
+        11: MtAHumanSanctumView,
+        12: MtAHumanAlliesView,
+        13: MtAHumanSpecialtiesView,
     }
     model_class = MtAHuman
     key_property = "creation_status"
