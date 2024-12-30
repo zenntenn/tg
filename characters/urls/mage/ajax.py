@@ -20,7 +20,7 @@ urls = [
     ),
     path(
         "load_examples/",
-        views.mage.mage.LoadExamplesView.as_view(),
+        views.mage.mage.MageFreebieFormPopulationView.as_view(),
         name="load_examples",
     ),
     path(

@@ -1,10 +1,6 @@
 from typing import Any
 
 from characters.forms.core.ally import AllyForm
-from characters.forms.core.backgroundform import (
-    BackgroundRatingForm,
-    BackgroundRatingFormSet,
-)
 from characters.forms.core.specialty import SpecialtiesForm
 from characters.forms.mage.familiar import FamiliarForm
 from characters.forms.mage.freebies import MageFreebiesForm
@@ -14,11 +10,7 @@ from characters.forms.mage.rote import RoteCreationForm
 from characters.forms.mage.xp import MageXPForm
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
-from characters.models.core.background_block import (
-    Background,
-    BackgroundRating,
-    PooledBackgroundRating,
-)
+from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.human import Human
 from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.core.specialty import Specialty
@@ -31,9 +23,11 @@ from characters.models.mage.sphere import Sphere
 from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
+    HuamnFreebieFormPopulationView,
     HumanAttributeView,
     HumanCharacterCreationView,
     HumanDetailView,
+    HumanFreebiesView,
 )
 from characters.views.mage.background_views import MtAEnhancementView
 from characters.views.mage.mtahuman import MtAHumanAbilityView
@@ -88,89 +82,85 @@ def load_mf_ratings(request):
     )
 
 
-class LoadExamplesView(View):
+class MageFreebieFormPopulationView(HuamnFreebieFormPopulationView):
+    primary_class = Mage
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 
-    def get(self, request, *args, **kwargs):
-        category_choice = request.GET.get("category")
-        object_id = request.GET.get("object")
-        m = Mage.objects.get(pk=object_id)
+    def category_method_map(self):
+        d = super().category_method_map()
+        d.update(
+            {
+                "Sphere": self.sphere_options,
+                "Resonance": self.resonance_options,
+                "Tenet": self.tenet_options,
+                "Practice": self.practice_options,
+                "Arete": self.practice_options,
+            }
+        )
+        return d
 
-        category_choice = request.GET.get("category")
-        if category_choice == "Attribute":
-            examples = Attribute.objects.all()
-            examples = [x for x in examples if getattr(m, x.property_name, 0) < 5]
-        elif category_choice == "Ability":
-            examples = Ability.objects.order_by("name")
-            examples = [
-                x
-                for x in examples
-                if getattr(m, x.property_name, 0) < 5 and hasattr(m, x.property_name)
-            ]
-        elif category_choice == "New Background":
-            examples = Background.objects.filter(
-                property_name__in=m.allowed_backgrounds
-            ).order_by("name")
-        elif category_choice == "Existing Background":
-            examples = [
-                x for x in BackgroundRating.objects.filter(char=m, rating__lt=5)
-            ]
-        elif category_choice == "MeritFlaw":
-            mage = ObjectType.objects.get(name="mage")
-            examples = MeritFlaw.objects.filter(allowed_types=mage)
-            if m.total_flaws() <= 0:
-                examples = examples.exclude(max_rating__lt=min(0, -7 - m.total_flaws()))
-            examples = examples.exclude(min_rating__gt=m.freebies)
-        elif category_choice == "Sphere":
-            examples = Sphere.objects.all().order_by("name")
-            examples = [
-                x
-                for x in examples
-                if getattr(m, x.property_name, 0) < m.arete
-                and hasattr(m, x.property_name)
-            ]
-        elif category_choice == "Resonance":
-            examples = Resonance.objects.all()
-        elif category_choice == "Tenet":
-            metaphysical_tenet_q = (
-                Q(id=m.metaphysical_tenet.id) if m.metaphysical_tenet else Q()
-            )
-            personal_tenet_q = Q(id=m.personal_tenet.id) if m.personal_tenet else Q()
-            ascension_tenet_q = Q(id=m.ascension_tenet.id) if m.ascension_tenet else Q()
-            other_tenets_q = Q(id__in=m.other_tenets.all().values_list("id", flat=True))
-            related_tenets_q = (
-                metaphysical_tenet_q
-                | personal_tenet_q
-                | ascension_tenet_q
-                | other_tenets_q
-            )
-            examples = Tenet.objects.exclude(related_tenets_q)
-        elif category_choice in ["Practice", "Arete"]:
-            examples = Practice.objects.exclude(
-                polymorphic_ctype__model="specializedpractice"
-            ).exclude(polymorphic_ctype__model="corruptedpractice")
-            spec = SpecializedPractice.objects.filter(faction=m.faction)
-            if spec.count() > 0:
-                examples = examples.exclude(
-                    id__in=[x.parent_practice.id for x in spec]
-                ) | Practice.objects.filter(id__in=[x.id for x in spec])
-            ids = PracticeRating.objects.filter(mage=m, rating=5).values_list(
-                "practice__id", flat=True
-            )
-            examples = examples.exclude(pk__in=ids).order_by("name")
-            examples = [
-                x
-                for x in examples
-                if (
-                    sum([getattr(m, abb.property_name) for abb in x.abilities.all()])
-                    / 2
-                    > m.practice_rating(x) + 1
+    def sphere_options(self):
+        return [
+            x
+            for x in Sphere.objects.all().order_by("name")
+            if getattr(self.character, x.property_name, 0) < self.character.arete
+            and hasattr(self.character, x.property_name)
+        ]
+
+    def resonance_options(self):
+        return Resonance.objects.all()
+
+    def tenet_options(self):
+        metaphysical_tenet_q = (
+            Q(id=self.character.metaphysical_tenet.id)
+            if self.character.metaphysical_tenet
+            else Q()
+        )
+        personal_tenet_q = (
+            Q(id=self.character.personal_tenet.id)
+            if self.character.personal_tenet
+            else Q()
+        )
+        ascension_tenet_q = (
+            Q(id=self.character.ascension_tenet.id)
+            if self.character.ascension_tenet
+            else Q()
+        )
+        other_tenets_q = Q(
+            id__in=self.character.other_tenets.all().values_list("id", flat=True)
+        )
+        related_tenets_q = (
+            metaphysical_tenet_q | personal_tenet_q | ascension_tenet_q | other_tenets_q
+        )
+        return Tenet.objects.exclude(related_tenets_q)
+
+    def practice_options(self):
+        examples = Practice.objects.exclude(
+            polymorphic_ctype__model="specializedpractice"
+        ).exclude(polymorphic_ctype__model="corruptedpractice")
+        spec = SpecializedPractice.objects.filter(faction=self.character.faction)
+        if spec.count() > 0:
+            examples = examples.exclude(
+                id__in=[x.parent_practice.id for x in spec]
+            ) | Practice.objects.filter(id__in=[x.id for x in spec])
+        ids = PracticeRating.objects.filter(mage=self.character, rating=5).values_list(
+            "practice__id", flat=True
+        )
+        examples = examples.exclude(pk__in=ids).order_by("name")
+        return [
+            x
+            for x in examples
+            if (
+                sum(
+                    [
+                        getattr(self.character, abb.property_name)
+                        for abb in x.abilities.all()
+                    ]
                 )
-            ]
-        else:
-            examples = []
-
-        return render(request, self.template_name, {"examples": examples})
+                / 2
+                > self.character.practice_rating(x) + 1
+            )
+        ]
 
 
 class LoadXPExamplesView(View):
@@ -1170,9 +1160,9 @@ class MageSpheresView(SpecialUserMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields[
-            "affinity_sphere"
-        ].queryset = self.object.get_affinity_sphere_options().order_by("name")
+        form.fields["affinity_sphere"].queryset = (
+            self.object.get_affinity_sphere_options().order_by("name")
+        )
         form.fields["affinity_sphere"].empty_label = "Choose an Affinity"
         form.fields["resonance"].widget = AutocompleteTextInput(
             suggestions=[x.name.title() for x in Resonance.objects.order_by("name")]
@@ -1323,19 +1313,15 @@ class MageExtrasView(SpecialUserMixin, UpdateView):
         return form
 
 
-class MageFreebiesView(SpecialUserMixin, UpdateView):
+class MageFreebiesView(HumanFreebiesView):
     model = Mage
     form_class = MageFreebiesForm
     template_name = "characters/mage/mage/chargen.html"
 
     def get_category_functions(self):
-        return {
-            "attribute": self.object.attribute_freebies,
-            "ability": self.object.ability_freebies,
-            "new background": self.object.new_background_freebies,
-            "existing background": self.object.existing_background_freebies,
-            "meritflaw": self.object.meritflaw_freebies,
-            "willpower": self.object.willpower_freebies,
+        d = super().get_category_functions()
+        d.update(
+            {
             "sphere": self.object.sphere_freebies,
             "arete": self.object.arete_freebies,
             "rotes": self.object.rotes_freebies,
@@ -1343,40 +1329,9 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
             "tenet": self.object.tenet_freebies,
             "practice": self.object.practice_freebies,
             "quintessence": self.object.quintessence_freebies,
-        }
-
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
+            }
         )
-        return context
-
-    def form_valid(self, form):
-        if form.is_valid():
-            trait_type = form.data["category"].lower()
-            cost = self.object.freebie_cost(trait_type)
-            if cost == "rating":
-                cost = int(form.data["value"])
-            if cost > self.object.freebies:
-                form.add_error(None, "Not Enough Freebies!")
-                return super().form_invalid(form)
-            trait, value, cost = self.get_category_functions()[trait_type](form)
-            if "background" in trait_type:
-                trait_type = "background"
-            d = self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
-            self.object.spent_freebies.append(d)
-            self.object.save()
-            return super().form_valid(form)
-        return super().form_invalid(form)
-
-    def dispatch(self, request, *args, **kwargs):
-        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
-        if obj.freebies == 0:
-            obj.creation_status += 1
-            obj.save()
-            return HttpResponseRedirect(obj.get_absolute_url())
-        return super().dispatch(request, *args, **kwargs)
+        return d
 
 
 class MageLanguagesView(SpecialUserMixin, FormView):

@@ -1,4 +1,4 @@
-from characters.forms.core.freebies import FreebiesForm
+from characters.forms.core.freebies import HumanFreebiesForm
 from characters.forms.mage.mtahuman import MtAHumanCreationForm
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
@@ -538,7 +538,7 @@ class MtAHumanExtrasView(SpecialUserMixin, UpdateView):
 
 class MtAHumanFreebiesView(SpecialUserMixin, UpdateView):
     model = MtAHuman
-    form_class = FreebiesForm
+    form_class = HumanFreebiesForm
     template_name = "characters/mage/mtahuman/chargen.html"
 
     def get_context_data(self, **kwargs):

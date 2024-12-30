@@ -16,10 +16,10 @@ CATEGORY_CHOICES = [
 ]
 
 
-class FreebiesForm(forms.Form):
+class HumanFreebiesForm(forms.Form):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
     example = forms.ModelChoiceField(queryset=Attribute.objects.none(), required=False)
-    value = forms.ModelChoiceField(queryset=Number.objects.none(), required=False)
+    value = forms.ChoiceField(choices=[], required=False)
     note = forms.CharField(max_length=300, required=False)
     pooled = forms.BooleanField(required=False)
 
@@ -54,6 +54,7 @@ class FreebiesForm(forms.Form):
                 self.fields["example"].queryset = self.instance.backgrounds.all()
             if self.data["category"] == "MeritFlaw":
                 self.fields["example"].queryset = MeritFlaw.objects.all()
+                self.fields['value'].choices = [(x, x) for x in range(-100, 101)]
 
     def validator(self, trait_type):
         trait_type = trait_type.lower().split(" ")[-1]
@@ -65,6 +66,7 @@ class FreebiesForm(forms.Form):
             return True
         return False
 
+
     def clean(self):
         cleaned_data = super().clean()
         category = self.data.get("category")
@@ -73,10 +75,7 @@ class FreebiesForm(forms.Form):
         elif category == "MeritFlaw" and (
             self.data["example"] == "" or self.data["value"] == ""
         ):
-            raise forms.ValidationError("Must Choose Merit/Flaw and rating")
-        elif category == "MeritFlaw" and (
-            self.data["example"] == "" or self.data["value"] == ""
-        ):
+            print("MeritFlaw Invalid!")
             raise forms.ValidationError("Must Choose Merit/Flaw and rating")
         elif (
             category

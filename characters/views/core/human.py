@@ -1,13 +1,19 @@
+from typing import Any
+from django.http import HttpResponseRedirect
+from django.views import View
+from characters.forms.core.freebies import HumanFreebiesForm
 from characters.models.core import Human
 from characters.models.core.ability_block import Ability
 from characters.models.core.attribute_block import Attribute
-from characters.models.core.background_block import Background
+from characters.models.core.background_block import Background, BackgroundRating
 from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.views.core.character import CharacterDetailView
 from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import CreateView, UpdateView
+
+from game.models import ObjectType
 
 
 class HumanDetailView(CharacterDetailView):
@@ -230,10 +236,125 @@ def load_examples(request):
 
 def load_values(request):
     mf = MeritFlaw.objects.get(pk=request.GET.get("example"))
-    ratings = [x.value for x in mf.ratings.all()]
-    ratings.sort()
+    # ratings = [x.value for x in mf.ratings.all()]
+    # ratings.sort()
+    ratings = mf.ratings.all()
     return render(
         request,
         "characters/core/human/load_values_dropdown_list.html",
         {"values": ratings},
     )
+
+
+class HuamnFreebieFormPopulationView(View):
+    primary_class = Human
+    template_name = "characters/core/human/load_examples_dropdown_list.html"
+
+    def get(self, request, *args, **kwargs):
+        category_choice = request.GET.get("category")
+        self.character = self.primary_class.objects.get(pk=request.GET.get("object"))
+        examples = []
+        if category_choice in self.category_method_map().keys():
+            examples = self.category_method_map()[category_choice]()
+        else:
+            examples = []
+        return render(request, self.template_name, {"examples": examples})
+
+    def category_method_map(self):
+        return {
+            "Attribute": self.attribute_options,
+            "Ability": self.ability_options,
+            "New Background": self.new_background_options,
+            "Existing Background": self.existing_background_options,
+            "MeritFlaw": self.meritflaw_options,
+        }
+
+    def attribute_options(self):
+        return [
+            x
+            for x in Attribute.objects.all()
+            if getattr(self.character, x.property_name, 0) < 5
+        ]
+
+    def ability_options(self):
+        return [
+            x
+            for x in Ability.objects.order_by("name")
+            if getattr(self.character, x.property_name, 0) < 5
+            and hasattr(self.character, x.property_name)
+        ]
+
+    def new_background_options(self):
+        return Background.objects.filter(
+            property_name__in=self.character.allowed_backgrounds
+        ).order_by("name")
+
+    def existing_background_options(self):
+        return [
+            x
+            for x in BackgroundRating.objects.filter(char=self.character, rating__lt=5)
+        ]
+
+    def meritflaw_options(self):
+        chartype = ObjectType.objects.get(name=self.primary_class.type)
+        examples = MeritFlaw.objects.filter(allowed_types=chartype)
+        if self.character.total_flaws() <= 0:
+            examples = examples.exclude(
+                max_rating__lt=min(0, -7 - self.character.total_flaws())
+            )
+        return examples.exclude(min_rating__gt=self.character.freebies)
+
+
+class HumanFreebiesView(SpecialUserMixin, UpdateView):
+    model = Human
+    form_class = HumanFreebiesForm
+    template_name = "characters/human/human/chargen.html"
+
+    def get_category_functions(self):
+        return {
+            "attribute": self.object.attribute_freebies,
+            "ability": self.object.ability_freebies,
+            "new background": self.object.new_background_freebies,
+            "existing background": self.object.existing_background_freebies,
+            "meritflaw": self.object.meritflaw_freebies,
+            "willpower": self.object.willpower_freebies,
+        }
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            trait_type = form.data["category"].lower()
+            cost = self.object.freebie_cost(trait_type)
+            if cost == "rating":
+                cost = int(form.data["value"])
+            if cost > self.object.freebies:
+                form.add_error(None, "Not Enough Freebies!")
+                return super().form_invalid(form)
+            trait, value, cost = self.get_category_functions()[trait_type](form)
+            if "background" in trait_type:
+                trait_type = "background"
+            d = self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
+            self.object.spent_freebies.append(d)
+            self.object.save()
+            return super().form_valid(form)
+        return super().form_invalid(form)
+    
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        print(form.errors)
+        return response
+    
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
+        if obj.freebies == 0:
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)

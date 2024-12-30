@@ -1,4 +1,4 @@
-from characters.forms.core.freebies import CATEGORY_CHOICES, FreebiesForm
+from characters.forms.core.freebies import CATEGORY_CHOICES, HumanFreebiesForm
 from characters.models.core.ability_block import Ability
 from characters.models.mage.focus import Practice, Tenet
 from characters.models.mage.resonance import Resonance
@@ -17,7 +17,7 @@ CATEGORY_CHOICES = CATEGORY_CHOICES + [
 ]
 
 
-class CompanionFreebiesForm(FreebiesForm):
+class CompanionFreebiesForm(HumanFreebiesForm):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
 
     def __init__(self, *args, suggestions=None, **kwargs):
@@ -36,7 +36,7 @@ class CompanionFreebiesForm(FreebiesForm):
         return self.instance
 
 
-class SorcererFreebiesForm(FreebiesForm):
+class SorcererFreebiesForm(HumanFreebiesForm):
     practice = forms.ModelChoiceField(
         queryset=Practice.objects.exclude(
             polymorphic_ctype__model="specializedpractice"
@@ -73,7 +73,7 @@ class SorcererFreebiesForm(FreebiesForm):
         return self.instance
 
 
-class MageFreebiesForm(FreebiesForm):
+class MageFreebiesForm(HumanFreebiesForm):
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
     resonance = forms.CharField(
         required=False, widget=AutocompleteTextInput(suggestions=[])
