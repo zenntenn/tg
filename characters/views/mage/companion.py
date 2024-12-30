@@ -194,20 +194,13 @@ class CompanionAttributeView(HumanAttributeView):
         return context
 
 
-class CompanionAbilityView(SpecialUserMixin, MtAHumanAbilityView):
+class CompanionAbilityView(MtAHumanAbilityView):
     model = Companion
     template_name = "characters/mage/companion/chargen.html"
 
     primary = 11
     secondary = 7
     tertiary = 4
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        return context
 
 
 class CompanionBackgroundsView(HumanBackgroundsView):

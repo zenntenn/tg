@@ -1040,16 +1040,13 @@ class MageAttributeView(HumanAttributeView):
         return context
 
 
-class MageAbilityView(SpecialUserMixin, MtAHumanAbilityView):
+class MageAbilityView(MtAHumanAbilityView):
     model = Mage
     template_name = "characters/mage/mage/chargen.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        return context
+    primary = 13
+    secondary = 9
+    tertiary = 5
 
 
 class MageBackgroundsView(HumanBackgroundsView):

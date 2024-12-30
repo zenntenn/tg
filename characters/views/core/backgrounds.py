@@ -49,7 +49,6 @@ class HumanBackgroundsView(SpecialUserMixin, FormView):
         context["is_approved_user"] = self.check_if_special_user(
             self.object, self.request.user
         )
-        print(context)
         for form in context["form"]:
             form.fields["bg"].queryset = Background.objects.filter(
                 property_name__in=self.object.allowed_backgrounds

@@ -292,7 +292,7 @@ class SorcererPsychicView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
     formsets = {
         "numina_form": PsychicPathRatingFormSet,
     }
-    
+
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(Sorcerer, pk=kwargs.get("pk"))
         if obj.sorcerer_type == "hedge_mage":
@@ -343,7 +343,7 @@ class SorcererPathView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
     formsets = {
         "numina_form": NuminaPathRatingFormSet,
     }
-    
+
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(Sorcerer, pk=kwargs.get("pk"))
         if obj.sorcerer_type != "hedge_mage":
@@ -351,7 +351,6 @@ class SorcererPathView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
             obj.save()
             return HttpResponseRedirect(obj.get_absolute_url())
         return super().dispatch(request, *args, **kwargs)
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

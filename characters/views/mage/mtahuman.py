@@ -1,11 +1,23 @@
+from characters.forms.core.freebies import FreebiesForm
 from characters.forms.mage.mtahuman import MtAHumanCreationForm
+from characters.models.core.ability_block import Ability
+from characters.models.core.attribute_block import Attribute
+from characters.models.core.background_block import (
+    Background,
+    BackgroundRating,
+    PooledBackgroundRating,
+)
+from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.models.mage.mtahuman import MtAHuman
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.human import (
     HumanAttributeView,
     HumanCharacterCreationView,
     HumanDetailView,
 )
+from core.models import Language
 from core.views.approved_user_mixin import SpecialUserMixin
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, FormView, UpdateView
 
@@ -253,7 +265,7 @@ class MtAHumanUpdateView(SpecialUserMixin, UpdateView):
         return context
 
 
-class MtAHumanAbilityView(UpdateView):
+class MtAHumanAbilityView(SpecialUserMixin, UpdateView):
     model = MtAHuman
     fields = [
         "awareness",
@@ -290,17 +302,20 @@ class MtAHumanAbilityView(UpdateView):
         "medicine",
         "science",
     ]
-    template_name = "characters/mage/mtahuman/ability_block_form.html"
+    template_name = "characters/mage/mtahuman/chargen.html"
 
-    primary = 13
-    secondary = 9
-    tertiary = 5
+    primary = 11
+    secondary = 7
+    tertiary = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["primary"] = self.primary
         context["secondary"] = self.secondary
         context["tertiary"] = self.tertiary
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def form_valid(self, form):
@@ -464,13 +479,225 @@ class MtAHumanAttributeView(HumanAttributeView):
         return context
 
 
+class MtAHumanBackgroundsView(HumanBackgroundsView):
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+
+class MtAHumanExtrasView(SpecialUserMixin, UpdateView):
+    model = MtAHuman
+    fields = [
+        "date_of_birth",
+        "apparent_age",
+        "age",
+        "description",
+        "history",
+        "goals",
+        "notes",
+        "public_info",
+    ]
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+    def form_valid(self, form):
+        self.object.creation_status += 1
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["date_of_birth"].widget = forms.DateInput(attrs={"type": "date"})
+        form.fields["description"].widget.attrs.update(
+            {
+                "placeholder": "Describe your character's physical appeareance. Be detailed, this will be visible to other players."
+            }
+        )
+        form.fields["history"].widget.attrs.update(
+            {
+                "placeholder": "Describe character history/backstory. Include information about their childhood, when and how they Awakened, and how they've interacted with mage society since, particularly mentioning important backgrounds."
+            }
+        )
+        form.fields["goals"].widget.attrs.update(
+            {
+                "placeholder": "Describe your character's long and short term goals, whether personal, professional, or magical."
+            }
+        )
+        form.fields["notes"].widget.attrs.update({"placeholder": "Notes"})
+        form.fields["public_info"].widget.attrs.update(
+            {
+                "placeholder": "This will be displayed to all players who look at your character, include Fame and anything else that would be publicly seen beyond physical description"
+            }
+        )
+        return form
+
+
+class MtAHumanFreebiesView(SpecialUserMixin, UpdateView):
+    model = MtAHuman
+    form_class = FreebiesForm
+    template_name = "characters/mage/mtahuman/chargen.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+    def form_valid(self, form):
+        if form.data["category"] == "-----":
+            form.add_error(None, "Must Choose Freebie Expenditure Type")
+            return super().form_invalid(form)
+        elif form.data["category"] == "MeritFlaw" and (
+            form.data["example"] == "" or form.data["value"] == ""
+        ):
+            form.add_error(None, "Must Choose Merit/Flaw and rating")
+            return super().form_invalid(form)
+        elif (
+            form.data["category"]
+            in [
+                "Attribute",
+                "Ability",
+                "New Background",
+                "Existing Background",
+                "Sphere",
+                "Tenet",
+                "Practice",
+            ]
+            and form.data["example"] == ""
+        ):
+            form.add_error(None, "Must Choose Trait")
+            return super().form_invalid(form)
+        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
+            form.add_error(None, "Must Choose Resonance")
+            return super().form_invalid(form)
+        trait_type = form.data["category"].lower()
+        if "background" in trait_type:
+            trait_type = "background"
+        cost = self.object.freebie_cost(trait_type)
+        if cost == "rating":
+            cost = int(form.data["value"])
+        if cost > self.object.freebies:
+            form.add_error(None, "Not Enough Freebies!")
+            return super().form_invalid(form)
+        if form.data["category"] == "Attribute":
+            trait = Attribute.objects.get(pk=form.data["example"])
+            value = getattr(self.object, trait.property_name) + 1
+            self.object.add_attribute(trait.property_name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "Ability":
+            trait = Ability.objects.get(pk=form.data["example"])
+            value = getattr(self.object, trait.property_name) + 1
+            self.object.add_ability(trait.property_name)
+            self.object.freebies -= cost
+            trait = trait.name
+        elif form.data["category"] == "New Background":
+            trait = Background.objects.get(pk=form.data["example"])
+            cost *= trait.multiplier
+            value = 1
+            if "pooled" in form.data.keys():
+                pbgr = PooledBackgroundRating.objects.get_or_create(
+                    bg=trait, group=self.object.get_group(), note=form.data["note"]
+                )[0]
+                pbgr.rating += 1
+                pbgr.save()
+                BackgroundRating.objects.create(
+                    bg=trait,
+                    rating=1,
+                    char=self.object,
+                    note=form.data["note"],
+                    complete=True,
+                    pooled=True,
+                )
+            else:
+                BackgroundRating.objects.create(
+                    bg=trait,
+                    rating=1,
+                    char=self.object,
+                    note=form.data["note"],
+                    pooled=False,
+                )
+            self.object.freebies -= cost
+            trait = str(trait)
+            if form.data["note"]:
+                trait += f" ({form.data['note']})"
+        elif form.data["category"] == "Existing Background":
+            trait = BackgroundRating.objects.get(pk=form.data["example"])
+            if trait.pooled:
+                pbgr = PooledBackgroundRating.objects.get(
+                    bg=trait.bg, group=self.object.get_group(), note=trait.note
+                )
+                pbgr.rating += 1
+                pbgr.save()
+            cost *= trait.bg.multiplier
+            value = trait.rating + 1
+            trait.rating += 1
+            trait.save()
+            self.object.freebies -= cost
+            trait = str(trait)
+        elif form.data["category"] == "Willpower":
+            trait = "Willpower"
+            value = self.object.willpower + 1
+            self.object.add_willpower()
+            self.object.freebies -= cost
+        elif form.data["category"] == "MeritFlaw":
+            trait = MeritFlaw.objects.get(pk=form.data["example"])
+            value = int(form.data["value"])
+            self.object.add_mf(trait, value)
+            self.object.freebies -= cost
+            trait = trait.name
+        if form.data["category"] != "MeritFlaw":
+            self.object.spent_freebies.append(
+                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
+            )
+        else:
+            self.object.spent_freebies.append(
+                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
+            )
+        if self.object.freebies == 0:
+            self.object.creation_status += 1
+            if "Language" not in self.object.merits_and_flaws.values_list(
+                "name", flat=True
+            ):
+                self.object.creation_status += 1
+                self.object.languages.add(Language.objects.get(name="English"))
+        self.object.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if form.data["category"] == "-----":
+            form.add_error(None, "Must Choose Freebie Expenditure Type")
+            return super().form_invalid(form)
+        elif form.data["category"] == "MeritFlaw" and (
+            form.data["example"] == "" or form.data["value"] == ""
+        ):
+            form.add_error(None, "Must Choose Merit/Flaw and rating")
+            return super().form_invalid(form)
+        elif (
+            form.data["category"]
+            in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
+            and form.data["example"] == ""
+        ):
+            form.add_error(None, "Must Choose Trait")
+            return super().form_invalid(form)
+        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
+            form.add_error(None, "Must Choose Resonance")
+            return super().form_invalid(form)
+        return self.form_valid(form)
+
+
 class MtAHumanCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MtAHumanAttributeView,
-        # TODO: Abilities
-        # TODO: Backgrounds
-        # TODO: Backstory
-        # TODO: Freebies
+        2: MtAHumanAbilityView,
+        3: MtAHumanBackgroundsView,
+        4: MtAHumanExtrasView,
+        5: MtAHumanFreebiesView,
         # TODO: Languages
         # TODO: Expanded Backgrounds
         # TODO: Specialties

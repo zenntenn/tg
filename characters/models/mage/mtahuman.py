@@ -7,6 +7,8 @@ from items.models.mage.wonder import Wonder
 class MtAHuman(Human):
     type = "mta_human"
 
+    freebie_step = 5
+
     allowed_backgrounds = [
         "contacts",
         "mentor",
@@ -278,7 +280,7 @@ class MtAHuman(Human):
     allied_characters = models.ManyToManyField(Character, blank=True)
     enhancement_devices = models.ManyToManyField(Wonder, blank=True)
 
-    background_points = 7
+    background_points = 5
 
     class Meta:
         verbose_name = "Human (Mage)"
