@@ -261,20 +261,13 @@ class SorcererAttributeView(HumanAttributeView):
         return context
 
 
-class SorcererAbilityView(SpecialUserMixin, MtAHumanAbilityView):
+class SorcererAbilityView(MtAHumanAbilityView):
     model = Sorcerer
     template_name = "characters/mage/sorcerer/chargen.html"
 
     primary = 11
     secondary = 7
     tertiary = 4
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        return context
 
 
 class SorcererBackgroundsView(HumanBackgroundsView):
@@ -299,6 +292,14 @@ class SorcererPsychicView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
     formsets = {
         "numina_form": PsychicPathRatingFormSet,
     }
+    
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Sorcerer, pk=kwargs.get("pk"))
+        if obj.sorcerer_type == "hedge_mage":
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -342,6 +343,15 @@ class SorcererPathView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
     formsets = {
         "numina_form": NuminaPathRatingFormSet,
     }
+    
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Sorcerer, pk=kwargs.get("pk"))
+        if obj.sorcerer_type != "hedge_mage":
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -383,6 +393,14 @@ class SorcererPathView(SpecialUserMixin, MultipleFormsetsMixin, UpdateView):
 class SorcererRitualView(SpecialUserMixin, FormView):
     form_class = NuminaRitualForm
     template_name = "characters/mage/sorcerer/chargen.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Sorcerer, pk=kwargs.get("pk"))
+        if obj.sorcerer_type != "hedge_mage":
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
