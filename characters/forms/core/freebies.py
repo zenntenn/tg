@@ -54,7 +54,7 @@ class HumanFreebiesForm(forms.Form):
                 self.fields["example"].queryset = self.instance.backgrounds.all()
             if self.data["category"] == "MeritFlaw":
                 self.fields["example"].queryset = MeritFlaw.objects.all()
-                self.fields['value'].choices = [(x, x) for x in range(-100, 101)]
+                self.fields["value"].choices = [(x, x) for x in range(-100, 101)]
 
     def validator(self, trait_type):
         trait_type = trait_type.lower().split(" ")[-1]
@@ -65,7 +65,6 @@ class HumanFreebiesForm(forms.Form):
         if self.instance.freebie_cost(trait_type) <= self.instance.freebies:
             return True
         return False
-
 
     def clean(self):
         cleaned_data = super().clean()

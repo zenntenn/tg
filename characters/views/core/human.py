@@ -1,6 +1,5 @@
 from typing import Any
-from django.http import HttpResponseRedirect
-from django.views import View
+
 from characters.forms.core.freebies import HumanFreebiesForm
 from characters.models.core import Human
 from characters.models.core.ability_block import Ability
@@ -10,9 +9,10 @@ from characters.models.core.merit_flaw_block import MeritFlaw
 from characters.views.core.character import CharacterDetailView
 from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.views import View
 from django.views.generic import CreateView, UpdateView
-
 from game.models import ObjectType
 
 
@@ -344,12 +344,11 @@ class HumanFreebiesView(SpecialUserMixin, UpdateView):
             self.object.save()
             return super().form_valid(form)
         return super().form_invalid(form)
-    
+
     def form_invalid(self, form):
         response = super().form_invalid(form)
         print(form.errors)
         return response
-    
 
     def dispatch(self, request, *args, **kwargs):
         obj = get_object_or_404(Human, pk=kwargs.get("pk"))
