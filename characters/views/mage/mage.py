@@ -1022,6 +1022,8 @@ class MageBasicsView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         self.object = form.save()
+        self.object.willpower = 5
+        self.object.save()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1326,6 +1328,23 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
     form_class = MageFreebiesForm
     template_name = "characters/mage/mage/chargen.html"
 
+    def get_category_functions(self):
+        return {
+            "attribute": self.object.attribute_freebies,
+            "ability": self.object.ability_freebies,
+            "new background": self.object.new_background_freebies,
+            "existing background": self.object.existing_background_freebies,
+            "meritflaw": self.object.meritflaw_freebies,
+            "willpower": self.object.willpower_freebies,
+            "sphere": self.object.sphere_freebies,
+            "arete": self.object.arete_freebies,
+            "rotes": self.object.rotes_freebies,
+            "resonance": self.object.resonance_freebies,
+            "tenet": self.object.tenet_freebies,
+            "practice": self.object.practice_freebies,
+            "quintessence": self.object.quintessence_freebies,
+        }
+
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["is_approved_user"] = self.check_if_special_user(
@@ -1334,202 +1353,44 @@ class MageFreebiesView(SpecialUserMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        if form.data["category"] == "-----":
-            form.add_error(None, "Must Choose Freebie Expenditure Type")
-            return super().form_invalid(form)
-        elif form.data["category"] == "MeritFlaw" and (
-            form.data["example"] == "" or form.data["value"] == ""
-        ):
-            form.add_error(None, "Must Choose Merit/Flaw and rating")
-            return super().form_invalid(form)
-        elif (
-            form.data["category"]
-            in [
-                "Attribute",
-                "Ability",
-                "New Background",
-                "Existing Background",
-                "Sphere",
-                "Tenet",
-                "Practice",
-            ]
-            and form.data["example"] == ""
-        ):
-            form.add_error(None, "Must Choose Trait")
-            return super().form_invalid(form)
-        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
-            form.add_error(None, "Must Choose Resonance")
-            return super().form_invalid(form)
-        trait_type = form.data["category"].lower()
-        if "background" in trait_type:
-            trait_type = "background"
-        cost = self.object.freebie_cost(trait_type)
-        if cost == "rating":
-            cost = int(form.data["value"])
-        if cost > self.object.freebies:
-            form.add_error(None, "Not Enough Freebies!")
-            return super().form_invalid(form)
-        if form.data["category"] == "Attribute":
-            trait = Attribute.objects.get(pk=form.data["example"])
-            value = getattr(self.object, trait.property_name) + 1
-            self.object.add_attribute(trait.property_name)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Ability":
-            trait = Ability.objects.get(pk=form.data["example"])
-            value = getattr(self.object, trait.property_name) + 1
-            self.object.add_ability(trait.property_name)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "New Background":
-            trait = Background.objects.get(pk=form.data["example"])
-            cost *= trait.multiplier
-            value = 1
-            if "pooled" in form.data.keys():
-                pbgr = PooledBackgroundRating.objects.get_or_create(
-                    bg=trait, group=self.object.get_group(), note=form.data["note"]
-                )[0]
-                pbgr.rating += 1
-                pbgr.save()
-                BackgroundRating.objects.create(
-                    bg=trait,
-                    rating=1,
-                    char=self.object,
-                    note=form.data["note"],
-                    complete=True,
-                    pooled=True,
-                )
-            else:
-                BackgroundRating.objects.create(
-                    bg=trait,
-                    rating=1,
-                    char=self.object,
-                    note=form.data["note"],
-                    pooled=False,
-                )
-            self.object.freebies -= cost
-            trait = str(trait)
-            if form.data["note"]:
-                trait += f" ({form.data['note']})"
-        elif form.data["category"] == "Existing Background":
-            trait = BackgroundRating.objects.get(pk=form.data["example"])
-            if trait.pooled:
-                pbgr = PooledBackgroundRating.objects.get(
-                    bg=trait.bg, group=self.object.get_group(), note=trait.note
-                )
-                pbgr.rating += 1
-                pbgr.save()
-            cost *= trait.bg.multiplier
-            value = trait.rating + 1
-            trait.rating += 1
-            trait.save()
-            self.object.freebies -= cost
-            trait = str(trait)
-        elif form.data["category"] == "Willpower":
-            trait = "Willpower"
-            value = self.object.willpower + 1
-            self.object.add_willpower()
-            self.object.freebies -= cost
-        elif form.data["category"] == "MeritFlaw":
-            trait = MeritFlaw.objects.get(pk=form.data["example"])
-            value = int(form.data["value"])
-            self.object.add_mf(trait, value)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Sphere":
-            trait = Sphere.objects.get(pk=form.data["example"])
-            value = getattr(self.object, trait.property_name) + 1
-            self.object.add_sphere(trait.property_name)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Rotes":
-            trait = "Rote Points"
-            value = 4
-            self.object.rote_points += 4
-            self.object.freebies -= cost
-        elif form.data["category"] == "Resonance":
-            trait = Resonance.objects.get(name=form.data["resonance"])
-            value = self.object.resonance_rating(trait) + 1
-            self.object.add_resonance(trait.name)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Tenet":
-            trait = Tenet.objects.get(pk=form.data["example"])
-            value = ""
-            self.object.add_tenet(trait)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Practice":
-            trait = Practice.objects.get(pk=form.data["example"])
-            value = self.object.practice_rating(trait) + 1
-            self.object.add_practice(trait)
-            self.object.freebies -= cost
-            trait = trait.name
-        elif form.data["category"] == "Arete":
-            if self.object.arete >= 3 and self.object.total_freebies() != 45:
-                form.add_error(
-                    None, "Arete Cannot Be Raised Above 3 At Character Creation"
-                )
+        if form.is_valid():
+            trait_type = form.data["category"].lower()
+            cost = self.object.freebie_cost(trait_type)
+            if cost == "rating":
+                cost = int(form.data["value"])
+            if cost > self.object.freebies:
+                form.add_error(None, "Not Enough Freebies!")
                 return super().form_invalid(form)
-            if self.object.arete >= 4 and self.object.total_freebies() == 45:
-                form.add_error(
-                    None, "Arete Cannot Be Raised Above 4 At Character Creation"
-                )
-                return super().form_invalid(form)
-            prac = Practice.objects.get(pk=form.data["example"])
-            trait = f"Arete ({prac.name})"
-            value = getattr(self.object, "arete") + 1
-            self.object.add_practice(prac)
-            self.object.add_arete()
-            self.object.freebies -= cost
-        elif form.data["category"] == "Quintessence":
-            trait = "Quintessence"
-            value = 4
-            self.object.quintessence += 4
-            self.object.freebies -= cost
-        if form.data["category"] != "MeritFlaw":
-            self.object.spent_freebies.append(
-                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
-            )
-        else:
-            self.object.spent_freebies.append(
-                self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
-            )
-        if self.object.freebies == 0:
-            self.object.creation_status += 1
-            if "Language" not in self.object.merits_and_flaws.values_list(
-                "name", flat=True
-            ):
-                self.object.creation_status += 1
-                self.object.languages.add(Language.objects.get(name="English"))
-        self.object.save()
-        return super().form_valid(form)
+            trait, value, cost = self.get_category_functions()[trait_type](form)
+            if "background" in trait_type:
+                trait_type = "background"
+            d = self.object.freebie_spend_record(trait, trait_type, value, cost=cost)
+            self.object.spent_freebies.append(d)
+            self.object.save()
+            return super().form_valid(form)
+        return super().form_invalid(form)
 
-    def form_invalid(self, form):
-        if form.data["category"] == "-----":
-            form.add_error(None, "Must Choose Freebie Expenditure Type")
-            return super().form_invalid(form)
-        elif form.data["category"] == "MeritFlaw" and (
-            form.data["example"] == "" or form.data["value"] == ""
-        ):
-            form.add_error(None, "Must Choose Merit/Flaw and rating")
-            return super().form_invalid(form)
-        elif (
-            form.data["category"]
-            in ["Attribute", "Ability", "Background", "Sphere", "Tenet", "Practice"]
-            and form.data["example"] == ""
-        ):
-            form.add_error(None, "Must Choose Trait")
-            return super().form_invalid(form)
-        elif form.data["category"] == "Resonance" and form.data["resonance"] == "":
-            form.add_error(None, "Must Choose Resonance")
-            return super().form_invalid(form)
-        return self.form_valid(form)
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
+        if obj.freebies == 0:
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MageLanguagesView(SpecialUserMixin, FormView):
     form_class = HumanLanguageForm
     template_name = "characters/mage/mage/chargen.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = get_object_or_404(Human, pk=kwargs.get("pk"))
+        if "Language" not in obj.merits_and_flaws.values_list("name", flat=True):
+            obj.languages.add(Language.objects.get(name="English"))
+            obj.creation_status += 1
+            obj.save()
+            return HttpResponseRedirect(obj.get_absolute_url())
+        return super().dispatch(request, *args, **kwargs)
 
     # Overriding `get_form_kwargs` to pass custom arguments to the form
     def get_form_kwargs(self):

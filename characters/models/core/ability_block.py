@@ -180,3 +180,12 @@ class AbilityBlock(models.Model):
         for _ in range(m - num_sec_kno):
             secondary_knowledges.append(("", 0, ""))
         return list(zip(secondary_talents, secondary_skills, secondary_knowledges))
+
+    def ability_freebies(self, form):
+        cost = 2
+        trait = form.cleaned_data["example"]
+        value = getattr(self, trait.property_name) + 1
+        self.add_ability(trait.property_name)
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost

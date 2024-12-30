@@ -355,6 +355,8 @@ class Human(
             "attribute": 5,
             "ability": 2,
             "background": 1,
+            "new background": 1,
+            "existing background": 1,
             "willpower": 1,
             "meritflaw": "rating",
         }
@@ -387,3 +389,11 @@ class Human(
         if trait_type == "ability" and trait_value == 0:
             return costs["new_ability"]
         return costs[trait_type] * trait_value
+
+    def willpower_freebies(self, form):
+        trait = "Willpower"
+        value = self.willpower + 1
+        cost = 1
+        self.add_willpower()
+        self.freebies -= cost
+        return trait, value, cost

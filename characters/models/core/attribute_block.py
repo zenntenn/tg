@@ -116,3 +116,12 @@ class AttributeBlock(models.Model):
     def random_attribute(self):
         choice = weighted_choice(self.filter_attributes(maximum=4))
         self.add_attribute(choice, 5)
+
+    def attribute_freebies(self, form):
+        cost = 5
+        trait = form.cleaned_data["example"]
+        value = getattr(self, trait.property_name) + 1
+        self.add_attribute(trait.property_name)
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost

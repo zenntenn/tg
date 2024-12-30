@@ -1077,6 +1077,74 @@ class Mage(MtAHuman):
             "resonance__name"
         )
 
+    def sphere_freebies(self, form):
+        cost = 7
+        trait = form.cleaned_data["example"]
+        value = getattr(self, trait.property_name) + 1
+        self.add_sphere(trait.property_name)
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost
+
+    def rotes_freebies(self, form):
+        trait = "Rote Points"
+        cost = 1
+        value = 4
+        self.rote_points += 4
+        self.freebies -= cost
+        return trait, value, cost
+
+    def resonance_freebies(self, form):
+        trait = Resonance.objects.get(name=form.data["resonance"])
+        value = self.object.resonance_rating(trait) + 1
+        self.add_resonance(trait.name)
+        cost = 3
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost
+
+    def tenet_freebies(self, form):
+        cost = 0
+        trait = form.cleaned_data["example"]
+        value = ""
+        self.add_tenet(trait)
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost
+
+    def practice_freebies(self, form):
+        trait = form.cleaned_data["example"]
+        cost = 1
+        value = self.practice_rating(trait) + 1
+        self.add_practice(trait)
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost
+
+    def arete_freebies(self, form):
+        if self.arete >= 3 and self.total_freebies() != 45:
+            form.add_error(None, "Arete Cannot Be Raised Above 3 At Character Creation")
+            return super().form_invalid(form)
+        if self.arete >= 4 and self.total_freebies() == 45:
+            form.add_error(None, "Arete Cannot Be Raised Above 4 At Character Creation")
+            return super().form_invalid(form)
+        prac = form.cleaned_data["example"]
+        trait = f"Arete ({prac.name})"
+        cost = 4
+        value = getattr(self, "arete") + 1
+        self.add_practice(prac)
+        self.add_arete()
+        self.freebies -= cost
+        return trait, value, cost
+
+    def quintessence_freebies(self, form):
+        trait = "Quintessence"
+        value = 4
+        cost = 1
+        self.quintessence += 4
+        self.freebies -= cost
+        return trait, value, cost
+
 
 class ResRating(models.Model):
     mage = models.ForeignKey("Mage", on_delete=models.SET_NULL, null=True)

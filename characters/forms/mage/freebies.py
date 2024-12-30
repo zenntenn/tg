@@ -1,7 +1,8 @@
 from characters.forms.core.freebies import CATEGORY_CHOICES, FreebiesForm
 from characters.models.core.ability_block import Ability
-from characters.models.mage.focus import Practice
+from characters.models.mage.focus import Practice, Tenet
 from characters.models.mage.resonance import Resonance
+from characters.models.mage.sphere import Sphere
 from core.widgets import AutocompleteTextInput
 from django import forms
 
@@ -107,6 +108,14 @@ class MageFreebiesForm(FreebiesForm):
         self.fields["category"].choices = [
             x for x in self.fields["category"].choices if self.validator(x[0])
         ]
+
+        if self.is_bound:
+            if self.data["category"] == "Sphere":
+                self.fields["example"].queryset = Sphere.objects.all()
+            if self.data["category"] == "Tenet":
+                self.fields["example"].queryset = Tenet.objects.all()
+            if self.data["category"] == "Practice" or self.data["category"] == "Arete":
+                self.fields["example"].queryset = Practice.objects.all()
 
     def save(self, *args, **kwargs):
         return self.instance

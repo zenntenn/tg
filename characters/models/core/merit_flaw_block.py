@@ -161,3 +161,12 @@ class MeritFlawBlock(models.Model):
             for x in MeritFlawRating.objects.filter(character=self)
             if x.rating > 0
         )
+
+    def meritflaw_freebies(self, form):
+        trait = form.cleaned_data["example"]
+        value = int(form.data["value"])
+        cost = value
+        self.add_mf(trait, value)
+        self.freebies -= cost
+        trait = trait.name
+        return trait, value, cost

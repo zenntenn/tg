@@ -154,3 +154,52 @@ class BackgroundBlock(models.Model):
             setattr(self, trait, value)
         while not self.has_backgrounds():
             self.random_background()
+
+    def new_background_freebies(self, form):
+        trait = form.cleaned_data["example"]
+        cost = trait.multiplier
+        value = 1
+        trait = Background.objects.get(pk=form.data["example"])
+        if "pooled" in form.data.keys():
+            pbgr = PooledBackgroundRating.objects.get_or_create(
+                bg=trait, group=self.get_group(), note=form.data["note"]
+            )[0]
+            pbgr.rating += 1
+            pbgr.save()
+            BackgroundRating.objects.create(
+                bg=trait,
+                rating=1,
+                char=self,
+                note=form.data["note"],
+                complete=True,
+                pooled=True,
+            )
+        else:
+            BackgroundRating.objects.create(
+                bg=trait,
+                rating=1,
+                char=self,
+                note=form.data["note"],
+                pooled=False,
+            )
+        self.freebies -= cost
+        trait = str(trait)
+        if form.data["note"]:
+            trait += f" ({form.data['note']})"
+        return trait, value, cost
+
+    def existing_background_freebies(self, form):
+        trait = form.cleaned_data["example"]
+        cost = trait.bg.multiplier
+        if trait.pooled:
+            pbgr = PooledBackgroundRating.objects.get(
+                bg=trait.bg, group=self.get_group(), note=trait.note
+            )
+            pbgr.rating += 1
+            pbgr.save()
+        value = trait.rating + 1
+        trait.rating += 1
+        trait.save()
+        self.freebies -= cost
+        trait = str(trait)
+        return trait, value, cost
