@@ -45,10 +45,20 @@ class Profile(models.Model):
         default="wod_heading",
     )
     theme = models.CharField(
-        max_length=30,
+        max_length=100,
         choices=zip(
-            ["themes/default.css", "themes/dark.css"],
-            ["Default", "Dark"],
+            [
+                "themes/default.css",
+                "themes/dark.css",
+                "themes/default_no_highlight.css",
+                "themes/dark_no_highlight.css",
+            ],
+            [
+                "Default",
+                "Dark",
+                "Default Without Highlights",
+                "Dark Without Highlights",
+            ],
         ),
         default="themes/default.css",
     )
