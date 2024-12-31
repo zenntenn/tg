@@ -3,7 +3,6 @@
 {% block basics %}
     {% include "characters/werewolf/garou/basics_display_include.html" %}
 {% endblock basics %}
-
 {% block advantages %}
     <div class="row">
         <h2 class="col-sm {{ object.get_heading }}">Advantages</h2>
@@ -45,41 +44,7 @@
     </div>
 {% endblock advantages %}
 {% block backgrounds %}
-    <div class="row">
-        <h2 class="col-sm {{ object.get_heading }}">Backgrounds</h2>
-    </div>
-    <div class="row">
-        <div class="col-sm">Allies</div>
-        <div class="col-sm dots">{{ object.allies|dots }}</div>
-        <div class="col-sm">Ancestors</div>
-        <div class="col-sm dots">{{ object.ancestors|dots }}</div>
-        <div class="col-sm">Contacts</div>
-        <div class="col-sm dots">{{ object.contacts|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Fate</div>
-        <div class="col-sm dots">{{ object.fate|dots }}</div>
-        <div class="col-sm">Fetish</div>
-        <div class="col-sm dots">{{ object.fetish|dots }}</div>
-        <div class="col-sm">Kinfolk</div>
-        <div class="col-sm dots">{{ object.kinfolk_rating|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Mentor</div>
-        <div class="col-sm dots">{{ object.mentor|dots }}</div>
-        <div class="col-sm">Pure Breed</div>
-        <div class="col-sm dots">{{ object.pure_breed|dots }}</div>
-        <div class="col-sm">Resources</div>
-        <div class="col-sm dots">{{ object.resources|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">Rites</div>
-        <div class="col-sm dots">{{ object.rites|dots }}</div>
-        <div class="col-sm">Spirit Heritage</div>
-        <div class="col-sm dots">{{ object.spirit_heritage|dots }}</div>
-        <div class="col-sm">Totem</div>
-        <div class="col-sm dots">{{ object.totem|dots }}</div>
-    </div>
+    {% include "characters/core/background_block/detail.html" %}
 {% endblock backgrounds %}
 {% block powers %}
     {% block gifts %}

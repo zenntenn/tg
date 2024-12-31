@@ -20,10 +20,10 @@
         </div>
         <div class="col-sm dots">{{ object.alertness|dots }}</div>
         <div class="col-sm">
-            Crafts
-            {% if object|get_specialty:'crafts' %}({{ object|get_specialty:'crafts' }}){% endif %}
+            Animal Ken
+            {% if object|get_specialty:'animal_ken' %}({{ object|get_specialty:'animal_ken' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.crafts|dots }}</div>
+        <div class="col-sm dots">{{ object.animal_ken|dots }}</div>
         <div class="col-sm">
             Academics
             {% if object|get_specialty:'academics' %}({{ object|get_specialty:'academics' }}){% endif %}
@@ -32,15 +32,15 @@
     </div>
     <div class="row">
         <div class="col-sm">
-            Art
-            {% if object|get_specialty:'art' %}({{ object|get_specialty:'art' }}){% endif %}
+            Athletics
+            {% if object|get_specialty:'athletics' %}({{ object|get_specialty:'athletics' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.art|dots }}</div>
+        <div class="col-sm dots">{{ object.athletics|dots }}</div>
         <div class="col-sm">
-            Drive
-            {% if object|get_specialty:'drive' %}({{ object|get_specialty:'drive' }}){% endif %}
+            Crafts
+            {% if object|get_specialty:'crafts' %}({{ object|get_specialty:'crafts' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.drive|dots }}</div>
+        <div class="col-sm dots">{{ object.crafts|dots }}</div>
         <div class="col-sm">
             Computer
             {% if object|get_specialty:'computer' %}({{ object|get_specialty:'computer' }}){% endif %}
@@ -49,32 +49,15 @@
     </div>
     <div class="row">
         <div class="col-sm">
-            Athletics
-            {% if object|get_specialty:'athletics' %}({{ object|get_specialty:'athletics' }}){% endif %}
+            Brawl
+            {% if object|get_specialty:'brawl' %}({{ object|get_specialty:'brawl' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.athletics|dots }}</div>
+        <div class="col-sm dots">{{ object.brawl|dots }}</div>
         <div class="col-sm">
-            Etiquette
-            {% if object|get_specialty:'etiquette' %}({{ object|get_specialty:'etiquette' }}){% endif %}
+            Drive
+            {% if object|get_specialty:'drive' %}({{ object|get_specialty:'drive' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.etiquette|dots }}</div>
-        <div class="col-sm">
-            Cosmology
-            {% if object|get_specialty:'cosmology' %}({{ object|get_specialty:'cosmology' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.cosmology|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">
-            Awareness
-            {% if object|get_specialty:'awareness' %}({{ object|get_specialty:'awareness' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.awareness|dots }}</div>
-        <div class="col-sm">
-            Firearms
-            {% if object|get_specialty:'firearms' %}({{ object|get_specialty:'firearms' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.firearms|dots }}</div>
+        <div class="col-sm dots">{{ object.drive|dots }}</div>
         <div class="col-sm">
             Enigmas
             {% if object|get_specialty:'enigmas' %}({{ object|get_specialty:'enigmas' }}){% endif %}
@@ -83,32 +66,15 @@
     </div>
     <div class="row">
         <div class="col-sm">
-            Brawl
-            {% if object|get_specialty:'brawl' %}({{ object|get_specialty:'brawl' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.brawl|dots }}</div>
-        <div class="col-sm">
-            Larceny
-            {% if object|get_specialty:'larceny' %}({{ object|get_specialty:'larceny' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.larceny|dots }}</div>
-        <div class="col-sm">
-            Finance
-            {% if object|get_specialty:'finance' %}({{ object|get_specialty:'finance' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.finance|dots }}</div>
-    </div>
-    <div class="row">
-        <div class="col-sm">
             Empathy
             {% if object|get_specialty:'empathy' %}({{ object|get_specialty:'empathy' }}){% endif %}
         </div>
         <div class="col-sm dots">{{ object.empathy|dots }}</div>
         <div class="col-sm">
-            Meditation
-            {% if object|get_specialty:'meditation' %}({{ object|get_specialty:'meditation' }}){% endif %}
+            Etiquette
+            {% if object|get_specialty:'etiquette' %}({{ object|get_specialty:'etiquette' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.meditation|dots }}</div>
+        <div class="col-sm dots">{{ object.etiquette|dots }}</div>
         <div class="col-sm">
             Investigation
             {% if object|get_specialty:'investigation' %}({{ object|get_specialty:'investigation' }}){% endif %}
@@ -122,10 +88,10 @@
         </div>
         <div class="col-sm dots">{{ object.expression|dots }}</div>
         <div class="col-sm">
-            Melee
-            {% if object|get_specialty:'melee' %}({{ object|get_specialty:'melee' }}){% endif %}
+            Firearms
+            {% if object|get_specialty:'firearms' %}({{ object|get_specialty:'firearms' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.melee|dots }}</div>
+        <div class="col-sm dots">{{ object.firearms|dots }}</div>
         <div class="col-sm">
             Law
             {% if object|get_specialty:'law' %}({{ object|get_specialty:'law' }}){% endif %}
@@ -139,10 +105,10 @@
         </div>
         <div class="col-sm dots">{{ object.intimidation|dots }}</div>
         <div class="col-sm">
-            Research
-            {% if object|get_specialty:'research' %}({{ object|get_specialty:'research' }}){% endif %}
+            Larceny
+            {% if object|get_specialty:'larceny' %}({{ object|get_specialty:'larceny' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.research|dots }}</div>
+        <div class="col-sm dots">{{ object.larceny|dots }}</div>
         <div class="col-sm">
             Medicine
             {% if object|get_specialty:'medicine' %}({{ object|get_specialty:'medicine' }}){% endif %}
@@ -156,10 +122,10 @@
         </div>
         <div class="col-sm dots">{{ object.leadership|dots }}</div>
         <div class="col-sm">
-            Stealth
-            {% if object|get_specialty:'stealth' %}({{ object|get_specialty:'stealth' }}){% endif %}
+            Melee
+            {% if object|get_specialty:'melee' %}({{ object|get_specialty:'melee' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.stealth|dots }}</div>
+        <div class="col-sm dots">{{ object.melee|dots }}</div>
         <div class="col-sm">
             Occult
             {% if object|get_specialty:'occult' %}({{ object|get_specialty:'occult' }}){% endif %}
@@ -168,20 +134,37 @@
     </div>
     <div class="row">
         <div class="col-sm">
+            Primal-Urge
+            {% if object|get_specialty:'primal_urge' %}({{ object|get_specialty:'primal_urge' }}){% endif %}
+        </div>
+        <div class="col-sm dots">{{ object.primal_urge|dots }}</div>
+        <div class="col-sm">
+            Performance
+            {% if object|get_specialty:'performance' %}({{ object|get_specialty:'performance' }}){% endif %}
+        </div>
+        <div class="col-sm dots">{{ object.performance|dots }}</div>
+        <div class="col-sm">
+            Rituals
+            {% if object|get_specialty:'rituals' %}({{ object|get_specialty:'rituals' }}){% endif %}
+        </div>
+        <div class="col-sm dots">{{ object.rituals|dots }}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
             Streetwise
             {% if object|get_specialty:'streetwise' %}({{ object|get_specialty:'streetwise' }}){% endif %}
         </div>
         <div class="col-sm dots">{{ object.streetwise|dots }}</div>
         <div class="col-sm">
-            Survival
-            {% if object|get_specialty:'survival' %}({{ object|get_specialty:'survival' }}){% endif %}
+            Stealth
+            {% if object|get_specialty:'stealth' %}({{ object|get_specialty:'stealth' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.survival|dots }}</div>
+        <div class="col-sm dots">{{ object.stealth|dots }}</div>
         <div class="col-sm">
-            Politics
-            {% if object|get_specialty:'politics' %}({{ object|get_specialty:'politics' }}){% endif %}
+            Science
+            {% if object|get_specialty:'science' %}({{ object|get_specialty:'science' }}){% endif %}
         </div>
-        <div class="col-sm dots">{{ object.politics|dots }}</div>
+        <div class="col-sm dots">{{ object.science|dots }}</div>
     </div>
     <div class="row">
         <div class="col-sm">
@@ -190,58 +173,14 @@
         </div>
         <div class="col-sm dots">{{ object.subterfuge|dots }}</div>
         <div class="col-sm">
+            Survival
+            {% if object|get_specialty:'survival' %}({{ object|get_specialty:'survival' }}){% endif %}
+        </div>
+        <div class="col-sm dots">{{ object.survival|dots }}</div>
+        <div class="col-sm">
             Technology
             {% if object|get_specialty:'technology' %}({{ object|get_specialty:'technology' }}){% endif %}
         </div>
         <div class="col-sm dots">{{ object.technology|dots }}</div>
-        <div class="col-sm">
-            Science
-            {% if object|get_specialty:'science' %}({{ object|get_specialty:'science' }}){% endif %}
-        </div>
-        <div class="col-sm dots">{{ object.science|dots }}</div>
     </div>
-    {% if object.get_secondaries_for_display %}
-        <div class="row">
-            <h3 class="col-sm {{ object.get_heading }}">Secondary Talents</h3>
-            <h3 class="col-sm {{ object.get_heading }}">Secondary Skills</h3>
-            <h3 class="col-sm {{ object.get_heading }}">Secondary Knowledges</h3>
-        </div>
-        {% for tal, ski, kno in object.get_secondaries_for_display %}
-            <div class="row">
-                <div class="col-sm">
-                    {{ tal|first }}
-                    {% with talname=tal|last %}
-                        {% if object|get_specialty:talname %}({{ object|get_specialty:talname }}){% endif %}
-                    {% endwith %}
-                </div>
-                {% if tal|slice:"1:"|first != 0 %}
-                    <div class="col-sm dots">{{ tal|slice:"1:"|first|dots }}</div>
-                {% else %}
-                    <div class="col-sm dots"></div>
-                {% endif %}
-                <div class="col-sm">
-                    {{ ski|first }}
-                    {% with skiname=ski|last %}
-                        {% if object|get_specialty:skiname %}({{ object|get_specialty:skiname }}){% endif %}
-                    {% endwith %}
-                </div>
-                {% if ski|slice:"1:"|first != 0 %}
-                    <div class="col-sm dots">{{ ski|slice:"1:"|first|dots }}</div>
-                {% else %}
-                    <div class="col-sm dots"></div>
-                {% endif %}
-                <div class="col-sm">
-                    {{ kno|first }}
-                    {% with knoname=kno|last %}
-                        {% if object|get_specialty:knoname %}({{ object|get_specialty:knoname }}){% endif %}
-                    {% endwith %}
-                </div>
-                {% if kno|slice:"1:"|first != 0 %}
-                    <div class="col-sm dots">{{ kno|slice:"1:"|first|dots }}</div>
-                {% else %}
-                    <div class="col-sm dots"></div>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% endif %}
 </div>
