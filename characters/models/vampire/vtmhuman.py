@@ -5,6 +5,7 @@ from django.db import models
 class VtMHuman(Human):
     type = "vtm_human"
     gameline = "vtm"
+    freebie_step = 5
 
     talents = [
         "alertness",

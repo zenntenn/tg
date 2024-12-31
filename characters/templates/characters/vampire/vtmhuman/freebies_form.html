@@ -113,7 +113,7 @@
             
             // Make the AJAX call
             $.ajax({                       // initialize an AJAX request
-                url: '{% url 'characters:mage:ajax:load_vtmhuman_examples' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-character-type/)
+                url: '{% url 'characters:vampire:ajax:load_vtmhuman_examples' %}',                    // set the url of the request (= localhost:8000/hr/ajax/load-character-type/)
                 data: {
                 'category': this.value,       // add the gameline id to the GET parameters
                 'object': {{object.id}}

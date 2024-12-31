@@ -84,3 +84,10 @@
         {% include "characters/core/character/not_owner.html" %}
     {% endif %}
 {% endblock contents %}
+{% block buttons %}
+    {% if object.creation_status == object.freebie_step and not object.freebies_approved %}
+    {% elif not is_approved_user %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock buttons %}
