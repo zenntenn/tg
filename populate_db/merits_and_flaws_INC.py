@@ -2749,9 +2749,13 @@ MeritFlaw.objects.get_or_create(name="Devil's Mark")[0].add_source(
 MeritFlaw.objects.get_or_create(name="Diabolical Mentor")[0].add_source(
     "Book of Secrets", 64
 )
-MeritFlaw.objects.get_or_create(name="Dilettante")[0].add_source(
+x = MeritFlaw.objects.get_or_create(name="Dilettante")[0].add_source(
     "The Rich Bastard's Guide to Magick", 44
 )
+x.add_ratings([1, 3])
+x.allowed_types.add(mage)
+x.allowed_types.add(human)
+x.allowed_types.add(sorcerer)
 MeritFlaw.objects.get_or_create(name="Discredited")[0].add_source("Book of Secrets", 62)
 MeritFlaw.objects.get_or_create(name="Dogmatic")[0].add_source("Book of Secrets", 64)
 MeritFlaw.objects.get_or_create(name="Double Agent")[0].add_source(
@@ -2766,9 +2770,13 @@ MeritFlaw.objects.get_or_create(name="Dual Affiliation")[0].add_source(
 MeritFlaw.objects.get_or_create(name="Easily Intoxicated")[0].add_source(
     "Book of Secrets", 40
 )
-MeritFlaw.objects.get_or_create(name="Eccentric")[0].add_source(
+x = MeritFlaw.objects.get_or_create(name="Eccentric")[0].add_source(
     "The Rich Bastard's Guide to Magick", 44
 )
+x.add_ratings([-1, -2])
+x.allowed_types.add(mage)
+x.allowed_types.add(human)
+x.allowed_types.add(sorcerer)
 MeritFlaw.objects.get_or_create(name="Echo Chamber")[0].add_source(
     "Book of Secrets", 66
 )
@@ -2778,7 +2786,7 @@ MeritFlaw.objects.get_or_create(name="Echoes (Mage)")[0].add_source(
 MeritFlaw.objects.get_or_create(name="Eidetic Memory")[0].add_source(
     "Book of Secrets", 44
 )
-MeritFlaw.objects.get_or_create(name="Enchanting Features")[0].add_source(
+MeritFlaw.objects.get_or_create(name="Enchanting Feature")[0].add_source(
     "Book of Secrets", 37
 )
 MeritFlaw.objects.get_or_create(name="Enemy")[0].add_source(
@@ -2817,9 +2825,14 @@ MeritFlaw.objects.get_or_create(name="Feral Mind")[0].add_source("Book of Secret
 MeritFlaw.objects.get_or_create(name="Fifth Degree")[0].add_source(
     "Book of Secrets", 68
 )
-MeritFlaw.objects.get_or_create(name="Financial Partner")[0].add_source(
+x = MeritFlaw.objects.get_or_create(name="Financial Partner")[0].add_source(
     "The Rich Bastard's Guide to Magick", 45
 )
+x.add_ratings([-2, -3, -4])
+x.allowed_types.add(mage)
+x.allowed_types.add(human)
+x.allowed_types.add(sorcerer)
+
 MeritFlaw.objects.get_or_create(name="Flashbacks (Mage and Changeling)")[0].add_source(
     "Book of Secrets", 52
 )
@@ -3086,9 +3099,14 @@ MeritFlaw.objects.get_or_create(name="Powerful Ally")[0].add_source(
     "Book of Secrets", 77
 )
 MeritFlaw.objects.get_or_create(name="Prestige")[0].add_source("Book of Secrets", 56)
-MeritFlaw.objects.get_or_create(name="Prestigious Mentor")[0].add_source(
+x = MeritFlaw.objects.get_or_create(name="Prestigious Mentor")[0].add_source(
     "Book of Secrets", 54
 )
+x.add_ratings([1])
+x.allowed_types.add(mage)
+x.allowed_types.add(human)
+x.allowed_types.add(sorcerer)
+
 MeritFlaw.objects.get_or_create(name="Primal Marks")[0].add_source(
     "Book of Secrets", 90
 )
@@ -3145,9 +3163,14 @@ MeritFlaw.objects.get_or_create(name="Sanctity")[0].add_source("Book of Secrets"
 MeritFlaw.objects.get_or_create(name="Scientific Mystic/Techgnosi")[0].add_source(
     "Book of Secrets", 45
 )
-MeritFlaw.objects.get_or_create(name="Screw the Rules")[0].add_source(
+x = MeritFlaw.objects.get_or_create(name="Screw the Rules")[0].add_source(
     "The Rich Bastard's Guide to Magick", 44
 )
+x.add_ratings([4])
+x.allowed_types.add(mage)
+x.allowed_types.add(human)
+x.allowed_types.add(sorcerer)
+
 MeritFlaw.objects.get_or_create(name="Secret Code Language")[0].add_source(
     "Book of Secrets", 57
 )

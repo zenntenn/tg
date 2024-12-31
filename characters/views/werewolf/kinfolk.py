@@ -1,12 +1,27 @@
+from characters.forms.core.ally import AllyForm
 from characters.forms.werewolf.kinfolk import KinfolkCreationForm
 from characters.models.core.merit_flaw_block import MeritFlawRating
 from characters.models.werewolf.kinfolk import Kinfolk
 from characters.views.core.backgrounds import HumanBackgroundsView
-from characters.views.core.human import HumanAttributeView, HumanCharacterCreationView
-from characters.views.werewolf.wtahuman import WtAHumanAbilityView
+from characters.views.core.generic_background import GenericBackgroundView
+from characters.views.core.human import (
+    HumanAttributeView,
+    HumanCharacterCreationView,
+    HumanFreebieFormPopulationView,
+)
+from characters.views.werewolf.wtahuman import (
+    WtAHumanAbilityView,
+    WtAHumanAlliesView,
+    WtAHumanExtrasView,
+    WtAHumanFreebieFormPopulationView,
+    WtAHumanFreebiesView,
+    WtAHumanLanguagesView,
+    WtAHumanSpecialtiesView,
+)
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
+from game.models import ObjectType
 
 
 class KinfolkDetailView(SpecialUserMixin, DetailView):
@@ -243,6 +258,36 @@ class KinfolkAbilityView(WtAHumanAbilityView):
 
 
 class KinfolkBackgroundsView(HumanBackgroundsView):
+    # TODO: Tribal Restrictions?
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
+class KinfolkExtrasView(WtAHumanExtrasView):
+    model = Kinfolk
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
+class KinfolkFreebiesView(WtAHumanFreebiesView):
+    model = Kinfolk
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
+class KinfolkFreebieFormPopulationView(HumanFreebieFormPopulationView):
+    primary_class = Kinfolk
+
+
+class KinfolkLanguagesView(WtAHumanLanguagesView):
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
+class KinfolkAlliesView(GenericBackgroundView):
+    primary_object_class = Kinfolk
+    background_name = "allies"
+    form_class = AllyForm
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
+class KinfolkSpecialtiesView(WtAHumanSpecialtiesView):
     template_name = "characters/werewolf/kinfolk/chargen.html"
 
 
@@ -251,12 +296,11 @@ class KinfolkCharacterCreationView(HumanCharacterCreationView):
         1: KinfolkAttributeView,
         2: KinfolkAbilityView,
         3: KinfolkBackgroundsView,
-        # TODO: Powers
-        # TODO: Backstory
-        # TODO: Freebies
-        # TODO: Languages
-        # TODO: Expanded Backgrounds
-        # TODO: Specialties
+        4: KinfolkExtrasView,
+        5: KinfolkFreebiesView,
+        6: KinfolkLanguagesView,
+        7: KinfolkAlliesView,
+        8: KinfolkSpecialtiesView,
     }
     model_class = Kinfolk
     key_property = "creation_status"

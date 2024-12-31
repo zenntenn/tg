@@ -8,4 +8,9 @@ urls = [
         views.werewolf.wtahuman.WtAHumanFreebieFormPopulationView.as_view(),
         name="load_wtahuman_examples",
     ),
+    path(
+        "load_kinfolk_examples/",
+        views.werewolf.kinfolk.KinfolkFreebieFormPopulationView.as_view(),
+        name="load_kinfolk_examples",
+    ),
 ]

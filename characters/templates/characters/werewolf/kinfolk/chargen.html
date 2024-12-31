@@ -35,6 +35,54 @@
                 {% include "characters/core/background_block/detail.html" %}
             {% endif %}
         {% endblock backgrounds %}
+        {% block advantages %}
+            {% include "characters/werewolf/kinfolk/advantages_display.html" %}
+        {% endblock advantages %}
+        {% block mfs %}
+            {% if object.creation_status >= 4 %}
+                {% include "characters/core/human/mf_display_block.html" %}
+            {% endif %}
+        {% endblock mfs %}
+        {% block appearance %}
+            {% if object.creation_status == 4 %}
+                {% include "characters/werewolf/wtahuman/appearance_block_form.html" %}
+            {% elif object.creation_status > 4 %}
+                {% include "characters/werewolf/wtahuman/appearance_block_display.html" %}
+            {% endif %}
+        {% endblock appearance %}
+        {% block languages %}
+            {% if object.creation_status > 6 %}
+                {% include "characters/core/human/language_display_block.html" %}
+            {% elif object.creation_status == 6 %}
+                {% include "characters/core/human/human_language_block_form.html" %}
+            {% endif %}
+        {% endblock languages %}
+        {% block history %}
+            {% if object.creation_status == 4 %}
+                {% include "characters/werewolf/wtahuman/history_block_form.html" %}
+            {% elif object.creation_status > 4 %}
+                {% include "characters/werewolf/wtahuman/history_block_display.html" %}
+            {% endif %}
+        {% endblock history %}
+        {% block freebies %}
+            {% if object.creation_status == 5 and object.freebies_approved %}
+                {% include "characters/werewolf/kinfolk/freebies_form.html" %}
+            {% elif object.creation_status == 5 %}
+                <div class="row">
+                    <h2 class="col-sm {{ object.get_heading }}">Waiting on ST to Assign Freebie Total</h2>
+                </div>
+            {% endif %}
+        {% endblock freebies %}
+        {% block ally %}
+            {% if object.creation_status == 7 %}
+                {% include "characters/core/ally/form_include.html" %}
+            {% endif %}
+        {% endblock ally %}
+        {% block specialties_form %}
+            {% if object.creation_status == 8 %}
+                {% include "characters/werewolf/wtahuman/specialties_block_form.html" %}
+            {% endif %}
+        {% endblock specialties_form %}
     {% else %}
         {% include "characters/core/character/not_owner.html" %}
     {% endif %}

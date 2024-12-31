@@ -6,7 +6,7 @@ class WtAHuman(Human):
     type = "wta_human"
 
     gameline = "wta"
-    
+
     freebie_step = 5
 
     talents = [

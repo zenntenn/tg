@@ -1,7 +1,7 @@
 from characters import views
 from django.urls import include, path
 
-from . import create, detail, index, update, ajax
+from . import ajax, create, detail, index, update
 
 urls = [
     path("ajax/", include((ajax.urls, "vampire_ajax"), namespace="ajax")),

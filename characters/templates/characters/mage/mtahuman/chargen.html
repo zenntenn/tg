@@ -35,6 +35,9 @@
                 {% include "characters/core/background_block/detail.html" %}
             {% endif %}
         {% endblock backgrounds %}
+        {% block advantages %}
+            {% include "characters/core/human/advantages_display.html" %}
+        {% endblock advantages %}
         {% block appearance %}
             {% if object.creation_status == 4 %}
                 {% include "characters/mage/mtahuman/appearance_block_form.html" %}

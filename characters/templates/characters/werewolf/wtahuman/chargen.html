@@ -35,6 +35,14 @@
                 {% include "characters/core/background_block/detail.html" %}
             {% endif %}
         {% endblock backgrounds %}
+        {% block advantages %}
+            {% include "characters/core/human/advantages_display.html" %}
+        {% endblock advantages %}
+        {% block mfs %}
+            {% if object.creation_status >= 4 %}
+                {% include "characters/core/human/mf_display_block.html" %}
+            {% endif %}
+        {% endblock mfs %}
         {% block appearance %}
             {% if object.creation_status == 4 %}
                 {% include "characters/werewolf/wtahuman/appearance_block_form.html" %}
@@ -42,11 +50,6 @@
                 {% include "characters/werewolf/wtahuman/appearance_block_display.html" %}
             {% endif %}
         {% endblock appearance %}
-        {% block mfs %}
-            {% if object.creation_status >= 4 %}
-                {% include "characters/core/human/mf_display_block.html" %}
-            {% endif %}
-        {% endblock mfs %}
         {% block languages %}
             {% if object.creation_status > 6 %}
                 {% include "characters/core/human/language_display_block.html" %}

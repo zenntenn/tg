@@ -11,6 +11,8 @@ from items.models.werewolf.fetish import Fetish
 class Kinfolk(WtAHuman):
     type = "kinfolk"
 
+    freebie_step = 5
+
     allowed_backgrounds = ["allies", "contacts", "mentor", "pure_breed", "resources"]
 
     BREEDS = [
@@ -44,6 +46,13 @@ class Kinfolk(WtAHuman):
     class Meta:
         verbose_name = "Kinfolk"
         verbose_name_plural = "Kinfolk"
+
+    def add_mf(self, mf, rating):
+        val = super().add_mf(mf, rating)
+        if val:
+            if mf.name == "Gnosis":
+                self.gnosis = rating - 4
+        return val
 
     def has_breed(self):
         return self.breed != ""
