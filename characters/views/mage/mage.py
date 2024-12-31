@@ -160,7 +160,7 @@ class MageFreebieFormPopulationView(HumanFreebieFormPopulationView):
                     ]
                 )
                 / 2
-                > self.character.practice_rating(x) + 1
+                >= self.character.practice_rating(x) + 1
             )
         ]
 
