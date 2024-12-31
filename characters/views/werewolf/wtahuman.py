@@ -12,6 +12,7 @@ from characters.models.werewolf.wtahuman import WtAHuman
 from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
+    HumanAbilityView,
     HumanAttributeView,
     HumanCharacterCreationView,
     HumanDetailView,
@@ -211,175 +212,14 @@ class WtAHumanAttributeView(HumanAttributeView):
         return context
 
 
-class WtAHumanAbilityView(SpecialUserMixin, UpdateView):
+class WtAHumanAbilityView(HumanAbilityView):
     model = WtAHuman
-    fields = [
-        "alertness",
-        "leadership",
-        "primal_urge",
-        "animal_ken",
-        "larceny",
-        "performance",
-        "survival",
-        "enigmas",
-        "law",
-        "occult",
-        "rituals",
-        "technology",
-        "athletics",
-        "brawl",
-        "empathy",
-        "expression",
-        "intimidation",
-        "streetwise",
-        "subterfuge",
-        "crafts",
-        "drive",
-        "etiquette",
-        "firearms",
-        "melee",
-        "stealth",
-        "academics",
-        "computer",
-        "investigation",
-        "medicine",
-        "science",
-    ]
+    fields = WtAHuman.primary_abilities
     template_name = "characters/werewolf/wtahuman/chargen.html"
 
     primary = 11
     secondary = 7
     tertiary = 4
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["primary"] = self.primary
-        context["secondary"] = self.secondary
-        context["tertiary"] = self.tertiary
-        context["is_approved_user"] = self.check_if_special_user(
-            self.object, self.request.user
-        )
-        return context
-
-    def form_valid(self, form):
-        awareness = form.cleaned_data.get("awareness")
-        art = form.cleaned_data.get("art")
-        leadership = form.cleaned_data.get("leadership")
-        larceny = form.cleaned_data.get("larceny")
-        meditation = form.cleaned_data.get("meditation")
-        research = form.cleaned_data.get("research")
-        survival = form.cleaned_data.get("survival")
-        technology = form.cleaned_data.get("technology")
-        cosmology = form.cleaned_data.get("cosmology")
-        enigmas = form.cleaned_data.get("enigmas")
-        finance = form.cleaned_data.get("finance")
-        law = form.cleaned_data.get("law")
-        occult = form.cleaned_data.get("occult")
-        politics = form.cleaned_data.get("politics")
-        alertness = form.cleaned_data.get("alertness")
-        athletics = form.cleaned_data.get("athletics")
-        brawl = form.cleaned_data.get("brawl")
-        empathy = form.cleaned_data.get("empathy")
-        expression = form.cleaned_data.get("expression")
-        intimidation = form.cleaned_data.get("intimidation")
-        streetwise = form.cleaned_data.get("streetwise")
-        subterfuge = form.cleaned_data.get("subterfuge")
-        crafts = form.cleaned_data.get("crafts")
-        drive = form.cleaned_data.get("drive")
-        etiquette = form.cleaned_data.get("etiquette")
-        firearms = form.cleaned_data.get("firearms")
-        melee = form.cleaned_data.get("melee")
-        stealth = form.cleaned_data.get("stealth")
-        academics = form.cleaned_data.get("academics")
-        computer = form.cleaned_data.get("computer")
-        investigation = form.cleaned_data.get("investigation")
-        medicine = form.cleaned_data.get("medicine")
-        science = form.cleaned_data.get("science")
-
-        for ability in [
-            awareness,
-            art,
-            leadership,
-            larceny,
-            meditation,
-            research,
-            survival,
-            technology,
-            cosmology,
-            enigmas,
-            finance,
-            law,
-            occult,
-            politics,
-            alertness,
-            athletics,
-            brawl,
-            empathy,
-            expression,
-            intimidation,
-            streetwise,
-            subterfuge,
-            crafts,
-            drive,
-            etiquette,
-            firearms,
-            melee,
-            stealth,
-            academics,
-            computer,
-            investigation,
-            medicine,
-            science,
-        ]:
-            if ability < 0 or ability > 3:
-                form.add_error(None, "Abilities must range from 0-3")
-                return self.form_invalid(form)
-
-        triple = [
-            alertness
-            + art
-            + athletics
-            + awareness
-            + brawl
-            + empathy
-            + expression
-            + intimidation
-            + leadership
-            + streetwise
-            + subterfuge,
-            crafts
-            + drive
-            + etiquette
-            + firearms
-            + larceny
-            + meditation
-            + melee
-            + research
-            + stealth
-            + survival
-            + technology,
-            academics
-            + computer
-            + cosmology
-            + enigmas
-            + finance
-            + investigation
-            + law
-            + medicine
-            + occult
-            + politics
-            + science,
-        ]
-        triple.sort()
-        if triple != [self.tertiary, self.secondary, self.primary]:
-            form.add_error(
-                None,
-                f"Abilities must be distributed {self.primary}/{self.secondary}/{self.tertiary}",
-            )
-            return self.form_invalid(form)
-        self.object.creation_status += 1
-        self.object.save()
-        return super().form_valid(form)
 
 
 class WtAHumanBackgroundsView(HumanBackgroundsView):
