@@ -1,7 +1,10 @@
 from characters.forms.changeling.changeling import ChangelingCreationForm
 from characters.models.changeling.changeling import Changeling
 from characters.models.core.merit_flaw_block import MeritFlawRating
+from characters.views.changeling.ctdhuman import CtDHumanAbilityView
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.human import HumanAttributeView, HumanCharacterCreationView
+from characters.views.mage.mtahuman import MtAHumanAbilityView
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
@@ -257,11 +260,24 @@ class ChangelingAttributeView(HumanAttributeView):
         return context
 
 
+class ChangelingAbilityView(CtDHumanAbilityView):
+    model = Changeling
+    template_name = "characters/changeling/changeling/chargen.html"
+
+    primary = 13
+    secondary = 9
+    tertiary = 5
+
+
+class ChangelingBackgroundsView(HumanBackgroundsView):
+    template_name = "characters/changeling/changeling/chargen.html"
+
+
 class ChangelingCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: ChangelingAttributeView,
-        # TODO: Abilities
-        # TODO: Backgrounds
+        2: ChangelingAbilityView,
+        3: ChangelingBackgroundsView,
         # TODO: Powers
         # TODO: Backstory
         # TODO: Freebies

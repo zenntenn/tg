@@ -5,6 +5,8 @@ from django.db import models
 class CtDHuman(Human):
     type = "ctd_human"
 
+    freebie_step = 5
+
     gameline = "ctd"
 
     talents = [

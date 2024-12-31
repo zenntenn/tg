@@ -58,6 +58,11 @@ urls = [
         name="fomor",
     ),
     path(
+        "fomor/full/<pk>/",
+        views.werewolf.FomorUpdateView.as_view(),
+        name="fomor_full",
+    ),
+    path(
         "werewolf/<pk>/",
         views.werewolf.WerewolfUpdateView.as_view(),
         name="werewolf",
@@ -73,6 +78,11 @@ urls = [
         name="kinfolk",
     ),
     path(
+        "kinfolk/full/<pk>/",
+        views.werewolf.KinfolkUpdateView.as_view(),
+        name="kinfolk_full",
+    ),
+    path(
         "camps/<pk>/",
         views.werewolf.CampUpdateView.as_view(),
         name="camp",
@@ -81,5 +91,10 @@ urls = [
         "fomoripower/<pk>/",
         views.werewolf.FomoriPowerUpdateView.as_view(),
         name="fomoripower",
+    ),
+    path(
+        "wta_human/full/<pk>/",
+        views.werewolf.WtAHumanUpdateView.as_view(),
+        name="wta_human_full",
     ),
 ]

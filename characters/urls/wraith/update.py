@@ -7,4 +7,9 @@ urls = [
         views.wraith.WtOHumanUpdateView.as_view(),
         name="wto_human",
     ),
+    path(
+        "wto_human/full/<pk>/",
+        views.wraith.WtOHumanUpdateView.as_view(),
+        name="wto_human_full",
+    ),
 ]

@@ -1,12 +1,35 @@
+from characters.models.changeling.ctdhuman import CtDHuman
 from characters.models.mage.mage import Mage
 from characters.models.mage.mtahuman import MtAHuman
+from characters.models.mage.sorcerer import Sorcerer
+from characters.models.vampire.vtmhuman import VtMHuman
 from characters.models.werewolf.spirit_character import SpiritCharacter
+from characters.models.werewolf.wtahuman import WtAHuman
+from characters.models.wraith.wtohuman import WtOHuman
 from django import forms
 
 
 class AllyForm(forms.Form):
-    ALLY_TYPE_CHOICES = [("human", "Human"), ("mage", "Mage"), ("spirit", "Spirit")]
-    ALLY_CLASSES = {"human": MtAHuman, "mage": Mage, "spirit": SpiritCharacter}
+    ALLY_TYPE_CHOICES = [
+        ("vtmhuman", "Human (Vampire)"),
+        ("wtahuman", "Human (Werewolf)"),
+        ("mtahuman", "Human (Mage)"),
+        ("ctdhuman", "Human (Changeling)"),
+        ("wtohuman", "Human (Wraith)"),
+        ("mage", "Mage"),
+        ("sorcerer", "Sorcerer"),
+        ("spirit", "Spirit"),
+    ]
+    ALLY_CLASSES = {
+        "vtmhuman": VtMHuman,
+        "wtahuman": WtAHuman,
+        "mtahuman": MtAHuman,
+        "ctdhuman": CtDHuman,
+        "wtohuman": WtOHuman,
+        "mage": Mage,
+        "sorcerer": Sorcerer,
+        "spirit": SpiritCharacter,
+    }
 
     ally_type = forms.ChoiceField(choices=ALLY_TYPE_CHOICES, label="Ally Type")
     name = forms.CharField(

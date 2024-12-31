@@ -1,6 +1,8 @@
 from characters.forms.werewolf.garou import WerewolfCreationForm
 from characters.models.werewolf.garou import Werewolf
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.human import HumanAttributeView, HumanCharacterCreationView
+from characters.views.werewolf.wtahuman import WtAHumanAbilityView
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
@@ -223,11 +225,24 @@ class WerewolfAttributeView(HumanAttributeView):
         return context
 
 
+class WerewolfAbilityView(WtAHumanAbilityView):
+    model = Werewolf
+    template_name = "characters/werewolf/garou/chargen.html"
+
+    primary = 13
+    secondary = 9
+    tertiary = 5
+
+
+class WerewolfBackgroundsView(HumanBackgroundsView):
+    template_name = "characters/werewolf/garou/chargen.html"
+
+
 class WerewolfCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: WerewolfAttributeView,
-        # TODO: Abilities
-        # TODO: Backgrounds
+        2: WerewolfAbilityView,
+        3: WerewolfBackgroundsView,
         # TODO: Powers
         # TODO: Backstory
         # TODO: Freebies

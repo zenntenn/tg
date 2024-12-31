@@ -1,7 +1,9 @@
 from characters.forms.werewolf.kinfolk import KinfolkCreationForm
 from characters.models.core.merit_flaw_block import MeritFlawRating
 from characters.models.werewolf.kinfolk import Kinfolk
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.human import HumanAttributeView, HumanCharacterCreationView
+from characters.views.werewolf.wtahuman import WtAHumanAbilityView
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
@@ -235,11 +237,20 @@ class KinfolkAttributeView(HumanAttributeView):
         return context
 
 
+class KinfolkAbilityView(WtAHumanAbilityView):
+    model = Kinfolk
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
+class KinfolkBackgroundsView(HumanBackgroundsView):
+    template_name = "characters/werewolf/kinfolk/chargen.html"
+
+
 class KinfolkCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: KinfolkAttributeView,
-        # TODO: Abilities
-        # TODO: Backgrounds
+        2: KinfolkAbilityView,
+        3: KinfolkBackgroundsView,
         # TODO: Powers
         # TODO: Backstory
         # TODO: Freebies

@@ -1,6 +1,8 @@
 from characters.forms.werewolf.fomor import FomorCreationForm
 from characters.models.werewolf.fomor import Fomor
+from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.human import HumanAttributeView, HumanCharacterCreationView
+from characters.views.werewolf.wtahuman import WtAHumanAbilityView
 from core.views.approved_user_mixin import SpecialUserMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
@@ -195,11 +197,20 @@ class FomorAttributeView(HumanAttributeView):
         return context
 
 
+class FomorAbilityView(WtAHumanAbilityView):
+    model = Fomor
+    template_name = "characters/werewolf/fomor/chargen.html"
+
+
+class FomorBackgroundsView(HumanBackgroundsView):
+    template_name = "characters/werewolf/fomor/chargen.html"
+
+
 class FomorCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: FomorAttributeView,
-        # TODO: Abilities
-        # TODO: Backgrounds
+        2: FomorAbilityView,
+        3: FomorBackgroundsView,
         # TODO: Powers
         # TODO: Backstory
         # TODO: Freebies

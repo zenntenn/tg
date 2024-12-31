@@ -48,7 +48,7 @@
     {% block allies %}
         {% if is_approved_user %}
             {% if object.creation_status == 5 %}
-                {% include "characters/mage/ally/form_include.html" %}
+                {% include "characters/core/ally/form_include.html" %}
             {% endif %}
         {% endif %}
     {% endblock allies %}
