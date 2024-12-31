@@ -13,6 +13,25 @@ class CharacterCreationForm(forms.Form):
                 self.fields["char_type"].choices = [
                     (x.name, x.name.replace("_", " ").title())
                     for x in ObjectType.objects.filter(type="char")
+                    if x.name
+                    in [
+                        "mage",
+                        "cabal",
+                        "group",
+                        "pack",
+                        "motley",
+                        "sorcerer",
+                        "mta_human",
+                        "wto_human",
+                        "ctd_human",
+                        "wta_human",
+                        "vtm_human",
+                        "changeling",
+                        "kinfolk",
+                        "fomor",
+                        "companion",
+                        "werewolf",
+                    ]
                 ]
             else:
                 self.fields["char_type"].choices = [
