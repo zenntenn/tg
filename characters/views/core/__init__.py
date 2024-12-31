@@ -24,59 +24,22 @@ from characters.models.vampire.vtmhuman import VtMHuman
 from characters.models.werewolf.charm import SpiritCharm
 from characters.models.werewolf.spirit_character import SpiritCharacter
 from characters.models.werewolf.totem import Totem
-from characters.views import changeling, mage, vampire, werewolf, wraith
-from core.utils import get_gameline_name
+from characters.views.changeling.changeling import ChangelingCharacterCreationView
+from characters.views.changeling.ctdhuman import CtDHumanCharacterCreationView
+from characters.views.changeling.motley import MotleyDetailView
 from core.views.generic import DictView
 from django.db.models import OuterRef, Subquery
-from django.forms import BaseModelForm
-from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, ListView, UpdateView, View
-from game.models import Chronicle, ObjectType
+from django.views.generic import ListView
+from game.models import ObjectType
 
-from .archetype import (
-    ArchetypeCreateView,
-    ArchetypeDetailView,
-    ArchetypeListView,
-    ArchetypeUpdateView,
-)
-from .backgrounds import HumanBackgroundsView
-from .character import CharacterCreateView, CharacterDetailView, CharacterUpdateView
-from .derangement import (
-    DerangementCreateView,
-    DerangementDetailView,
-    DerangementListView,
-    DerangementUpdateView,
-)
-from .group import GroupCreateView, GroupDetailView, GroupUpdateView
-from .human import (
-    HumanAttributeView,
-    HumanBasicsView,
-    HumanCharacterCreationView,
-    HumanCreateView,
-    HumanDetailView,
-    HumanUpdateView,
-    load_examples,
-    load_values,
-)
-from .meritflaw import (
-    MeritFlawCreateView,
-    MeritFlawDetailView,
-    MeritFlawListView,
-    MeritFlawUpdateView,
-)
-from .specialty import (
-    SpecialtyCreateView,
-    SpecialtyDetailView,
-    SpecialtyListView,
-    SpecialtyUpdateView,
-)
+from .group import GroupDetailView
 
 
 class GenericCharacterDetailView(DictView):
+    from characters.views import changeling, mage, vampire, werewolf, wraith
+
     view_mapping = {
-        "character": CharacterDetailView,
-        "human": HumanCharacterCreationView,
         "spirit_character": werewolf.SpiritDetailView,
         "mta_human": mage.MtAHumanCharacterCreationView,
         "mage": mage.MageCharacterCreationView,
@@ -86,8 +49,8 @@ class GenericCharacterDetailView(DictView):
         "kinfolk": werewolf.KinfolkCharacterCreationView,
         "werewolf": werewolf.WerewolfCharacterCreationView,
         "fomor": werewolf.FomorCharacterCreationView,
-        "changeling": changeling.ChangelingCharacterCreationView,
-        "ctd_human": changeling.CtDHumanCharacterCreationView,
+        "changeling": ChangelingCharacterCreationView,
+        "ctd_human": CtDHumanCharacterCreationView,
         "companion": mage.CopanionCharacterCreationView,
         "sorcerer": mage.SorcererCharacterCreationView,
     }
@@ -97,11 +60,13 @@ class GenericCharacterDetailView(DictView):
 
 
 class GenericGroupDetailView(DictView):
+    from characters.views import changeling, mage, vampire, werewolf, wraith
+
     view_mapping = {
         "group": GroupDetailView,
         "cabal": mage.CabalDetailView,
         "pack": werewolf.PackDetailView,
-        "motley": changeling.MotleyDetailView,
+        "motley": MotleyDetailView,
     }
     model_class = Group
     key_property = "type"

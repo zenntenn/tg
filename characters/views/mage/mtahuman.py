@@ -19,10 +19,10 @@ from characters.models.mage.mtahuman import MtAHuman
 from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
-    HuamnFreebieFormPopulationView,
     HumanAttributeView,
     HumanCharacterCreationView,
     HumanDetailView,
+    HumanFreebieFormPopulationView,
     HumanFreebiesView,
 )
 from characters.views.mage.background_views import MtAEnhancementView
@@ -560,7 +560,7 @@ class MtAHumanFreebiesView(HumanFreebiesView):
     template_name = "characters/mage/mtahuman/chargen.html"
 
 
-class MtAHumanFreebieFormPopulationView(HuamnFreebieFormPopulationView):
+class MtAHumanFreebieFormPopulationView(HumanFreebieFormPopulationView):
     primary_class = MtAHuman
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 

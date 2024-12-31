@@ -23,10 +23,10 @@ from characters.models.mage.sphere import Sphere
 from characters.views.core.backgrounds import HumanBackgroundsView
 from characters.views.core.generic_background import GenericBackgroundView
 from characters.views.core.human import (
-    HuamnFreebieFormPopulationView,
     HumanAttributeView,
     HumanCharacterCreationView,
     HumanDetailView,
+    HumanFreebieFormPopulationView,
     HumanFreebiesView,
     HumanLanguagesView,
     HumanSpecialtiesView,
@@ -84,7 +84,7 @@ def load_mf_ratings(request):
     )
 
 
-class MageFreebieFormPopulationView(HuamnFreebieFormPopulationView):
+class MageFreebieFormPopulationView(HumanFreebieFormPopulationView):
     primary_class = Mage
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 

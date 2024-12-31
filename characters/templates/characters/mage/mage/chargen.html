@@ -81,7 +81,7 @@
             {% endif %}
         {% endblock history %}
         {% block freebies %}
-            {% if object.creation_status == 7 and object.freebies_approved %}
+            {% if object.creation_status == object.freebie_step and object.freebies_approved %}
                 {% include "characters/mage/mage/freebies_form.html" %}
             {% elif object.creation_status == 7 %}
                 <div class="row">
@@ -128,7 +128,7 @@
         {% endblock sanctum %}
         {% block ally %}
             {% if object.creation_status == 16 %}
-                {% include "characters/mage/ally/form_include.html" %}
+                {% include "characters/core/ally/form_include.html" %}
             {% endif %}
         {% endblock ally %}
         {% block specialties_form %}
@@ -141,7 +141,7 @@
     {% endif %}
 {% endblock contents %}
 {% block buttons %}
-    {% if object.creation_status == 7 and not object.freebies_approved %}
+    {% if object.creation_status == object.freebie_step and not object.freebies_approved %}
     {% elif not is_approved_user %}
     {% else %}
         {{ block.super }}

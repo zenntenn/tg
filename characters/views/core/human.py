@@ -184,6 +184,52 @@ class HumanAttributeView(SpecialUserMixin, UpdateView):
         return context
 
 
+class HumanAbilityView(SpecialUserMixin, UpdateView):
+    model = Human
+    fields = Human.primary_abilities
+    template_name = "characters/wraith/wtohuman/chargen.html"
+
+    primary = 11
+    secondary = 7
+    tertiary = 4
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["primary"] = self.primary
+        context["secondary"] = self.secondary
+        context["tertiary"] = self.tertiary
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
+        return context
+
+    def form_valid(self, form):
+        for ability in self.model.primary_abilities:
+            if form.cleaned_data.get(ability) < 0 or form.cleaned_data.get(ability) > 3:
+                form.add_error(None, "Abilities must range from 0-3")
+                return self.form_invalid(form)
+
+        talents = sum(
+            [form.cleaned_data.get(ability) for ability in self.model.talents]
+        )
+        skills = sum([form.cleaned_data.get(ability) for ability in self.model.skills])
+        knowledges = sum(
+            [form.cleaned_data.get(ability) for ability in self.model.knowledges]
+        )
+
+        triple = [talents, skills, knowledges]
+        triple.sort()
+        if triple != [self.tertiary, self.secondary, self.primary]:
+            form.add_error(
+                None,
+                f"Abilities must be distributed {self.primary}/{self.secondary}/{self.tertiary}",
+            )
+            return self.form_invalid(form)
+        self.object.creation_status += 1
+        self.object.save()
+        return super().form_valid(form)
+
+
 class HumanBiographicalInformation(SpecialUserMixin, UpdateView):
     model = Human
     fields = [
@@ -239,7 +285,7 @@ def load_values(request):
     )
 
 
-class HuamnFreebieFormPopulationView(View):
+class HumanFreebieFormPopulationView(View):
     primary_class = Human
     template_name = "characters/core/human/load_examples_dropdown_list.html"
 

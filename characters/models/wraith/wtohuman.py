@@ -7,43 +7,47 @@ class WtOHuman(Human):
 
     gameline = "wto"
 
+    freebie_step = 5
+
     talents = [
         "alertness",
         "athletics",
+        "awareness",
         "brawl",
         "empathy",
         "expression",
         "intimidation",
+        "persuasion",
         "streetwise",
         "subterfuge",
-        "awareness",
-        "persuasion",
     ]
     skills = [
         "crafts",
         "drive",
         "etiquette",
         "firearms",
-        "melee",
-        "stealth",
         "larceny",
+        "leadership",
         "meditation",
+        "melee",
         "performance",
+        "stealth",
     ]
     knowledges = [
         "academics",
+        "bureaucracy",
         "computer",
+        "enigmas",
         "investigation",
         "medicine",
-        "science",
-        "bureaucracy",
-        "enigmas",
         "occult",
         "politics",
+        "science",
         "technology",
     ]
     primary_abilities = [
         "alertness",
+        "leadership",
         "awareness",
         "persuasion",
         "larceny",
@@ -94,6 +98,7 @@ class WtOHuman(Human):
     larceny = models.IntegerField(default=0)
     meditation = models.IntegerField(default=0)
     performance = models.IntegerField(default=0)
+    leadership = models.IntegerField(default=0)
 
     bureaucracy = models.IntegerField(default=0)
     enigmas = models.IntegerField(default=0)

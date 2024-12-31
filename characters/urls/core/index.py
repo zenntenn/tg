@@ -1,26 +1,29 @@
-from characters import views
+from characters.views.core.archetype import ArchetypeListView
+from characters.views.core.derangement import DerangementListView
+from characters.views.core.meritflaw import MeritFlawListView
+from characters.views.core.specialty import SpecialtyListView
 from django.urls import path
 
 app_name = "characters:detail"
 urls = [
     path(
         "archetypes/",
-        views.core.ArchetypeListView.as_view(),
+        ArchetypeListView.as_view(),
         name="archetype",
     ),
     path(
         "meritflaws/",
-        views.core.MeritFlawListView.as_view(),
+        MeritFlawListView.as_view(),
         name="meritflaw",
     ),
     path(
         "specialties/",
-        views.core.SpecialtyListView.as_view(),
+        SpecialtyListView.as_view(),
         name="specialty",
     ),
     path(
         "derangement/",
-        views.core.DerangementListView.as_view(),
+        DerangementListView.as_view(),
         name="derangement",
     ),
 ]

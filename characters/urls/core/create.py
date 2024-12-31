@@ -1,46 +1,52 @@
-from characters import views
+from characters.views.core.archetype import ArchetypeCreateView
+from characters.views.core.character import CharacterCreateView
+from characters.views.core.derangement import DerangementCreateView
+from characters.views.core.group import GroupCreateView
+from characters.views.core.human import HumanBasicsView, HumanCreateView
+from characters.views.core.meritflaw import MeritFlawCreateView
+from characters.views.core.specialty import SpecialtyCreateView
 from django.urls import path
 
 app_name = "characters:create"
 urls = [
     path(
         "character/",
-        views.core.CharacterCreateView.as_view(),
+        CharacterCreateView.as_view(),
         name="character",
     ),
     path(
         "group/",
-        views.core.GroupCreateView.as_view(),
+        GroupCreateView.as_view(),
         name="group",
     ),
     path(
         "human/",
-        views.core.HumanBasicsView.as_view(),
+        HumanBasicsView.as_view(),
         name="human",
     ),
     path(
         "human/full/",
-        views.core.HumanCreateView.as_view(),
+        HumanCreateView.as_view(),
         name="human_full",
     ),
     path(
         "archetypes/",
-        views.core.ArchetypeCreateView.as_view(),
+        ArchetypeCreateView.as_view(),
         name="archetype",
     ),
     path(
         "meritflaws/",
-        views.core.MeritFlawCreateView.as_view(),
+        MeritFlawCreateView.as_view(),
         name="meritflaw",
     ),
     path(
         "specialties/",
-        views.core.SpecialtyCreateView.as_view(),
+        SpecialtyCreateView.as_view(),
         name="specialty",
     ),
     path(
         "derangement/",
-        views.core.DerangementCreateView.as_view(),
+        DerangementCreateView.as_view(),
         name="derangement",
     ),
 ]

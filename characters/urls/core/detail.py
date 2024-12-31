@@ -1,28 +1,32 @@
-from characters import views
+from characters.views.core import GenericCharacterDetailView, GenericGroupDetailView
+from characters.views.core.archetype import ArchetypeDetailView
+from characters.views.core.derangement import DerangementDetailView
+from characters.views.core.meritflaw import MeritFlawDetailView
+from characters.views.core.specialty import SpecialtyDetailView
 from django.urls import path
 
 app_name = "characters:detail"
 urls = [
-    path("groups/<pk>/", views.core.GenericGroupDetailView.as_view(), name="group"),
+    path("groups/<pk>/", GenericGroupDetailView.as_view(), name="group"),
     path(
         "archetypes/<pk>/",
-        views.core.ArchetypeDetailView.as_view(),
+        ArchetypeDetailView.as_view(),
         name="archetype",
     ),
     path(
         "meritflaws/<pk>/",
-        views.core.MeritFlawDetailView.as_view(),
+        MeritFlawDetailView.as_view(),
         name="meritflaw",
     ),
     path(
         "specialties/<pk>/",
-        views.core.SpecialtyDetailView.as_view(),
+        SpecialtyDetailView.as_view(),
         name="specialty",
     ),
     path(
         "derangement/<pk>/",
-        views.core.DerangementDetailView.as_view(),
+        DerangementDetailView.as_view(),
         name="derangement",
     ),
-    path("<pk>/", views.core.GenericCharacterDetailView.as_view(), name="character"),
+    path("<pk>/", GenericCharacterDetailView.as_view(), name="character"),
 ]

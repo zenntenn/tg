@@ -1,20 +1,22 @@
-from characters import views
+from characters.views.changeling.house import HouseListView
+from characters.views.changeling.kith import KithListView
+from characters.views.changeling.legacy import LegacyListView
 from django.urls import path
 
 urls = [
     path(
         "kith/",
-        views.changeling.KithListView.as_view(),
+        KithListView.as_view(),
         name="kith",
     ),
     path(
         "house/",
-        views.changeling.HouseListView.as_view(),
+        HouseListView.as_view(),
         name="house",
     ),
     path(
         "legacy/",
-        views.changeling.LegacyListView.as_view(),
+        LegacyListView.as_view(),
         name="legacy",
     ),
 ]
