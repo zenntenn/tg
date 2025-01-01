@@ -79,30 +79,6 @@ class LocationIndexView(View):
             elif gameline == "mta":
                 redi = f"locations:mage:list:{loc_type}"
             return redirect(redi)
-        elif action == "random":
-            if request.user.is_authenticated:
-                user = request.user
-            else:
-                user = None
-            try:
-                loc = self.locs[request.POST["loc_type"]].objects.create(
-                    name=request.POST["name"], owner=user
-                )
-                if "rank" in dir(loc):
-                    loc.rank = int(request.POST["rank"])
-                    loc.save()
-            except KeyError:
-                raise Http404
-            if request.POST["rank"] is None:
-                rank = None
-            else:
-                rank = int(request.POST["rank"])
-            try:
-                loc.random(rank=rank)
-            except:
-                raise Http404
-            loc.save()
-            return redirect(loc.get_absolute_url())
         return render(request, "locations/index.html", context)
 
     def get_context(self):

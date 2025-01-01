@@ -1,4 +1,3 @@
-import random
 from collections import defaultdict
 
 from characters.models.core.ability_block import Ability
@@ -244,9 +243,6 @@ class Mage(MtAHuman):
         self.faction = faction
         self.subfaction = subfaction
         self.save()
-        if affiliation is not None:
-            if affiliation.name == "Marauders":
-                self.random_quiet()
         return True
 
     def get_affiliation_weights(self):
@@ -266,32 +262,6 @@ class Mage(MtAHuman):
                 affiliation_weights[faction] = 1
         return affiliation_weights
 
-    def random_faction(self, affiliation=None, faction=None, subfaction=None):
-        if affiliation is None:
-            affiliation_weights = self.get_affiliation_weights()
-            affiliation = weighted_choice(affiliation_weights, ceiling=100)
-            if subfaction is not None:
-                faction = subfaction.parent
-            if faction is not None:
-                affiliation = faction.parent
-        if faction is None:
-            faction = (
-                MageFaction.objects.filter(parent=affiliation).order_by("?").first()
-            )
-            if subfaction is not None:
-                faction = subfaction.parent
-        if subfaction is None:
-            if (
-                random.random() < 0.25
-                or faction.name == "Order of Hermes"
-                or affiliation.name == "Technocratic Union"
-            ):
-                if MageFaction.objects.filter(parent=faction).exists():
-                    subfaction = (
-                        MageFaction.objects.filter(parent=faction).order_by("?").first()
-                    )
-        return self.set_faction(affiliation, faction, subfaction=subfaction)
-
     def set_quiet_type(self, quiet_type):
         self.quiet_type = quiet_type
         return True
@@ -299,11 +269,6 @@ class Mage(MtAHuman):
     def set_quiet_rating(self, quiet_rating):
         self.quiet = quiet_rating
         return True
-
-    def random_quiet(self):
-        return self.set_quiet_rating(random.randint(1, 5)) and self.set_quiet_type(
-            random.choice(["denial", "madness", "morbidity"])
-        )
 
     def has_focus(self):
         return (
@@ -319,73 +284,6 @@ class Mage(MtAHuman):
         for prac in practices:
             self.add_practice(prac)
         return True
-
-    def random_focus(self):
-        self.metaphysical_tenet = (
-            Tenet.objects.filter(tenet_type="met").order_by("?").first()
-        )
-        self.ascension_tenet = (
-            Tenet.objects.filter(tenet_type="asc").order_by("?").first()
-        )
-        self.personal_tenet = (
-            Tenet.objects.filter(tenet_type="per").order_by("?").first()
-        )
-        while (
-            random.random() < 0.1 and Tenet.objects.filter(tenet_type="oth").count() > 0
-        ):
-            self.other_tenets.add(
-                Tenet.objects.filter(tenet_type="oth")
-                .exclude(pk__in=self.other_tenets.all())
-                .order_by("?")
-                .first()
-            )
-        practices = {
-            x: 1
-            for x in Practice.objects.exclude(
-                polymorphic_ctype__model="specializedpractice"
-            ).exclude(polymorphic_ctype__model="corruptedpractice")
-        }
-        if self.affiliation:
-            for practice in self.affiliation.practices.all():
-                practices[practice] += 1
-        if self.faction:
-            for practice in self.faction.practices.all():
-                practices[practice] += 1
-        if self.subfaction:
-            for practice in self.subfaction.practices.all():
-                practices[practice] += 1
-        for tenet in (
-            Tenet.objects.filter(
-                pk__in=[
-                    self.metaphysical_tenet.id,
-                    self.ascension_tenet.id,
-                    self.personal_tenet.id,
-                ]
-            )
-            | self.other_tenets.all()
-        ):
-            for practice in tenet.associated_practices.all():
-                practices[practice] += 1
-            for practice in tenet.limited_practices.all():
-                practices[practice] -= 1
-        if SpecializedPractice.objects.filter(faction=self.faction).count() == 1:
-            specialized_practice = SpecializedPractice.objects.get(faction=self.faction)
-            practices[specialized_practice] = (
-                10 + practices[specialized_practice.parent_practice]
-            )
-            practices = {
-                k: v
-                for k, v in practices.items()
-                if k != specialized_practice.parent_practice and v > 0
-            }
-        min_key = min([x for x in practices.values()])
-        if set([x for x in practices.values()]) != {min_key}:
-            practices = {k: v for k, v in practices.items() if v > min_key}
-        while self.total_practices() < self.arete:
-            prac = weighted_choice(practices, ceiling=1000)
-            self.add_practice(prac)
-            practices[prac] += 1
-        self.save()
 
     def add_background(self, background, maximum=5):
         if background in ["requisitions", "secret_weapons"]:
@@ -442,25 +340,6 @@ class Mage(MtAHuman):
     def has_affinity_sphere(self):
         return self.affinity_sphere is not None
 
-    def random_affinity_sphere(self):
-        self.set_affinity_sphere(random.choice(list(self.get_spheres().keys())))
-
-    def random_sphere(self):
-        max_sphere = min(
-            [self.arete, max([self.practice_rating(x) for x in self.practices.all()])]
-        )
-        if len(self.filter_spheres(maximum=self.arete - 1).keys()) != 0:
-            choice = weighted_choice(self.filter_spheres(maximum=max_sphere - 1))
-            self.add_sphere(choice)
-        else:
-            raise ValueError(f"All Spheres Maxed out at Arete {self.arete}")
-
-    def random_spheres(self):
-        if self.affinity_sphere is None:
-            self.random_affinity_sphere()
-        while self.total_spheres() < 6:
-            self.random_sphere()
-
     def set_corr_name(self, name):
         if name not in [x[0] for x in self.CORR_NAMES]:
             raise ValueError("Unknown Sphere Name")
@@ -489,26 +368,12 @@ class Mage(MtAHuman):
             cap = 10
         return add_dot(self, "arete", cap)
 
-    def random_arete(self):
-        target = random.randint(1, 3)
-        self.arete = target
-        for i in range(target - 1):
-            self.spent_freebies.append(
-                self.freebie_spend_record("Arete", "arete", i + 2)
-            )
-        self.save()
-
     def has_essence(self):
         return self.essence != ""
 
     def set_essence(self, essence):
         self.essence = essence
         return True
-
-    def random_essence(self):
-        options = ["Dynamic", "Pattern", "Primordial", "Questing"]
-        choice = random.choice(options)
-        self.set_essence(choice)
 
     def add_resonance(self, resonance):
         if isinstance(resonance, str):
@@ -564,70 +429,9 @@ class Mage(MtAHuman):
             )
         return all_res
 
-    def random_resonance(self):
-        choice = self.choose_random_resonance()
-        return self.add_resonance(choice)
-
-    def choose_random_resonance(self):
-        if random.random() < 0.7:
-            possible = self.filter_resonance(minimum=1, maximum=4)
-            if len(possible) > 0:
-                choice = random.choice(possible)
-                return choice
-        while True:
-            index = random.randint(1, Resonance.objects.last().id)
-            if Resonance.objects.filter(pk=index).exists():
-                choice = Resonance.objects.get(pk=index)
-                if self.resonance_rating(choice) < 5:
-                    return choice
-
-    def random_ability(self, maximum=4):
-        PRACTICE_ABILITY_WEIGHTING = 5
-        PRIMARY_ABILITY_WEIGHTING = 5
-
-        possibilities = self.filter_abilities(maximum=maximum)
-        for practice in self.practices.all():
-            for ability in practice.abilities.all():
-                if ability.property_name in possibilities:
-                    possibilities[ability.property_name] += PRACTICE_ABILITY_WEIGHTING
-        for ability in possibilities:
-            if ability in self.primary_abilities:
-                possibilities[ability] *= PRIMARY_ABILITY_WEIGHTING
-        choice = weighted_choice(possibilities, ceiling=100)
-        self.add_ability(choice, 5)
-
-    def random_abilities(self):
-        ability_types = [13, 9, 5]
-        random.shuffle(ability_types)
-        while self.total_talents() < ability_types[0]:
-            possibilities = self.get_talents()
-            for practice in self.practices.all():
-                for ability in practice.abilities.all():
-                    if ability.property_name in possibilities:
-                        possibilities[ability.property_name] += 3
-            ability_choice = weighted_choice(possibilities, ceiling=100)
-            self.add_ability(ability_choice, maximum=3)
-        while self.total_skills() < ability_types[1]:
-            possibilities = self.get_skills()
-            for practice in self.practices.all():
-                for ability in practice.abilities.all():
-                    if ability.property_name in possibilities:
-                        possibilities[ability.property_name] += 3
-            ability_choice = weighted_choice(possibilities, ceiling=100)
-            self.add_ability(ability_choice, maximum=3)
-        while self.total_knowledges() < ability_types[2]:
-            possibilities = self.get_knowledges()
-            for practice in self.practices.all():
-                for ability in practice.abilities.all():
-                    if ability.property_name in possibilities:
-                        possibilities[ability.property_name] += 3
-            ability_choice = weighted_choice(possibilities, ceiling=100)
-            self.add_ability(ability_choice, maximum=3)
-
     def add_effect(self, effect):
         if effect.is_learnable(self):
             r = Rote.objects.create(effect=effect)
-            r.random(mage=self)
             self.rote_points -= effect.cost()
             self.rotes.add(r)
             return True
@@ -647,15 +451,6 @@ class Mage(MtAHuman):
         q = Q(**spheres)
         return effects.filter(q)
 
-    def random_effect(self):
-        options = self.filter_effects(max_cost=self.rote_points)
-        effect = random.choice(options)
-        self.add_effect(effect)
-
-    def random_effects(self):
-        while self.rote_points > 0:
-            self.random_effect()
-
     def total_effects(self):
         return sum(x.effect.cost() for x in self.rotes.all())
 
@@ -664,11 +459,6 @@ class Mage(MtAHuman):
         for sphere in self.filter_spheres(minimum=4):
             output = output and (self.specialties.filter(stat=sphere).count() > 0)
         return output
-
-    def random_specialties(self):
-        super().random_specialties()
-        for sphere in self.filter_spheres(minimum=4):
-            self.specialties.add(random.choice(self.filter_specialties(stat=sphere)))
 
     def needs_specialties(self):
         return len(self.needed_specialties()) > 0
@@ -714,13 +504,6 @@ class Mage(MtAHuman):
     def has_mage_history(self):
         return self.age_of_awakening != 0 and self.avatar_description != ""
 
-    def random_mage_history(self):
-        self.awakening = "A thing that happened"
-        self.seekings = "None"
-        self.quiets = "None"
-        self.age_of_awakening = 15
-        self.avatar_description = "An Avatar"
-
     def xp_frequencies(self):
         return {
             "attribute": 16,
@@ -731,27 +514,6 @@ class Mage(MtAHuman):
             "arete": 10,
             "rote points": 2,
         }
-
-    def random_xp_functions(self):
-        return {
-            "attribute": self.random_xp_attributes,
-            "ability": self.random_xp_abilities,
-            "background": self.random_xp_background,
-            "willpower": self.random_xp_willpower,
-            "sphere": self.random_xp_sphere,
-            "arete": self.random_xp_arete,
-            "rote points": self.random_xp_rote_points,
-        }
-
-    def random_xp_sphere(self):
-        trait = weighted_choice(self.get_spheres())
-        return self.spend_xp(trait)
-
-    def random_xp_arete(self):
-        return self.spend_xp("arete")
-
-    def random_xp_rote_points(self):
-        return self.spend_xp("rote points")
 
     def spend_xp(self, trait):
         output = super().spend_xp(trait)
@@ -834,20 +596,6 @@ class Mage(MtAHuman):
             "resonance": 10,
         }
 
-    def random_freebie_functions(self):
-        return {
-            "attribute": self.random_freebies_attributes,
-            "ability": self.random_freebies_abilities,
-            "background": self.random_freebies_background,
-            "willpower": self.random_freebies_willpower,
-            "meritflaw": self.random_freebies_meritflaw,
-            "sphere": self.random_freebies_sphere,
-            "arete": self.random_freebies_arete,
-            "quintessence": self.random_freebies_quintessence,
-            "rote points": self.random_freebies_rote_points,
-            "resonance": self.random_freebies_resonance,
-        }
-
     def freebie_costs(self):
         costs = super().freebie_costs()
         costs.update(
@@ -907,96 +655,13 @@ class Mage(MtAHuman):
             return False
         return trait
 
-    def random_freebies_sphere(self):
-        trait = weighted_choice(self.get_spheres())
-        return self.spend_freebies(trait)
-
-    def random_freebies_arete(self):
-        return self.spend_freebies("arete")
-
-    def random_freebies_quintessence(self):
-        return self.spend_freebies("quintessence")
-
-    def random_freebies_rote_points(self):
-        return self.spend_freebies("rote points")
-
-    def random_freebies_resonance(self):
-        trait = self.choose_random_resonance()
-        return self.spend_freebies(trait)
-
     def has_library(self):
         return (
             sum([x.rank for x in Library.objects.filter(owned_by=self)]) == self.library
         )
 
-    def random_library(self):
-        if self.library > 0:
-            l = Library.objects.create(
-                name=f"{self.name}'s Library",
-                rank=self.library,
-                owner=self.owner,
-                chronicle=self.chronicle,
-                owned_by=self,
-            )
-            l.random(faction=self.faction)
-            l.save()
-            self.library_owned = l
-            self.save()
-
     def has_node(self):
         return sum([x.rank for x in Node.objects.filter(owned_by=self)]) == self.node
-
-    def random_node(self, favored_list=None):
-        if self.node > 0:
-            n = Node.objects.create(
-                name="", owner=self.owner, chronicle=self.chronicle, owned_by=self
-            )
-            n.random(rank=self.node, favored_list=favored_list)
-            if not n.has_name():
-                n.set_name(f"{self.name}'s Node")
-            n.save()
-            self.node_owned = n
-            self.save()
-
-    def random(
-        self,
-        freebies=15,
-        xp=0,
-        ethnicity=None,
-        affiliation=None,
-        faction=None,
-        subfaction=None,
-        backgrounds=None,
-    ):
-        self.update_status("Ran")
-        self.willpower = 5
-        if backgrounds is None:
-            backgrounds = {}
-        self.freebies = freebies
-        self.xp = xp
-        self.random_arete()
-        self.random_name(ethnicity=ethnicity)
-        self.random_concept()
-        self.random_archetypes()
-        self.random_essence()
-        self.random_faction(
-            affiliation=affiliation, faction=faction, subfaction=subfaction
-        )
-        self.random_focus()
-        self.random_attributes()
-        self.random_abilities()
-        self.random_backgrounds(backgrounds)
-        self.random_affinity_sphere()
-        self.random_spheres()
-        self.random_history()
-        self.random_resonance()
-        self.random_finishing_touches()
-        self.random_mage_history()
-        self.mf_based_corrections()
-        self.random_effects()
-        self.random_specialties()
-        self.random_node(favored_list=self.resonance.all())
-        self.random_library()
 
     def freebie_cost(self, trait_type):
         mage_costs = {

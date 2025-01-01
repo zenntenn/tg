@@ -27,13 +27,3 @@ class Artifact(Wonder):
 
     def has_power(self):
         return self.power is not None
-
-    def random_power(self):
-        e = Effect.objects.filter(max_sphere=self.rank).order_by("?").first()
-        return self.set_power(e)
-
-    def random(self, name=None, rank=None):
-        super().random(rank=rank, name=name)
-        self.random_power()
-        self.quintessence_max = 5 * self.rank
-        self.background_cost = 2 * self.rank

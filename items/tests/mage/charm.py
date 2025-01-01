@@ -21,35 +21,6 @@ class TestCharm(TestCase):
         self.assertTrue(self.charm.has_power())
 
 
-class TestRandomCharm(TestCase):
-    def setUp(self):
-        self.player, _ = User.objects.get_or_create(username="Test")
-        Effect.objects.create(name="Fireball", forces=3, prime=2)
-        Effect.objects.create(name="F1", forces=1)
-        Effect.objects.create(name="F2", forces=2)
-        Effect.objects.create(name="F3", forces=3)
-        Effect.objects.create(name="F4", forces=4)
-        Effect.objects.create(name="F5", forces=5)
-        Resonance.objects.create(name="Test")
-
-    def test_random_power(self):
-        c = Charm.objects.create(name="", rank=3)
-        self.assertFalse(c.has_power())
-        self.assertTrue(c.random_power())
-        self.assertTrue(c.has_power())
-
-    def test_random(self):
-        c = Charm.objects.create(name="")
-        c.random()
-        self.assertEqual(c.status, "Ran")
-        self.assertTrue(c.has_name())
-        self.assertTrue(c.has_rank())
-        self.assertTrue(c.has_resonance())
-        self.assertTrue(c.has_power())
-        self.assertEqual(c.arete, c.rank)
-        self.assertEqual(c.background_cost, c.rank)
-
-
 class TestCharmDetailView(TestCase):
     def setUp(self) -> None:
         self.wonder = Charm.objects.create(name="Test Charm")

@@ -20,30 +20,6 @@ class TestGroupDetailView(TestCase):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/core/group/detail.html")
 
-
-class TestRandomGroup(TestCase):
-    def setUp(self):
-        human_setup()
-        self.group = Group.objects.create()
-        for key in list(Human().get_abilities().keys()) + list(
-            Human().get_attributes().keys()
-        ):
-            for i in range(5):
-                Specialty.objects.create(name=f"{key.title()} Specialty {i}", stat=key)
-
-    def test_random_name(self):
-        self.group.random_name()
-        self.assertTrue(self.group.name.startswith("Random Group"))
-
-    def test_random(self):
-        self.group.random(
-            num_chars=5, new_characters=True, random_names=True, freebies=15, xp=0
-        )
-        self.assertEqual(self.group.members.count(), 5)
-        self.assertIsNotNone(self.group.leader)
-        self.assertIn(self.group.leader, self.group.members.all())
-
-
 class TestGroupCreateView(TestCase):
     def setUp(self):
         self.valid_data = {

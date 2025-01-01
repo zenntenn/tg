@@ -19,21 +19,6 @@ class TestPack(TestCase):
         self.assertEqual(pack.members.count(), 5)
         self.assertIsNotNone(pack.leader)
 
-    def test_random_pack(self):
-        pack = Pack.objects.create(name="Pack 1")
-        pack.random(num_chars=5, new_characters=False)
-        self.assertEqual(pack.members.count(), 5)
-        for werewolf in Werewolf.objects.all():
-            self.assertIn(werewolf, pack.members.all())
-        pack = Pack.objects.create(name="Pack 2")
-        pack.random(num_chars=5, new_characters=True)
-        self.assertEqual(pack.members.count(), 5)
-
-    def test_exception(self):
-        pack = Pack.objects.create(name="Pack 10")
-        with self.assertRaises(ValueError):
-            pack.random(num_chars=10, new_characters=False)
-
     def test_totem_total(self):
         p = Pack.objects.create(name="Pack")
         self.assertEqual(p.total_totem(), 0)
@@ -58,18 +43,6 @@ class TestPack(TestCase):
         self.assertFalse(pack.has_totem())
         pack.set_totem(t)
         self.assertTrue(pack.has_totem())
-
-    def test_random_totem(self):
-        p = Pack.objects.create(name="Pack")
-        for i in range(4):
-            w = Werewolf.objects.create(name=f"Werewolf {i}", owner=self.player)
-            w.totem = i + 1
-            w.save()
-            p.members.add(w)
-            p.save()
-        self.assertFalse(p.has_totem())
-        self.assertTrue(p.random_totem())
-        self.assertTrue(p.has_totem())
 
     def test_str(self):
         pack = Pack.objects.create(name="Pack 1")

@@ -57,12 +57,6 @@ class Character(CharacterModel):
         self.concept = concept
         return True
 
-    def random_concept(self):
-        self.set_concept("Random")
-
-    def random_name(self):
-        self.set_name(f"Random Character {Character.objects.count()}")
-
     def get_absolute_url(self):
         return reverse("characters:character", kwargs={"pk": self.pk})
 

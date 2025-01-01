@@ -397,7 +397,6 @@ class TestMage(TestCase):
         self.character.arete = 3
         self.character.forces = 3
         self.character.prime = 2
-        self.character.random_focus()
         e = Effect.objects.create(name="Fireball", forces=3, prime=2)
         e2 = Effect.objects.create(name="Teleport", correspondence=3)
         num = self.character.rotes.count()
@@ -419,7 +418,6 @@ class TestMage(TestCase):
         self.character.forces = 3
         self.character.prime = 2
         self.character.matter = 1
-        self.character.random_focus()
         self.assertFalse(self.character.has_effects())
         self.character.add_effect(Effect.objects.get(name="Forces 3"))
         self.assertFalse(self.character.has_effects())
@@ -435,7 +433,6 @@ class TestMage(TestCase):
         self.character.forces = 3
         self.character.prime = 2
         self.character.correspondence = 3
-        self.character.random_focus()
         r1 = Effect.objects.create(name="Fireball", forces=3, prime=2)
         r2 = Effect.objects.create(name="Teleport", correspondence=3)
         self.character.add_effect(r1)
@@ -474,7 +471,7 @@ class TestMage(TestCase):
         self.assertFalse(self.character.has_mage_history())
         self.character.age_of_awakening = 13
         self.assertFalse(self.character.has_mage_history())
-        self.character.avatar_description = "The Random Graph"
+        self.character.avatar_description = "Avatar"
         self.assertTrue(self.character.has_mage_history())
 
     def test_set_quiet_rating(self):
@@ -524,170 +521,6 @@ class TestMage(TestCase):
         self.assertFalse(self.character.has_node())
         Node.objects.create(name="test_node", rank=2, owned_by=self.character)
         self.assertTrue(self.character.has_node())
-
-
-class TestRandomMage(TestCase):
-    def setUp(self):
-        mage_setup()
-        self.player = User.objects.create_user(username="Test")
-        self.character = Mage.objects.create(name="", owner=self.player)
-
-    def test_random_affinity_sphere(self):
-        self.assertFalse(self.character.has_affinity_sphere())
-        self.character.random_affinity_sphere()
-        self.assertTrue(self.character.has_affinity_sphere())
-
-    def test_random_faction(self):
-        self.assertFalse(self.character.has_faction())
-        self.character.random_faction()
-        self.assertTrue(self.character.has_faction())
-        mage = Mage.objects.create(name="Random Character", owner=self.player)
-        mocker = Mock()
-        mocker.side_effect = [0.01]
-        with mock.patch("random.random", mocker):
-            mage.random_faction()
-        self.assertIsNotNone(mage.subfaction)
-
-    def test_random_focus(self):
-        self.assertFalse(self.character.has_focus())
-        self.character.random_focus()
-        self.assertTrue(self.character.has_focus())
-
-    def test_random_sphere(self):
-        self.character.arete = 3
-        self.character.affinity_sphere = Sphere.objects.get(property_name="forces")
-        num = self.character.total_spheres()
-        self.character.random_focus()
-        self.character.random_sphere()
-        self.assertEqual(self.character.total_spheres(), num + 1)
-
-    def test_random_spheres(self):
-        self.character.arete = 3
-        self.character.random_focus()
-        self.assertFalse(self.character.has_spheres())
-        self.character.random_spheres()
-        self.assertTrue(self.character.has_spheres())
-
-    def test_random_arete(self):
-        self.assertEqual(self.character.arete, 0)
-        self.character.random_arete()
-        self.assertNotEqual(self.character.arete, 0)
-
-    def test_random_essence(self):
-        self.assertFalse(self.character.has_essence())
-        self.character.random_essence()
-        self.assertTrue(self.character.has_essence())
-
-    def test_random_resonance(self):
-        self.assertEqual(self.character.total_resonance(), 0)
-        self.character.random_resonance()
-        self.assertEqual(self.character.total_resonance(), 1)
-
-    def test_random_effect(self):
-        self.character.arete = 3
-        self.character.forces = 3
-        self.character.prime = 2
-        self.character.matter = 1
-        self.character.random_focus()
-        num = self.character.rotes.count()
-        self.character.random_effect()
-        self.assertEqual(self.character.rotes.count(), num + 1)
-
-    def test_random_effects(self):
-        self.character.arete = 3
-        self.character.forces = 3
-        self.character.prime = 2
-        self.character.matter = 1
-        self.character.random_focus()
-        self.assertFalse(self.character.has_effects())
-        self.character.random_effects()
-        self.assertTrue(self.character.has_effects())
-
-    def test_created_node_when_has_node(self):
-        self.character.node = 3
-        self.assertFalse(self.character.has_node())
-        self.character.random_node()
-        self.assertTrue(self.character.has_node())
-
-    def test_created_library_when_has_library(self):
-        self.character.library = 3
-        self.assertFalse(self.character.has_library())
-        self.character.random_library()
-        self.assertTrue(self.character.has_library())
-
-    def test_random_specialties(self):
-        self.character.forces = 4
-        self.character.random_specialties()
-        self.assertTrue(self.character.has_specialties())
-        self.assertGreater(self.character.specialties.filter(stat="forces").count(), 0)
-
-    def test_random_quiet(self):
-        self.character.random_quiet()
-        self.assertGreater(self.character.quiet, 0)
-        self.assertNotEqual(self.character.quiet_type, "none")
-
-    def test_random(self):
-        self.assertFalse(self.character.has_name())
-        self.assertFalse(self.character.has_concept())
-        self.assertFalse(self.character.has_archetypes())
-        self.assertFalse(self.character.has_attributes())
-        self.assertFalse(self.character.has_abilities())
-        self.assertFalse(self.character.has_backgrounds())
-        self.assertFalse(self.character.has_finishing_touches())
-        self.assertFalse(self.character.has_history())
-        self.assertFalse(self.character.has_spheres())
-        self.assertFalse(self.character.has_affinity_sphere())
-        self.assertFalse(self.character.has_faction())
-        self.assertFalse(self.character.has_focus())
-        self.assertFalse(self.character.has_essence())
-        self.assertFalse(self.character.has_effects())
-        self.assertFalse(self.character.has_mage_history())
-        self.character.random(freebies=0, xp=0)
-        self.assertTrue(self.character.has_name())
-        self.assertTrue(self.character.has_concept())
-        self.assertTrue(self.character.has_archetypes())
-        self.assertTrue(self.character.has_attributes())
-        self.assertTrue(self.character.has_abilities())
-        self.assertTrue(self.character.has_specialties())
-        self.assertTrue(self.character.has_backgrounds())
-        self.assertTrue(self.character.has_finishing_touches())
-        self.assertTrue(self.character.has_history())
-        self.assertTrue(self.character.has_spheres())
-        self.assertTrue(self.character.has_affinity_sphere())
-        self.assertTrue(self.character.has_faction())
-        self.assertTrue(self.character.has_focus())
-        self.assertTrue(self.character.has_essence())
-        self.assertTrue(self.character.has_effects())
-        self.assertTrue(self.character.has_mage_history())
-        self.assertTrue(self.character.has_node())
-        self.assertTrue(self.character.has_library())
-
-    def test_choose_random_resonance(self):
-        res = self.character.choose_random_resonance()
-        self.assertIsNotNone(res)
-        self.assertIsInstance(res, Resonance)
-
-    def test_random_mage_history(self):
-        self.character.random_mage_history()
-        self.assertIsNotNone(self.character.awakening)
-        self.assertIsNotNone(self.character.seekings)
-        self.assertIsNotNone(self.character.quiets)
-        self.assertIsNotNone(self.character.age_of_awakening)
-        self.assertIsNotNone(self.character.avatar_description)
-
-    def test_random_abilities(self):
-        self.character.random_abilities()
-        triple = [
-            self.character.total_talents(),
-            self.character.total_skills(),
-            self.character.total_knowledges(),
-        ]
-        triple.sort()
-        self.assertEqual(triple, [5, 9, 13])
-
-    def test_random_ability(self):
-        self.character.random_ability()
-        self.assertGreater(self.character.total_abilities(), 0)
 
 
 class TestMageDetailView(TestCase):

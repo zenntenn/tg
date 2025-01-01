@@ -1,5 +1,3 @@
-import random
-
 from characters.models.changeling.ctdhuman import CtDHuman
 from characters.models.changeling.house import House
 from characters.models.changeling.kith import Kith
@@ -119,9 +117,6 @@ class Changeling(CtDHuman):
         self.court = court
         return True
 
-    def random_court(self):
-        return self.set_court(random.choice(["seelie", "unseelie"]))
-
     def eligible_for_house(self):
         if self.kith:
             return self.title > 0 or "Sidhe" in self.kith.name
@@ -138,10 +133,6 @@ class Changeling(CtDHuman):
             return True
         return False
 
-    def random_house(self):
-        h = House.objects.filter(court=self.court).order_by("?").first()
-        return self.set_house(h)
-
     def has_seelie_legacy(self):
         return self.seelie_legacy is not None
 
@@ -150,10 +141,6 @@ class Changeling(CtDHuman):
             self.seelie_legacy = legacy
             return True
         return False
-
-    def random_seelie_legacy(self):
-        legacy = Legacy.objects.filter(court="seelie").order_by("?").first()
-        return self.set_seelie_legacy(legacy)
 
     def has_unseelie_legacy(self):
         return self.unseelie_legacy is not None
@@ -164,10 +151,6 @@ class Changeling(CtDHuman):
             return True
         return False
 
-    def random_unseelie_legacy(self):
-        legacy = Legacy.objects.filter(court="unseelie").order_by("?").first()
-        return self.set_unseelie_legacy(legacy)
-
     def has_seeming(self):
         return self.seeming != ""
 
@@ -176,15 +159,9 @@ class Changeling(CtDHuman):
         self.seeming = seeming
         if self.seeming == "childling":
             self.add_glamour()
-        if self.seeming == "wilder":
-
-            random.choice([self.add_glamour, self.add_willpower])()
         if self.seeming == "grump":
             self.add_willpower()
         return True
-
-    def random_seeming(self):
-        return self.set_seeming(random.choice(["childling", "wilder", "grump"]))
 
     def has_kith(self):
         return self.kith is not None
@@ -192,10 +169,6 @@ class Changeling(CtDHuman):
     def set_kith(self, kith):
         self.kith = kith
         return True
-
-    def random_kith(self):
-        kith = Kith.objects.order_by("?").first()
-        return self.set_kith(kith)
 
     def add_art(self, art):
         return add_dot(self, art, 5)
@@ -231,14 +204,6 @@ class Changeling(CtDHuman):
     def total_arts(self):
         return sum(v for v in self.get_arts().values())
 
-    def random_art(self):
-        art = weighted_choice(self.get_arts())
-        return self.add_art(art)
-
-    def random_arts(self):
-        while not self.has_arts():
-            self.random_art()
-
     def add_realm(self, realm):
         return add_dot(self, realm, 5)
 
@@ -261,30 +226,6 @@ class Changeling(CtDHuman):
     def total_realms(self):
         return sum(v for v in self.get_realms().values())
 
-    def random_realm(self):
-        realm_dict = self.get_realms()
-        if self.total_realms() < 3:
-            realm_dict = {
-                k: v for k, v in realm_dict.items() if k not in ["time", "scene"]
-            }
-        realm = weighted_choice(realm_dict)
-        return self.add_art(realm)
-
-    def random_realms(self):
-        while not self.has_realms():
-            self.random_realm()
-
-    def random_background(self):
-        bgs = self.get_backgrounds()
-        bgs = {k: v + 2 for k, v in bgs.items()}
-        if self.kith:
-            if "Sidhe" not in self.kith.name:
-                bgs["holdings"] -= 1
-                bgs["title"] -= 2
-                bgs["retinue"] -= 2
-        choice = weighted_choice(bgs)
-        return self.add_background(choice)
-
     def add_banality(self):
         return add_dot(self, "banality", 10)
 
@@ -298,10 +239,6 @@ class Changeling(CtDHuman):
         self.musing_threshold = threshold
         return True
 
-    def random_musing_threshold(self):
-        threshold = random.choice(self.MUSING_THRESHOLDS)[0]
-        return self.set_musing_threshold(threshold)
-
     def has_ravaging_threshold(self):
         return self.ravaging_threshold != ""
 
@@ -309,19 +246,12 @@ class Changeling(CtDHuman):
         self.ravaging_threshold = threshold
         return True
 
-    def random_ravaging_threshold(self):
-        threshold = random.choice(self.RAVAGING_THRESHOLDS)[0]
-        return self.set_ravaging_threshold(threshold)
-
     def set_antithesis(self, antithesis):
         self.antithesis = antithesis
         return True
 
     def has_antithesis(self):
         return self.antithesis != ""
-
-    def random_antithesis(self):
-        return self.set_antithesis("Antithesis")
 
     def has_changeling_history(self):
         b = True
@@ -340,18 +270,12 @@ class Changeling(CtDHuman):
         self.date_of_crysalis = date_of_crysalis
         return True
 
-    def random_changeling_history(self):
-        return self.set_changeling_history("True Name", now(), "Crysalis", now())
-
     def has_changeling_appearance(self):
         return self.fae_mien != ""
 
     def set_changeling_appearance(self, fae_mien):
         self.fae_mien = fae_mien
         return True
-
-    def random_changeling_appearance(self):
-        return self.set_changeling_appearance("Fae Mien")
 
     def birthright_correction(self):
         if self.kith.name == "Troll":
@@ -365,37 +289,3 @@ class Changeling(CtDHuman):
         if "Sidhe" in self.kith.name:
             self.add_attribute("appearance", maximum=10)
             self.add_attribute("appearance", maximum=10)
-
-    def random(
-        self,
-        freebies=15,
-        xp=0,
-        ethnicity=None,
-    ):
-        self.update_status("Ran")
-        self.willpower = 4
-        self.freebies = freebies
-        self.xp = xp
-        self.random_name(ethnicity=ethnicity)
-        self.random_kith()
-        self.random_concept()
-        self.random_attributes()
-        self.random_abilities()
-        self.random_backgrounds()
-        self.random_seeming()
-        self.random_court()
-        self.random_seelie_legacy()
-        self.random_unseelie_legacy()
-        self.random_arts()
-        self.random_realms()
-        self.random_musing_threshold()
-        self.random_ravaging_threshold()
-        self.random_antithesis()
-        self.random_history()
-        self.random_changeling_history()
-        self.random_changeling_appearance()
-        self.random_finishing_touches()
-        self.mf_based_corrections()
-        self.random_house()
-        self.random_specialties()
-        self.birthright_correction()

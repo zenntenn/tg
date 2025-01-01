@@ -18,21 +18,6 @@ class TestMotley(TestCase):
         self.assertEqual(motley.members.count(), 5)
         self.assertIsNotNone(motley.leader)
 
-    def test_random(self):
-        motley = Motley.objects.create(name="Motley 1")
-        motley.random(num_chars=5, new_characters=False)
-        self.assertEqual(motley.members.count(), 5)
-        for changeling in Changeling.objects.all():
-            self.assertIn(changeling, motley.members.all())
-        motley = Motley.objects.create(name="Motley 2")
-        motley.random(num_chars=5, new_characters=True)
-        self.assertEqual(motley.members.count(), 5)
-
-    def test_exception(self):
-        motley = Motley.objects.create(name="Motley 10")
-        with self.assertRaises(ValueError):
-            motley.random(num_chars=10, new_characters=False)
-
     def test_str(self):
         motley = Motley.objects.create(name="Motley 1")
         self.assertEqual(str(motley), "Motley 1")

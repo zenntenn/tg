@@ -1,7 +1,5 @@
-import random
-
 from characters.models.core.statistic import Statistic
-from core.utils import add_dot, weighted_choice
+from core.utils import add_dot
 from django.db import models
 
 
@@ -72,12 +70,6 @@ class AbilityBlock(models.Model):
     def add_ability(self, ability, maximum=4):
         return add_dot(self, ability, maximum)
 
-    def random_ability(self, maximum=4):
-        choice = weighted_choice(
-            self.filter_abilities(maximum=maximum), ceiling=5, floor=0
-        )
-        self.add_ability(choice, 5)
-
     def get_abilities(self):
         tmp = {}
         tmp.update(self.get_talents())
@@ -107,19 +99,6 @@ class AbilityBlock(models.Model):
 
     def total_knowledges(self):
         return sum(self.get_knowledges().values())
-
-    def random_abilities(self, primary=13, secondary=9, tertiary=5):
-        ability_types = [primary, secondary, tertiary]
-        random.shuffle(ability_types)
-        while self.total_talents() < ability_types[0]:
-            ability_choice = weighted_choice(self.get_talents())
-            self.add_ability(ability_choice, maximum=3)
-        while self.total_skills() < ability_types[1]:
-            ability_choice = weighted_choice(self.get_skills())
-            self.add_ability(ability_choice, maximum=3)
-        while self.total_knowledges() < ability_types[2]:
-            ability_choice = weighted_choice(self.get_knowledges())
-            self.add_ability(ability_choice, maximum=3)
 
     def total_abilities(self):
         return sum(self.get_abilities().values())
