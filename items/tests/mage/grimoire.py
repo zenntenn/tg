@@ -1,17 +1,10 @@
-import random
-from unittest import mock
-from unittest.mock import Mock
-
 from characters.models.core.ability_block import Ability
 from characters.models.mage import Effect
 from characters.models.mage.faction import MageFaction
 from characters.models.mage.focus import Instrument, Practice
 from characters.models.mage.rote import Rote
 from characters.models.mage.sphere import Sphere
-from characters.tests.utils import mage_setup
 from core.models import Language
-from django.contrib.auth.models import User
-from django.db.models.query import QuerySet
 from django.test import TestCase
 from items.models.core.material import Material
 from items.models.core.medium import Medium
@@ -173,147 +166,6 @@ class TestGrimoire(TestCase):
         self.grimoire.spheres.add(Sphere.objects.get(name="Forces"))
         self.assertFalse(self.grimoire.has_rotes())
         self.grimoire.set_rotes(self.rotes)
-        self.assertTrue(self.grimoire.has_rotes())
-
-
-class TestRandomGrimoire(TestCase):
-    def setUp(self):
-        self.player, _ = User.objects.get_or_create(username="Test")
-        self.grimoire = Grimoire.objects.create(name="Random Grimoire")
-        mage_setup()
-
-    def test_random_name(self):
-        g = Grimoire.objects.create(name="")
-        g.random_medium()
-        g.random_spheres()
-        self.assertFalse(g.has_name())
-        self.assertTrue(g.random_name())
-        self.assertTrue(g.has_name())
-
-    def test_random_rank(self):
-        mocker = Mock()
-        mocker.side_effect = [0.0001, 0.00001]
-        with mock.patch("random.random", mocker):
-            self.grimoire.random_rank()
-            self.assertEqual(self.grimoire.rank, 4)
-            self.grimoire.random_rank()
-            self.assertEqual(self.grimoire.rank, 5)
-
-    def test_random_is_primer(self):
-        mocker = Mock()
-        mocker.side_effect = [0.01, 0.11]
-        with mock.patch("random.random", mocker):
-            self.grimoire.random_is_primer()
-            self.assertTrue(self.grimoire.is_primer)
-            self.grimoire.random_is_primer()
-            self.assertFalse(self.grimoire.is_primer)
-
-    def test_random_faction(self):
-        self.assertFalse(self.grimoire.has_faction())
-        self.grimoire.random_faction()
-        self.assertTrue(self.grimoire.has_faction())
-
-    def test_random_practices(self):
-        self.grimoire.faction = MageFaction.objects.get(name="Test Faction 0")
-
-        self.assertTrue(isinstance(self.grimoire.random_practices(None), QuerySet))
-
-        random_num_practices = random.randint(1, 3)
-        practices = Practice.objects.order_by("?")[:random_num_practices]
-        self.assertEqual(
-            len(self.grimoire.random_practices(practices)), random_num_practices
-        )
-
-        self.assertTrue(len(self.grimoire.random_practices(None)) >= 1)
-
-    def test_random_instruments(self):
-        self.assertTrue(isinstance(self.grimoire.random_instruments(None), QuerySet))
-
-        random_num_instruments = random.randint(1, 3)
-        instruments = Instrument.objects.order_by("?")[:random_num_instruments]
-        self.assertEqual(
-            len(self.grimoire.random_instruments(instruments)), random_num_instruments
-        )
-
-        self.assertTrue(len(self.grimoire.random_instruments(None)) >= 1)
-
-    def test_random_focus(self):
-        self.grimoire.faction = MageFaction.objects.get(name="Test Faction 0")
-        self.assertFalse(self.grimoire.has_focus())
-        self.grimoire.random_focus()
-        self.assertTrue(self.grimoire.has_focus())
-
-    def test_random_abilities(self):
-        self.grimoire.faction = MageFaction.objects.get(name="Test Faction 0")
-        self.assertFalse(self.grimoire.has_abilities())
-        self.grimoire.random_focus()
-        self.grimoire.random_abilities()
-        self.assertTrue(self.grimoire.has_abilities())
-
-    def test_random_materials(self):
-        self.assertFalse(self.grimoire.has_materials())
-        self.grimoire.random_faction()
-        self.grimoire.random_material()
-        self.assertTrue(self.grimoire.has_materials())
-
-    def test_random_language(self):
-        self.assertFalse(self.grimoire.has_language())
-        self.grimoire.random_language()
-        self.assertTrue(self.grimoire.has_language())
-
-    def test_random_medium(self):
-        self.assertFalse(self.grimoire.has_medium())
-        self.grimoire.random_medium()
-        self.assertTrue(self.grimoire.has_medium())
-
-    def test_random_length(self):
-        self.assertFalse(self.grimoire.has_length())
-        self.grimoire.random_length()
-        self.assertTrue(self.grimoire.has_length())
-
-    def test_random_date_written(self):
-        self.assertFalse(self.grimoire.has_date_written())
-        self.grimoire.random_date_written()
-        self.assertTrue(self.grimoire.has_date_written())
-
-    def test_random_spheres(self):
-        self.assertFalse(self.grimoire.has_spheres())
-        self.grimoire.random_spheres()
-        self.assertTrue(self.grimoire.has_spheres())
-
-    def test_random_rotes(self):
-        self.grimoire.random_rank()
-        self.grimoire.faction = MageFaction.objects.get(name="Test Faction 0")
-        self.grimoire.practices.add(Practice.objects.get(name="Test Practice 0"))
-        self.grimoire.abilities.add(Ability.objects.get(name="Awareness"))
-        self.grimoire.spheres.add(Sphere.objects.get(name="Correspondence"))
-        self.assertFalse(self.grimoire.has_rotes())
-        self.grimoire.random_rotes()
-        self.assertTrue(self.grimoire.has_rotes())
-
-    def test_random(self):
-        self.assertFalse(self.grimoire.has_rank())
-        self.assertFalse(self.grimoire.has_faction())
-        self.assertFalse(self.grimoire.has_medium())
-        self.assertFalse(self.grimoire.has_materials())
-        self.assertFalse(self.grimoire.has_length())
-        self.assertFalse(self.grimoire.has_focus())
-        self.assertFalse(self.grimoire.has_date_written())
-        self.assertFalse(self.grimoire.has_abilities())
-        self.assertFalse(self.grimoire.has_language())
-        self.assertFalse(self.grimoire.has_spheres())
-        self.assertFalse(self.grimoire.has_rotes())
-        self.grimoire.random()
-        self.assertTrue(self.grimoire.has_rank())
-        self.assertTrue(self.grimoire.has_faction())
-        self.assertTrue(self.grimoire.has_medium())
-        self.assertTrue(self.grimoire.has_materials())
-        self.assertTrue(self.grimoire.has_length())
-        self.assertTrue(self.grimoire.has_focus())
-        self.assertTrue(self.grimoire.has_date_written())
-        self.assertTrue(self.grimoire.has_abilities())
-        self.assertTrue(self.grimoire.has_language())
-        self.assertTrue(self.grimoire.has_spheres())
         self.assertTrue(self.grimoire.has_rotes())
 
 

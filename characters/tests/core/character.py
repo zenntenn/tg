@@ -34,22 +34,6 @@ class TestCharacter(TestCase):
         )
 
 
-class TestRandomCharacter(TestCase):
-    def setUp(self):
-        self.character = Character.objects.create()
-
-    def test_random_concept(self):
-        self.assertFalse(self.character.has_concept())
-        self.character.random_concept()
-        self.assertTrue(self.character.has_concept())
-
-    def test_random_name(self):
-        name_count = Character.objects.count()
-        self.assertNotEqual(self.character.name, f"Random Character {name_count}")
-        self.character.random_name()
-        self.assertEqual(self.character.name, f"Random Character {name_count}")
-
-
 class TestGenericCharacterDetailViews(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="Test")

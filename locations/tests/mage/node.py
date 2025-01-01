@@ -187,66 +187,6 @@ class TestNode(TestCase):
         self.assertTrue(self.node.has_output())
 
 
-class TestRandomNode(TestCase):
-    def setUp(self):
-        mage_setup()
-        self.node = Node.objects.create(name="")
-
-    def test_random_name(self):
-        self.assertFalse(self.node.has_name())
-        self.node.random_name()
-        self.assertTrue(self.node.has_name())
-
-    def test_random_rank(self):
-        self.assertEqual(self.node.rank, 0)
-        self.node.random_rank()
-        self.assertNotEqual(self.node.rank, 0)
-
-    def test_random_resonance(self):
-        self.assertEqual(self.node.total_resonance(), 0)
-        self.node.random_resonance()
-        self.assertEqual(self.node.total_resonance(), 1)
-
-    def test_random_mf(self):
-        num = self.node.total_mf()
-        while not self.node.random_mf(minimum=0):
-            assert False
-        self.assertGreater(self.node.total_mf(), num)
-
-    def test_random_size(self):
-        mocker = Mock()
-        mocker.side_effect = [0, 2]
-        with mock.patch("random.choice", mocker):
-            self.node.random_size()
-            self.assertEqual(self.node.size, 0)
-            self.node.random_size()
-            self.assertEqual(self.node.size, 2)
-
-    def test_random_ratio(self):
-        mocker = Mock()
-        mocker.side_effect = [0, 2]
-        with mock.patch("random.choice", mocker):
-            self.node.random_ratio()
-            self.assertEqual(self.node.ratio, 0)
-            self.node.random_ratio()
-            self.assertEqual(self.node.ratio, 2)
-
-    def test_random_forms(self):
-        self.assertFalse(self.node.has_output_forms())
-        self.node.random_forms()
-        self.assertTrue(self.node.has_output_forms())
-
-    def test_random(self):
-        self.assertEqual(self.node.points, 0)
-        self.node.random()
-        self.assertGreaterEqual(self.node.total_resonance(), self.node.rank)
-        self.assertNotEqual(self.node.rank, 0)
-        self.assertEqual(self.node.points, 0)
-        self.assertTrue(self.node.has_resonance())
-        self.assertTrue(self.node.has_output_forms())
-        self.assertTrue(self.node.has_output())
-
-
 class TestNodeDetailView(TestCase):
     def setUp(self) -> None:
         self.location = Node.objects.create(name="Test Node")

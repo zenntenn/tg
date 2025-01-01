@@ -67,15 +67,13 @@ class Model(PolymorphicModel):
         Chronicle, blank=True, null=True, on_delete=models.SET_NULL
     )
 
-    status_keys = ["Un", "Sub", "App", "Ret", "Dec", "Ran", "Fre"]
+    status_keys = ["Un", "Sub", "App", "Ret", "Dec"]
     statuses = [
         "Unfinished",
         "Submitted",
         "Approved",
         "Retired",
         "Deceased",
-        "Random",
-        "Freeform",
     ]
     status = models.CharField(
         max_length=3, choices=zip(status_keys, statuses), default="Un"

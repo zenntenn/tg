@@ -28,7 +28,7 @@ class TestChantry(TestCase):
         self.faction = MageFaction.objects.create(name="faction")
         self.player = User.objects.create_user(username="Test")
         self.character = Mage.objects.create(name="", owner=self.player)
-        self.grimoire = Grimoire.objects.create(name="Random Grimoire")
+        self.grimoire = Grimoire.objects.create(name="Grimoire")
         mage_setup()
 
     def test_trait_cost(self):
@@ -60,37 +60,12 @@ class TestChantry(TestCase):
         self.chantry.nodes.add(self.node2)
         self.assertEqual(self.chantry.total_node(), 2)
 
-    def test_create_nodes(self):
-        self.chantry.random_faction()
-        self.chantry.random_name()
-        self.chantry.node_rating = 0
-        self.chantry.create_nodes()
-        self.assertEqual(self.chantry.nodes.count(), 0)
-        self.assertEqual(self.chantry.total_node(), 0)
-        self.chantry.node_rating = 12
-        self.chantry.create_nodes()
-        self.assertGreater(self.chantry.nodes.count(), 0)
-        self.assertEqual(self.chantry.total_node(), 12)
-        for node in self.chantry.nodes.all():
-            self.assertEqual(node.parent, self.chantry)
-
     def test_has_library(self):
         self.chantry.library_rating = 3
         self.assertFalse(self.chantry.has_library())
         self.chantry.chantry_library = self.library
         self.chantry.save()
         self.assertTrue(self.chantry.has_library())
-
-    def test_create_library(self):
-        self.chantry.library_rating = 0
-        self.assertFalse(self.chantry.has_library())
-        self.chantry.create_library()
-        self.assertTrue(self.chantry.has_library())
-        self.assertEqual(self.chantry.chantry_library.num_books(), 0)
-        self.chantry.library_rating = 4
-        self.chantry.create_library()
-        self.assertTrue(self.chantry.has_library())
-        self.assertEqual(self.chantry.chantry_library.num_books(), 4)
 
     def test_set_library(self):
         library = Library.objects.create(name="Test Library", rank=0)
@@ -198,122 +173,6 @@ class TestChantry(TestCase):
         }
 
         self.assertEqual(result, expected)
-
-
-class TestRandomChantry(TestCase):
-    def setUp(self) -> None:
-        self.chantry = Chantry.objects.create(name="")
-        self.library = Library.objects.create(rank=3)
-        self.grimoire1 = Grimoire.objects.create()
-        self.grimoire2 = Grimoire.objects.create()
-        self.grimoire3 = Grimoire.objects.create()
-        self.library.add_book(self.grimoire1)
-        self.library.add_book(self.grimoire2)
-        self.library.add_book(self.grimoire3)
-        self.node1 = Node.objects.create(name="node1", rank=1)
-        self.node2 = Node.objects.create(name="node2", rank=1)
-        self.human = Human.objects.create(name="human")
-        self.cabal = Cabal.objects.create(name="cabal")
-        self.player = User.objects.create_user(username="Test")
-        self.character = Mage.objects.create(name="", owner=self.player)
-        self.grimoire = Grimoire.objects.create(name="Random Grimoire")
-        mage_setup()
-
-    def test_random_points(self):
-        self.chantry.rank = 1
-        self.chantry.random_points()
-        self.assertGreaterEqual(self.chantry.points, 10)
-        self.assertLessEqual(self.chantry.points, 20)
-        self.chantry.rank = 2
-        self.chantry.random_points()
-        self.assertGreaterEqual(self.chantry.points, 21)
-        self.assertLessEqual(self.chantry.points, 30)
-        self.chantry.rank = 3
-        self.chantry.random_points()
-        self.assertGreaterEqual(self.chantry.points, 31)
-        self.assertLessEqual(self.chantry.points, 70)
-        self.chantry.rank = 4
-        self.chantry.random_points()
-        self.assertGreaterEqual(self.chantry.points, 71)
-        self.assertLessEqual(self.chantry.points, 100)
-        self.chantry.rank = 5
-        self.chantry.random_points()
-        self.assertGreaterEqual(self.chantry.points, 101)
-        self.assertLessEqual(self.chantry.points, 200)
-
-    def test_random_rank(self):
-        self.assertEqual(self.chantry.rank, 0)
-        self.chantry.random_rank()
-        self.assertNotEqual(self.chantry.rank, 0)
-
-    def test_random(self):
-        self.assertFalse(self.chantry.has_faction())
-        self.assertFalse(self.chantry.has_name())
-        self.assertFalse(self.chantry.has_library())
-        self.assertFalse(self.chantry.has_season())
-        self.assertFalse(self.chantry.has_chantry_type())
-        self.assertTrue(self.chantry.has_node())
-        self.chantry.random()
-        self.assertTrue(self.chantry.has_season())
-        self.assertTrue(self.chantry.has_chantry_type())
-        self.assertTrue(self.chantry.has_faction())
-        self.assertTrue(self.chantry.has_name())
-        self.assertGreater(self.chantry.points, 0)
-        self.assertLessEqual(self.chantry.points - self.chantry.points_spent(), 1)
-
-    def test_random_faction(self):
-        self.assertFalse(self.chantry.has_faction())
-        self.assertTrue(self.chantry.random_faction())
-        self.assertTrue(self.chantry.has_faction())
-
-    def test_random_name(self):
-        self.assertEqual(self.chantry.name, "")
-        m, _ = MageFaction.objects.get_or_create(name="Society of Ether")
-        self.chantry.set_faction(m)
-        self.assertTrue(self.chantry.random_name())
-        self.assertIn("Laboratory", self.chantry.name)
-
-    def test_random_chantry_type(self):
-        self.assertFalse(self.chantry.has_chantry_type())
-        self.chantry.random_chantry_type()
-        self.assertTrue(self.chantry.has_chantry_type())
-
-    def test_random_season(self):
-        self.assertFalse(self.chantry.has_season())
-        self.chantry.random_season()
-        self.assertTrue(self.chantry.has_season())
-
-    def test_random_populate(self):
-        chantry = Chantry.objects.create(
-            name="Test Chantry",
-            season="spring",
-            chantry_type="college",
-            leadership_type="anarchy",
-            rank=1,
-        )
-        chantry.random_points()
-        chantry.random_faction()
-        chantry.random_populate()
-
-        self.assertGreaterEqual(chantry.members.count(), 3)
-
-        total_cabal_points = sum(
-            sum(x.chantry for x in cabal.members.all())
-            for cabal in self.chantry.cabals.all()
-        )
-        self.assertLessEqual(total_cabal_points, chantry.points)
-
-        for cabal in chantry.cabals.all():
-            self.assertGreaterEqual(cabal.members.count(), 3)
-
-    def test_random_leadership_type(self):
-        chantry = Chantry.objects.create()
-        chantry.random_leadership_type()
-
-        leadership_choices = [choice[0] for choice in Chantry.LEADERSHIP_CHOICES]
-
-        self.assertIn(chantry.leadership_type, leadership_choices)
-
 
 class TestChantryDetailView(TestCase):
     def setUp(self) -> None:

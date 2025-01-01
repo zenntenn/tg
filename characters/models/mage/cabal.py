@@ -28,56 +28,6 @@ class Cabal(Group):
             return "Amalgam"
         return self.type.title()
 
-    def random(
-        self,
-        num_chars=None,
-        new_characters=True,
-        random_names=True,
-        freebies=15,
-        xp=0,
-        user=None,
-        faction=None,
-        chantry=0,
-    ):
-        faction_probs = {}
-        if faction is None:
-            for faction in MageFaction.objects.all():
-                if faction.parent is None:
-                    faction_probs[faction] = 30
-                elif faction.parent.parent is None:
-                    faction_probs[faction] = 10
-                elif faction.parent.parent.parent is None:
-                    faction_probs[faction] = 1
-                else:
-                    faction_probs[faction] = 0
-            mage_faction = weighted_choice(faction_probs, ceiling=100)
-        else:
-            mage_faction = faction
-        affiliation = None
-        faction = None
-        subfaction = None
-        if mage_faction.parent is None:
-            affiliation = mage_faction
-        elif mage_faction.parent.parent is None:
-            faction = mage_faction
-        else:
-            subfaction = mage_faction
-        super().random(
-            num_chars=num_chars,
-            new_characters=new_characters,
-            random_names=random_names,
-            freebies=freebies,
-            xp=xp,
-            user=user,
-            member_type=Mage,
-            character_kwargs={
-                "affiliation": affiliation,
-                "faction": faction,
-                "subfaction": subfaction,
-                "backgrounds": {"chantry": chantry},
-            },
-        )
-
     def get_update_url(self):
         return reverse("characters:mage:update:cabal", kwargs={"pk": self.pk})
 

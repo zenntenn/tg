@@ -21,21 +21,6 @@ class TestCabal(TestCase):
         self.assertEqual(cabal.members.count(), 5)
         self.assertIsNotNone(cabal.leader)
 
-    def test_random(self):
-        cabal = Cabal.objects.create(name="Cabal 1")
-        cabal.random(num_chars=5, new_characters=False)
-        self.assertEqual(cabal.members.count(), 5)
-        for mage in Mage.objects.all():
-            self.assertIn(mage, cabal.members.all())
-        cabal = Cabal.objects.create(name="Cabal 2")
-        cabal.random(num_chars=5, new_characters=True)
-        self.assertEqual(cabal.members.count(), 5)
-
-    def test_exception(self):
-        cabal = Cabal.objects.create(name="Cabal 10")
-        with self.assertRaises(ValueError):
-            cabal.random(num_chars=10, new_characters=False)
-
     def test_str(self):
         cabal = Cabal.objects.create(name="Cabal 1")
         self.assertEqual(str(cabal), "Cabal 1")

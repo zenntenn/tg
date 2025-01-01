@@ -57,49 +57,6 @@ class TestLibrary(TestCase):
         self.assertEqual(self.library.num_books(), 3)
 
 
-class TestRandomLibrary(TestCase):
-    def setUp(self):
-        self.player, _ = User.objects.get_or_create(username="Test")
-        self.library = Library.objects.create(name="", rank=2)
-        self.grimoire = Grimoire.objects.create(name="Random Grimoire")
-        mage_setup()
-
-    def test_increase_rank(self):
-        self.assertEqual(self.library.num_books(), 0)
-        self.library.increase_rank()
-        self.library.increase_rank()
-        self.assertEqual(self.library.num_books(), 2)
-
-    def test_random_name(self):
-        self.assertFalse(self.library.has_name())
-        self.assertTrue(self.library.random_name())
-        self.assertTrue(self.library.has_name())
-
-    def test_random_rank(self):
-        self.assertEqual(self.library.rank, 2)
-        self.library.random_rank(rank=0)
-        self.assertEqual(self.library.rank, 0)
-        self.library.random_rank()
-        self.assertNotEqual(self.library.rank, 0)
-
-    def test_random_faction(self):
-        self.library.random_faction()
-        self.assertIsNotNone(self.library.faction)
-
-    def test_random_book(self):
-        num_books = self.library.num_books()
-        self.library.random_faction()
-        self.library.save()
-        self.library.random_book()
-        self.assertEqual(num_books + 1, self.library.num_books())
-
-    def test_random(self):
-        self.library.random()
-        self.assertEqual(self.library.status, "Ran")
-        self.assertIsNotNone(self.library.faction)
-        self.assertEqual(self.library.num_books(), self.library.rank)
-
-
 class TestLibraryDetailView(TestCase):
     def setUp(self):
         self.library = Library.objects.create(name="Test Library")

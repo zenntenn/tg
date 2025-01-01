@@ -1,7 +1,5 @@
-import random
-
 from characters.models.core.statistic import Statistic
-from core.utils import add_dot, weighted_choice
+from core.utils import add_dot
 from django.db import models
 
 
@@ -78,25 +76,6 @@ class AttributeBlock(models.Model):
     def total_attributes(self):
         return sum(self.get_attributes().values())
 
-    def random_attributes(self, primary=7, secondary=5, tertiary=3):
-        attribute_types = [primary, secondary, tertiary]
-        random.shuffle(attribute_types)
-        while self.total_physical_attributes() < attribute_types[0] + 3:
-            attribute_choice = weighted_choice(
-                self.get_physical_attributes(), floor=3, ceiling=3
-            )
-            add_dot(self, attribute_choice, 5)
-        while self.total_social_attributes() < attribute_types[1] + 3:
-            attribute_choice = weighted_choice(
-                self.get_social_attributes(), floor=3, ceiling=3
-            )
-            add_dot(self, attribute_choice, 5)
-        while self.total_mental_attributes() < attribute_types[2] + 3:
-            attribute_choice = weighted_choice(
-                self.get_mental_attributes(), floor=3, ceiling=3
-            )
-            add_dot(self, attribute_choice, 5)
-
     def has_attributes(
         self, primary=7, secondary=5, tertiary=3, max_value=5, attribute_dict=None
     ):
@@ -112,10 +91,6 @@ class AttributeBlock(models.Model):
         return {
             k: v for k, v in self.get_attributes().items() if minimum <= v <= maximum
         }
-
-    def random_attribute(self):
-        choice = weighted_choice(self.filter_attributes(maximum=4))
-        self.add_attribute(choice, 5)
 
     def attribute_freebies(self, form):
         cost = 5

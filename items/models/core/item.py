@@ -27,10 +27,3 @@ class ItemModel(Model):
 
     def get_heading(self):
         return "wod_heading"
-
-    def random_name(self, name=None):
-        if self.has_name():
-            return False
-        if name is None:
-            name = f"Random Item {ItemModel.objects.count()}"
-        return self.set_name(name)

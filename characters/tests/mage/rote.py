@@ -19,23 +19,6 @@ class TestRoteDetailView(TestCase):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/mage/rote/detail.html")
 
-
-class TestRandomRote(TestCase):
-    def setUp(self):
-        self.effect = Effect.objects.create(name="Test Effect")
-        occult = Ability.objects.create(name="Occult", property_name="occult")
-        self.practice = Practice.objects.create(name="Test Practice")
-        self.practice.abilities.add(occult)
-        Attribute.objects.create(name="Strength", property_name="strength")
-        self.rote = Rote.objects.create(effect=self.effect)
-
-    def test_random(self):
-        self.rote.random()
-        self.assertIsNotNone(self.rote.practice)
-        self.assertIsNotNone(self.rote.attribute)
-        self.assertIsNotNone(self.rote.ability)
-
-
 class TestRoteCreateView(TestCase):
     def setUp(self):
         e = Effect.objects.create(name="Test Effect")

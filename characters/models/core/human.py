@@ -1,4 +1,3 @@
-import random
 from datetime import date, timedelta
 
 from characters.models.core.ability_block import Ability, AbilityBlock
@@ -11,9 +10,8 @@ from characters.models.core.health_block import HealthBlock
 from characters.models.core.human_url_block import HumanUrlBlock
 from characters.models.core.merit_flaw_block import MeritFlawBlock
 from characters.models.core.specialty import Specialty
-from characters.utils import random_ethnicity, random_name
 from core.models import Language
-from core.utils import add_dot, weighted_choice
+from core.utils import add_dot
 from django.db import models
 
 
@@ -164,34 +162,6 @@ class Human(
             pk__in=self.specialties.all()
         )
 
-    def random_name(self, ethnicity=None):
-        ethnicity = random_ethnicity()
-        sex = random.random()
-        if sex < 0.495:
-            sex = "Male"
-            gender = "m"
-        elif sex < 0.99:
-            sex = "Female"
-            gender = "f"
-        else:
-            sex = "Other"
-            gender = "mf"
-        self.notes += f"\nEthnicity: {ethnicity}, Sex {sex}"
-        if not self.has_name():
-            name = random_name(gender, ethnicity)
-            count = 0
-            while Character.objects.filter(name=name).exists() and count < 20:
-                self.ethnicity = random_ethnicity()
-                name = random_name(gender, ethnicity)
-                count += 1
-            if count == 20:
-                name = f"Random Name {random.randint(1, 10000000000)}"
-            self.set_name(name)
-
-    def random_archetypes(self):
-        self.nature = Archetype.objects.order_by("?").first()
-        self.demeanor = Archetype.objects.order_by("?").first()
-
     def add_specialty(self, specialty):
         if getattr(self, specialty.stat) < 4 and specialty.stat not in [
             "arts",
@@ -236,119 +206,6 @@ class Human(
         ]:
             output = output and (self.specialties.filter(stat=ability).count() > 0)
         return output
-
-    def random_specialty(self, stat):
-        options = self.filter_specialties(stat=stat)
-        return self.add_specialty(random.choice(options))
-
-    def random_specialties(self):
-        need_specialty = []
-        for attribute in self.filter_attributes(minimum=4):
-            if attribute not in need_specialty:
-                need_specialty.append(attribute)
-        for ability in self.filter_abilities(minimum=4):
-            if ability not in need_specialty:
-                need_specialty.append(ability)
-        for ability in [
-            x
-            for x in self.filter_abilities(minimum=1)
-            if x
-            in [
-                "arts",
-                "athletics",
-                "crafts",
-                "firearms",
-                "melee",
-                "academics",
-                "occult",
-                "lore",
-                "politics",
-                "science",
-            ]
-        ]:
-            if ability not in need_specialty:
-                need_specialty.append(ability)
-        for stat in need_specialty:
-            self.specialties.add(random.choice(self.filter_specialties(stat=stat)))
-
-    def add_random_language(self):
-        d = {
-            l.name: l.frequency
-            for l in Language.objects.all()
-            if l not in self.languages.all()
-        }
-        if len(d) == 0:
-            return False
-        choice = weighted_choice(d)
-        choice = Language.objects.get(name=choice)
-        self.languages.add(choice)
-        self.save()
-        return True
-
-    def random_derangement(self):
-        d = (
-            Derangement.objects.exclude(pk__in=self.derangements.all())
-            .order_by("?")
-            .first()
-        )
-        return self.add_derangement(d)
-
-    def random_birthdate(self, age):
-        earliest_date = date.today() - timedelta(days=(age + 1) * 365)
-        int_delta = 365 * 24 * 60 * 60
-        random_second = random.randrange(int_delta)
-        return earliest_date + timedelta(seconds=random_second)
-
-    def random_finishing_touches(self):
-        self.age = random.randint(18, 80)
-        birthday = self.random_birthdate(self.age)
-        self.date_of_birth = birthday
-        self.description = "Description"
-        self.apparent_age = self.age
-        self.save()
-
-    def random_history(self):
-        self.history = "History"
-        self.goals = "Goals"
-        self.save()
-
-    def mf_based_corrections(self):
-        if self.merits_and_flaws.filter(name="Ability Deficit").exists():
-            stats_to_lose = random.choice(
-                [self.get_talents(), self.get_skills(), self.get_knowledges()]
-            )
-            total_removed = 0
-            for key, value in stats_to_lose.items():
-                if value > 3:
-                    total_removed += value - 3
-                    stats_to_lose[key] = 3
-                    setattr(self, key, 3)
-            while total_removed > 5:
-                tmp = {k: v for k, v in stats_to_lose.item() if v < 3}
-                new_stat = weighted_choice(tmp)
-                if self.add_ability(new_stat):
-                    stats_to_lose[new_stat] += 1
-                    total_removed -= 1
-            while total_removed < 5:
-                new_stat = weighted_choice(stats_to_lose)
-                stats_to_lose[new_stat] -= 1
-                setattr(self, new_stat, stats_to_lose[new_stat])
-                total_removed += 1
-
-    def random(self, freebies=15, xp=0, ethnicity=None):
-        self.update_status("Ran")
-        self.freebies = freebies
-        self.xp = xp
-        self.random_name(ethnicity=ethnicity)
-        self.random_concept()
-        self.random_archetypes()
-        self.random_attributes()
-        self.random_abilities()
-        self.random_backgrounds()
-        self.mf_based_corrections()
-        self.random_specialties()
-        self.random_finishing_touches()
-        self.random_history()
 
     def freebie_costs(self):
         return {

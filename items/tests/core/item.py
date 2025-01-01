@@ -2,14 +2,6 @@ from django.test import TestCase
 from items.models.core import ItemModel
 
 
-class TestRandomItem(TestCase):
-    def test_random_name(self):
-        item = ItemModel.objects.create()
-        item.random_name()
-        self.assertTrue(item.has_name())
-        self.assertTrue(item.name.startswith("Random Item "))
-
-
 class TestItemDetailView(TestCase):
     def setUp(self) -> None:
         self.item = ItemModel.objects.create(name="Test Item")

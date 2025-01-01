@@ -1,5 +1,3 @@
-import random
-
 from characters.models.werewolf.battlescar import BattleScar
 from characters.models.werewolf.camp import Camp
 from characters.models.werewolf.gift import Gift, GiftPermission
@@ -7,7 +5,7 @@ from characters.models.werewolf.renownincident import RenownIncident
 from characters.models.werewolf.rite import Rite
 from characters.models.werewolf.tribe import Tribe
 from characters.models.werewolf.wtahuman import WtAHuman
-from core.utils import add_dot, weighted_choice
+from core.utils import add_dot
 from django.db import models
 from django.db.models import Q
 from items.models.werewolf.fetish import Fetish
@@ -142,9 +140,6 @@ class Werewolf(WtAHuman):
         self.save()
         return True
 
-    def random_breed(self):
-        return self.set_breed(random.choice(["homid", "metis", "lupus"]))
-
     def has_auspice(self):
         return self.auspice != ""
 
@@ -188,19 +183,6 @@ class Werewolf(WtAHuman):
         self.save()
         return True
 
-    def random_auspice(self):
-        choice = random.choice(
-            ["ragabash", "theurge", "philodox", "galliard", "ahroun"]
-        )
-        if choice == "ragabash":
-            g = random.randint(0, 3)
-            h = random.randint(0, 3 - g)
-            w = 3 - g - h
-            ragabash_renown = [g, h, w]
-        else:
-            ragabash_renown = [1, 1, 1]
-        return self.set_auspice(choice, ragabash_renown=ragabash_renown)
-
     def has_tribe(self):
         return self.tribe is not None
 
@@ -225,16 +207,8 @@ class Werewolf(WtAHuman):
         self.willpower = tribe.willpower
         if self.tribe.name == "Silver Fangs" and self.pure_breed < 3:
             self.pure_breed = 3
-        if self.tribe.name == "Black Spiral Dancers":
-            self.random_derangement()
         self.save()
         return True
-
-    def random_tribe(self):
-        value = True
-        while self.tribe is None:
-            value = self.set_tribe(Tribe.objects.order_by("?").first())
-        return value
 
     def has_camp(self):
         return self.camps.count() != 0
@@ -254,33 +228,6 @@ class Werewolf(WtAHuman):
         self.camps.add(camp)
         self.save()
         return True
-
-    def random_camp(self, camp_type="camp"):
-        if self.tribe.name == "Silver Fangs":
-            lodge = (
-                Camp.objects.filter(camp_type="lodge", tribe=self.tribe)
-                .order_by("?")
-                .first()
-            )
-            house = (
-                Camp.objects.filter(camp_type="house", tribe=self.tribe)
-                .order_by("?")
-                .first()
-            )
-            philosophy = (
-                Camp.objects.filter(camp_type="philosophy", tribe=self.tribe)
-                .order_by("?")
-                .first()
-            )
-            return (
-                self.add_camp(lodge)
-                and self.add_camp(house)
-                and self.add_camp(philosophy)
-            )
-        fltr = Q(tribe=self.tribe) | Q(tribe=None)
-        return self.add_camp(
-            Camp.objects.filter(fltr).filter(camp_type=camp_type).order_by("?").first()
-        )
 
     def add_gift(self, gift):
         if gift in self.gifts.all():
@@ -315,60 +262,6 @@ class Werewolf(WtAHuman):
 
         return b
 
-    def choose_random_gift(
-        self, breed=False, tribe=False, auspice=False, min_rank=1, max_rank=5
-    ):
-        options = self.filter_gifts()
-        if breed:
-            options = options.filter(
-                allowed=GiftPermission.objects.get(
-                    shifter="werewolf", condition=self.breed
-                )
-            )
-        if tribe:
-            q = options.filter(
-                allowed=GiftPermission.objects.get(
-                    shifter="werewolf", condition=self.tribe.name
-                )
-            )
-            if self.camps.count() != 0:
-                for camp in self.camps.all():
-                    q = q | options.filter(
-                        allowed=GiftPermission.objects.get_or_create(
-                            shifter="werewolf", condition=camp.name
-                        )[0]
-                    )
-            options = q
-        if auspice:
-            options = options.filter(
-                allowed=GiftPermission.objects.get(
-                    shifter="werewolf", condition=self.auspice
-                )
-            )
-
-        # rank
-        options = options.filter(rank__gte=min_rank)
-        options = options.filter(rank__lte=min(max_rank, self.rank))
-        options = list(options)
-        return random.choice(options)
-
-    def random_gift(
-        self, breed=False, tribe=False, auspice=False, min_rank=1, max_rank=5
-    ):
-        choice = self.choose_random_gift(
-            breed=breed,
-            tribe=tribe,
-            auspice=auspice,
-            min_rank=min_rank,
-            max_rank=max_rank,
-        )
-        return self.add_gift(choice)
-
-    def random_gifts(self):
-        self.random_gift(breed=True)
-        self.random_gift(tribe=True)
-        self.random_gift(auspice=True)
-
     def add_rite(self, rite):
         self.rites_known.add(rite)
         self.save()
@@ -385,17 +278,6 @@ class Werewolf(WtAHuman):
             sum(x.level for x in self.rites_known.all())
             + self.rites_known.filter(level=0).count() / 2
         )
-
-    def random_rite(self, max_level=5):
-        possibilities = [x for x in self.filter_rites() if x.level <= max_level]
-        if len(possibilities) == 0:
-            return False
-        choice = random.choice(possibilities)
-        return self.add_rite(choice)
-
-    def random_rites(self):
-        while not self.has_rites():
-            self.random_rite(max_level=self.rites - self.total_rites())
 
     def set_glory(self, glory):
         self.glory = glory
@@ -448,30 +330,7 @@ class Werewolf(WtAHuman):
         self.temporary_glory = max(0, self.temporary_glory)
         self.temporary_honor = max(0, self.temporary_honor)
         self.temporary_wisdom = max(0, self.temporary_wisdom)
-        if r.name == "Learning a new rite":
-            if rite is not None:
-                self.add_rite(rite)
-            else:
-                self.random_rite()
-            self.renown_incidents[-1] += f"({self.rites_known.last().name})"
         return True
-
-    def random_renown_incident(self):
-        if self.rank != 5 and self.auspice != "ragabash":
-            reqs = self.requirements[self.auspice][self.rank + 1]
-            glory = reqs["glory"] - self.glory
-            honor = reqs["honor"] - self.honor
-            wisdom = reqs["wisdom"] - self.wisdom
-        else:
-            glory = 10 - self.glory
-            honor = 10 - self.honor
-            wisdom = 10 - self.wisdom
-        d = {
-            r: sum([glory * r.glory, wisdom * r.wisdom, honor * r.honor])
-            for r in RenownIncident.objects.all()
-        }
-        r = weighted_choice(d, floor=1, ceiling=20)
-        return self.add_renown_incident(r)
 
     def add_gnosis(self):
         return add_dot(self, "gnosis", 10)
@@ -523,18 +382,6 @@ class Werewolf(WtAHuman):
             return True
         return False
 
-    def random_battle_scar(self):
-        scars = BattleScar.objects.exclude(pk__in=self.battle_scars.all())
-        if scars.count() > 0:
-            choice = scars.order_by("?").first()
-            return self.add_battle_scar(choice)
-        return False
-
-    def random_werewolf_history(self):
-        self.first_change = "Young"
-        self.age_of_first_change = 13
-        self.save()
-
     def add_fetish(self, fetish):
         if fetish in self.fetishes_owned.all():
             return False
@@ -546,44 +393,5 @@ class Werewolf(WtAHuman):
             rank__lte=max_rating, rank__gte=min_rating
         ).exclude(pk__in=self.fetishes_owned.all())
 
-    def random_fetish(self, min_rating=0, max_rating=5):
-        options = self.filter_fetishes(min_rating=min_rating, max_rating=max_rating)
-        if options.count() != 0:
-            choice = random.choice(options)
-            return self.add_fetish(choice)
-        return False
-
-    def random_fetishes(self, total_rating=0):
-        total = self.total_fetish_rating() + total_rating
-        while self.total_fetish_rating() < total:
-            self.random_fetish(
-                max_rating=total - self.total_fetish_rating(), min_rating=1
-            )
-
     def total_fetish_rating(self):
         return sum(x.rank for x in self.fetishes_owned.all())
-
-    def random(self, freebies=15, xp=0, ethnicity=None):
-        self.update_status("Ran")
-        self.freebies = freebies
-        self.xp = xp
-        self.random_name(ethnicity=ethnicity)
-        self.random_concept()
-        self.random_archetypes()
-        self.random_breed()
-        self.random_auspice()
-        self.random_tribe()
-        if random.random() < 0.2:
-            self.random_camp()
-        self.random_attributes()
-        self.random_abilities()
-        self.random_backgrounds()
-        self.random_gifts()
-        self.random_rites()
-        self.random_history()
-        self.random_finishing_touches()
-        self.random_werewolf_history()
-        self.mf_based_corrections()
-        self.random_specialties()
-        self.random_fetishes(total_rating=self.fetish)
-        self.save()

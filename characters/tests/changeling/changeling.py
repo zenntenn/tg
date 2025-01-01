@@ -334,12 +334,12 @@ class TestChangeling(TestCase):
 
     def test_set_antithesis(self):
         self.assertFalse(self.character.has_antithesis())
-        self.assertTrue(self.character.set_antithesis("Random Antithesis"))
+        self.assertTrue(self.character.set_antithesis("Antithesis"))
         self.assertTrue(self.character.has_antithesis())
 
     def test_has_antithesis(self):
         self.assertFalse(self.character.has_antithesis())
-        self.character.set_antithesis("Random Antithesis")
+        self.character.set_antithesis("Antithesis")
         self.assertTrue(self.character.has_antithesis())
 
     def test_add_glamour(self):
@@ -406,131 +406,6 @@ class TestChangeling(TestCase):
         self.assertEqual(self.character.crysalis, crysalis)
         self.assertEqual(self.character.date_of_crysalis, date_of_crysalis)
         self.assertTrue(self.character.has_changeling_history())
-
-
-class TestRandomChangeling(TestCase):
-    def setUp(self) -> None:
-        self.player = User.objects.create_user(username="User1", password="12345")
-        self.character = Changeling.objects.create(owner=self.player, name="")
-        changeling_setup()
-
-    def test_random_house(self):
-        self.character.title = 1
-        self.character.court = "seelie"
-        self.assertFalse(self.character.has_house())
-        self.character.set_house(House.objects.get(name="House 0"))
-        self.assertTrue(self.character.has_house())
-
-    def test_random_seeming(self):
-        self.assertFalse(self.character.has_seeming())
-        self.assertTrue(self.character.random_seeming())
-        self.assertTrue(self.character.has_seeming())
-
-    def test_random_court(self):
-        self.assertFalse(self.character.has_court())
-        self.assertTrue(self.character.random_court())
-        self.assertTrue(self.character.has_court())
-
-    def test_random_seelie_legacy(self):
-        self.assertFalse(self.character.has_seelie_legacy())
-        self.character.random_seelie_legacy()
-        self.assertTrue(self.character.has_seelie_legacy())
-
-    def test_random_unseelie_legacy(self):
-        self.assertFalse(self.character.has_unseelie_legacy())
-        self.character.random_unseelie_legacy()
-        self.assertTrue(self.character.has_unseelie_legacy())
-
-    def test_random_changeling_history(self):
-        self.assertTrue(self.character.random_changeling_history())
-        self.assertTrue(self.character.has_changeling_history())
-
-    def test_random_changeling_appearance(self):
-        self.assertTrue(self.character.random_changeling_appearance())
-        self.assertTrue(self.character.has_changeling_appearance())
-
-    def test_random_kith(self):
-        self.assertFalse(self.character.has_kith())
-        self.character.random_kith()
-        self.assertTrue(self.character.has_kith())
-
-    def test_random_art(self):
-        total = self.character.total_arts()
-        self.character.random_art()
-        self.assertEqual(self.character.total_arts(), total + 1)
-
-    def test_random_arts(self):
-        self.assertFalse(self.character.has_arts())
-        self.character.random_arts()
-        self.assertTrue(self.character.has_arts())
-
-    def test_random_realm(self):
-        total = self.character.total_realms()
-        self.character.random_realm()
-        self.assertEqual(self.character.total_realms(), total + 1)
-
-    def test_random_realms(self):
-        self.assertFalse(self.character.has_realms())
-        self.character.random_realms()
-        self.assertTrue(self.character.has_realms())
-
-    def test_random_musing_threshold(self):
-        self.assertFalse(self.character.has_musing_threshold())
-        self.character.random_musing_threshold()
-        self.assertTrue(self.character.has_musing_threshold())
-
-    def test_random_ravaging_threshold(self):
-        self.assertFalse(self.character.has_ravaging_threshold())
-        self.character.random_ravaging_threshold()
-        self.assertTrue(self.character.has_ravaging_threshold())
-
-    def test_random_antithesis(self):
-        self.assertFalse(self.character.has_antithesis())
-        self.character.random_antithesis()
-        self.assertTrue(self.character.has_antithesis())
-
-    def test_random(self):
-        self.assertFalse(self.character.has_name())
-        self.assertFalse(self.character.has_concept())
-        self.assertFalse(self.character.has_kith())
-        self.assertFalse(self.character.has_attributes())
-        self.assertFalse(self.character.has_abilities())
-        self.assertFalse(self.character.has_backgrounds())
-        self.assertFalse(self.character.has_finishing_touches())
-        self.assertFalse(self.character.has_history())
-        self.assertFalse(self.character.has_seeming())
-        self.assertFalse(self.character.has_court())
-        self.assertFalse(self.character.has_seelie_legacy())
-        self.assertFalse(self.character.has_unseelie_legacy())
-        self.assertFalse(self.character.has_arts())
-        self.assertFalse(self.character.has_realms())
-        self.assertFalse(self.character.has_musing_threshold())
-        self.assertFalse(self.character.has_ravaging_threshold())
-        self.assertFalse(self.character.has_antithesis())
-        self.assertFalse(self.character.has_changeling_history())
-        self.assertFalse(self.character.has_changeling_appearance())
-        self.character.random(freebies=0, xp=0)
-        self.assertTrue(self.character.has_name())
-        self.assertTrue(self.character.has_concept())
-        self.assertTrue(self.character.has_kith())
-        self.assertTrue(self.character.has_attributes())
-        self.assertTrue(self.character.has_abilities())
-        self.assertTrue(self.character.has_specialties())
-        self.assertTrue(self.character.has_backgrounds())
-        self.assertTrue(self.character.has_finishing_touches())
-        self.assertTrue(self.character.has_history())
-        self.assertTrue(self.character.has_seeming())
-        self.assertTrue(self.character.has_court())
-        self.assertTrue(self.character.has_seelie_legacy())
-        self.assertTrue(self.character.has_unseelie_legacy())
-        self.assertTrue(self.character.has_arts())
-        self.assertTrue(self.character.has_realms())
-        self.assertTrue(self.character.has_musing_threshold())
-        self.assertTrue(self.character.has_ravaging_threshold())
-        self.assertTrue(self.character.has_antithesis())
-        self.assertTrue(self.character.has_house())
-        self.assertTrue(self.character.has_changeling_history())
-        self.assertTrue(self.character.has_changeling_appearance())
 
 
 class TestChangelingDetailView(TestCase):

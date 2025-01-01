@@ -113,25 +113,6 @@ class ItemIndexView(View):
             elif gameline == "mta":
                 redi = f"items:mage:list:{item_type}"
             return redirect(redi)
-        elif action == "random":
-            if request.user.is_authenticated:
-                user = request.user
-            else:
-                user = None
-            item = self.items[request.POST["item_type"]].objects.create(
-                name=request.POST["name"], owner=user
-            )
-            if request.POST["rank"] is None:
-                rank = None
-            else:
-                rank = int(request.POST["rank"])
-            try:
-                item.random(rank=rank)
-            except Exception as e:
-                print(e)
-                raise Http404
-            item.save()
-            return redirect(item.get_absolute_url())
         return render(request, "items/index.html", context)
 
     def get_context(self):

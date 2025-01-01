@@ -1,5 +1,4 @@
 from characters.models.core.statistic import Statistic
-from core.utils import weighted_choice
 from django.db import models
 
 
@@ -142,18 +141,6 @@ class BackgroundBlock(models.Model):
         if self.total_backgrounds() > self.background_points:
             self.freebies -= self.total_backgrounds() - self.background_points
         return self.total_backgrounds() >= self.background_points
-
-    def random_background(self):
-        choice = weighted_choice(self.get_backgrounds())
-        return self.add_background(choice)
-
-    def random_backgrounds(self, backgrounds=None):
-        if backgrounds is None:
-            backgrounds = {}
-        for trait, value in backgrounds.items():
-            setattr(self, trait, value)
-        while not self.has_backgrounds():
-            self.random_background()
 
     def new_background_freebies(self, form):
         trait = form.cleaned_data["example"]
