@@ -19,6 +19,7 @@ class TestRoteDetailView(TestCase):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/mage/rote/detail.html")
 
+
 class TestRoteCreateView(TestCase):
     def setUp(self):
         e = Effect.objects.create(name="Test Effect")

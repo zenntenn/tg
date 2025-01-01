@@ -20,6 +20,7 @@ class TestGroupDetailView(TestCase):
         response = self.client.get(self.url)
         self.assertTemplateUsed(response, "characters/core/group/detail.html")
 
+
 class TestGroupCreateView(TestCase):
     def setUp(self):
         self.valid_data = {

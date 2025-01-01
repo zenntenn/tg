@@ -41,8 +41,6 @@ class TestFomor(TestCase):
         self.assertEqual(list(filtered_powers.all()), [self.power3])
 
 
-
-
 class TestFomorDetailView(TestCase):
     def setUp(self) -> None:
         self.fomor = Fomor.objects.create(name="Test Fomor")

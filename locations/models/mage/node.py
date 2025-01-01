@@ -74,7 +74,7 @@ class Node(LocationModel):
         node = ObjectType.objects.get_or_create(
             name="node", type="loc", gameline="mta"
         )[0]
-        if not node in mf.allowed_types.all():
+        if node not in mf.allowed_types.all():
             return False
         if not mf.ratings.filter(value=rating).exists():
             return False
@@ -218,6 +218,7 @@ class Node(LocationModel):
         self.quintessence_per_week = int(self.points * float(self.get_ratio_display()))
         self.tass_per_week = self.points - self.quintessence_per_week
         return True
+
 
 class NodeMeritFlawRating(models.Model):
     node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True)

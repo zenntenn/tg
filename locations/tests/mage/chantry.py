@@ -174,6 +174,7 @@ class TestChantry(TestCase):
 
         self.assertEqual(result, expected)
 
+
 class TestChantryDetailView(TestCase):
     def setUp(self) -> None:
         self.chantry = Chantry.objects.create(name="Test Chantry")

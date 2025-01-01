@@ -789,7 +789,6 @@ class TestHuman(TestCase):
         )
 
 
-
 class TestHumanDetailView(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="Test")

@@ -338,7 +338,6 @@ class TestWerewolf(TestCase):
         self.assertEqual(self.character.total_fetish_rating(), 2)
 
 
-
 class TestWerewolfDetailView(TestCase):
     def setUp(self) -> None:
         self.player = User.objects.create_user(username="User1", password="12345")

@@ -455,7 +455,7 @@ class Grimoire(Wonder):
         spheres=None,
         rotes=None,
     ):
-        self.update_status("Ran")
+        self.update_status("Sub")
         self.random_rank(rank)
         self.background_cost = 2 * self.rank
         self.quintessence_max = 5 * self.rank

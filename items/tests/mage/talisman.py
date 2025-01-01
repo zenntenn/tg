@@ -30,6 +30,7 @@ class TestTalisman(TestCase):
         talisman.add_power(self.effect2)
         self.assertTrue(talisman.has_powers())
 
+
 class TestTalismanDetailView(TestCase):
     def setUp(self) -> None:
         self.talisman = Talisman.objects.create(name="Test Talisman")

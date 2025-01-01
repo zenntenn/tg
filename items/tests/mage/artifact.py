@@ -20,6 +20,7 @@ class TestArtifact(TestCase):
         self.artifact.set_power(self.power)
         self.assertTrue(self.artifact.has_power())
 
+
 class TestArtifactDetailView(TestCase):
     def setUp(self) -> None:
         self.artifact = Artifact.objects.create(name="Test Artifact")
