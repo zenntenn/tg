@@ -35,4 +35,24 @@
     {% else %}
         {% include "characters/core/character/not_owner.html" %}
     {% endif %}
+    {% block status_change %}
+        {% if is_approved_user %}
+                <form {% block formdetails %}
+                      action=""
+                      method="post"
+                      {% endblock formdetails %}>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm">
+                            <input type="submit" name="retire" value="Mark Retired" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <input type="submit" name="decease" value="Mark Deceased" />
+                        </div>
+                    </div>
+                </form>
+        {% endif %}
+    {% endblock status_change %}
 {% endblock contents %}

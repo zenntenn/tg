@@ -701,6 +701,12 @@ class MageDetailView(HumanDetailView):
                 spec = Specialty.objects.get_or_create(name=spec, stat=stat)[0]
                 self.object.specialties.add(spec)
             self.object.save()
+        if "retire" in form.data.keys():
+            self.object.status = "Ret"
+            self.object.save()
+        if "decease" in form.data.keys():
+            self.object.status = "Dec"
+            self.object.save()
         if form_errors:
             return self.render_to_response(context)
         return redirect(reverse("characters:character", kwargs={"pk": self.object.pk}))
