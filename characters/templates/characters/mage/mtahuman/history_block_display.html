@@ -1,3 +1,4 @@
+{% load sanitize_text %}
 <div class="row">
     <h2 class="col-sm {{ object.get_heading }} pointer"
         data-toggle="collapse"
@@ -8,18 +9,18 @@
 <div id="historySection" class="collapse show multi-collapse">
     <div class="row">
         <div class="col-sm">History</div>
-        <div class="col-sm">{{ object.history|linebreaks }}</div>
+        <div class="col-sm">{{ object.history|sanitize_html|linebreaks }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Goals</div>
-        <div class="col-sm">{{ object.goals|linebreaks }}</div>
+        <div class="col-sm">{{ object.goals|sanitize_html|linebreaks }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Notes</div>
-        <div class="col-sm">{{ object.notes|linebreaks }}</div>
+        <div class="col-sm">{{ object.notes|sanitize_html|linebreaks }}</div>
     </div>
     <div class="row">
         <div class="col-sm">Public Information</div>
-        <div class="col-sm">{{ object.public_info|linebreaks }}</div>
+        <div class="col-sm">{{ object.public_info|sanitize_html|linebreaks }}</div>
     </div>
 </div>

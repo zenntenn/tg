@@ -1,5 +1,6 @@
 {% extends "characters/werewolf/wtahuman/detail.html" %}
 {% load dots %}
+{% load sanitize_text %}
 {% block basics %}
     {% include "characters/werewolf/garou/basics_display_include.html" %}
 {% endblock basics %}
@@ -109,7 +110,7 @@
     </div>
     <div class="row">
         <div class="col-sm">Description</div>
-        <div class="col-sm">{{ object.description|linebreaks }}</div>
+        <div class="col-sm">{{ object.description|sanitize_html|linebreaks }}</div>
     </div>
 {% endblock appearance %}
 {% block history %}
@@ -118,15 +119,15 @@
     </div>
     <div class="row">
         <div class="col-sm">Childhood</div>
-        <div class="col-sm">{{ object.childhood|linebreaks }}</div>
+        <div class="col-sm">{{ object.childhood|sanitize_html|linebreaks }}</div>
     </div>
     <div class="row">
         <div class="col-sm">History</div>
-        <div class="col-sm">{{ object.history|linebreaks }}</div>
+        <div class="col-sm">{{ object.history|sanitize_html|linebreaks }}</div>
     </div>
     <div class="row">
         <div class="col-sm">First Change</div>
-        <div class="col-sm">{{ object.first_change|linebreaks }}</div>
+        <div class="col-sm">{{ object.first_change|sanitize_html|linebreaks }}</div>
         <div class="col-sm">Battle Scars</div>
         <div class="col-sm">
             {% for scar in object.battle_scars.all %}<a href="{{ scar.get_absolute_url }}">{{ scar.name }},</a>{% endfor %}
@@ -134,9 +135,9 @@
     </div>
     <div class="row">
         <div class="col-sm">Goals</div>
-        <div class="col-sm">{{ object.goals|linebreaks }}</div>
+        <div class="col-sm">{{ object.goals|sanitize_html|linebreaks }}</div>
         <div class="col-sm">Notes</div>
-        <div class="col-sm">{{ object.notes|linebreaks }}</div>
+        <div class="col-sm">{{ object.notes|sanitize_html|linebreaks }}</div>
     </div>
 {% endblock history %}
 {% block xp %}

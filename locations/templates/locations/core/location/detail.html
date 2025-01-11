@@ -1,4 +1,5 @@
 {% extends "core/object.html" %}
+{% load sanitize_text %}
 {% block contents %}
     {% block name %}
         <div class="row {{ object.get_heading }}">
@@ -32,7 +33,7 @@
     {% block description %}
         <div class="row">
             <div class="col-sm">Description</div>
-            <div class="col-sm">{{ object.description|linebreaks }}</div>
+            <div class="col-sm">{{ object.description|sanitize_html|linebreaks }}</div>
         </div>
     {% endblock description %}
     {% block post_description %}

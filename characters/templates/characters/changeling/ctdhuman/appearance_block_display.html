@@ -1,3 +1,4 @@
+{% load sanitize_text %}
 <div class="row">
     <h2 class="col-sm {{ object.get_heading }} pointer"
         data-toggle="collapse"
@@ -18,6 +19,6 @@
     </div>
     <div class="row">
         <div class="col-sm">Description</div>
-        <div class="col-sm">{{ object.description|linebreaks }}</div>
+        <div class="col-sm">{{ object.description|sanitize_html|linebreaks }}</div>
     </div>
 </div>
