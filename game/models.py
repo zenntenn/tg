@@ -217,6 +217,9 @@ class Scene(models.Model):
     location = models.ForeignKey(
         "locations.LocationModel", on_delete=models.SET_NULL, null=True
     )
+    user_read_status = models.ManyToManyField(
+        User, blank=True, through="UserSceneReadStatus"
+    )
     finished = models.BooleanField(default=False)
     xp_given = models.BooleanField(default=False)
     waiting_for_st = models.BooleanField(default=False)
@@ -287,11 +290,32 @@ class Scene(models.Model):
         post = Post.objects.create(
             character=character, message=message, display_name=display, scene=self
         )
-
+        for user in User.objects.filter(charactermodel__scenes=self).distinct():
+            if user != character.owner:
+                status = UserSceneReadStatus.objects.get_or_create(
+                    user=user, scene=self
+                )[0]
+                status.read = False
+                status.save()
+            else:
+                status = UserSceneReadStatus.objects.get_or_create(
+                    user=user, scene=self
+                )[0]
+                status.read = True
+                status.save()
         return post
 
     def most_recent_post(self):
         return Post.objects.filter(scene=self).order_by("-datetime_created").first()
+
+
+class UserSceneReadStatus(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    scene = models.ForeignKey(Scene, on_delete=models.SET_NULL, null=True)
+    read = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user}-{self.scene}: {self.read}"
 
 
 class Post(models.Model):

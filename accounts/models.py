@@ -12,6 +12,7 @@ from game.models import (
     Scene,
     Story,
     STRelationship,
+    UserSceneReadStatus,
     Week,
     WeeklyXPRequest,
 )
@@ -221,6 +222,11 @@ class Profile(models.Model):
     def xp_spend_requests(self):
         chars = Character.objects.all()
         return [x for x in chars if x.waiting_for_xp_spend()]
+
+    def unread_scenes(self):
+        return Scene.objects.filter(
+            userscenereadstatus__user=self.user, userscenereadstatus__read=False
+        ).distinct()
 
 
 @receiver(post_save, sender=User)
