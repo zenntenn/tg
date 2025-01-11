@@ -34,7 +34,7 @@
     </div>
     <div class="row">
         {% for gift in object.gifts_1 %}
-            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html|linebreaks }}</a>
+            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html }}</a>
         {% endfor %}
     </div>
     <div class="row">
@@ -42,7 +42,7 @@
     </div>
     <div class="row">
         {% for gift in object.gifts_2 %}
-            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html|linebreaks }}</a>
+            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html }}</a>
         {% endfor %}
     </div>
     <div class="row">
@@ -50,7 +50,7 @@
     </div>
     <div class="row">
         {% for gift in object.gifts_3 %}
-            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html|linebreaks }}</a>
+            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html }}</a>
         {% endfor %}
     </div>
     <div class="row">
@@ -58,7 +58,7 @@
     </div>
     <div class="row">
         {% for gift in object.gifts_4 %}
-            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html|linebreaks }}</a>
+            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html }}</a>
         {% endfor %}
     </div>
     <div class="row">
@@ -66,7 +66,7 @@
     </div>
     <div class="row">
         {% for gift in object.gifts_5 %}
-            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html|linebreaks }}</a>
+            <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html }}</a>
         {% endfor %}
     </div>
     {% if object.gift_6 %}
@@ -75,7 +75,7 @@
         </div>
         <div class="row">
             {% for gift in object.gifts_6 %}
-                <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html|linebreaks }}</a>
+                <a class="col-sm" href="{{ gift.get_absolute_url }}">{{ gift.name|sanitize_html }}</a>
             {% endfor %}
         </div>
     {% endif %}

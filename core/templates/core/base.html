@@ -125,7 +125,7 @@
             <ul class="messages">
                 {% for message in messages %}
                     <li class="{{ message.tags }}">
-                        {{ message|sanitize_html|linebreaks }}<a href="#" class="close">x</a>
+                        {{ message|sanitize_html }}<a href="#" class="close">x</a>
                     </li>
                 {% endfor %}
             </ul>
