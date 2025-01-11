@@ -13,7 +13,7 @@
             <div class="row border">
                 <div class="col-sm border"">{{ hr.name }}
                 </div>
-                <div class="col-sm border">{{ hr.display_sources|sanitize_html }}</div>
+                <div class="col-sm border">{{ hr.display_sources|sanitize_html|linebreaks }}</div>
                 <div class="col-sm border">{{ hr.description }}</div>
             </div>
         {% endfor %}

@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}
     {% load sanitize_text %}
-    {{ object.name|sanitize_html }}
+    {{ object.name|sanitize_html|linebreaks }}
 {% endblock title %}
 {% block content %}
     {% csrf_token %}

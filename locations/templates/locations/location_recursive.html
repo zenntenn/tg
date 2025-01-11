@@ -7,7 +7,7 @@
      aria-controls="loc-{{ location.id }}-Section">
     <div class="col-sm border lefttext">
         <a href="{{ location.get_absolute_url }}"
-           style="padding-left: {{ indent_level }}px">{{ location.name|sanitize_html }}</a>
+           style="padding-left: {{ indent_level }}px">{{ location.name|sanitize_html|linebreaks }}</a>
     </div>
     {% if location.owner %}
         <a class="col-sm border centertext"
