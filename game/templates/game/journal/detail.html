@@ -32,12 +32,12 @@
                     <form method="post" action="">
                         {% csrf_token %}
                         <div class="row">
-                            <div class="col-sm">{{ form.entry.message|quote_tag|sanitize_html|linebreaks }}</div>
+                            <div class="col-sm">{{ form.entry.message|quote_tag|sanitize_html }}</div>
                         </div>
                         {% if form.entry.st_message %}
                             {% if form.entry.st_message != 'Read' %}
                                 <div class="row">
-                                    <div class="col-sm st">{{ form.entry.st_message|quote_tag|sanitize_html|linebreaks }}</div>
+                                    <div class="col-sm st">{{ form.entry.st_message|quote_tag|sanitize_html }}</div>
                                 </div>
                             {% endif %}
                         {% else %}
