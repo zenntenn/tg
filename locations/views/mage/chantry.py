@@ -3,6 +3,7 @@ from typing import Any
 from characters.forms.core.ally import AllyForm
 from characters.models.core.background_block import Background
 from characters.views.core.generic_background import GenericBackgroundView
+from core.views.approved_user_mixin import SpecialUserMixin
 from core.views.generic import DictView
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -187,7 +188,7 @@ class ChantryBasicsView(CreateView):
         return form
 
 
-class ChantryPointsView(FormView):
+class ChantryPointsView(SpecialUserMixin, FormView):
     form_class = ChantryPointForm
     template_name = "locations/mage/chantry/locgen.html"
 
@@ -200,6 +201,9 @@ class ChantryPointsView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = self.object
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def get_success_url(self):
@@ -218,7 +222,7 @@ class ChantryPointsView(FormView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ChantryIntegratedEffectsView(FormView):
+class ChantryIntegratedEffectsView(SpecialUserMixin, FormView):
     form_class = ChantryEffectsForm
     template_name = "locations/mage/chantry/locgen.html"
 
@@ -231,6 +235,9 @@ class ChantryIntegratedEffectsView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["object"] = self.object
+        context["is_approved_user"] = self.check_if_special_user(
+            self.object, self.request.user
+        )
         return context
 
     def get_success_url(self):
