@@ -36,7 +36,7 @@
                 <div class="col-sm">
                     <p class="post">
                         <b {% if post.character.owner.profile.is_st %}class="st"{% elif post.character.owner == request.user %}class="highlight"{% endif %}><a class="text-link" href="{{ post.character.get_absolute_url }}">{{ post.display_name }}</a></b>:
-                        {{ post.message|quote_tag|sanitize_html|linebreaks }}
+                        {{ post.message|quote_tag|sanitize_html }}
                     </p>
                 </div>
             </div>
