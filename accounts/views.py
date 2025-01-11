@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 from game.forms import WeeklyXPRequestForm
-from game.models import Scene, Week, WeeklyXPRequest
+from game.models import Scene, UserSceneReadStatus, Week, WeeklyXPRequest
 from items.models.core import ItemModel
 from locations.models.core.location import LocationModel
 
@@ -85,6 +85,9 @@ class ProfileView(DetailView):
         submit_story_request_id = request.POST.get("submit_story_request")
         submit_story_approval_id = request.POST.get("submit_story_approval")
 
+        # Mark Scene Read
+        mark_scene_id_read = request.POST.get("mark_scene_read")
+
         if submitted_scene_id is not None:
             scene = Scene.objects.get(pk=submitted_scene_id)
             form = SceneXP(request.POST, scene=scene)
@@ -153,6 +156,13 @@ class ProfileView(DetailView):
             )
             if form.is_valid():
                 form.st_save()
+        if mark_scene_id_read is not None:
+            scene = Scene.objects.get(pk=mark_scene_id_read)
+            status = UserSceneReadStatus.objects.get_or_create(
+                scene=scene, user=self.object.user
+            )[0]
+            status.read = True
+            status.save()
         elif "Edit Preferences" in request.POST.keys():
             return redirect("profile_update", pk=self.object.pk)
         if form_errors:

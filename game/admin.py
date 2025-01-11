@@ -9,6 +9,7 @@ from game.models import (
     Story,
     StoryXPRequest,
     STRelationship,
+    UserSceneReadStatus,
     Week,
     WeeklyXPRequest,
 )
@@ -62,3 +63,4 @@ admin.site.register(Story)
 admin.site.register(Week)
 admin.site.register(WeeklyXPRequest)
 admin.site.register(StoryXPRequest)
+admin.site.register(UserSceneReadStatus)

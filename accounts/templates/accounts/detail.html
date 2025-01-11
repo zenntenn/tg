@@ -9,6 +9,7 @@
             <h1 class="col-sm {{ object.preferred_heading }}">{{ object.user.username }}</h1>
         </div>
         {% include "accounts/includes/settings.html" %}
+        {% include "accounts/includes/active_scenes.html" %}
         {% if object.is_st %}
             {% include "accounts/includes/chronicles.html" %}
             {% include "accounts/includes/attention.html" %}
