@@ -148,12 +148,17 @@ class ChantrySelectOrCreateForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        self.character = kwargs.pop("character")
         super().__init__(*args, **kwargs)
         self.chantry_creation_form = ChantryCreateForm(
-            instance=self.instance,
             data=self.data if self.is_bound else None,
             prefix="chantry",
         )
+
+        if self.character is not None:
+            self.fields["existing_chantry"].queryset = Chantry.objects.filter(
+                chronicle=self.character.chronicle
+            )
 
     def clean(self):
         cleaned_data = super().clean()

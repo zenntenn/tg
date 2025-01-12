@@ -49,6 +49,7 @@ from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
 from items.forms.mage.wonder import WonderForm
 from items.models.core.item import ItemModel
+from locations.forms.mage.chantry import ChantrySelectOrCreateForm
 from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
 from locations.forms.mage.sanctum import SanctumForm
@@ -1532,6 +1533,20 @@ class MageSanctumView(GenericBackgroundView):
     template_name = "characters/mage/mage/chargen.html"
 
 
+class MageChantryView(GenericBackgroundView):
+    primary_object_class = Mage
+    background_name = "chantry"
+    form_class = ChantrySelectOrCreateForm
+    template_name = "characters/mage/mage/chargen.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["character"] = self.primary_object_class.objects.get(
+            pk=self.kwargs["pk"]
+        )
+        return kwargs
+
+
 class MageCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: MageAttributeView,
@@ -1550,7 +1565,8 @@ class MageCharacterCreationView(HumanCharacterCreationView):
         14: MageEnhancementView,
         15: MageSanctumView,
         16: MageAlliesView,
-        17: MageSpecialtiesView,
+        17: MageChantryView,
+        18: MageSpecialtiesView,
     }
     model_class = Mage
     key_property = "creation_status"
