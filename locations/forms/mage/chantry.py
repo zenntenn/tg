@@ -154,6 +154,8 @@ class ChantrySelectOrCreateForm(forms.Form):
             data=self.data if self.is_bound else None,
             prefix="chantry",
         )
+        for field in self.chantry_creation_form.fields.keys():
+            self.chantry_creation_form.fields[field].required = False
 
         if self.character is not None:
             self.fields["existing_chantry"].queryset = Chantry.objects.filter(
@@ -182,3 +184,13 @@ class ChantrySelectOrCreateForm(forms.Form):
                 self.add_error("existing_chantry", "Please select an existing Chantry.")
 
         return cleaned_data
+
+    def save(self, commit=True):
+        create_new = self.cleaned_data.get("create_new")
+        if create_new:
+            chantry = self.chantry_creation_form.save(commit=commit)
+        else:
+            chantry = self.cleaned_data.get("existing_chantry")
+            chantry.total_points += int(self.data["chantry-total_points"])
+        chantry.save()
+        return chantry

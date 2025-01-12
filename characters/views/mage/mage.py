@@ -1546,6 +1546,19 @@ class MageChantryView(GenericBackgroundView):
         )
         return kwargs
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.chantry_creation_form.fields[
+            "total_points"
+        ].initial = self.current_background.rating
+        form.chantry_creation_form.fields["total_points"].widget.attrs.update(
+            {
+                "min": self.current_background.rating,
+                "max": self.current_background.rating,
+            }
+        )
+        return form
+
 
 class MageCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {

@@ -48,6 +48,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, UpdateView
 from game.models import ObjectType
 from items.forms.mage.sorcerer_artifact import ArtifactCreateOrSelectForm
+from locations.forms.mage.chantry import ChantrySelectOrCreateForm
 from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
 from locations.forms.mage.sanctum import SanctumForm
@@ -956,6 +957,33 @@ class SorcererSanctumView(GenericBackgroundView):
     template_name = "characters/mage/sorcerer/chargen.html"
 
 
+class SorcererChantryView(GenericBackgroundView):
+    primary_object_class = Sorcerer
+    background_name = "chantry"
+    form_class = ChantrySelectOrCreateForm
+    template_name = "characters/mage/sorcerer/chargen.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["character"] = self.primary_object_class.objects.get(
+            pk=self.kwargs["pk"]
+        )
+        return kwargs
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.chantry_creation_form.fields[
+            "total_points"
+        ].initial = self.current_background.rating
+        form.chantry_creation_form.fields["total_points"].widget.attrs.update(
+            {
+                "min": self.current_background.rating,
+                "max": self.current_background.rating,
+            }
+        )
+        return form
+
+
 class SorcererCharacterCreationView(HumanCharacterCreationView):
     view_mapping = {
         1: SorcererAttributeView,
@@ -974,7 +1002,8 @@ class SorcererCharacterCreationView(HumanCharacterCreationView):
         14: SorcererEnhancementView,
         15: SorcererSanctumView,
         16: SorcererAlliesView,
-        17: SorcererSpecialtiesView,
+        17: SorcererChantryView,
+        18: SorcererSpecialtiesView,
     }
 
     model_class = Sorcerer
