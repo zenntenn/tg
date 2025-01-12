@@ -373,30 +373,37 @@ class Journal(models.Model):
 
 
 def message_processing(character, message):
-    temporary_point_regex = re.compile(r"#WP|#Q(-?\d+)|#P(-?\d+)|#(-?\d+)(B|L|A)")
+    temporary_point_regex = re.compile(
+        r"#WP(-?\d+)|#WP|#Q(-?\d+)|#P(-?\d+)|#(-?\d+)(B|L|A)"
+    )
     wp_spend = False
     expenditures = []
 
     for match in temporary_point_regex.finditer(message):
         full_match = match.group(0)
-        if full_match == "#WP":
+        if match.group(1):
+            wp_amount = int(match.group(1))
+            character.temporary_willpower -= wp_amount
+            expenditures.append(f"{wp_amount}WP")
+            character.save()
+        elif full_match == "#WP":
             character.temporary_willpower -= 1
             wp_spend = True
             expenditures.append("WP")
             character.save()
-        elif match.group(1):
-            if hasattr(character, "quintessence"):
-                character.quintessence -= int(match.group(1))
-                expenditures.append(f"{int(match.group(1))}Q")
-                character.save()
         elif match.group(2):
-            if hasattr(character, "paradox"):
-                character.paradox += int(match.group(2))
-                expenditures.append(f"{int(match.group(2))}P")
+            if hasattr(character, "quintessence"):
+                character.quintessence -= int(match.group(2))
+                expenditures.append(f"{int(match.group(2))}Q")
                 character.save()
         elif match.group(3):
-            damage_type = match.group(4)
-            damage_amount = int(match.group(3))
+            if hasattr(character, "paradox"):
+                character.paradox += int(match.group(3))
+                expenditures.append(f"{int(match.group(3))}P")
+                character.save()
+        elif match.group(4):
+            damage_type = match.group(5)
+            damage_amount = int(match.group(4))
             expenditures.append(f"{damage_amount}{damage_type}")
             if damage_type == "B":
                 for _ in range(damage_amount):
