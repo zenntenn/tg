@@ -103,3 +103,77 @@ class ChantryEffectsForm(EffectCreateOrSelectForm):
     def save(self, commit=True):
         effect = super().save(commit=commit)
         self.object.integrated_effects.add(effect)
+
+
+class ChantryCreateForm(forms.ModelForm):
+    total_points = forms.IntegerField(
+        min_value=0, error_messages={"min_value": "Total points must be 0 or higher."}
+    )
+
+    class Meta:
+        model = Chantry
+        fields = [
+            "name",
+            "chronicle",
+            "parent",
+            "description",
+            "faction",
+            "leadership_type",
+            "season",
+            "chantry_type",
+            "gauntlet",
+            "shroud",
+            "dimension_barrier",
+        ]
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Enter name here"}),
+            "description": forms.Textarea(
+                attrs={"placeholder": "Enter description here"}
+            ),
+        }
+
+    def save(self, commit=True):
+        chantry = super().save(commit=commit)
+        chantry.total_points = int(self.cleaned_data.get("total_points"))
+        chantry.save()
+        return chantry
+
+
+class ChantrySelectOrCreateForm(forms.Form):
+    create_new = forms.BooleanField(required=False, label="Create a new Chantry?")
+    existing_chantry = forms.ModelChoiceField(
+        queryset=Chantry.objects.all(),
+        required=False,
+        label="Select an existing Chantry",
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.chantry_creation_form = ChantryCreateForm(
+            instance=self.instance,
+            data=self.data if self.is_bound else None,
+            prefix="chantry",
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        create_new = cleaned_data.get("create_new")
+        existing_chantry = cleaned_data.get("existing_chantry")
+
+        if create_new:
+            # Validate the creation form if the user wants to create a new Chantry
+            if not self.chantry_creation_form.is_valid():
+                # Propagate the child form's errors to this parent form
+                for field, errors in self.chantry_creation_form.errors.items():
+                    if field == "__all__":
+                        # Non-field errors
+                        self.add_error(None, errors)
+                    else:
+                        # Field-specific errors
+                        self.add_error(field, errors)
+        else:
+            # If not creating new, an existing chantry must be selected
+            if not existing_chantry:
+                self.add_error("existing_chantry", "Please select an existing Chantry.")
+
+        return cleaned_data
