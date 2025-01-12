@@ -105,8 +105,13 @@
                 {% include "characters/core/ally/form_include.html" %}
             {% endif %}
         {% endblock ally %}
-        {% block specialties_form %}
+        {% block chantry %}
             {% if object.creation_status == 13 %}
+                {% include "locations/mage/chantry/select_or_create_form.html" %}
+            {% endif %}
+        {% endblock chantry %}
+        {% block specialties_form %}
+            {% if object.creation_status == 14 %}
                 {% include "characters/mage/mtahuman/specialties_block_form.html" %}
             {% endif %}
         {% endblock specialties_form %}

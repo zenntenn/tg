@@ -9,7 +9,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
-from locations.forms.mage.chantry import ChantryEffectsForm, ChantryPointForm
+from locations.forms.mage.chantry import (
+    ChantryCreateForm,
+    ChantryEffectsForm,
+    ChantryPointForm,
+)
 from locations.forms.mage.library import LibraryForm
 from locations.forms.mage.node import NodeForm
 from locations.forms.mage.sanctum import SanctumForm
@@ -161,31 +165,19 @@ class LoadExamplesView(View):
         return render(request, self.template_name, {"examples": examples})
 
 
-class ChantryBasicsView(CreateView):
+class ChantryBasicsView(FormView):
     model = Chantry
-    fields = [
-        "name",
-        "chronicle",
-        "parent",
-        "description",
-        "faction",
-        "leadership_type",
-        "season",
-        "chantry_type",
-        "total_points",
-        "gauntlet",
-        "shroud",
-        "dimension_barrier",
-    ]
+    form_class = ChantryCreateForm
     template_name = "locations/mage/chantry/basics.html"
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["name"].widget.attrs.update({"placeholder": "Enter name here"})
-        form.fields["description"].widget.attrs.update(
-            {"placeholder": "Enter description here"}
-        )
-        return form
+    def form_valid(self, form):
+        # Save the Chantry object
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Simply use the model's get_absolute_url
+        return self.object.get_absolute_url()
 
 
 class ChantryPointsView(SpecialUserMixin, FormView):
